@@ -1,0 +1,54 @@
+<div class="min-h-screen bg-gray-50">
+
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+
+                <div class="flex items-center gap-2">
+                    <div class="h-8 w-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+                        L</div>
+                    <span class="text-xl font-bold text-gray-900">LotusAcademy</span>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-500 hidden sm:block">
+                        Bonjour, <strong class="text-indigo-600">{{ user?.firstName }}</strong>
+                        <span
+                            class="ml-1 px-2 py-0.5 rounded-full bg-gray-100 text-xs text-gray-600 border border-gray-200">
+                            {{ user?.role }}
+                        </span>
+                    </span>
+                    <button (click)="logout()"
+                        class="text-sm text-red-600 hover:text-red-800 font-medium px-3 py-2 rounded-md hover:bg-red-50 transition">
+                        Déconnexion
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+
+        @switch (user?.role) {
+
+        @case ('ADMIN') {
+        <app-admin-dashboard />
+        }
+
+        @case ('INSTRUCTOR') {
+        <app-instructor-dashboard />
+        }
+
+        @case ('STUDENT') {
+        <app-student-dashboard />
+        }
+
+        @default {
+        <app-student-dashboard />
+        }
+
+        }
+
+    </main>
+</div>
