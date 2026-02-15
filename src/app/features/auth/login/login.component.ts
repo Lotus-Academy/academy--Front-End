@@ -1,5 +1,4 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService, LoginRequest, RegisterRequest } from '../../../core/services/auth.service';
@@ -7,7 +6,7 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../../core/servic
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink], // CommonModule retiré car inutile avec @if
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -23,7 +22,6 @@ export class LoginComponent implements OnInit {
   showPassword: boolean = false;
   errorMessage: string = '';
 
-  // Mise à jour du formulaire avec firstName et lastName
   authForm: FormGroup = this.fb.group({
     firstName: [''],
     lastName: [''],
@@ -40,26 +38,29 @@ export class LoginComponent implements OnInit {
 
   toggleMode() {
     this.isLogin = !this.isLogin;
+
+    // Navigation pour mettre à jour l'URL
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: this.isLogin ? 'login' : 'signup' },
       queryParamsHandling: 'merge',
     });
-    this.updateValidators();
+
+    // On efface le message d'erreur et on réinitialise partiellement le formulaire
     this.errorMessage = '';
+    this.updateValidators();
   }
 
-  // Active/Désactive les validateurs sur les champs Nom/Prénom
   private updateValidators() {
     const firstNameControl = this.authForm.get('firstName');
     const lastNameControl = this.authForm.get('lastName');
 
     if (!this.isLogin) {
-      // En mode Inscription : Obligatoires
+      // Mode Inscription : Champs obligatoires
       firstNameControl?.setValidators([Validators.required, Validators.minLength(2)]);
       lastNameControl?.setValidators([Validators.required, Validators.minLength(2)]);
     } else {
-      // En mode Login : On s'en fiche, on retire les règles
+      // Mode Connexion : Champs optionnels
       firstNameControl?.clearValidators();
       lastNameControl?.clearValidators();
     }
@@ -70,7 +71,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.authForm.invalid) {
-      this.authForm.markAllAsTouched(); // Montre les erreurs visuelles
+      this.authForm.markAllAsTouched();
       return;
     }
 
@@ -92,8 +93,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(request).subscribe({
       next: (res) => {
-        this.authService.saveToken(res.token);
-        this.authService.saveUser(res); // Si tu as implémenté saveUser
+        // Le service gère le stockage (voir modifications précédentes du AuthService)
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
@@ -104,7 +104,6 @@ export class LoginComponent implements OnInit {
   }
 
   private performSignup() {
-    // Plus besoin de "split" ! On prend les valeurs directes.
     const request: RegisterRequest = {
       firstName: this.authForm.value.firstName,
       lastName: this.authForm.value.lastName,
@@ -115,15 +114,11 @@ export class LoginComponent implements OnInit {
 
     this.authService.register(request).subscribe({
       next: (res) => {
-        // Connexion automatique après inscription
-        this.authService.saveToken(res.token);
-        this.authService.saveUser(res);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.isLoading = false;
-        // Gestion message d'erreur du backend
-        this.errorMessage = err.error?.message || "Erreur lors de l'inscription.";
+        this.errorMessage = err.error?.message || "Une erreur est survenue lors de l'inscription.";
       }
     });
   }

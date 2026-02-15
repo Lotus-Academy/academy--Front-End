@@ -22,16 +22,26 @@
 
             <div class="mb-6">
                 <h1 class="text-3xl font-bold text-gray-900">
-                    {{ isLogin ? 'Welcome back' : 'Create your account' }}
+                    @if (isLogin) {
+                    Welcome back
+                    } @else {
+                    Create your account
+                    }
                 </h1>
                 <p class="mt-2 text-gray-600">
-                    {{ isLogin ? 'Sign in to access your courses' : 'Start your journey to mastering new skills' }}
+                    @if (isLogin) {
+                    Sign in to access your courses
+                    } @else {
+                    Start your journey to mastering new skills
+                    }
                 </p>
             </div>
 
-            <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-50 text-red-700 text-sm rounded-md border border-red-200">
+            @if (errorMessage) {
+            <div class="mb-4 p-3 bg-red-50 text-red-700 text-sm rounded-md border border-red-200">
                 {{ errorMessage }}
             </div>
+            }
 
             <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="space-y-6">
 
@@ -59,33 +69,34 @@
                     </div>
                 </div>
 
-                <div *ngIf="!isLogin" class="grid grid-cols-2 gap-4">
-
+                @if (!isLogin) {
+                <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-gray-700">First Name</label>
-                        <div class="relative">
-                            <input type="text" formControlName="firstName" placeholder="John"
-                                class="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        </div>
-                        <div *ngIf="authForm.get('firstName')?.touched && authForm.get('firstName')?.invalid"
-                            class="text-xs text-red-500 mt-1">
+                        <input type="text" formControlName="firstName" placeholder="John"
+                            class="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+
+                        @if (authForm.get('firstName')?.touched && authForm.get('firstName')?.invalid) {
+                        <div class="text-xs text-red-500 mt-1">
                             Required (min 2).
                         </div>
+                        }
                     </div>
 
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-gray-700">Last Name</label>
-                        <div class="relative">
-                            <input type="text" formControlName="lastName" placeholder="Doe"
-                                class="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        </div>
-                        <div *ngIf="authForm.get('lastName')?.touched && authForm.get('lastName')?.invalid"
-                            class="text-xs text-red-500 mt-1">
+                        <input type="text" formControlName="lastName" placeholder="Doe"
+                            class="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+
+                        @if (authForm.get('lastName')?.touched && authForm.get('lastName')?.invalid) {
+                        <div class="text-xs text-red-500 mt-1">
                             Required.
                         </div>
+                        }
                     </div>
-
                 </div>
+                }
+
                 <div class="space-y-1">
                     <label class="block text-sm font-medium text-gray-700">Email</label>
                     <div class="relative">
@@ -100,13 +111,20 @@
                         <input type="email" formControlName="email" placeholder="you@example.com"
                             class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
+                    @if (authForm.get('email')?.touched && authForm.get('email')?.invalid) {
+                    <div class="text-xs text-red-500 mt-1">
+                        Valid email required.
+                    </div>
+                    }
                 </div>
 
                 <div class="space-y-1">
                     <div class="flex items-center justify-between">
                         <label class="block text-sm font-medium text-gray-700">Password</label>
-                        <a *ngIf="isLogin" href="#"
-                            class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                        @if (isLogin) {
+                        <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Forgot
+                            password?</a>
+                        }
                     </div>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
@@ -123,35 +141,45 @@
 
                         <button type="button" (click)="showPassword = !showPassword"
                             class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer">
-                            <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            @if (!showPassword) {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
                                 <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
                                 <circle cx="12" cy="12" r="3" />
                             </svg>
-                            <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            } @else {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
                                 <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
                                 <path
                                     d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
                                 <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
                                 <line x1="2" x2="22" y1="2" y2="22" />
                             </svg>
+                            }
                         </button>
                     </div>
+                    @if (authForm.get('password')?.touched && authForm.get('password')?.invalid) {
+                    <div class="text-xs text-red-500 mt-1">
+                        Min 8 chars required.
+                    </div>
+                    }
                 </div>
 
                 <button type="submit" [disabled]="authForm.invalid || isLoading"
                     class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-                    <span *ngIf="isLoading" class="mr-2 animate-spin">⌛</span>
+                    @if (isLoading) {
+                    <span class="mr-2 animate-spin">⌛</span>
+                    }
                     {{ isLogin ? 'Sign in' : 'Create account' }}
                 </button>
 
                 <p class="text-center text-sm text-gray-600">
                     {{ isLogin ? "Don't have an account?" : "Already have an account?" }}
                     <button type="button" (click)="toggleMode()"
-                        class="font-medium text-indigo-600 hover:text-indigo-500 hover:underline">
+                        class="font-medium text-indigo-600 hover:text-indigo-500 hover:underline ml-1">
                         {{ isLogin ? "Sign up" : "Sign in" }}
                     </button>
                 </p>
