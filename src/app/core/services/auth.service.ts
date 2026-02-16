@@ -39,7 +39,6 @@ export class AuthService {
 
   private http = inject(HttpClient);
 
-  // Correction de l'URL pour inclure /v1
   private baseUrl = 'http://localhost:8080/api/v1/auth';
 
   constructor() { }
@@ -50,7 +49,6 @@ export class AuthService {
    */
   register(request: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.baseUrl}/register`, request).pipe(
-      // Optionnel : On peut connecter l'utilisateur directement après l'inscription
       tap(response => this.saveSession(response))
     );
   }

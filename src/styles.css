@@ -1,3 +1,33 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import "tailwindcss";
+
+@layer base {
+
+    /* On définit explicitement comment Tailwind doit réagir à la classe .dark */
+    :root {
+        color-scheme: light;
+    }
+
+    .dark {
+        color-scheme: dark;
+    }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Styles de base pour tester immédiatement */
+body {
+    @apply bg-white text-slate-900 transition-colors duration-300;
+}
+
+.dark body {
+    @apply bg-slate-900 text-slate-100;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+section {
+    scroll-margin-top: 5rem;
+    /* Ajustez selon la hauteur de votre navbar (h-16 = 4rem) */
+}

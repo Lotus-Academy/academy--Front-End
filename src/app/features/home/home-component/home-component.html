@@ -1,0 +1,248 @@
+<app-navbar></app-navbar>
+
+<main class="overflow-x-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
+
+    <section id="hero"
+        class="relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 pb-16 pt-12 md:pb-24 md:pt-20">
+        <div class="absolute inset-0 -z-10 opacity-20 dark:opacity-10">
+            <div
+                class="absolute inset-0 bg-[grid-size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]">
+            </div>
+        </div>
+
+        <div class="container mx-auto px-4">
+            <div class="mx-auto max-w-4xl text-center">
+                <div
+                    class="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 shadow-sm animate-fade-in">
+                    <span class="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="text-sm font-medium text-slate-600 dark:text-slate-400">New courses added weekly</span>
+                </div>
+
+                <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-7xl">
+                    Learn from the Best. <br>
+                    <span class="text-blue-600 dark:text-blue-400">Grow with Lotus Academy.</span>
+                </h1>
+
+                <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-300 md:text-xl">
+                    Join thousands of learners discovering new skills from expert instructors in our vibrant learning
+                    community.
+                </p>
+
+                <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                    <button routerLink="/courses"
+                        class="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition flex items-center gap-2 shadow-lg shadow-blue-200">
+                        Browse Courses <lucide-icon [name]="icons.ArrowRight" class="w-5 h-5"></lucide-icon>
+                    </button>
+                    <button routerLink="/auth"
+                        class="px-8 py-4 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition flex items-center gap-2">
+                        <lucide-icon [name]="icons.Play" class="w-5 h-5 text-blue-600 dark:text-blue-400"></lucide-icon>
+                        Start Learning Free
+                    </button>
+                </div>
+
+                <div class="mt-16 grid grid-cols-3 gap-8 border-t border-slate-100 dark:border-slate-800 pt-8">
+                    @for (stat of stats; track stat.label) {
+                    <div class="text-center">
+                        <div
+                            class="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/30">
+                            <lucide-icon [name]="stat.icon"
+                                class="h-6 w-6 text-blue-600 dark:text-blue-400"></lucide-icon>
+                        </div>
+                        <div class="text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">{{ stat.value }}
+                        </div>
+                        <div class="text-sm text-slate-500 dark:text-slate-400">{{ stat.label }}</div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="topics" class="py-16 md:py-24 bg-slate-50/50 dark:bg-slate-800/50">
+        <div class="container mx-auto px-4">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">Trending Topics</h2>
+                <p class="mt-2 text-slate-600 dark:text-slate-400">Explore the most popular areas of study</p>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+                @for (topic of topics; track topic.name) {
+                <a [routerLink]="['/courses']" [queryParams]="{topic: topic.name}"
+                    class="group flex flex-col items-center rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 text-center transition-all hover:shadow-xl hover:-translate-y-1">
+                    <div [class]="'mb-4 flex h-14 w-14 items-center justify-center rounded-xl ' + topic.color">
+                        <lucide-icon [name]="topic.icon" class="h-7 w-7"></lucide-icon>
+                    </div>
+                    <h3
+                        class="font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        {{ topic.name }}
+                    </h3>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ topic.courses }} courses</p>
+                </a>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials"
+        class="border-t border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/30 py-16 md:py-24">
+        <div class="container mx-auto px-4">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">What Our Students Say</h2>
+                <p class="mt-2 text-slate-600 dark:text-slate-400">Join thousands of successful traders</p>
+            </div>
+
+            <div class="grid gap-8 md:grid-cols-3">
+                @for (testimonial of testimonials; track testimonial.name) {
+                <div
+                    class="rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
+                    <div class="mb-4 flex gap-1">
+                        @for (star of [1,2,3,4,5]; track star) {
+                        <lucide-icon [name]="icons.Star" class="h-5 w-5 fill-yellow-400 text-yellow-400"></lucide-icon>
+                        }
+                    </div>
+
+                    <p class="mb-6 text-slate-700 dark:text-slate-300 leading-relaxed italic">
+                        "{{ testimonial.content }}"
+                    </p>
+
+                    <div class="flex items-center gap-3">
+                        <img [src]="testimonial.image" [alt]="testimonial.name"
+                            class="h-12 w-12 rounded-full object-cover">
+                        <div>
+                            <p class="font-semibold text-slate-900 dark:text-white">{{ testimonial.name }}</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ testimonial.role }}</p>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="py-16 md:py-24 dark:bg-slate-900">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4 dark:text-white">Frequently Asked Questions</h2>
+                <p class="text-slate-600 dark:text-slate-400">Find answers to common questions about Lotus Academy</p>
+            </div>
+
+            <div class="space-y-4">
+                @for (faq of faqs; track faq.question; let i = $index) {
+                <div
+                    class="border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 overflow-hidden">
+                    <button (click)="toggleFaq(i)"
+                        class="w-full flex justify-between items-center p-6 text-left font-medium text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                        {{ faq.question }}
+                        <span class="transform transition-transform duration-200"
+                            [class.rotate-180]="activeIndex === i">▼</span>
+                    </button>
+
+                    @if (activeIndex === i) {
+                    <div class="p-6 pt-0 text-slate-600 dark:text-slate-400 animate-fade-down">
+                        {{ faq.answer }}
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="courses" class="py-16 md:py-24 border-t border-slate-100 dark:border-slate-800">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">Featured Courses</h2>
+                    <p class="mt-2 text-slate-600 dark:text-slate-400">Hand-picked courses to accelerate your trading
+                        journey</p>
+                </div>
+                <button routerLink="/courses"
+                    class="text-blue-600 dark:text-blue-400 font-semibold hover:underline flex items-center gap-2">
+                    View all courses <lucide-icon [name]="icons.ArrowRight" class="w-4 h-4"></lucide-icon>
+                </button>
+            </div>
+
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                @for (course of featuredCourses; track course.id) {
+                <div
+                    class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-xl transition-all">
+                    <div class="relative h-48 overflow-hidden">
+                        <img [src]="course.thumbnailUrl"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div
+                            class="absolute top-4 left-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold shadow-sm dark:text-white">
+                            {{ course.categoryName }}
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 h-12">{{ course.title }}
+                        </h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">{{ course.instructorName }}</p>
+                        <div
+                            class="flex items-center justify-between border-t border-slate-50 dark:border-slate-700 pt-4">
+                            <span class="text-xl font-bold text-blue-600 dark:text-blue-400">{{ course.price === 0 ?
+                                'Free' : (course.price | currency) }}</span>
+                            <button [routerLink]="['/courses', course.id]"
+                                class="p-2 rounded-lg bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors">
+                                Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 md:py-24 bg-white dark:bg-slate-900">
+        <div class="container mx-auto px-4">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">Why Learn With Lotus Academy?
+                </h2>
+                <p class="mx-auto mt-2 max-w-2xl text-slate-600 dark:text-slate-400">Join thousands of successful
+                    traders who started their journey here</p>
+            </div>
+
+            <div class="grid gap-8 md:grid-cols-3">
+                <div
+                    class="group relative rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 p-8 transition-all hover:shadow-lg">
+                    <div
+                        class="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-blue-600/10 dark:bg-blue-400/10 transition-colors group-hover:bg-blue-600 dark:group-hover:bg-blue-500">
+                        <lucide-icon [name]="icons.Award"
+                            class="h-7 w-7 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors"></lucide-icon>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Industry Expertise</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Learn from professionals with decades
+                        of experience at top hedge funds and investment banks.</p>
+                </div>
+
+                <div
+                    class="group relative rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 p-8 transition-all hover:shadow-lg">
+                    <div
+                        class="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-blue-600/10 dark:bg-blue-400/10 transition-colors group-hover:bg-blue-600 dark:group-hover:bg-blue-500">
+                        <lucide-icon [name]="icons.Database"
+                            class="h-7 w-7 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors"></lucide-icon>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Real Data Examples</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Practice with real market data and
+                        build strategies that work in actual trading environments.</p>
+                </div>
+
+                <div
+                    class="group relative rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 p-8 transition-all hover:shadow-lg">
+                    <div
+                        class="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-blue-600/10 dark:bg-blue-400/10 transition-colors group-hover:bg-blue-600 dark:group-hover:bg-blue-500">
+                        <lucide-icon [name]="icons.BookOpen"
+                            class="h-7 w-7 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors"></lucide-icon>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Structured Curriculum</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Follow a carefully designed learning
+                        path from fundamentals to advanced trading strategies.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<app-footer></app-footer>

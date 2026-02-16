@@ -1,10 +1,10 @@
-<div class="min-h-screen bg-white flex">
+<div class="min-h-screen bg-white dark:bg-slate-900 flex transition-colors duration-300">
 
     <div class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div class="mx-auto w-full max-w-sm lg:w-96">
 
             <a routerLink="/"
-                class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors mb-8 cursor-pointer">
+                class="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors mb-8 cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m12 19-7-7 7-7" />
@@ -17,18 +17,18 @@
                 <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
                     <span class="text-xl font-bold text-white">L</span>
                 </div>
-                <span class="text-2xl font-bold text-gray-900">Lotus Academy</span>
+                <span class="text-2xl font-bold text-gray-900 dark:text-white">Lotus Academy</span>
             </div>
 
             <div class="mb-6">
-                <h1 class="text-3xl font-bold text-gray-900">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
                     @if (isLogin) {
                     Welcome back
                     } @else {
                     Create your account
                     }
                 </h1>
-                <p class="mt-2 text-gray-600">
+                <p class="mt-2 text-gray-600 dark:text-slate-400">
                     @if (isLogin) {
                     Sign in to access your courses
                     } @else {
@@ -38,7 +38,8 @@
             </div>
 
             @if (errorMessage) {
-            <div class="mb-4 p-3 bg-red-50 text-red-700 text-sm rounded-md border border-red-200">
+            <div
+                class="mb-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-sm rounded-md border border-red-200 dark:border-red-900/30">
                 {{ errorMessage }}
             </div>
             }
@@ -46,7 +47,7 @@
             <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="space-y-6">
 
                 <button type="button"
-                    class="w-full flex justify-center items-center gap-3 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium text-gray-700 bg-white">
+                    class="w-full flex justify-center items-center gap-3 py-2.5 border border-gray-300 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition font-medium text-gray-700 dark:text-slate-200 bg-white dark:bg-slate-800">
                     <svg class="h-5 w-5" viewBox="0 0 24 24">
                         <path fill="currentColor"
                             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -62,45 +63,44 @@
 
                 <div class="relative">
                     <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-200"></div>
+                        <div class="w-full border-t border-gray-200 dark:border-slate-700"></div>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="bg-white px-2 text-gray-500 text-xs">OR EMAIL</span>
+                        <span
+                            class="bg-white dark:bg-slate-900 px-2 text-gray-500 dark:text-slate-500 text-xs uppercase tracking-wider">Or
+                            email</span>
                     </div>
                 </div>
 
                 @if (!isLogin) {
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">First Name</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">First Name</label>
                         <input type="text" formControlName="firstName" placeholder="John"
-                            class="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            class="block w-full px-3 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500">
 
                         @if (authForm.get('firstName')?.touched && authForm.get('firstName')?.invalid) {
-                        <div class="text-xs text-red-500 mt-1">
-                            Required (min 2).
-                        </div>
+                        <div class="text-xs text-red-500 mt-1">Required (min 2).</div>
                         }
                     </div>
 
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Last Name</label>
                         <input type="text" formControlName="lastName" placeholder="Doe"
-                            class="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            class="block w-full px-3 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500">
 
                         @if (authForm.get('lastName')?.touched && authForm.get('lastName')?.invalid) {
-                        <div class="text-xs text-red-500 mt-1">
-                            Required.
-                        </div>
+                        <div class="text-xs text-red-500 mt-1">Required.</div>
                         }
                     </div>
                 </div>
                 }
 
                 <div class="space-y-1">
-                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Email</label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <div
+                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-slate-500">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -109,25 +109,25 @@
                             </svg>
                         </div>
                         <input type="email" formControlName="email" placeholder="you@example.com"
-                            class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500">
                     </div>
                     @if (authForm.get('email')?.touched && authForm.get('email')?.invalid) {
-                    <div class="text-xs text-red-500 mt-1">
-                        Valid email required.
-                    </div>
+                    <div class="text-xs text-red-500 mt-1">Valid email required.</div>
                     }
                 </div>
 
                 <div class="space-y-1">
                     <div class="flex items-center justify-between">
-                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Password</label>
                         @if (isLogin) {
-                        <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Forgot
+                        <a href="#"
+                            class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">Forgot
                             password?</a>
                         }
                     </div>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <div
+                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-slate-500">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -137,10 +137,10 @@
                         </div>
                         <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
                             placeholder="••••••••"
-                            class="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            class="block w-full pl-10 pr-10 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500">
 
                         <button type="button" (click)="showPassword = !showPassword"
-                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer">
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 cursor-pointer transition-colors">
                             @if (!showPassword) {
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -162,9 +162,7 @@
                         </button>
                     </div>
                     @if (authForm.get('password')?.touched && authForm.get('password')?.invalid) {
-                    <div class="text-xs text-red-500 mt-1">
-                        Min 8 chars required.
-                    </div>
+                    <div class="text-xs text-red-500 mt-1">Min 8 chars required.</div>
                     }
                 </div>
 
@@ -176,10 +174,10 @@
                     {{ isLogin ? 'Sign in' : 'Create account' }}
                 </button>
 
-                <p class="text-center text-sm text-gray-600">
+                <p class="text-center text-sm text-gray-600 dark:text-slate-400">
                     {{ isLogin ? "Don't have an account?" : "Already have an account?" }}
                     <button type="button" (click)="toggleMode()"
-                        class="font-medium text-indigo-600 hover:text-indigo-500 hover:underline ml-1">
+                        class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 hover:underline ml-1 cursor-pointer">
                         {{ isLogin ? "Sign up" : "Sign in" }}
                     </button>
                 </p>
@@ -189,7 +187,8 @@
     </div>
 
     <div class="hidden lg:block relative w-0 flex-1">
-        <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-indigo-800">
+        <div
+            class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-indigo-800 dark:from-indigo-900 dark:to-slate-900">
             <div class="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-20"
                 style="background-image: url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200');">
             </div>
