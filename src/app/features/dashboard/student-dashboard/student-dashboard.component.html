@@ -1,1 +1,30 @@
-<p>student-dashboard.component works!</p>
+<div class="space-y-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 w-fit rounded-xl mb-4">
+                <lucide-icon name="video" class="w-6 h-6"></lucide-icon>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">12</h3>
+            <p class="text-sm text-slate-500">Cours en cours</p>
+        </div>
+    </div>
+
+    <div>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Continuer l'apprentissage</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            @for (course of inProgressCourses; track course.id) {
+            <div
+                class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 flex gap-4 group cursor-pointer hover:border-indigo-500 transition-colors">
+                <img [src]="course.thumb" class="h-24 w-32 rounded-lg object-cover">
+                <div class="flex-1 py-1">
+                    <h4 class="font-bold text-slate-900 dark:text-white">{{ course.title }}</h4>
+                    <p class="text-xs text-slate-500 mb-4">{{ course.instructor }}</p>
+                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full">
+                        <div class="bg-indigo-600 h-full rounded-full" [style.width.%]="course.progress"></div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>
