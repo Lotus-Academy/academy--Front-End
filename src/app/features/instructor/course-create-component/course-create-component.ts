@@ -1,12 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { CourseService, Category } from '../../../core/services/course-service';
+import { LucideAngularModule, ArrowLeft, Save, Loader2, Image as ImageIcon } from 'lucide-angular';
+
+import { CourseService } from '../../../core/services/course-service';
+
+// Interface temporaire (idéalement à placer dans vos models)
+export interface Category { id: string; name: string; }
 
 @Component({
   selector: 'app-course-create',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, LucideAngularModule],
   templateUrl: './course-create-component.html'
 })
 export class CourseCreateComponent implements OnInit {
@@ -15,45 +21,54 @@ export class CourseCreateComponent implements OnInit {
   private courseService = inject(CourseService);
   private router = inject(Router);
 
+  readonly icons = { ArrowLeft, Save, Loader2, ImageIcon };
+
+  // Formulaire aligné sur CourseCreateDTO
   courseForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(5)]],
     subtitle: ['', [Validators.required]],
     categoryId: ['', [Validators.required]],
     price: [0, [Validators.required, Validators.min(0)]],
-    level: ['BEGINNER', [Validators.required]],
+    level: ['Beginner', [Validators.required]],
     language: ['Français', [Validators.required]],
-    description: ['']
+    description: [''],
+    thumbnailUrl: [''] // Ajouté selon votre DTO
   });
 
   categories: Category[] = [];
   isLoading = false;
 
   ngOnInit(): void {
-    // Charger les catégories pour le select
-    this.courseService.getCategories().subscribe({
-      next: (cats) => this.categories = cats,
-      error: (err) => console.error('Erreur chargement catégories', err)
-    });
+    // Simulation / Chargement des catégories
+    // this.courseService.getCategories().subscribe({...});
+
+    // MOCK temporaire pour que le select fonctionne visuellement
+    this.categories = [
+      { id: '1', name: 'Trading & Investissement' },
+      { id: '2', name: 'Cryptomonnaie' },
+      { id: '3', name: 'Programmation' }
+    ];
+  }
+
+  // Helper pour vérifier facilement les erreurs dans le HTML
+  isFieldInvalid(field: string): boolean {
+    const control = this.courseForm.get(field);
+    return control ? control.invalid && (control.dirty || control.touched) : false;
   }
 
   onSubmit() {
-    if (this.courseForm.invalid) return;
+    if (this.courseForm.invalid) {
+      this.courseForm.markAllAsTouched();
+      return;
+    }
 
     this.isLoading = true;
-    this.courseService.createCourse(this.courseForm.value).subscribe({
-      next: (course) => {
-        this.isLoading = false;
-        // Rediriger vers la page d'édition de contenu (qu'on créera après)
-        // this.router.navigate(['/instructor/courses', course.id, 'edit']);
 
-        // Pour l'instant, retour au dashboard
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err) => {
-        console.error(err);
-        this.isLoading = false;
-        alert("Erreur lors de la création du cours");
-      }
-    });
+    // Remplacer par l'appel réel à this.courseService.createCourse(this.courseForm.value)
+    setTimeout(() => {
+      this.isLoading = false;
+      // Redirection vers le dashboard instructeur après création
+      this.router.navigate(['/dashboard']);
+    }, 1500);
   }
 }

@@ -1,100 +1,64 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of, delay } from 'rxjs';
+import { CourseResponseDTO } from '../models/course.dto';
 
-// --- INTERFACES (Basées sur tes DTOs Java) ---
-
-export interface Category {
-  id: string;
-  name: string;
-  description?: string;
-}
-
-export interface CourseCreateRequest {
-  title: string;
-  subtitle: string;
-  categoryId: string;
-  description?: string;
-  price: number;
-  level: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
-  language: string;
-  thumbnailUrl?: string; // On gérera l'upload d'image plus tard si besoin
-}
-
-export interface CourseResponse {
-  id: string;
-  title: string;
-  subtitle: string;
-  price: number;
-  thumbnailUrl?: string;
-  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
-  categoryName: string;
-  instructorName: string;
-  sections?: Section[];
-}
-
-export interface Section {
-  id: string;
-  title: string;
-  orderIndex: number;
-  lessons: Lesson[];
-}
-
-export interface Lesson {
-  id: string;
-  title: string;
-  duration: number; // en secondes
-  mediaUrl?: string;
-  freePreview: boolean;
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CourseService {
-
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/v1';
+  private apiUrl = '/api/v1/courses'; // Remplacez par votre URL d'API réelle
 
-  // --- COURS ---
+  // Données fictives respectant strictement votre CourseResponseDTO
+  private mockCourses: CourseResponseDTO[] = [
+    {
+      id: '550e8400-e29b-41d4-a716-446655440000',
+      title: 'Maîtriser l\'Analyse Technique et le Price Action',
+      slug: 'maitriser-analyse-technique',
+      subtitle: 'Devenez un expert en lecture de graphiques boursiers',
+      description: 'Un cours complet sur l\'analyse technique...',
+      price: 149.99,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
+      level: 'Intermediate',
+      language: 'FR',
+      status: 'APPROVED',
+      categoryId: 'cat-1',
+      categoryName: 'Trading',
+      instructorId: 'inst-1',
+      instructorName: 'Sarah Johnson',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      publishedAt: new Date().toISOString(),
+      sections: []
+    },
+    {
+      id: '550e8400-e29b-41d4-a716-446655440001',
+      title: 'Introduction à la Finance Décentralisée (DeFi)',
+      slug: 'intro-finance-decentralisee',
+      subtitle: 'Comprendre la DeFi et les Smart Contracts',
+      description: 'Découvrez le futur de la finance...',
+      price: 0,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=800',
+      level: 'Beginner',
+      language: 'FR',
+      status: 'APPROVED',
+      categoryId: 'cat-2',
+      categoryName: 'Cryptomonnaie',
+      instructorId: 'inst-2',
+      instructorName: 'Michael Chen',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      publishedAt: new Date().toISOString(),
+      sections: []
+    }
+  ];
 
-  createCourse(request: CourseCreateRequest): Observable<CourseResponse> {
-    return this.http.post<CourseResponse>(`${this.apiUrl}/courses`, request);
+  getPublishedCourses(): Observable<CourseResponseDTO[]> {
+    // Remplacer par : return this.http.get<CourseResponseDTO[]>(`${this.apiUrl}/published`);
+    return of(this.mockCourses.filter(c => c.status === 'APPROVED')).pipe(delay(500));
   }
 
-  getCourseById(courseId: string): Observable<CourseResponse> {
-    return this.http.get<CourseResponse>(`${this.apiUrl}/courses/${courseId}`);
-  }
-
-  // Pour le catalogue public
-  getAllCourses(): Observable<CourseResponse[]> {
-    return this.http.get<CourseResponse[]>(`${this.apiUrl}/courses`);
-  }
-
-  // Pour le dashboard instructeur (il faudrait un endpoint spécifique /my-courses côté back, 
-  // mais pour l'instant on peut filtrer côté front ou utiliser l'endpoint public si l'instructeur est le créateur)
-  // Note: Idéalement, ajoute un endpoint `GET /api/v1/instructors/courses` dans ton backend plus tard.
-
-  // --- CATÉGORIES ---
-
-  getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${this.apiUrl}/categories`);
-  }
-
-  // --- SECTIONS & LEÇONS ---
-
-  addSection(courseId: string, title: string): Observable<Section> {
-    return this.http.post<Section>(`${this.apiUrl}/courses/${courseId}/sections`, { title });
-  }
-
-  addLesson(sectionId: string, lesson: any): Observable<Lesson> {
-    return this.http.post<Lesson>(`${this.apiUrl}/sections/${sectionId}/lessons`, lesson);
-  }
-
-  // Upload Vidéo (Multipart)
-  uploadLessonMedia(sectionId: string, lessonId: string, file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('file', file);
-    return this.http.post(`${this.apiUrl}/sections/${sectionId}/lessons/${lessonId}/upload`, formData);
+  getCourseById(id: string): Observable<CourseResponseDTO | undefined> {
+    // Remplacer par : return this.http.get<CourseResponseDTO>(`${this.apiUrl}/slug/${slug}`);
+    return of(this.mockCourses.find(c => c.id === id)).pipe(delay(500));
   }
 }
