@@ -15,11 +15,11 @@
                     <div class="flex items-center gap-2 text-sm text-slate-400 font-medium mb-6">
                         <a routerLink="/courses" class="hover:text-white transition-colors">Catalogue</a>
                         <span>/</span>
-                        <span class="text-slate-200">{{ data.title }}</span>
+                        <span class="text-slate-200">{{ data.categoryName }}</span>
                     </div>
 
                     <h1 class="text-3xl md:text-5xl font-bold leading-tight mb-4">{{ data.title }}</h1>
-                    <p class="text-lg text-slate-300 mb-8 line-clamp-2">{{ data.description }}</p>
+                    <p class="text-lg text-slate-300 mb-8 line-clamp-2">{{ data.subtitle || data.description }}</p>
 
                     <div class="flex flex-wrap items-center gap-6 text-sm font-medium">
                         <div class="flex items-center gap-2">
@@ -27,15 +27,11 @@
                                 class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold">
                                 {{ data.instructorName?.charAt(0) || 'I' }}
                             </div>
-                            <span>Par {{ data.instructorName || data.instructorEmail }}</span>
+                            <span>Par {{ data.instructorName }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-slate-300">
                             <lucide-icon [name]="icons.Globe" class="w-4 h-4"></lucide-icon>
-                            <span>Français</span>
-                        </div>
-                        <div class="flex items-center gap-2 text-slate-300">
-                            <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4 text-green-400"></lucide-icon>
-                            <span>Dernière mise à jour {{ data.publishedAt | date:'MMMM yyyy' }}</span>
+                            <span>{{ data.language }}</span>
                         </div>
                     </div>
                 </div>
@@ -55,32 +51,12 @@
                             </div>
                         </div>
 
-                        <div
-                            class="bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 mb-12">
-                            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Ce que vous allez
-                                apprendre</h2>
-                            <div class="grid sm:grid-cols-2 gap-4">
-                                <div class="flex items-start gap-3">
-                                    <lucide-icon [name]="icons.CheckCircle"
-                                        class="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0"></lucide-icon>
-                                    <span class="text-sm text-slate-700 dark:text-slate-300 font-medium">Maîtriser les
-                                        concepts fondamentaux de l'analyse technique</span>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <lucide-icon [name]="icons.CheckCircle"
-                                        class="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0"></lucide-icon>
-                                    <span class="text-sm text-slate-700 dark:text-slate-300 font-medium">Gérer
-                                        efficacement votre capital et vos risques</span>
-                                </div>
-                            </div>
-                        </div>
-
                         <div>
                             <div class="flex items-center justify-between mb-6">
                                 <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Programme du cours</h2>
                                 <div class="text-sm font-medium text-slate-500 dark:text-slate-400">
-                                    {{ data.totalSections }} sections • {{ data.totalLessons }} leçons • {{
-                                    formatDuration(data.totalDuration) }} de durée totale
+                                    {{ totalSections() }} sections • {{ totalLessons() }} leçons • {{
+                                    formatDuration(totalDuration()) }}
                                 </div>
                             </div>
 
@@ -108,17 +84,31 @@
                                     <div class="px-4 py-2 bg-white dark:bg-slate-900">
                                         @for (lesson of section.lessons; track lesson.id) {
                                         <div
-                                            class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-slate-800/50 last:border-0 group cursor-pointer">
+                                            class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-slate-800/50 last:border-0 group">
                                             <div class="flex items-center gap-3">
+                                                @if (lesson.freePreview) {
                                                 <lucide-icon [name]="icons.PlayCircle"
-                                                    class="w-4 h-4 text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors"></lucide-icon>
-                                                <span
-                                                    class="text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{{
+                                                    class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></lucide-icon>
+                                                <a href="#"
+                                                    class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline">{{
+                                                    lesson.title }}</a>
+                                                } @else {
+                                                <lucide-icon [name]="icons.Lock"
+                                                    class="w-4 h-4 text-slate-400"></lucide-icon>
+                                                <span class="text-sm font-medium text-slate-700 dark:text-slate-300">{{
                                                     lesson.title }}</span>
+                                                }
                                             </div>
-                                            <span class="text-xs font-medium text-slate-500 dark:text-slate-500">
-                                                {{ formatDuration(lesson.duration) }}
-                                            </span>
+                                            <div class="flex items-center gap-3">
+                                                @if (lesson.freePreview) {
+                                                <span
+                                                    class="text-xs font-bold text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 dark:text-indigo-400 px-2 py-0.5 rounded-sm">Aperçu
+                                                    gratuit</span>
+                                                }
+                                                <span class="text-xs font-medium text-slate-500 dark:text-slate-400">
+                                                    {{ formatDuration(lesson.duration) }}
+                                                </span>
+                                            </div>
                                         </div>
                                         }
                                     </div>
@@ -127,7 +117,6 @@
                                 }
                             </div>
                         </div>
-
                     </div>
 
                     <div class="lg:w-[360px] shrink-0">
@@ -144,19 +133,13 @@
                                             class="w-8 h-8 text-indigo-600 ml-1"></lucide-icon>
                                     </div>
                                 </div>
-                                <div
-                                    class="absolute bottom-4 left-0 right-0 text-center font-bold text-white tracking-wide">
-                                    Aperçu du cours</div>
                             </div>
 
                             <div class="p-6">
                                 <div class="mb-6">
                                     <div class="text-3xl font-bold text-slate-900 dark:text-white">
-                                        @if (data.price === 0) {
-                                        Gratuit
-                                        } @else {
-                                        {{ data.price | currency:'EUR':'symbol':'1.2-2' }}
-                                        }
+                                        @if (data.price === 0) { Gratuit }
+                                        @else { {{ data.price | currency:'EUR':'symbol':'1.2-2' }} }
                                     </div>
                                 </div>
 
@@ -165,15 +148,7 @@
                                         class="w-full py-3.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 dark:shadow-none">
                                         S'inscrire maintenant
                                     </button>
-                                    <button
-                                        class="w-full py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                                        Ajouter aux favoris
-                                    </button>
                                 </div>
-
-                                <p class="text-xs text-center font-medium text-slate-500 dark:text-slate-400 mb-6">
-                                    Garantie de remboursement de 30 jours
-                                </p>
 
                                 <div>
                                     <h3 class="font-bold text-slate-900 dark:text-white mb-4">Ce cours comprend :</h3>
@@ -181,12 +156,12 @@
                                         <li
                                             class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300 font-medium">
                                             <lucide-icon [name]="icons.MonitorPlay" class="w-4 h-4"></lucide-icon>
-                                            {{ formatDuration(data.totalDuration) }} de vidéo à la demande
+                                            {{ formatDuration(totalDuration()) }} de vidéo
                                         </li>
                                         <li
                                             class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300 font-medium">
                                             <lucide-icon [name]="icons.BookOpen" class="w-4 h-4"></lucide-icon>
-                                            {{ data.totalLessons }} ressources téléchargeables
+                                            {{ totalLessons() }} leçons
                                         </li>
                                         <li
                                             class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300 font-medium">
@@ -195,7 +170,6 @@
                                         </li>
                                     </ul>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -203,7 +177,6 @@
                 </div>
             </div>
         </section>
-
     </main>
     }
 

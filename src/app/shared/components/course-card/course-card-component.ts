@@ -16,10 +16,7 @@ export class CourseCardComponent {
 
   readonly icons = { Star, Clock, Users };
 
-  // Données fictives en attendant leur ajout dans le backend
-  mockRating = 4.8;
-  mockStudents = 1250;
-  mockDuration = '4h 30m';
+
 
   getLevelClasses(level: string): string {
     const base = 'px-2.5 py-0.5 rounded-full text-xs font-bold border backdrop-blur-sm ';

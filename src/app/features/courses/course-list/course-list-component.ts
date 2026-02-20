@@ -92,8 +92,8 @@ export class CourseListComponent implements OnInit {
         this.isLoading.set(false);
 
         // Optionnel : Extraire dynamiquement les catégories des données réelles
-        // const uniqueCats = ['All', ...new Set(courses.map(c => c.categoryName))];
-        // this.categories = uniqueCats;
+        const uniqueCats = ['All', ...new Set(courses.map(c => c.categoryName))];
+        this.categories = uniqueCats;
       },
       error: (err) => {
         console.error('Erreur lors du chargement des cours', err);

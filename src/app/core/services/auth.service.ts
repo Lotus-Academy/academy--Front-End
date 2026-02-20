@@ -27,8 +27,8 @@ export interface AuthResponse {
   status: 'ACTIVE' | 'PAUSED' | 'BANNED' | 'PENDING_VERIFICATION';
   firstName: string;
   lastName: string;
-  headline?: string;   // Optionnel
-  profilePictureUrl?: string; // Optionnel
+  headline?: string;
+  profilePictureUrl?: string;
   emailVerified: boolean;
 }
 

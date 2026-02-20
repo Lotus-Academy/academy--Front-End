@@ -32,15 +32,15 @@
                 <div class="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-5">
                     <div class="flex items-center gap-1">
                         <lucide-icon [name]="icons.Star" class="h-4 w-4 fill-yellow-400 text-yellow-400"></lucide-icon>
-                        <span class="font-bold text-slate-900 dark:text-white">{{ mockRating }}</span>
+                        <span class="font-bold text-slate-900 dark:text-white">{{ course.rating ?? 'N/A' }}</span>
                     </div>
                     <div class="flex items-center gap-1">
                         <lucide-icon [name]="icons.Users" class="h-4 w-4"></lucide-icon>
-                        <span>{{ mockStudents | number }}</span>
+                        <span>{{ course.studentsCount ?? 'N/A' }}</span>
                     </div>
                     <div class="flex items-center gap-1">
                         <lucide-icon [name]="icons.Clock" class="h-4 w-4"></lucide-icon>
-                        <span>{{ mockDuration }}</span>
+                        <span>{{ course.totalDuration ?? 'N/A' }}</span>
                     </div>
                 </div>
 
