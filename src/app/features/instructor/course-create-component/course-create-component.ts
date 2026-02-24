@@ -2,11 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { LucideAngularModule, ArrowLeft, Save, Loader2, Image as ImageIcon } from 'lucide-angular';
+import { LucideAngularModule, ArrowLeft, Save, Loader2 } from 'lucide-angular';
 
 import { CourseService } from '../../../core/services/course-service';
 
-// Interface temporaire (idéalement à placer dans vos models)
 export interface Category { id: string; name: string; }
 
 @Component({
@@ -21,36 +20,37 @@ export class CourseCreateComponent implements OnInit {
   private courseService = inject(CourseService);
   private router = inject(Router);
 
-  readonly icons = { ArrowLeft, Save, Loader2, ImageIcon };
+  readonly icons = { ArrowLeft, Save, Loader2 };
 
-  // Formulaire aligné sur CourseCreateDTO
+  // Formulaire strictement aligné sur CourseCreateDTO de votre Swagger
   courseForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(5)]],
     subtitle: ['', [Validators.required]],
     categoryId: ['', [Validators.required]],
     price: [0, [Validators.required, Validators.min(0)]],
-    level: ['Beginner', [Validators.required]],
+    level: ['BEGINNER', [Validators.required]],
     language: ['Français', [Validators.required]],
     description: [''],
-    thumbnailUrl: [''] // Ajouté selon votre DTO
+    thumbnailUrl: [''],
+    trailerUrl: ['']
   });
 
   categories: Category[] = [];
   isLoading = false;
 
   ngOnInit(): void {
-    // Simulation / Chargement des catégories
-    // this.courseService.getCategories().subscribe({...});
+    // Dans un cas réel, décommentez ceci si vous avez la méthode dans le service :
+    // this.courseService.getCategories().subscribe(cats => this.categories = cats);
 
-    // MOCK temporaire pour que le select fonctionne visuellement
+    // Fallback visuel temporaire
     this.categories = [
-      { id: '1', name: 'Trading & Investissement' },
+      { id: '3fa85f64-5717-4562-b3fc-2c963f66afa6', name: 'Trading & Investissement' },
       { id: '2', name: 'Cryptomonnaie' },
-      { id: '3', name: 'Programmation' }
+      { id: '3', name: 'Programmation' },
+      { id: '8ba4e23e-3af0-4cd6-9b5c-8b946578dd87', name: 'Informatique' },
     ];
   }
 
-  // Helper pour vérifier facilement les erreurs dans le HTML
   isFieldInvalid(field: string): boolean {
     const control = this.courseForm.get(field);
     return control ? control.invalid && (control.dirty || control.touched) : false;
@@ -64,11 +64,18 @@ export class CourseCreateComponent implements OnInit {
 
     this.isLoading = true;
 
-    // Remplacer par l'appel réel à this.courseService.createCourse(this.courseForm.value)
-    setTimeout(() => {
-      this.isLoading = false;
-      // Redirection vers le dashboard instructeur après création
-      this.router.navigate(['/dashboard']);
-    }, 1500);
+    // Appel réel au backend
+    this.courseService.createCourse(this.courseForm.value).subscribe({
+      next: (createdCourse) => {
+        this.isLoading = false;
+        // Redirection magique vers le Curriculum Builder avec l'ID généré
+        this.router.navigate(['/instructor/courses', createdCourse.id, 'edit', 'curriculum']);
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+        alert("Erreur lors de l'initialisation du cours");
+      }
+    });
   }
 }

@@ -7,61 +7,75 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class CourseService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/v1/courses`;
+  private apiUrl = `${environment.apiUrl}/api/v1`;
   private publicCourses: Observable<CourseResponseDTO[]> = of([]);
 
-  // Données fictives respectant strictement votre CourseResponseDTO
-  /* private mockCourses: CourseResponseDTO[] = [
-     {
-       id: '550e8400-e29b-41d4-a716-446655440000',
-       title: 'Maîtriser l\'Analyse Technique et le Price Action',
-       slug: 'maitriser-analyse-technique',
-       subtitle: 'Devenez un expert en lecture de graphiques boursiers',
-       description: 'Un cours complet sur l\'analyse technique...',
-       price: 149.99,
-       thumbnailUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-       level: 'Intermediate',
-       language: 'FR',
-       status: 'APPROVED',
-       categoryId: 'cat-1',
-       categoryName: 'Trading',
-       instructorId: 'inst-1',
-       instructorName: 'Sarah Johnson',
-       createdAt: new Date().toISOString(),
-       updatedAt: new Date().toISOString(),
-       publishedAt: new Date().toISOString(),
-       sections: []
-     },
-     {
-       id: '550e8400-e29b-41d4-a716-446655440001',
-       title: 'Introduction à la Finance Décentralisée (DeFi)',
-       slug: 'intro-finance-decentralisee',
-       subtitle: 'Comprendre la DeFi et les Smart Contracts',
-       description: 'Découvrez le futur de la finance...',
-       price: 0,
-       thumbnailUrl: 'https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=800',
-       level: 'Beginner',
-       language: 'FR',
-       status: 'APPROVED',
-       categoryId: 'cat-2',
-       categoryName: 'Cryptomonnaie',
-       instructorId: 'inst-2',
-       instructorName: 'Michael Chen',
-       createdAt: new Date().toISOString(),
-       updatedAt: new Date().toISOString(),
-       publishedAt: new Date().toISOString(),
-       sections: []
-     }
-   ];
- */
   getPublishedCourses(): Observable<CourseResponseDTO[]> {
-    this.publicCourses = this.http.get<CourseResponseDTO[]>(`${this.apiUrl}`);
+    this.publicCourses = this.http.get<CourseResponseDTO[]>(`${this.apiUrl}/courses`);
     return this.publicCourses;
-    //return of(this.mockCourses.filter(c => c.status === 'APPROVED')).pipe(delay(500));
   }
 
   getCourseById(id: string): Observable<CourseResponseDTO> {
-    // Remplacer par : return this.http.get<CourseResponseDTO>(`${this.apiUrl}/slug/${slug}`);
-    return this.http.get<CourseResponseDTO>(`${this.apiUrl}/${id}`);
+    return this.http.get<CourseResponseDTO>(`${this.apiUrl}/courses/${id}`);
+  }
+
+
+  // --- COURS DE BASE ---
+
+  createCourse(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/courses`, data);
+  }
+
+
+  updateCourse(courseId: string, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/courses/${courseId}`, data);
+  }
+
+  // --- MÉDIAS DU COURS (MULTIPART) ---
+
+  uploadCourseThumbnail(courseId: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}/courses/${courseId}/thumbnail`, formData);
+  }
+
+  uploadCourseTrailer(courseId: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}/courses/${courseId}/trailer`, formData);
+  }
+
+  // --- PROGRAMME (SECTIONS & LEÇONS) ---
+
+  createSection(courseId: string, data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/courses/${courseId}/sections`, data);
+  }
+
+  createLesson(sectionId: string, data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/sections/${sectionId}/lessons`, data);
+  }
+
+  uploadLessonMedia(sectionId: string, lessonId: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}/sections/${sectionId}/lessons/${lessonId}/upload`, formData);
+  }
+
+  // --- QUIZ ---
+
+  createQuiz(data: any): Observable<any> {
+    // Le Swagger indique POST /api/v1/quiz avec QuizCreateDTO
+    return this.http.post(`${this.apiUrl}/quiz`, data, { responseType: 'text' });
+  }
+
+  // --- SOUMISSION ---
+
+  submitForReview(courseId: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/courses/${courseId}/submit-review`, { courseId }, { responseType: 'text' });
+  }
+
+  // recupere les cours d'un instructeur
+  getInstructorCourses(): Observable<CourseResponseDTO[]> {
+    return this.http.get<CourseResponseDTO[]>(`${this.apiUrl}/courses/instructor/my-courses`);
   }
 }

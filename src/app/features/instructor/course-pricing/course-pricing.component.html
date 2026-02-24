@@ -1,0 +1,51 @@
+<div
+    class="space-y-8 bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+
+    <div class="grid md:grid-cols-2 gap-8">
+        <div>
+            <h3 class="font-bold mb-4">Affiche du cours</h3>
+            <div
+                class="aspect-video bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center relative group">
+                @if (currentCourse()?.thumbnailUrl) {
+                <img [src]="currentCourse()?.thumbnailUrl" class="w-full h-full object-cover">
+                } @else {
+                <lucide-icon [name]="icons.ImageIcon" class="w-10 h-10 text-slate-400"></lucide-icon>
+                }
+                <div
+                    class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-all">
+                    <label
+                        class="cursor-pointer bg-white text-slate-900 px-4 py-2 rounded-lg font-bold text-sm hover:bg-slate-100">
+                        @if (isUploadingThumbnail()) { Upload... } @else { Changer l'image }
+                        <input type="file" class="hidden" (change)="onThumbnailSelected($event)" accept="image/*">
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="font-bold mb-4">Vidéo de présentation (Trailer)</h3>
+            <div
+                class="aspect-video bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center relative group">
+                <lucide-icon [name]="icons.Film" class="w-10 h-10 text-slate-400"></lucide-icon>
+                <div
+                    class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-all">
+                    <label
+                        class="cursor-pointer bg-white text-slate-900 px-4 py-2 rounded-lg font-bold text-sm hover:bg-slate-100">
+                        @if (isUploadingTrailer()) { Upload... } @else { Uploader Vidéo MP4 }
+                        <input type="file" class="hidden" (change)="onTrailerSelected($event)" accept="video/mp4">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form [formGroup]="pricingForm" (ngSubmit)="onSave()" class="border-t pt-8">
+        <label class="block font-bold mb-2">Prix (USD)</label>
+        <input type="number" formControlName="price"
+            class="w-full md:w-1/3 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+        <div class="mt-4 flex justify-end">
+            <button type="submit" [disabled]="isSaving()"
+                class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-indigo-700">Enregistrer</button>
+        </div>
+    </form>
+</div>

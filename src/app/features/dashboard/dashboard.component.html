@@ -1,22 +1,17 @@
-<app-dashboard-layout [title]="dashboardTitle" [user]="user" (logout)="logout()">
-
-    @switch (user?.role) {
-
-    @case ('ADMIN') {
-    <app-admin-dashboard />
-    }
-
-    @case ('INSTRUCTOR') {
-    <app-instructor-dashboard />
-    }
-
-    @case ('STUDENT') {
-    <app-student-dashboard />
-    }
-
-    @default {
-    <app-student-dashboard />
-    }
-    }
-
-</app-dashboard-layout>
+@switch (user?.role) {
+@case ('ADMIN') {
+<app-admin-layout title="Panneau d'Administration">
+    <app-admin-dashboard></app-admin-dashboard>
+</app-admin-layout>
+}
+@case ('INSTRUCTOR') {
+<app-instructor-layout title="Espace Instructeur">
+    <app-instructor-dashboard></app-instructor-dashboard>
+</app-instructor-layout>
+}
+@case ('STUDENT') {
+<app-student-layout title="Bienvenue, {{ user?.firstName }} !">
+    <app-student-dashboard></app-student-dashboard>
+</app-student-layout>
+}
+}

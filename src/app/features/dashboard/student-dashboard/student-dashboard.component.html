@@ -1,30 +1,159 @@
-<div class="space-y-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div class="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 w-fit rounded-xl mb-4">
-                <lucide-icon name="video" class="w-6 h-6"></lucide-icon>
-            </div>
-            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">12</h3>
-            <p class="text-sm text-slate-500">Cours en cours</p>
-        </div>
-    </div>
+<div class="space-y-10 animate-fade-in-up">
 
-    <div>
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Continuer l'apprentissage</h2>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            @for (course of inProgressCourses; track course.id) {
-            <div
-                class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 flex gap-4 group cursor-pointer hover:border-indigo-500 transition-colors">
-                <img [src]="course.thumb" class="h-24 w-32 rounded-lg object-cover">
-                <div class="flex-1 py-1">
-                    <h4 class="font-bold text-slate-900 dark:text-white">{{ course.title }}</h4>
-                    <p class="text-xs text-slate-500 mb-4">{{ course.instructor }}</p>
-                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full">
-                        <div class="bg-indigo-600 h-full rounded-full" [style.width.%]="course.progress"></div>
-                    </div>
-                </div>
+    @if (isLoading()) {
+    <div class="flex justify-center py-20">
+        <div class="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+    </div>
+    } @else {
+
+    @if (continueWatching().length > 0) {
+    <section>
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+                <lucide-icon [name]="icons.Clock" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></lucide-icon>
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Continuer à regarder</h2>
             </div>
+            <button
+                class="flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
+                Voir tout <lucide-icon [name]="icons.ChevronRight" class="w-4 h-4"></lucide-icon>
+            </button>
+        </div>
+
+        <div class="flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory hide-scrollbar">
+            @for (course of continueWatching(); track course.courseId) {
+
+            <a [routerLink]="['/learn/course', course.courseId]"
+                class="snap-start shrink-0 w-[300px] sm:w-[340px] group block">
+                <div
+                    class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-700 transition-all">
+
+                    <div class="relative aspect-video bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                        <img [src]="course.courseThumbnail"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div
+                            class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                            <div
+                                class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all shadow-lg">
+                                <lucide-icon [name]="icons.Play" class="w-5 h-5 text-indigo-600 ml-1"></lucide-icon>
+                            </div>
+                        </div>
+                        <div
+                            class="absolute bottom-2 right-2 bg-black/80 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-md">
+                            {{ formatTime(course.lastWatchedTimestamp) }}
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <h3
+                            class="font-bold text-slate-900 dark:text-white line-clamp-1 mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                            {{ course.courseTitle }}
+                        </h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mb-3">
+                            Leçon actuelle : {{ course.lastWatchedLessonTitle }}
+                        </p>
+
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-indigo-600 h-full rounded-full transition-all duration-1000 ease-out"
+                                [style.width.%]="course.courseProgressPercentage"></div>
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">{{
+                                course.courseProgressPercentage }}% complété</span>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
             }
         </div>
-    </div>
+    </section>
+    }
+
+    <section
+        class="flex flex-col sm:flex-row gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="relative flex-1">
+            <lucide-icon [name]="icons.Search"
+                class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400"></lucide-icon>
+            <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
+                placeholder="Rechercher un cours ou un instructeur..."
+                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white transition-colors">
+        </div>
+        <div class="relative w-full sm:w-64">
+            <lucide-icon [name]="icons.Filter"
+                class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"></lucide-icon>
+            <select [ngModel]="selectedCategory()" (ngModelChange)="selectedCategory.set($event)"
+                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white transition-colors appearance-none">
+                <option value="all">Toutes les catégories</option>
+                @for (cat of categories(); track cat.id) {
+                <option [value]="cat.id">{{ cat.name }}</option>
+                }
+            </select>
+        </div>
+    </section>
+
+    @if (following().length > 0) {
+    <section>
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Instructeurs que vous suivez</h2>
+        <div class="flex gap-6 overflow-x-auto pb-2 hide-scrollbar">
+            @for (instructor of following(); track instructor.id) {
+            <a routerLink="/instructor/profile/{{instructor.instructorId}}"
+                class="flex flex-col items-center gap-2 min-w-[80px] group cursor-pointer">
+                <div
+                    class="w-16 h-16 rounded-full border-2 border-transparent group-hover:border-indigo-500 p-0.5 transition-all">
+                    <div
+                        class="w-full h-full rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-xl overflow-hidden">
+                        @if (instructor.avatarUrl) {
+                        <img [src]="instructor.avatarUrl" class="w-full h-full object-cover">
+                        } @else {
+                        {{ instructor.displayName.charAt(0) }}
+                        }
+                    </div>
+                </div>
+                <span
+                    class="text-sm font-medium text-slate-700 dark:text-slate-300 text-center truncate w-24 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    {{ instructor.displayName }}
+                </span>
+            </a>
+            }
+        </div>
+    </section>
+    }
+
+    <section>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">
+            {{ selectedCategory() === 'all' && searchQuery() === '' ? 'Découvrir de nouveaux cours' : 'Résultats de
+            recherche' }}
+        </h2>
+
+        @if (filteredCourses().length > 0) {
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            @for (course of filteredCourses(); track course.id; let i = $index) {
+            <app-course-card [course]="course" [index]="i"></app-course-card>
+            }
+        </div>
+        } @else {
+        <div
+            class="bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 py-16 text-center">
+            <lucide-icon [name]="icons.Video"
+                class="mx-auto h-12 w-12 text-slate-300 dark:text-slate-600 mb-4"></lucide-icon>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Aucun cours trouvé</h3>
+            <p class="text-slate-500 dark:text-slate-400">Essayez de modifier vos filtres de recherche ou parcourez une
+                autre catégorie.</p>
+        </div>
+        }
+    </section>
+
+    }
+
 </div>
+
+<style>
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>

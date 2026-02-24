@@ -5,9 +5,14 @@ import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { CourseCreateComponent } from './features/instructor/course-create-component/course-create-component';
 import { CourseListComponent } from "./features/courses/course-list/course-list-component";
 
-// NOUVEAU : Import du composant de détails du cours
-// Assurez-vous que le chemin correspond à l'emplacement réel de votre fichier
+import { CourseEditorShellComponent } from './features/instructor/course-editor-shell/course-editor-shell.component';
+import { CourseEditBasicComponent } from './features/instructor/course-edit-basic/course-edit-basic.component';
+import { CourseCurriculumComponent } from './features/instructor/course-curriculum/course-curriculum.component';
+import { CoursePricingComponent } from './features/instructor/course-pricing/course-pricing.component';
+
 import { CourseDetailComponent } from './features/courses/course-detail/course-detail-component';
+import { CourseQuizComponent } from './features/instructor/course-quiz/course-quiz.component';
+import { CourseEditPreviewComponent } from './features/instructor/course-edit-preview/course-edit-preview.component';
 
 export const routes: Routes = [
     // La page d'accueil est maintenant la route par défaut
@@ -15,20 +20,32 @@ export const routes: Routes = [
 
     { path: 'login', component: LoginComponent },
 
-    // CORRECTION : Angular ne supporte pas les queryParams directement dans la chaîne du redirectTo.
-    // La redirection doit pointer vers le chemin de base '/login'.
+
     { path: 'register', redirectTo: '/login', pathMatch: 'full' },
 
     { path: 'dashboard', component: DashboardComponent },
 
     { path: 'courses', component: CourseListComponent },
 
-
     { path: 'courses/:id', component: CourseDetailComponent },
 
     {
         path: 'instructor/courses/new',
         component: CourseCreateComponent
+    },
+    // L'Éditeur complet du cours avec ses sous-sections
+    {
+        path: 'instructor/courses/:id/edit',
+        component: CourseEditorShellComponent,
+        children: [
+            { path: 'basic', component: CourseEditBasicComponent },
+            { path: 'curriculum', component: CourseCurriculumComponent },
+            { path: 'pricing', component: CoursePricingComponent },
+            { path: 'quiz', component: CourseQuizComponent },
+            { path: 'preview', component: CourseEditPreviewComponent },
+            { path: '', redirectTo: 'basic', pathMatch: 'full' } // Redirection par défaut
+
+        ]
     },
 
     //routes des elements du navbar

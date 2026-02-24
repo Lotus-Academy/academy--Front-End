@@ -1,1 +1,119 @@
-<p>instructor-dashboard.component works!</p>
+<div class="space-y-8 animate-fade-in-up">
+
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        @for (stat of stats(); track stat.label) {
+        <div
+            class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="p-3 rounded-xl" [ngClass]="stat.colorClass">
+                <lucide-icon [name]="stat.icon" class="w-6 h-6"></lucide-icon>
+            </div>
+            <div>
+                <p class="text-2xl font-bold text-slate-900 dark:text-white">{{ stat.value }}</p>
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ stat.label }}</p>
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="border-b border-slate-200 dark:border-slate-800">
+        <nav class="flex gap-6">
+            <button (click)="activeTab.set('courses')"
+                [ngClass]="activeTab() === 'courses' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'"
+                class="flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                <lucide-icon [name]="icons.Video" class="w-4 h-4"></lucide-icon>
+                Mes Cours
+            </button>
+            <button (click)="activeTab.set('students')"
+                [ngClass]="activeTab() === 'students' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'"
+                class="flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                <lucide-icon [name]="icons.Users" class="w-4 h-4"></lucide-icon>
+                Progression Étudiants
+            </button>
+        </nav>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+
+        @if (activeTab() === 'courses') {
+        <div class="p-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Gestion de mes cours</h2>
+                <a routerLink="/instructor/courses/new"
+                    class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors">
+                    <lucide-icon [name]="icons.Plus" class="w-4 h-4"></lucide-icon>
+                    Créer un nouveau cours
+                </a>
+            </div>
+
+            <div class="space-y-4">
+                @if (isLoading()) {
+                <div class="flex justify-center py-8">
+                    <div class="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                </div>
+                } @else if (myCourses().length === 0) {
+                <div class="text-center py-12">
+                    <lucide-icon [name]="icons.Video"
+                        class="mx-auto h-12 w-12 text-slate-300 dark:text-slate-700 mb-4"></lucide-icon>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Aucun cours créé</h3>
+                    <p class="text-slate-500 dark:text-slate-400">Commencez par créer votre premier cours pour le
+                        partager avec les étudiants.</p>
+                </div>
+                } @else {
+                @for (course of myCourses(); track course.id) {
+                <div
+                    class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors gap-4">
+
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-16 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
+                            @if (course.thumbnailUrl) {
+                            <img [src]="course.thumbnailUrl" class="w-full h-full object-cover">
+                            } @else {
+                            <lucide-icon [name]="icons.Video" class="w-6 h-6 text-slate-400"></lucide-icon>
+                            }
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 dark:text-white line-clamp-1">{{ course.title }}</h4>
+                            <div class="flex items-center gap-2 mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                <span>{{ course.categoryName }}</span>
+                                <span>•</span>
+                                <span>Modifié le {{ course.updatedAt | date:'dd/MM/yyyy' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end shrink-0">
+                        <span class="px-2.5 py-1 text-xs font-bold rounded-full border flex items-center gap-1.5"
+                            [ngClass]="getStatusConfig(course.status).bg">
+                            <lucide-icon [name]="getStatusConfig(course.status).icon" class="w-3.5 h-3.5"></lucide-icon>
+                            {{ getStatusConfig(course.status).label }}
+                        </span>
+
+                        <a [routerLink]="['/instructor/courses', course.id,'edit', 'curriculum']"
+                            class="px-3 py-1.5 text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50 rounded-lg transition-colors">
+                            Modifier
+                        </a>
+                    </div>
+                </div>
+                }
+                }
+            </div>
+        </div>
+        }
+
+        @if (activeTab() === 'students') {
+        <div class="p-6">
+            <div class="flex items-center gap-2 mb-6">
+                <lucide-icon [name]="icons.BarChart3"
+                    class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></lucide-icon>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Aperçu de la progression</h2>
+            </div>
+            <div class="text-center py-12 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl">
+                <p class="text-slate-500 dark:text-slate-400">Le tableau de progression des étudiants sera affiché ici.
+                </p>
+            </div>
+        </div>
+        }
+
+    </div>
+</div>

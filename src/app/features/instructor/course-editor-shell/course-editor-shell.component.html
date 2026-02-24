@@ -1,0 +1,81 @@
+<div class="max-w-7xl mx-auto space-y-6">
+
+    <div
+        class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center gap-4">
+            <a routerLink="/dashboard"
+                class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                title="Retour au tableau de bord">
+                <lucide-icon [name]="icons.ArrowLeft" class="w-5 h-5"></lucide-icon>
+            </a>
+            <div>
+                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Édition du
+                    cours</p>
+                <h1 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white line-clamp-1">{{ courseTitle()
+                    }}</h1>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <span
+                class="px-3 py-1 text-xs font-bold rounded-full border bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">
+                {{ courseStatus() === 'PENDING_REVIEW' ? 'En attente de validation' : 'Brouillon' }}
+            </span>
+            <button [routerLink]="['/instructor/courses', courseId(), 'edit', 'preview']"
+                routerLinkActive="bg-indigo-700"
+                class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                Aperçu
+            </button>
+        </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+
+        <aside class="lg:w-64 shrink-0">
+            <nav class="flex flex-col gap-1 sticky top-24">
+
+                <a [routerLink]="['/instructor/courses', courseId(), 'edit', 'basic']"
+                    routerLinkActive="bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 font-bold"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <lucide-icon [name]="icons.Settings" class="w-5 h-5"></lucide-icon>
+                    <span class="text-sm">Informations de base</span>
+                </a>
+
+                <a [routerLink]="['/instructor/courses', courseId(), 'edit', 'curriculum']"
+                    routerLinkActive="bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 font-bold"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <lucide-icon [name]="icons.BookOpen" class="w-5 h-5"></lucide-icon>
+                    <span class="text-sm">Programme (Curriculum)</span>
+                </a>
+
+                <a [routerLink]="['/instructor/courses', courseId(), 'edit', 'pricing']"
+                    routerLinkActive="bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 font-bold"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <lucide-icon [name]="icons.Tag" class="w-5 h-5"></lucide-icon>
+                    <span class="text-sm">Tarification & Médias</span>
+                </a>
+
+                <a [routerLink]="['/instructor/courses', courseId(), 'edit', 'quiz']"
+                    routerLinkActive="bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 font-bold"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <lucide-icon [name]="icons.CheckSquare" class="w-5 h-5"></lucide-icon>
+                    <span class="text-sm">Examen (Quiz)</span>
+                </a>
+
+                <div class="h-px bg-slate-200 dark:bg-slate-800 my-2 mx-4"></div>
+
+                <a [routerLink]="['/instructor/courses', courseId(), 'edit', 'publish']"
+                    routerLinkActive="bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400 font-bold border-green-200"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors mt-2 border border-transparent">
+                    <lucide-icon [name]="icons.CheckSquare" class="w-5 h-5"></lucide-icon>
+                    <span class="text-sm">Soumettre le cours</span>
+                </a>
+
+            </nav>
+        </aside>
+
+        <main class="flex-1 min-w-0">
+            <router-outlet></router-outlet>
+        </main>
+
+    </div>
+</div>
