@@ -1,4 +1,4 @@
-<div class="space-y-8 animate-fade-in-up">
+<div class="space-y-8 animate-fade-in-up relative">
 
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         @for (stat of stats(); track stat.label) {
@@ -81,14 +81,19 @@
                     <div
                         class="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
 
-                        <div class="flex items-start gap-4">
+                        <div class="flex items-start gap-4 flex-1">
                             <div
-                                class="w-12 h-12 rounded bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center shrink-0">
+                                class="w-16 h-12 rounded bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center shrink-0 overflow-hidden">
+                                @if (course.thumbnailUrl) {
+                                <img [src]="course.thumbnailUrl" class="w-full h-full object-cover">
+                                } @else {
                                 <lucide-icon [name]="icons.BookOpen"
                                     class="w-6 h-6 text-indigo-600 dark:text-indigo-400"></lucide-icon>
+                                }
                             </div>
                             <div>
-                                <h4 class="font-bold text-slate-900 dark:text-white">{{ course.title }}</h4>
+                                <h4 class="font-bold text-slate-900 dark:text-white line-clamp-1">{{ course.title }}
+                                </h4>
                                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                                     Par <span class="font-medium text-slate-700 dark:text-slate-300">{{
                                         course.instructorName }}</span> • {{ course.categoryName }} • {{
@@ -101,29 +106,48 @@
 
                             @if (course.status === 'PENDING_REVIEW') {
                             <span
-                                class="px-2.5 py-1 text-xs font-bold rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200">En
+                                class="px-2.5 py-1 text-xs font-bold rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800">En
                                 attente</span>
-                            <button
-                                class="p-2 text-slate-400 hover:text-indigo-600 transition-colors bg-white dark:bg-slate-800 rounded shadow-sm border dark:border-slate-700"
-                                title="Voir les détails">
-                                <lucide-icon [name]="icons.Eye" class="w-4 h-4"></lucide-icon>
-                            </button>
-                            <button (click)="handleCourseStatus(course.id, 'APPROVED')"
-                                class="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors bg-white dark:bg-slate-800 rounded shadow-sm border dark:border-slate-700"
-                                title="Approuver">
-                                <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4"></lucide-icon>
-                            </button>
-                            <button (click)="handleCourseStatus(course.id, 'REJECTED')"
-                                class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors bg-white dark:bg-slate-800 rounded shadow-sm border dark:border-slate-700"
-                                title="Rejeter">
-                                <lucide-icon [name]="icons.XCircle" class="w-4 h-4"></lucide-icon>
-                            </button>
+
+                            <div class="flex items-center gap-2">
+                                <button
+                                    class="p-2 text-slate-400 hover:text-indigo-600 transition-colors bg-white dark:bg-slate-800 rounded shadow-sm border dark:border-slate-700"
+                                    title="Voir les détails">
+                                    <lucide-icon [name]="icons.Eye" class="w-4 h-4"></lucide-icon>
+                                </button>
+
+                                <button [disabled]="isProcessing(course.id)" (click)="approveCourse(course.id)"
+                                    class="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors bg-white dark:bg-slate-800 rounded shadow-sm border dark:border-slate-700 disabled:opacity-50"
+                                    title="Approuver">
+                                    @if (isProcessing(course.id)) {
+                                    <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
+                                    } @else {
+                                    <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4"></lucide-icon>
+                                    }
+                                </button>
+
+                                <button [disabled]="isProcessing(course.id)" (click)="rejectCourse(course.id)"
+                                    class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors bg-white dark:bg-slate-800 rounded shadow-sm border dark:border-slate-700 disabled:opacity-50"
+                                    title="Rejeter">
+                                    @if (isProcessing(course.id)) {
+                                    <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
+                                    } @else {
+                                    <lucide-icon [name]="icons.XCircle" class="w-4 h-4"></lucide-icon>
+                                    }
+                                </button>
+                            </div>
+
                             } @else if (course.status === 'APPROVED') {
                             <span
-                                class="px-2.5 py-1 text-xs font-bold rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200">Approuvé</span>
+                                class="px-2.5 py-1 text-xs font-bold rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800 flex items-center gap-1">
+                                <lucide-icon [name]="icons.CheckCircle" class="w-3.5 h-3.5"></lucide-icon> Approuvé
+                            </span>
+                            } @else if (course.status === 'REJECTED') {
+                            <span
+                                class="px-2.5 py-1 text-xs font-bold rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800">Rejeté</span>
                             } @else {
                             <span
-                                class="px-2.5 py-1 text-xs font-bold rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200">Rejeté</span>
+                                class="px-2.5 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">Brouillon</span>
                             }
 
                         </div>
@@ -139,7 +163,7 @@
 
             @if (activeTab() === 'instructors') {
             <div class="space-y-4">
-                <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Candidatures Instructeurs</h2>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Utilisateurs Instructeurs</h2>
 
                 <div class="grid gap-4 md:grid-cols-2">
                     @for (instructor of instructors(); track instructor.id) {
@@ -148,31 +172,21 @@
 
                         <div class="flex items-center gap-3">
                             <div
-                                class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">
-                                {{ instructor.name.charAt(0) }}
+                                class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold uppercase">
+                                {{ instructor.firstName.charAt(0) }}{{ instructor.lastName.charAt(0) }}
                             </div>
                             <div>
-                                <p class="font-bold text-slate-900 dark:text-white text-sm">{{ instructor.name }}</p>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">{{ instructor.specialty }}</p>
+                                <p class="font-bold text-slate-900 dark:text-white text-sm">{{ instructor.firstName }}
+                                    {{ instructor.lastName }}</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">{{ instructor.email }}</p>
                             </div>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            @if (instructor.status === 'PENDING') {
-                            <button (click)="handleInstructorStatus(instructor.id, 'APPROVED')"
-                                class="p-1.5 text-green-600 bg-white dark:bg-slate-800 rounded shadow-sm border dark:border-slate-700 hover:bg-green-50 transition-colors">
-                                <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4"></lucide-icon>
-                            </button>
-                            <button (click)="handleInstructorStatus(instructor.id, 'REJECTED')"
-                                class="p-1.5 text-red-600 bg-white dark:bg-slate-800 rounded shadow-sm border dark:border-slate-700 hover:bg-red-50 transition-colors">
-                                <lucide-icon [name]="icons.XCircle" class="w-4 h-4"></lucide-icon>
-                            </button>
-                            } @else {
-                            <span class="text-xs font-bold"
-                                [ngClass]="instructor.status === 'APPROVED' ? 'text-green-600' : 'text-red-600'">
-                                {{ instructor.status === 'APPROVED' ? 'Approuvé' : 'Rejeté' }}
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-full"
+                                [ngClass]="instructor.status === 'ACTIVE' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'">
+                                {{ instructor.status }}
                             </span>
-                            }
                         </div>
                     </div>
                     }
@@ -184,7 +198,7 @@
             <div class="space-y-4">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-lg font-bold text-slate-900 dark:text-white">Gestion des Catégories</h2>
-                    <button
+                    <button (click)="openCategoryModal()"
                         class="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
                         <lucide-icon [name]="icons.FolderPlus" class="w-4 h-4"></lucide-icon> Ajouter
                     </button>
@@ -193,16 +207,19 @@
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @for (category of categories(); track category.id) {
                     <div
-                        class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group">
-                        <div>
-                            <p class="font-bold text-slate-900 dark:text-white">{{ category.name }}</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ category.courseCount }} cours
-                                associés</p>
+                        class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group h-full bg-white dark:bg-slate-800">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="font-bold text-slate-900 dark:text-white">{{ category.name }}</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">
+                                    {{ category.description || 'Aucune description fournie.' }}
+                                </p>
+                            </div>
+                            <button
+                                class="p-2 -mt-2 -mr-2 text-slate-400 opacity-0 group-hover:opacity-100 transition-all hover:text-indigo-600">
+                                <lucide-icon [name]="icons.Pencil" class="w-4 h-4"></lucide-icon>
+                            </button>
                         </div>
-                        <button
-                            class="p-2 text-slate-400 opacity-0 group-hover:opacity-100 transition-all hover:text-indigo-600">
-                            <lucide-icon [name]="icons.Pencil" class="w-4 h-4"></lucide-icon>
-                        </button>
                     </div>
                     }
                 </div>
@@ -213,3 +230,74 @@
         </div>
     </div>
 </div>
+
+@if (isCategoryModalOpen()) {
+<div
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm transition-opacity">
+    <div
+        class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-fade-in-up border border-slate-200 dark:border-slate-800">
+
+        <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
+                <lucide-icon [name]="icons.FolderPlus"
+                    class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></lucide-icon>
+                Nouvelle Catégorie
+            </h3>
+            <button (click)="closeCategoryModal()"
+                class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                <lucide-icon [name]="icons.X" class="w-5 h-5"></lucide-icon>
+            </button>
+        </div>
+
+        <form [formGroup]="categoryForm" (ngSubmit)="submitCategory()">
+            <div class="p-6 space-y-4">
+
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nom de la catégorie
+                        *</label>
+                    <input type="text" formControlName="name" placeholder="Ex: Développement Web"
+                        class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white transition-colors"
+                        [ngClass]="{'border-red-500 focus:ring-red-500': categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched}">
+
+                    @if (categoryForm.get('name')?.hasError('required') && categoryForm.get('name')?.touched) {
+                    <p class="text-xs text-red-500 mt-1.5">Ce champ est requis.</p>
+                    }
+                    @if (categoryForm.get('name')?.hasError('minlength') && categoryForm.get('name')?.touched) {
+                    <p class="text-xs text-red-500 mt-1.5">Le nom doit faire au moins 3 caractères.</p>
+                    }
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Description
+                        (Optionnel)</label>
+                    <textarea formControlName="description" rows="3" placeholder="Description courte de la catégorie..."
+                        class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white transition-colors resize-none"></textarea>
+
+                    @if (categoryForm.get('description')?.hasError('maxlength') &&
+                    categoryForm.get('description')?.touched) {
+                    <p class="text-xs text-red-500 mt-1.5">La description ne peut excéder 255 caractères.</p>
+                    }
+                </div>
+            </div>
+
+            <div
+                class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex justify-end gap-3">
+                <button type="button" (click)="closeCategoryModal()"
+                    class="px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                    Annuler
+                </button>
+                <button type="submit" [disabled]="categoryForm.invalid || isSavingCategory()"
+                    class="px-4 py-2 text-sm font-bold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center gap-2">
+                    @if (isSavingCategory()) {
+                    <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
+                    Création...
+                    } @else {
+                    Créer la catégorie
+                    }
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+}

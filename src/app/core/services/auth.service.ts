@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { jwtDecode } from 'jwt-decode'; // Assurez-vous d'avoir fait : npm install jwt-decode
+import { jwtDecode } from 'jwt-decode';
 
 // 1. DTO REGISTER
 export interface RegisterRequest {

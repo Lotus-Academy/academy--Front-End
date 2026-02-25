@@ -10,8 +10,8 @@ export class CourseService {
   private apiUrl = `${environment.apiUrl}/api/v1`;
   private publicCourses: Observable<CourseResponseDTO[]> = of([]);
 
-  getPublishedCourses(): Observable<CourseResponseDTO[]> {
-    this.publicCourses = this.http.get<CourseResponseDTO[]>(`${this.apiUrl}/courses`);
+  getPublishedCourses(): Observable<any> {
+    this.publicCourses = this.http.get<any>(`${this.apiUrl}/courses?page=0&size=12&sort=createdAt%2CDESC`);
     return this.publicCourses;
   }
 

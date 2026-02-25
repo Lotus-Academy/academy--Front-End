@@ -88,11 +88,11 @@ export class CourseListComponent implements OnInit {
     this.isLoading.set(true);
     this.courseService.getPublishedCourses().subscribe({
       next: (courses) => {
-        this.allCourses.set(courses);
+        this.allCourses.set(courses.content);
         this.isLoading.set(false);
 
         // Optionnel : Extraire dynamiquement les catégories des données réelles
-        const uniqueCats = ['All', ...new Set(courses.map(c => c.categoryName))];
+        const uniqueCats = ['All', 'informatique', 'trading', 'cryptomonnaie', 'programmation', 'machine learning'];
         this.categories = uniqueCats;
       },
       error: (err) => {

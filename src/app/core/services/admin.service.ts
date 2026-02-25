@@ -1,71 +1,185 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of, delay } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { CourseResponseDTO } from '../models/course.dto';
 
-export interface AdminCourseDTO {
-  id: string;
-  title: string;
-  instructorName: string;
-  categoryName: string;
-  status: 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED';
-  createdAt: string;
+// --- DTOs ---
+
+export interface PageCourseResponseDTO {
+  content: CourseResponseDTO[];
+  pageable: any;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  size: number;
+  number: number;
+}
+
+// Typage générique pour les réponses paginées de Spring Boot
+export interface PageResponseDTO<T> {
+  content: T[];
+  pageable: any;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  size: number;
+  number: number;
 }
 
 export interface AdminInstructorDTO {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  specialty: string;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
-  appliedAt: string;
+  role: string;
+  status: string;
+  createdAt: string;
 }
 
-export interface AdminCategoryDTO {
+export interface CategoryDTO {
   id: string;
   name: string;
-  courseCount: number;
+  description?: string;
 }
+
+export interface CategoryCreateDTO {
+  name: string;
+  description?: string;
+}
+
+export interface DashboardStatsDTO {
+  // Ajustez selon ce que votre backend renvoie réellement
+  totalUsers: number;
+  totalCourses: number;
+  totalRevenue: number;
+  pendingCourses: number;
+}
+
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/v1/admin`;
 
-  // Mocks
-  private mockCourses: AdminCourseDTO[] = [
-    { id: '1', title: 'Maîtriser le Trading Algorithmique', instructorName: 'Sarah Johnson', categoryName: 'Trading', status: 'PENDING_REVIEW', createdAt: new Date().toISOString() },
-    { id: '2', title: 'Introduction à la DeFi', instructorName: 'Michael Chen', categoryName: 'Cryptomonnaie', status: 'APPROVED', createdAt: new Date().toISOString() }
-  ];
+  // URL de base pour les routes admin
+  private adminUrl = `${environment.apiUrl}/api/v1/admin`;
+  // URL de base pour les routes publiques/globales
+  private publicUrl = `${environment.apiUrl}/api/v1`;
 
-  private mockInstructors: AdminInstructorDTO[] = [
-    { id: '1', name: 'Emily Davis', email: 'emily@example.com', specialty: 'Analyse Technique', status: 'PENDING', appliedAt: new Date().toISOString() }
-  ];
+  // ==========================================
+  // GESTION DES COURS
+  // ==========================================
 
-  private mockCategories: AdminCategoryDTO[] = [
-    { id: '1', name: 'Trading', courseCount: 45 },
-    { id: '2', name: 'Cryptomonnaie', courseCount: 32 }
-  ];
+  /**
+   * GET /api/v1/admin/courses
+   * Récupère TOUS les cours avec pagination
+   */
+  getAllCourses(page: number = 0, size: number = 20): Observable<PageCourseResponseDTO> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', 'createdAt,DESC');
 
-  getPendingCourses(): Observable<AdminCourseDTO[]> {
-    return of(this.mockCourses).pipe(delay(500));
+    return this.http.get<PageCourseResponseDTO>(`${this.adminUrl}/courses`, { params });
   }
 
-  getPendingInstructors(): Observable<AdminInstructorDTO[]> {
-    return of(this.mockInstructors).pipe(delay(500));
+  /**
+   * PATCH /api/v1/admin/courses/{courseId}/approve
+   */
+  approveCourse(courseId: string): Observable<string> {
+    return this.http.patch(`${this.adminUrl}/courses/${courseId}/approve`, {}, { responseType: 'text' });
   }
 
-  getCategories(): Observable<AdminCategoryDTO[]> {
-    return of(this.mockCategories).pipe(delay(500));
+  /**
+   * PATCH /api/v1/admin/courses/{courseId}/reject
+   */
+  rejectCourse(courseId: string): Observable<string> {
+    return this.http.patch(`${this.adminUrl}/courses/${courseId}/reject`, {}, { responseType: 'text' });
   }
 
-  updateCourseStatus(courseId: string, status: 'APPROVED' | 'REJECTED'): Observable<any> {
-    console.log(`Cours ${courseId} mis à jour au statut : ${status}`);
-    return of({ success: true }).pipe(delay(300));
+  /**
+   * PATCH /api/v1/admin/courses/{courseId}/approve-deletion
+   */
+  approveCourseDeletion(courseId: string): Observable<string> {
+    return this.http.patch(`${this.adminUrl}/courses/${courseId}/approve-deletion`, {}, { responseType: 'text' });
   }
 
-  updateInstructorStatus(instructorId: string, status: 'APPROVED' | 'REJECTED'): Observable<any> {
-    console.log(`Instructeur ${instructorId} mis à jour au statut : ${status}`);
-    return of({ success: true }).pipe(delay(300));
+
+  // ==========================================
+  // GESTION DES INSTRUCTEURS & UTILISATEURS
+  // ==========================================
+
+  /**
+   * GET /api/v1/admin/instructors
+   * Liste tous les instructeurs avec pagination
+   */
+  getAllInstructors(page: number = 0, size: number = 20): Observable<PageResponseDTO<AdminInstructorDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', 'createdAt,DESC');
+
+    return this.http.get<PageResponseDTO<AdminInstructorDTO>>(`${this.adminUrl}/instructors`, { params });
+  }
+
+  /**
+   * NOTE : Le Swagger ne mentionne pas d'endpoint spécifique pour approuver/rejeter un instructeur.
+   * Si cet endpoint existe dans votre contrôleur (ex: PATCH /api/v1/admin/users/{id}/status),
+   * vous pouvez décommenter et adapter cette méthode :
+   */
+  /*
+  updateInstructorStatus(instructorId: string, status: 'APPROVED' | 'REJECTED'): Observable<string> {
+    return this.http.patch(`${this.adminUrl}/users/${instructorId}/status?status=${status}`, {}, { responseType: 'text' });
+  }
+  */
+
+
+  // ==========================================
+  // GESTION DES CATÉGORIES
+  // ==========================================
+
+  /**
+   * GET /api/v1/categories
+   * Récupère la liste de toutes les catégories (Endpoint public)
+   */
+  getCategories(): Observable<CategoryDTO[]> {
+    return this.http.get<CategoryDTO[]>(`${this.publicUrl}/categories`);
+  }
+
+  /**
+   * POST /api/v1/admin/categories
+   * Créer une nouvelle catégorie
+   */
+  createCategory(data: CategoryCreateDTO): Observable<string> {
+    return this.http.post(`${this.adminUrl}/categories`, data, { responseType: 'text' });
+  }
+
+  /**
+   * PUT /api/v1/admin/categories/{categoryId}
+   * Modifier une catégorie existante
+   */
+  updateCategory(categoryId: string, data: CategoryCreateDTO): Observable<string> {
+    return this.http.put(`${this.adminUrl}/categories/${categoryId}`, data, { responseType: 'text' });
+  }
+
+  /**
+   * DELETE /api/v1/admin/categories/{categoryId}
+   * Supprimer une catégorie
+   */
+  deleteCategory(categoryId: string): Observable<string> {
+    return this.http.delete(`${this.adminUrl}/categories/${categoryId}`, { responseType: 'text' });
+  }
+
+
+  // ==========================================
+  // STATISTIQUES GLOBALES
+  // ==========================================
+
+  /**
+   * GET /api/v1/admin/stats
+   * Récupère les KPI globaux
+   */
+  getDashboardStats(): Observable<DashboardStatsDTO> {
+    return this.http.get<DashboardStatsDTO>(`${this.adminUrl}/stats`);
   }
 }
