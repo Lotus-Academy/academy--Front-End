@@ -1,0 +1,122 @@
+<app-admin-layout title="Analytiques et Finance">
+
+    <div class="space-y-6 animate-fade-in-up">
+
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Performances globales</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Suivez les revenus et la croissance de votre
+                    plateforme.</p>
+            </div>
+            <button (click)="exportData()"
+                class="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm">
+                <lucide-icon [name]="icons.Download" class="w-4 h-4"></lucide-icon> Exporter CSV
+            </button>
+        </div>
+
+        @if (isLoading()) {
+        <div class="flex justify-center py-20">
+            <div class="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+        </div>
+        } @else {
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            @for (kpi of kpiCards(); track kpi.title) {
+            <div
+                class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-50 transition-transform group-hover:scale-110"
+                    [ngClass]="kpi.bg"></div>
+
+                <div class="relative z-10">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" [ngClass]="kpi.bg">
+                        <lucide-icon [name]="kpi.icon" class="w-6 h-6" [ngClass]="kpi.color"></lucide-icon>
+                    </div>
+                    <p class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-1">{{ kpi.title }}</p>
+                    <h3 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                        @if (kpi.isCurrency) {
+                        {{ kpi.value | currency:'USD':'symbol':'1.0-0' }}
+                        } @else {
+                        {{ kpi.value | number }}
+                        }
+                    </h3>
+                </div>
+            </div>
+            }
+        </div>
+
+        <div
+            class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden mt-8">
+            <div
+                class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/20">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <lucide-icon [name]="icons.CreditCard" class="w-5 h-5 text-slate-400"></lucide-icon>
+                    Transactions Récentes
+                </h3>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
+                    <thead
+                        class="bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-800">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">Transaction ID</th>
+                            <th scope="col" class="px-6 py-4">Utilisateur / Cours</th>
+                            <th scope="col" class="px-6 py-4">Date</th>
+                            <th scope="col" class="px-6 py-4">Statut</th>
+                            <th scope="col" class="px-6 py-4 text-right">Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                        @for (payment of recentPayments(); track payment.id) {
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 font-mono text-xs text-slate-500">
+                                {{ payment.id }}...
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-slate-900 dark:text-white line-clamp-1">{{
+                                    payment.courseTitle || 'Achat de cours' }}</div>
+                                <div class="text-xs text-slate-500">{{ payment.studentEmail || 'Utilisateur inconnu' }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 font-medium">
+                                {{ payment.date | date:'dd MMM yyyy, HH:mm' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2.5 py-1 text-xs font-bold rounded-full"
+                                    [ngClass]="payment.status === 'succeeded' || payment.status === 'COMPLETED' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-yellow-100 text-yellow-700 border border-yellow-200'">
+                                    {{ payment.status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <span class="font-black text-slate-900 dark:text-white">
+                                    {{ payment.amount | currency:payment.currency:'symbol':'1.2-2' }}
+                                </span>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @if (recentPayments().length === 0) {
+                <div class="p-12 text-center">
+                    <lucide-icon [name]="icons.CreditCard"
+                        class="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-4"></lucide-icon>
+                    <p class="text-slate-500 font-medium">Aucune transaction trouvée.</p>
+                </div>
+                }
+            </div>
+
+            @if (recentPayments().length > 0) {
+            <div
+                class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-center">
+                <button
+                    class="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 transition-colors flex items-center justify-center gap-1 mx-auto">
+                    Voir tout l'historique <lucide-icon [name]="icons.ArrowUpRight" class="w-4 h-4"></lucide-icon>
+                </button>
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+</app-admin-layout>

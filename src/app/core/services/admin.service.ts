@@ -56,6 +56,17 @@ export interface DashboardStatsDTO {
   pendingCourses: number;
 }
 
+export interface AdminPaymentDTO {
+  id?: string;
+  courseTitle: string;
+  amount: number;
+  currency: string;
+  date: string;
+  status: string;
+  receiptUrl?: string;
+  studentEmail?: string;
+}
+
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -181,5 +192,31 @@ export class AdminService {
    */
   getDashboardStats(): Observable<DashboardStatsDTO> {
     return this.http.get<DashboardStatsDTO>(`${this.adminUrl}/stats`);
+  }
+
+  /**
+   * GET /api/v1/admin/students
+   * Liste tous les étudiants avec pagination
+   */
+  getAllStudents(page: number = 0, size: number = 20): Observable<PageResponseDTO<any>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', 'createdAt,DESC');
+
+    return this.http.get<PageResponseDTO<any>>(`${this.adminUrl}/students`, { params });
+  }
+
+  /**
+   * GET /api/v1/admin/payments
+   * Consulter l'historique global des transactions financières
+   */
+  getAllPayments(page: number = 0, size: number = 50): Observable<PageResponseDTO<AdminPaymentDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', 'paidAt,DESC'); // Tri par date de paiement décroissante
+
+    return this.http.get<PageResponseDTO<AdminPaymentDTO>>(`${this.adminUrl}/payments`, { params });
   }
 }

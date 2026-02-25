@@ -13,6 +13,12 @@ import { CoursePricingComponent } from './features/instructor/course-pricing/cou
 import { CourseDetailComponent } from './features/courses/course-detail/course-detail-component';
 import { CourseQuizComponent } from './features/instructor/course-quiz/course-quiz.component';
 import { CourseEditPreviewComponent } from './features/instructor/course-edit-preview/course-edit-preview.component';
+import { AdminUsersComponent } from './features/admin/admin-users/admin-users.component';
+import { AdminCoursesComponent } from './features/admin/admin-courses/admin-courses.component';
+import { AdminInstructorsComponent } from './features/admin/admin-instructors/admin-instructors.component';
+import { AdminCategoriesComponent } from './features/admin/admin-categories/admin-categories.component';
+import { AdminAnalyticsComponent } from './features/admin/admin-analytics/admin-analytics.component';
+import { AdminPaymentsComponent } from './features/admin/admin-payments/admin-payments.component';
 
 export const routes: Routes = [
     // La page d'accueil est maintenant la route par défaut
@@ -54,5 +60,16 @@ export const routes: Routes = [
 
     // Gestion des pages non trouvées (optionnel mais conseillé)
     // Cette route (wildcard) DOIT toujours rester à la toute fin du tableau.
+
+
+    // Routes d'administration (chaque vue embarque le layout)
+    { path: 'dashboard/users', component: AdminUsersComponent },
+    { path: 'dashboard/videos', component: AdminCoursesComponent },
+
+    { path: 'dashboard/instructors', component: AdminInstructorsComponent },
+    { path: 'dashboard/categories', component: AdminCategoriesComponent },
+    { path: 'dashboard/analytics', component: AdminAnalyticsComponent },
+    { path: 'dashboard/payments', component: AdminPaymentsComponent },
+    // { path: 'dashboard', component: AdminOverviewComponent },
     { path: '**', redirectTo: '' }
 ];

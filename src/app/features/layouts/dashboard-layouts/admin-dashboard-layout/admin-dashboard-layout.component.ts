@@ -21,7 +21,8 @@ import {
   Users,
   UserCheck,
   Video,
-  FolderOpen
+  FolderOpen,
+  CreditCard
 } from 'lucide-angular';
 
 import { AuthService } from '../../../../core/services/auth.service';
@@ -56,6 +57,7 @@ export class AdminLayoutComponent {
     { href: '/dashboard/instructors', label: 'Instructeurs', icon: UserCheck },
     { href: '/dashboard/videos', label: 'Cours', icon: Video },
     { href: '/dashboard/categories', label: 'Catégories', icon: FolderOpen },
+    { href: '/dashboard/payments', label: 'Paiements', icon: CreditCard },
     { href: '/dashboard/analytics', label: 'Analytiques', icon: BarChart3 }
   ];
 
