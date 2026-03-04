@@ -23,7 +23,7 @@ export class StudentLayoutComponent {
   @Input({ required: true }) title!: string;
 
   navLinks = [
-    { href: '/student/dashboard', label: 'Mon Apprentissage', icon: Home },
+    { href: '/dashboard', label: 'Mon Apprentissage', icon: Home },
     { href: '/courses', label: 'Catalogue', icon: Play },
     { href: '/student/favorites', label: 'Mes Favoris', icon: Heart },
     { href: '/student/profile', label: 'Paramètres', icon: Settings }

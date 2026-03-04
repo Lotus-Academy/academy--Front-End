@@ -153,5 +153,31 @@
             "REQUIRED": "Requis.",
             "VALID_EMAIL": "Email valide requis."
         }
+    },
+    "PROFILE": {
+        "TITLE": "Paramètres du compte",
+        "SUBTITLE": "Gérez vos informations personnelles et les paramètres de sécurité de votre compte.",
+        "TAB_GENERAL": "Informations Générales",
+        "TAB_SECURITY": "Sécurité",
+        "PHOTO_TITLE": "Photo de profil",
+        "PHOTO_DESC": "Formats recommandés : JPG, PNG. Taille maximale : 2MB.",
+        "BTN_CHANGE_PHOTO": "Modifier la photo",
+        "FIRST_NAME": "Prénom",
+        "LAST_NAME": "Nom",
+        "HEADLINE": "Titre (Optionnel)",
+        "BIO": "Biographie (Optionnel)",
+        "BTN_SAVE": "Enregistrer les modifications",
+        "SAVING": "Enregistrement en cours...",
+        "PASSWORD_TITLE": "Modifier le mot de passe",
+        "OLD_PASSWORD": "Mot de passe actuel",
+        "NEW_PASSWORD": "Nouveau mot de passe",
+        "BTN_UPDATE_PASSWORD": "Mettre à jour le mot de passe",
+        "DANGER_ZONE": "Zone de danger",
+        "DELETE_TITLE": "Archiver le compte",
+        "DELETE_DESC": "En archivant votre compte, vous perdrez l'accès à vos cours et à votre tableau de bord. Cette action est irréversible par l'utilisateur.",
+        "BTN_DELETE": "Archiver mon compte définitivement",
+        "SUCCESS_PROFILE": "Profil mis à jour avec succès.",
+        "SUCCESS_PASSWORD": "Mot de passe mis à jour avec succès.",
+        "ERROR_GENERIC": "Une erreur est survenue lors du traitement de votre demande."
     }
 }

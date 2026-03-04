@@ -39,6 +39,7 @@ import { AdminInstructorsComponent } from './features/admin/admin-instructors/ad
 import { AdminCategoriesComponent } from './features/admin/admin-categories/admin-categories.component';
 import { AdminAnalyticsComponent } from './features/admin/admin-analytics/admin-analytics.component';
 import { AdminPaymentsComponent } from './features/admin/admin-payments/admin-payments.component';
+import { ProfileComponent } from './features/user/profile/profile.component';
 
 export const routes: Routes = [
     // --- ROUTES PUBLIQUES ---
@@ -49,6 +50,9 @@ export const routes: Routes = [
     // --- ROUTES D'AUTHENTIFICATION ---
     { path: 'login', component: LoginComponent },
     { path: 'register', redirectTo: '/login', pathMatch: 'full' },
+
+    { path: 'student/profile', component: ProfileComponent },
+    { path: 'instructor/profile', component: ProfileComponent },
     // Nouvelle route pour l'inscription des instructeurs
     { path: 'instructor-register', component: InstructorRegisterComponent },
 

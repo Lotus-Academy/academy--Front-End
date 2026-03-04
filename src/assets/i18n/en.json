@@ -153,5 +153,31 @@
             "REQUIRED": "Required.",
             "VALID_EMAIL": "Valid email required."
         }
+    },
+    "PROFILE": {
+        "TITLE": "Account Settings",
+        "SUBTITLE": "Manage your personal information and account security settings.",
+        "TAB_GENERAL": "General Information",
+        "TAB_SECURITY": "Security",
+        "PHOTO_TITLE": "Profile Picture",
+        "PHOTO_DESC": "Recommended formats: JPG, PNG. Maximum size: 2MB.",
+        "BTN_CHANGE_PHOTO": "Change picture",
+        "FIRST_NAME": "First Name",
+        "LAST_NAME": "Last Name",
+        "HEADLINE": "Headline (Optional)",
+        "BIO": "Biography (Optional)",
+        "BTN_SAVE": "Save changes",
+        "SAVING": "Saving...",
+        "PASSWORD_TITLE": "Change Password",
+        "OLD_PASSWORD": "Current password",
+        "NEW_PASSWORD": "New password",
+        "BTN_UPDATE_PASSWORD": "Update password",
+        "DANGER_ZONE": "Danger Zone",
+        "DELETE_TITLE": "Archive Account",
+        "DELETE_DESC": "By archiving your account, you will lose access to your courses and dashboard. This action is irreversible by the user.",
+        "BTN_DELETE": "Archive my account permanently",
+        "SUCCESS_PROFILE": "Profile successfully updated.",
+        "SUCCESS_PASSWORD": "Password successfully updated.",
+        "ERROR_GENERIC": "An error occurred while processing your request."
     }
 }
