@@ -1,0 +1,157 @@
+{
+    "LAYOUT": {
+        "ADMIN_SPACE": "Espace Administrateur",
+        "INSTRUCTOR_SPACE": "Espace Instructeur",
+        "STUDENT_SPACE": "Espace Étudiant",
+        "ADMIN_ROLE": "Admin",
+        "INSTRUCTOR_ROLE": "Instructeur",
+        "STUDENT_ROLE": "Étudiant",
+        "LOGOUT": "Déconnexion"
+    },
+    "MENU": {
+        "DASHBOARD": "Vue d'ensemble",
+        "COURSES": "Cours",
+        "COURSE_CATALOG": "Catalogue",
+        "CREATE_COURSE": "Créer un cours",
+        "ANALYTICS": "Analytiques",
+        "SETTINGS": "Paramètres",
+        "USERS": "Utilisateurs",
+        "INSTRUCTORS": "Instructeurs",
+        "CATEGORIES": "Catégories",
+        "PAYMENTS": "Paiements",
+        "STUDENT_TRACKING": "Suivi des étudiants",
+        "FAVORITES": "Mes Favoris"
+    },
+    "NOTIFICATIONS": {
+        "TITLE": "Notifications",
+        "NEW": "nouvelle(s)",
+        "EMPTY": "Aucune notification"
+    },
+    "BANNERS": {
+        "LOCKED_FEATURE": "Votre profil doit être approuvé pour utiliser cette fonctionnalité.",
+        "MISSING_TITLE": "Bienvenue sur Lotus Academy !",
+        "MISSING_DESC": "Pour pouvoir publier des cours et accéder aux statistiques, vous devez d'abord compléter votre profil professionnel.",
+        "MISSING_BTN": "Compléter mon profil",
+        "PENDING_TITLE": "Candidature en cours de traitement",
+        "PENDING_DESC": "Votre profil a bien été soumis. Notre équipe l'examine actuellement.",
+        "REJECTED_TITLE": "Candidature nécessitant des corrections",
+        "REJECTED_DESC": "Votre profil n'a pas pu être validé en l'état.",
+        "REJECTED_BTN": "Modifier mon profil",
+        "EMPTY_TITLE": "Votre profil est vide",
+        "EMPTY_DESC": "Avant de pouvoir créer votre premier cours, nous avons besoin d'en savoir un peu plus sur vous et votre expertise.",
+        "EMPTY_BTN": "Démarrer l'intégration"
+    },
+    "HOME": {
+        "HERO": {
+            "BADGE": "Nouveaux cours ajoutés chaque semaine",
+            "TITLE_1": "Apprenez des meilleurs.",
+            "TITLE_2": "Évoluez avec Lotus Academy.",
+            "SUBTITLE": "Rejoignez des milliers d'apprenants et découvrez de nouvelles compétences grâce à des instructeurs experts dans notre communauté d'apprentissage dynamique.",
+            "BTN_BROWSE": "Parcourir les cours",
+            "BTN_START": "Commencer gratuitement"
+        },
+        "STATS": {
+            "STUDENTS": "Étudiants",
+            "COURSES": "Cours",
+            "RATING": "Note Moyenne"
+        },
+        "TOPICS": {
+            "TITLE": "Sujets Tendances",
+            "SUBTITLE": "Explorez les domaines d'études les plus populaires",
+            "COURSES": "cours",
+            "ITEMS": {
+                "ALGO": "Trading Algorithmique",
+                "QUANT": "Finance Quantitative",
+                "ML": "Machine Learning",
+                "RISK": "Gestion des Risques",
+                "PSYCHO": "Psychologie du Trading"
+            }
+        },
+        "TESTIMONIALS": {
+            "TITLE": "Ce Que Disent Nos Étudiants",
+            "SUBTITLE": "Rejoignez des milliers de traders à succès"
+        },
+        "FAQ": {
+            "TITLE": "Questions Fréquemment Posées",
+            "SUBTITLE": "Trouvez des réponses aux questions courantes sur Lotus Academy",
+            "Q1": "Comment commencer avec Lotus Academy ?",
+            "A1": "Créez simplement un compte gratuit, parcourez notre catalogue de cours et inscrivez-vous à tout cours qui vous intéresse.",
+            "Q2": "Des certificats sont-ils fournis à la fin du cours ?",
+            "A2": "Oui, vous recevrez un certificat de fin d'études vérifié avec un code QR unique pour chaque cours terminé."
+        },
+        "COURSES": {
+            "TITLE": "Cours à la Une",
+            "SUBTITLE": "Des cours triés sur le volet pour accélérer votre parcours de trading",
+            "VIEW_ALL": "Voir tous les cours",
+            "FREE": "Gratuit",
+            "DETAILS": "Détails"
+        },
+        "WHY": {
+            "TITLE": "Pourquoi Apprendre Avec Lotus Academy ?",
+            "SUBTITLE": "Rejoignez des milliers de traders à succès qui ont commencé leur parcours ici",
+            "REASON1_TITLE": "Expertise de l'Industrie",
+            "REASON1_DESC": "Apprenez de professionnels avec des décennies d'expérience dans les meilleurs fonds spéculatifs et banques d'investissement.",
+            "REASON2_TITLE": "Exemples de Données Réelles",
+            "REASON2_DESC": "Pratiquez avec des données de marché réelles et construisez des stratégies qui fonctionnent dans des environnements de trading réels.",
+            "REASON3_TITLE": "Programme Structuré",
+            "REASON3_DESC": "Suivez un parcours d'apprentissage soigneusement conçu, des principes fondamentaux aux stratégies de trading avancées."
+        }
+    },
+    "NAVBAR": {
+        "HOME": "Accueil",
+        "COURSES": "Cours",
+        "TEACH": "Enseigner",
+        "FAQ": "FAQ",
+        "LOGIN": "Connexion",
+        "SIGNUP": "S'inscrire"
+    },
+    "FOOTER": {
+        "DESC": "Apprenez auprès d'instructeurs experts avec du contenu vidéo de qualité professionnelle et des stratégies de trading concrètes.",
+        "COMPANY": {
+            "TITLE": "Entreprise",
+            "ABOUT": "À propos",
+            "CAREERS": "Carrières",
+            "PRESS": "Presse"
+        },
+        "RESOURCES": {
+            "TITLE": "Ressources",
+            "BLOG": "Blog",
+            "HELP": "Centre d'aide",
+            "FAQ": "FAQ"
+        },
+        "LEGAL": {
+            "TITLE": "Légal",
+            "TERMS": "Conditions",
+            "PRIVACY": "Confidentialité",
+            "COOKIES": "Cookies"
+        },
+        "COPYRIGHT": "Tous droits réservés."
+    },
+    "INSTRUCTOR_REGISTER": {
+        "BACK_HOME": "Retour à l'accueil",
+        "VERIFY_TITLE": "Vérifiez votre boîte mail",
+        "VERIFY_TXT_1": "Nous avons envoyé un lien de vérification à",
+        "VERIFY_TXT_2": ". Veuillez cliquer sur ce lien pour activer votre compte instructeur.",
+        "BTN_GO_LOGIN": "Aller à la connexion",
+        "BADGE": "Espace Formateur",
+        "TITLE": "Devenez Instructeur",
+        "SUBTITLE": "Partagez votre expertise et monétisez votre savoir auprès de milliers d'étudiants.",
+        "FIRST_NAME": "Prénom",
+        "LAST_NAME": "Nom",
+        "EMAIL": "Email professionnel",
+        "PASSWORD": "Mot de passe",
+        "BTN_SUBMIT": "Créer mon compte instructeur",
+        "LOADING": "Création en cours...",
+        "ALREADY_HAVE_ACCOUNT": "Déjà un compte ?",
+        "LINK_LOGIN": "Connectez-vous",
+        "WANT_TO_LEARN": "Vous cherchez plutôt à apprendre ?",
+        "LINK_STUDENT": "Créer un compte étudiant",
+        "BANNER_TITLE": "Inspirez la prochaine génération",
+        "BANNER_DESC": "Rejoignez une communauté d'experts. Créez des cours impactants, développez votre audience et générez des revenus grâce à votre savoir-faire.",
+        "ERRORS": {
+            "REQUIRED_MIN_2": "Requis (min 2 caractères).",
+            "REQUIRED": "Requis.",
+            "VALID_EMAIL": "Email valide requis."
+        }
+    }
+}
