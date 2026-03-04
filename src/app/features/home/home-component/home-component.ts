@@ -18,7 +18,7 @@ import {
 } from 'lucide-angular';
 import { NavbarComponent } from "../../layouts/navbar-component/navbar-component";
 import { FooterComponent } from "../../layouts/footer-component/footer-component";
-import { TranslateModule } from '@ngx-translate/core'; // Ajout du module de traduction
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
@@ -33,37 +33,28 @@ export class HomeComponent {
     BarChart3, Brain, Shield, Heart, Database, BookOpen, Star
   };
 
-  // Utilisation des clés de traduction pour les labels
   stats = [
     { icon: Users, value: "50,000+", labelKey: "HOME.STATS.STUDENTS" },
     { icon: TrendingUp, value: "200+", labelKey: "HOME.STATS.COURSES" },
     { icon: Award, value: "4.9", labelKey: "HOME.STATS.RATING" },
   ];
 
-  // Utilisation des clés de traduction. La propriété "query" est conservée pour le bon fonctionnement des paramètres d'URL
   topics = [
-    { nameKey: "HOME.TOPICS.ITEMS.ALGO", query: "Algorithmic Trading", icon: TrendingUp, courses: 45, color: "bg-blue-500/10 text-blue-500" },
-    { nameKey: "HOME.TOPICS.ITEMS.QUANT", query: "Quantitative Finance", icon: BarChart3, courses: 32, color: "bg-green-500/10 text-green-500" },
-    { nameKey: "HOME.TOPICS.ITEMS.ML", query: "Machine Learning", icon: Brain, courses: 28, color: "bg-yellow-500/10 text-yellow-500" },
-    { nameKey: "HOME.TOPICS.ITEMS.RISK", query: "Risk Management", icon: Shield, courses: 24, color: "bg-red-500/10 text-red-500" },
-    { nameKey: "HOME.TOPICS.ITEMS.PSYCHO", query: "Trading Psychology", icon: Heart, courses: 18, color: "bg-purple-500/10 text-purple-500" },
+    { nameKey: "HOME.TOPICS.ITEMS.ALGO", query: "Algorithmic Trading", icon: TrendingUp, courses: 45, color: "bg-lotus/10 text-lotus" },
+    { nameKey: "HOME.TOPICS.ITEMS.QUANT", query: "Quantitative Finance", icon: BarChart3, courses: 32, color: "bg-lotus/10 text-lotus" },
+    { nameKey: "HOME.TOPICS.ITEMS.ML", query: "Machine Learning", icon: Brain, courses: 28, color: "bg-green/10 text-green" },
+    { nameKey: "HOME.TOPICS.ITEMS.RISK", query: "Risk Management", icon: Shield, courses: 24, color: "bg-lotus/10 text-lotus" },
+    { nameKey: "HOME.TOPICS.ITEMS.PSYCHO", query: "Trading Psychology", icon: Heart, courses: 18, color: "bg-lotus/10 text-lotus" },
   ];
 
   activeIndex: number | null = null;
 
-  // Utilisation des clés de traduction pour la FAQ
   faqs = [
-    {
-      questionKey: "HOME.FAQ.Q1",
-      answerKey: "HOME.FAQ.A1"
-    },
-    {
-      questionKey: "HOME.FAQ.Q2",
-      answerKey: "HOME.FAQ.A2"
-    }
+    { questionKey: "HOME.FAQ.Q1", answerKey: "HOME.FAQ.A1" },
+    { questionKey: "HOME.FAQ.Q2", answerKey: "HOME.FAQ.A2" }
   ];
 
-  toggleFaq(index: number) {
+  toggleFaq(index: number): void {
     this.activeIndex = this.activeIndex === index ? null : index;
   }
 

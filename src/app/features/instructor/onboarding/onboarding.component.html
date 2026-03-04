@@ -1,73 +1,81 @@
-<div class="min-h-screen bg-slate-50 dark:bg-slate-950 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+<div class="min-h-screen bg-slate-50 dark:bg-ds-black py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
     <div class="max-w-3xl mx-auto">
 
-        <div class="text-center mb-10 animate-fade-in-up">
-            <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Devenez Instructeur</h1>
-            <p class="mt-2 text-slate-600 dark:text-slate-400">Complétez votre profil pour commencer à enseigner sur
-                Lotus Academy.</p>
+        <div class="text-center mb-12 animate-fade-in-up">
+            <h1
+                class="font-cormorant font-light text-4xl sm:text-5xl text-slate-900 dark:text-white tracking-tight mb-4">
+                Devenez Instructeur</h1>
+            <p class="font-syne text-slate-600 dark:text-ds-muted/70">Complétez votre profil pour commencer à enseigner
+                sur Lotus Academy.</p>
         </div>
 
-        <div class="mb-8 animate-fade-in-up">
+        <div class="mb-12 animate-fade-in-up">
             <div class="flex items-center justify-between relative z-10">
                 @for (step of steps; track step.num) {
                 <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center border-2 font-bold transition-colors bg-white dark:bg-slate-900"
-                        [ngClass]="currentStep() >= step.num ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400' : 'border-slate-300 text-slate-400 dark:border-slate-700'">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center border-[1.5px] font-mono text-[12px] transition-all duration-300 bg-white dark:bg-ds-surface"
+                        [ngClass]="currentStep() >= step.num ? 'border-lotus text-lotus dark:border-lotus dark:text-lotus shadow-[0_0_15px_rgba(200,169,126,0.2)]' : 'border-slate-200 text-slate-400 dark:border-ds-border dark:text-ds-muted/30'">
                         @if (currentStep() > step.num) {
-                        <lucide-icon [name]="icons.CheckCircle" class="w-5 h-5"></lucide-icon>
+                        <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4 stroke-[2px]"></lucide-icon>
                         } @else {
                         {{ step.num }}
                         }
                     </div>
-                    <span class="text-xs font-bold mt-2 hidden sm:block"
-                        [ngClass]="currentStep() >= step.num ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400'">
+                    <span
+                        class="font-mono text-[9px] uppercase tracking-[0.15em] mt-3 hidden sm:block transition-colors"
+                        [ngClass]="currentStep() >= step.num ? 'text-lotus' : 'text-slate-400 dark:text-ds-muted/50'">
                         {{ step.title }}
                     </span>
                 </div>
                 }
             </div>
-            <div class="relative w-full h-1 bg-slate-200 dark:bg-slate-800 -mt-8 sm:-mt-12 -z-10">
-                <div class="absolute top-0 left-0 h-full bg-indigo-600 dark:bg-indigo-400 transition-all duration-300"
+            <div class="relative w-full h-[2px] bg-slate-200 dark:bg-ds-border -mt-8 sm:-mt-[3.25rem] -z-10">
+                <div class="absolute top-0 left-0 h-full bg-lotus transition-all duration-500 ease-out"
                     [style.width.%]="progressPercentage()"></div>
             </div>
         </div>
 
         @if (errorMessage()) {
-        <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-xl">
-            <p class="text-sm font-bold text-red-800 dark:text-red-300">{{ errorMessage() }}</p>
+        <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded">
+            <p class="font-syne text-sm font-bold text-red-800 dark:text-red-400">{{ errorMessage() }}</p>
         </div>
         }
 
         <div
-            class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl p-6 sm:p-10 animate-fade-in-up">
+            class="bg-white dark:bg-ds-surface rounded border border-slate-200 dark:border-ds-border shadow-sm p-6 sm:p-10 animate-fade-in-up">
             <form [formGroup]="onboardingForm" (ngSubmit)="submit()">
 
                 @if (currentStep() === 1) {
                 <div formGroupName="step1" class="space-y-6 animate-fade-in">
                     <h2
-                        class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
-                        <lucide-icon [name]="icons.User" class="w-5 h-5 text-indigo-600"></lucide-icon> Profil Public
+                        class="font-cormorant text-2xl text-slate-900 dark:text-white flex items-center gap-3 border-b border-slate-100 dark:border-ds-border/50 pb-4">
+                        <lucide-icon [name]="icons.User" class="w-5 h-5 text-lotus stroke-[1.5px]"></lucide-icon> Profil
+                        Public
                     </h2>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Titre professionnel
-                            *</label>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Titre
+                            professionnel *</label>
                         <input type="text" formControlName="headline" placeholder="Ex: Expert Cloud & DevOps Senior"
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                         @if (onboardingForm.get('step1.headline')?.touched &&
                         onboardingForm.get('step1.headline')?.invalid) {
-                        <p class="text-xs text-red-500 mt-1">Le titre est obligatoire (max 100 caractères).</p>
+                        <p class="text-[10px] font-mono text-red-500 mt-1 uppercase tracking-wider">Titre obligatoire
+                            (max 100 car.).</p>
                         }
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Biographie *</label>
-                        <textarea formControlName="bio" rows="5"
-                            placeholder="Parlez-nous de votre parcours et de ce qui fait de vous un excellent formateur..."
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors resize-none"></textarea>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Biographie
+                            *</label>
+                        <textarea formControlName="bio" rows="5" placeholder="Parlez-nous de votre parcours..."
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors resize-none placeholder:text-slate-400 dark:placeholder:text-ds-muted/30"></textarea>
                         @if (onboardingForm.get('step1.bio')?.touched &&
                         onboardingForm.get('step1.bio')?.hasError('minlength')) {
-                        <p class="text-xs text-red-500 mt-1">La biographie doit contenir au moins 50 caractères.</p>
+                        <p class="text-[10px] font-mono text-red-500 mt-1 uppercase tracking-wider">Minimum 50
+                            caractères requis.</p>
                         }
                     </div>
                 </div>
@@ -76,31 +84,36 @@
                 @if (currentStep() === 2) {
                 <div formGroupName="step2" class="space-y-6 animate-fade-in">
                     <h2
-                        class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
-                        <lucide-icon [name]="icons.BookOpen" class="w-5 h-5 text-indigo-600"></lucide-icon> Expertise
+                        class="font-cormorant text-2xl text-slate-900 dark:text-white flex items-center gap-3 border-b border-slate-100 dark:border-ds-border/50 pb-4">
+                        <lucide-icon [name]="icons.BookOpen" class="w-5 h-5 text-lotus stroke-[1.5px]"></lucide-icon>
+                        Expertise
                     </h2>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Domaines d'expertise
-                            *</label>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Domaines
+                            d'expertise *</label>
                         <input type="text" formControlName="expertiseDomainsStr"
-                            placeholder="Ex: Java, Spring Boot, Angular (séparés par des virgules)"
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
-                        <p class="text-xs text-slate-500">Séparez les domaines par des virgules.</p>
+                            placeholder="Ex: Quant Finance, Python, C++"
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
+                        <p class="font-mono text-[9px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/40">
+                            Séparez les domaines par des virgules.</p>
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Années d'expérience
-                            *</label>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Années
+                            d'expérience *</label>
                         <input type="number" formControlName="yearsOfExperience" min="0"
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors">
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Langues d'enseignement
-                            *</label>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Langues
+                            d'enseignement *</label>
                         <input type="text" formControlName="teachingLanguagesStr" placeholder="Ex: Français, Anglais"
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                     </div>
                 </div>
                 }
@@ -108,34 +121,38 @@
                 @if (currentStep() === 3) {
                 <div formGroupName="step3" class="space-y-6 animate-fade-in">
                     <h2
-                        class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
-                        <lucide-icon [name]="icons.Globe" class="w-5 h-5 text-indigo-600"></lucide-icon> Présence en
-                        ligne
+                        class="font-cormorant text-2xl text-slate-900 dark:text-white flex items-center gap-3 border-b border-slate-100 dark:border-ds-border/50 pb-4">
+                        <lucide-icon [name]="icons.Globe" class="w-5 h-5 text-lotus stroke-[1.5px]"></lucide-icon>
+                        Présence en ligne
                     </h2>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Profil LinkedIn
-                            *</label>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Profil
+                            LinkedIn *</label>
                         <input type="url" formControlName="linkedinUrl" placeholder="https://linkedin.com/in/votrenom"
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                         @if (onboardingForm.get('step3.linkedinUrl')?.touched &&
                         onboardingForm.get('step3.linkedinUrl')?.invalid) {
-                        <p class="text-xs text-red-500 mt-1">Lien LinkedIn obligatoire et valide requis.</p>
+                        <p class="text-[10px] font-mono text-red-500 mt-1 uppercase tracking-wider">Lien LinkedIn valide
+                            requis.</p>
                         }
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Site Web
-                            (Optionnel)</label>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Site
+                            Web (Optionnel)</label>
                         <input type="url" formControlName="websiteUrl" placeholder="https://votresite.com"
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Profil GitHub
-                            (Optionnel)</label>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Profil
+                            GitHub (Optionnel)</label>
                         <input type="url" formControlName="githubUrl" placeholder="https://github.com/votrenom"
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                     </div>
                 </div>
                 }
@@ -143,36 +160,41 @@
                 @if (currentStep() === 4) {
                 <div formGroupName="step4" class="space-y-6 animate-fade-in">
                     <h2
-                        class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
-                        <lucide-icon [name]="icons.FileText" class="w-5 h-5 text-indigo-600"></lucide-icon> Légal &
-                        Finance
+                        class="font-cormorant text-2xl text-slate-900 dark:text-white flex items-center gap-3 border-b border-slate-100 dark:border-ds-border/50 pb-4">
+                        <lucide-icon [name]="icons.FileText" class="w-5 h-5 text-lotus stroke-[1.5px]"></lucide-icon>
+                        Légal & Finance
                     </h2>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Nom Légal Complet
-                            *</label>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Nom
+                            Légal Complet *</label>
                         <input type="text" formControlName="legalName" placeholder="Identique à votre pièce d'identité"
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Téléphone *</label>
-                        <input type="tel" formControlName="phoneNumber" placeholder="+33612345678"
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Adresse de Facturation
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Téléphone
                             *</label>
-                        <textarea formControlName="billingAddress" rows="3"
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors resize-none"></textarea>
+                        <input type="tel" formControlName="phoneNumber" placeholder="+33612345678"
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">Numéro fiscal / SIRET
-                            (Optionnel)</label>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Adresse
+                            de Facturation *</label>
+                        <textarea formControlName="billingAddress" rows="3"
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors resize-none"></textarea>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">Numéro
+                            fiscal / SIRET (Optionnel)</label>
                         <input type="text" formControlName="taxId"
-                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors">
                     </div>
                 </div>
                 }
@@ -180,67 +202,67 @@
                 @if (currentStep() === 5) {
                 <div formGroupName="step5" class="space-y-6 animate-fade-in">
                     <h2
-                        class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
-                        <lucide-icon [name]="icons.CheckCircle" class="w-5 h-5 text-indigo-600"></lucide-icon>
+                        class="font-cormorant text-2xl text-slate-900 dark:text-white flex items-center gap-3 border-b border-slate-100 dark:border-ds-border/50 pb-4">
+                        <lucide-icon [name]="icons.CheckCircle" class="w-5 h-5 text-lotus stroke-[1.5px]"></lucide-icon>
                         Validation Finale
                     </h2>
 
                     <div
-                        class="p-4 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                        <label class="flex items-start gap-3 cursor-pointer">
+                        class="p-5 border border-slate-200 dark:border-ds-border rounded bg-slate-50 dark:bg-ds-black transition-colors hover:border-lotus/50 dark:hover:border-lotus/30">
+                        <label class="flex items-start gap-4 cursor-pointer group">
                             <input type="checkbox" formControlName="availableForMentoring"
-                                class="mt-1 w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-700">
+                                class="mt-1 w-4 h-4 rounded-sm border-slate-300 text-lotus focus:ring-lotus focus:ring-offset-0 bg-white dark:bg-ds-surface dark:border-ds-border dark:checked:bg-lotus dark:checked:border-lotus transition-all">
                             <div>
-                                <span class="block text-sm font-bold text-slate-900 dark:text-white">Disponible pour le
-                                    mentorat</span>
-                                <span class="block text-xs text-slate-500 mt-0.5">Cochez si vous acceptez que les
-                                    étudiants vous sollicitent pour des sessions privées.</span>
+                                <span
+                                    class="block font-syne font-bold text-slate-900 dark:text-white group-hover:text-lotus transition-colors">Disponible
+                                    pour le mentorat</span>
+                                <span class="block text-sm text-slate-600 dark:text-ds-muted/70 mt-1">Cochez si vous
+                                    acceptez que les étudiants vous sollicitent pour des sessions privées.</span>
                             </div>
                         </label>
                     </div>
 
-                    <div
-                        class="p-4 border border-indigo-200 dark:border-indigo-900/50 rounded-xl bg-indigo-50/50 dark:bg-indigo-900/20">
-                        <label class="flex items-start gap-3 cursor-pointer">
+                    <div class="p-5 border border-lotus/30 rounded bg-lotus/5 dark:bg-lotus/5 transition-colors">
+                        <label class="flex items-start gap-4 cursor-pointer group">
                             <input type="checkbox" formControlName="termsAccepted"
-                                class="mt-1 w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-700">
+                                class="mt-1 w-4 h-4 rounded-sm border-lotus/50 text-lotus focus:ring-lotus focus:ring-offset-0 bg-white dark:bg-ds-surface dark:border-lotus/30 dark:checked:bg-lotus dark:checked:border-lotus transition-all">
                             <div>
-                                <span class="block text-sm font-bold text-slate-900 dark:text-white">Conditions
+                                <span
+                                    class="block font-syne font-bold text-slate-900 dark:text-white group-hover:text-lotus transition-colors">Conditions
                                     Générales *</span>
-                                <span class="block text-xs text-slate-500 mt-0.5">J'accepte les conditions générales des
-                                    instructeurs de Lotus Academy et je certifie que les informations fournies sont
-                                    exactes.</span>
+                                <span class="block text-sm text-slate-600 dark:text-ds-muted/70 mt-1">J'accepte les
+                                    conditions générales des instructeurs de Lotus Academy et je certifie que les
+                                    informations fournies sont exactes.</span>
                             </div>
                         </label>
                         @if (onboardingForm.get('step5.termsAccepted')?.touched &&
                         onboardingForm.get('step5.termsAccepted')?.invalid) {
-                        <p class="text-xs text-red-500 mt-2 font-bold ml-8">Vous devez accepter les conditions pour
-                            continuer.</p>
+                        <p class="text-[10px] font-mono text-red-500 mt-3 uppercase tracking-wider ml-8">L'acceptation
+                            est obligatoire.</p>
                         }
                     </div>
                 </div>
                 }
 
                 <div
-                    class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                    class="mt-10 pt-6 border-t border-slate-200 dark:border-ds-border flex items-center justify-between">
                     <button type="button" (click)="prevStep()" [disabled]="currentStep() === 1"
-                        class="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-0 transition-all">
+                        class="flex items-center gap-2 px-5 py-3 rounded font-mono text-[11px] uppercase tracking-[0.12em] text-slate-600 dark:text-ds-muted/70 hover:bg-slate-100 dark:hover:bg-ds-border/50 disabled:opacity-0 transition-colors">
                         <lucide-icon [name]="icons.ChevronLeft" class="w-4 h-4"></lucide-icon> Précédent
                     </button>
 
                     @if (currentStep() < 5) { <button type="button" (click)="nextStep()"
-                        class="flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 transition-all">
+                        class="flex items-center gap-2 px-8 py-3 rounded font-mono text-[11px] uppercase tracking-[0.12em] bg-lotus text-ds-black hover:bg-lotus-light transition-colors shadow-sm">
                         Suivant <lucide-icon [name]="icons.ChevronRight" class="w-4 h-4"></lucide-icon>
                         </button>
                         } @else {
                         <button type="submit" [disabled]="onboardingForm.invalid || isSubmitting()"
-                            class="flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold bg-green-600 text-white shadow-sm hover:bg-green-700 disabled:opacity-50 transition-all">
+                            class="flex items-center gap-2 px-8 py-3 rounded font-mono text-[11px] uppercase tracking-[0.12em] bg-green text-ds-black hover:bg-green/80 disabled:opacity-50 transition-colors shadow-sm">
                             @if (isSubmitting()) {
                             <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
                             Soumission...
                             } @else {
-                            <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4"></lucide-icon> Soumettre ma
-                            candidature
+                            <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4"></lucide-icon> Soumettre
                             }
                         </button>
                         }

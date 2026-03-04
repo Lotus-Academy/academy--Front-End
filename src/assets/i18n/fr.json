@@ -25,7 +25,8 @@
     "NOTIFICATIONS": {
         "TITLE": "Notifications",
         "NEW": "nouvelle(s)",
-        "EMPTY": "Aucune notification"
+        "EMPTY": "Aucune notification",
+        "MARK_ALL_READ": "Tout marquer comme lu"
     },
     "BANNERS": {
         "LOCKED_FEATURE": "Votre profil doit être approuvé pour utiliser cette fonctionnalité.",
@@ -179,5 +180,38 @@
         "SUCCESS_PROFILE": "Profil mis à jour avec succès.",
         "SUCCESS_PASSWORD": "Mot de passe mis à jour avec succès.",
         "ERROR_GENERIC": "Une erreur est survenue lors du traitement de votre demande."
+    },
+    "LOGIN": {
+        "BACK_HOME": "Retour à l'accueil",
+        "TITLE_LOGIN": "Bon retour",
+        "TITLE_REGISTER": "Créez votre compte",
+        "SUBTITLE_LOGIN": "Connectez-vous pour accéder à vos cours",
+        "SUBTITLE_REGISTER": "Commencez votre voyage pour maîtriser de nouvelles compétences",
+        "BTN_GOOGLE": "Continuer avec Google",
+        "OR_EMAIL": "Ou par e-mail",
+        "FIRST_NAME": "Prénom",
+        "LAST_NAME": "Nom",
+        "EMAIL": "Email",
+        "PASSWORD": "Mot de passe",
+        "FORGOT_PASSWORD": "Mot de passe oublié ?",
+        "BTN_SUBMIT_LOGIN": "Se connecter",
+        "BTN_SUBMIT_REGISTER": "Créer un compte",
+        "LOADING": "En cours...",
+        "NO_ACCOUNT": "Vous n'avez pas de compte ?",
+        "HAVE_ACCOUNT": "Déjà un compte ?",
+        "LINK_SIGNUP": "S'inscrire",
+        "LINK_SIGNIN": "Se connecter",
+        "EXPERT_PROMPT": "Vous êtes un expert dans votre domaine ?",
+        "LINK_INSTRUCTOR": "Devenir Formateur sur Lotus Academy",
+        "BANNER_TITLE": "Commencez votre apprentissage aujourd'hui",
+        "BANNER_DESC": "Rejoignez des milliers d'apprenants qui découvrent de nouvelles compétences et font avancer leur carrière à l'intersection de la finance et de la technologie.",
+        "ERRORS": {
+            "REQUIRED_MIN_2": "Requis (min 2 car.)",
+            "REQUIRED": "Requis",
+            "VALID_EMAIL": "Email valide requis",
+            "MIN_8_CHARS": "Min 8 caractères requis",
+            "INVALID_CREDENTIALS": "Email ou mot de passe incorrect.",
+            "GENERIC": "Une erreur est survenue lors de l'inscription."
+        }
     }
 }

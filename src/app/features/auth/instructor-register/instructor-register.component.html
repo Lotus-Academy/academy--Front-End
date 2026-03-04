@@ -1,107 +1,117 @@
-<div class="min-h-screen bg-white dark:bg-slate-900 flex transition-colors duration-300">
+<div class="min-h-screen bg-slate-50 dark:bg-ds-black flex transition-colors duration-300">
 
-    <div class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+    <div
+        class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white dark:bg-ds-black">
         <div class="mx-auto w-full max-w-sm lg:w-96">
 
             <a routerLink="/"
-                class="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors mb-8 cursor-pointer">
-                <lucide-icon [name]="icons.ArrowLeft" class="w-4 h-4"></lucide-icon>
+                class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.15em] text-slate-500 dark:text-ds-muted/50 hover:text-lotus dark:hover:text-lotus transition-colors mb-10 cursor-pointer">
+                <lucide-icon [name]="icons.ArrowLeft" class="w-3.5 h-3.5 stroke-[1.5px]"></lucide-icon>
                 {{ 'INSTRUCTOR_REGISTER.BACK_HOME' | translate }}
             </a>
 
-            <div class="flex items-center gap-2 mb-10">
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
-                    <span class="text-xl font-bold text-white">L</span>
+            <div class="flex items-center gap-3 mb-10">
+                <div class="flex h-8 w-8 items-center justify-center rounded bg-lotus/10 border border-lotus/20">
+                    <span class="text-base font-cormorant font-bold text-lotus">L</span>
                 </div>
-                <span class="text-2xl font-bold text-gray-900 dark:text-white">Lotus Academy</span>
+                <span class="text-2xl font-cormorant font-bold text-slate-900 dark:text-white tracking-wide">Lotus
+                    Academy</span>
             </div>
 
             @if (isRegistrationSuccess()) {
             <div
-                class="text-center bg-green-50 dark:bg-green-900/20 p-8 rounded-2xl border border-green-100 dark:border-green-900/30 animate-fade-in-up">
-                <lucide-icon [name]="icons.CheckCircle2" class="w-16 h-16 text-green-600 mx-auto mb-4"></lucide-icon>
-                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ 'INSTRUCTOR_REGISTER.VERIFY_TITLE'
-                    | translate }}</h3>
-                <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
-                    {{ 'INSTRUCTOR_REGISTER.VERIFY_TXT_1' | translate }} <strong>{{ registerForm.get('email')?.value
-                        }}</strong>{{ 'INSTRUCTOR_REGISTER.VERIFY_TXT_2' | translate }}
+                class="text-center bg-green/5 dark:bg-green/10 p-8 rounded border border-green/20 dark:border-green/30 animate-fade-in-up">
+                <div class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-green/20 mb-6">
+                    <lucide-icon [name]="icons.CheckCircle2" class="w-8 h-8 text-green stroke-[1.5px]"></lucide-icon>
+                </div>
+                <h3 class="font-cormorant text-3xl font-light text-slate-900 dark:text-white mb-3">{{
+                    'INSTRUCTOR_REGISTER.VERIFY_TITLE' | translate }}</h3>
+                <p class="font-syne text-sm text-slate-600 dark:text-ds-muted/70 mb-8 leading-relaxed">
+                    {{ 'INSTRUCTOR_REGISTER.VERIFY_TXT_1' | translate }} <strong
+                        class="text-slate-900 dark:text-white">{{ registerForm.get('email')?.value }}</strong>{{
+                    'INSTRUCTOR_REGISTER.VERIFY_TXT_2' | translate }}
                 </p>
                 <button (click)="goToLogin()"
-                    class="w-full py-2.5 px-4 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700 transition">
+                    class="w-full py-4 px-6 bg-lotus text-ds-black rounded font-mono text-[12px] uppercase tracking-[0.12em] hover:bg-lotus-light transition-all">
                     {{ 'INSTRUCTOR_REGISTER.BTN_GO_LOGIN' | translate }}
                 </button>
             </div>
             }
 
             @else {
-            <div class="mb-6 animate-fade-in-up">
+            <div class="mb-8 animate-fade-in-up">
                 <span
-                    class="inline-block py-1 px-3 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-3 uppercase tracking-wider">
+                    class="inline-block px-3 py-1.5 rounded border border-slate-200 dark:border-ds-border font-mono text-[9px] uppercase tracking-[0.2em] text-slate-600 dark:text-ds-muted/70 mb-5">
                     {{ 'INSTRUCTOR_REGISTER.BADGE' | translate }}
                 </span>
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                <h1 class="font-cormorant font-light text-4xl text-slate-900 dark:text-white mb-3">
                     {{ 'INSTRUCTOR_REGISTER.TITLE' | translate }}
                 </h1>
-                <p class="mt-2 text-gray-600 dark:text-slate-400">
+                <p class="font-syne text-slate-600 dark:text-ds-muted/70">
                     {{ 'INSTRUCTOR_REGISTER.SUBTITLE' | translate }}
                 </p>
             </div>
 
             @if (errorMessage()) {
             <div
-                class="mb-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-sm rounded-md border border-red-200 dark:border-red-900/30">
-                {{ errorMessage() }}
+                class="mb-6 p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded animate-fade-in-up">
+                <p class="font-syne text-sm font-bold text-red-800 dark:text-red-400">{{ errorMessage() }}</p>
             </div>
             }
 
-            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6 animate-fade-in-up">
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6 animate-fade-in-up"
+                style="animation-delay: 0.1s;">
 
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">{{
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
                             'INSTRUCTOR_REGISTER.FIRST_NAME' | translate }}</label>
                         <input type="text" formControlName="firstName" placeholder="Jean"
-                            class="block w-full px-3 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500">
+                            class="block w-full px-4 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                         @if (registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid) {
-                        <div class="text-xs text-red-500 mt-1">{{ 'INSTRUCTOR_REGISTER.ERRORS.REQUIRED_MIN_2' |
-                            translate }}</div>
+                        <div class="font-mono text-[9px] uppercase tracking-wider text-red-500 mt-1">{{
+                            'INSTRUCTOR_REGISTER.ERRORS.REQUIRED_MIN_2' | translate }}</div>
                         }
                     </div>
 
-                    <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">{{
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
                             'INSTRUCTOR_REGISTER.LAST_NAME' | translate }}</label>
                         <input type="text" formControlName="lastName" placeholder="Dupont"
-                            class="block w-full px-3 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500">
+                            class="block w-full px-4 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                         @if (registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid) {
-                        <div class="text-xs text-red-500 mt-1">{{ 'INSTRUCTOR_REGISTER.ERRORS.REQUIRED' | translate }}
-                        </div>
+                        <div class="font-mono text-[9px] uppercase tracking-wider text-red-500 mt-1">{{
+                            'INSTRUCTOR_REGISTER.ERRORS.REQUIRED' | translate }}</div>
                         }
                     </div>
                 </div>
 
-                <div class="space-y-1">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">{{
+                <div class="space-y-2">
+                    <label
+                        class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
                         'INSTRUCTOR_REGISTER.EMAIL' | translate }}</label>
                     <input type="email" formControlName="email" placeholder="expert@domaine.com"
-                        class="block w-full px-3 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500">
+                        class="block w-full px-4 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                     @if (registerForm.get('email')?.touched && registerForm.get('email')?.invalid) {
-                    <div class="text-xs text-red-500 mt-1">{{ 'INSTRUCTOR_REGISTER.ERRORS.VALID_EMAIL' | translate }}
-                    </div>
+                    <div class="font-mono text-[9px] uppercase tracking-wider text-red-500 mt-1">{{
+                        'INSTRUCTOR_REGISTER.ERRORS.VALID_EMAIL' | translate }}</div>
                     }
                 </div>
 
-                <div class="space-y-1">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">{{
+                <div class="space-y-2">
+                    <label
+                        class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
                         'INSTRUCTOR_REGISTER.PASSWORD' | translate }}</label>
                     <div class="relative">
                         <input [type]="showPassword() ? 'text' : 'password'" formControlName="password"
                             placeholder="••••••••"
-                            class="block w-full px-3 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm pr-10 placeholder:text-gray-400 dark:placeholder:text-slate-500">
+                            class="block w-full px-4 py-3 pr-11 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                         <button type="button" (click)="togglePasswordVisibility()"
-                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 cursor-pointer transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 dark:text-ds-muted/40 hover:text-lotus transition-colors cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round">
                                 @if (!showPassword()) {
                                 <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
@@ -119,24 +129,26 @@
                 </div>
 
                 <button type="submit" [disabled]="registerForm.invalid || isLoading()"
-                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all">
-                    @if (isLoading()) { <span class="mr-2 animate-spin">⌛</span> {{ 'INSTRUCTOR_REGISTER.LOADING' |
+                    class="w-full flex justify-center items-center py-4 px-6 rounded font-mono text-[12px] uppercase tracking-[0.12em] bg-lotus text-ds-black hover:bg-lotus-light disabled:opacity-50 disabled:cursor-not-allowed transition-all mt-8">
+                    @if (isLoading()) { <span class="mr-3 animate-spin">⌛</span> {{ 'INSTRUCTOR_REGISTER.LOADING' |
                     translate }} }
                     @else { {{ 'INSTRUCTOR_REGISTER.BTN_SUBMIT' | translate }} }
                 </button>
 
-                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-slate-800 space-y-4">
-                    <p class="text-center text-sm text-gray-600 dark:text-slate-400">
+                <div class="mt-8 pt-6 border-t border-slate-200 dark:border-ds-border space-y-4">
+                    <p class="text-center font-syne text-sm text-slate-600 dark:text-ds-muted/70">
                         {{ 'INSTRUCTOR_REGISTER.ALREADY_HAVE_ACCOUNT' | translate }}
                         <a routerLink="/login"
-                            class="font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer">{{
-                            'INSTRUCTOR_REGISTER.LINK_LOGIN' | translate }}</a>
+                            class="font-bold text-lotus hover:text-lotus-light transition-colors ml-1 cursor-pointer">
+                            {{ 'INSTRUCTOR_REGISTER.LINK_LOGIN' | translate }}
+                        </a>
                     </p>
-                    <p class="text-center text-sm text-gray-500 dark:text-slate-500">
+                    <p class="text-center font-syne text-sm text-slate-500 dark:text-ds-muted/50">
                         {{ 'INSTRUCTOR_REGISTER.WANT_TO_LEARN' | translate }}
                         <a routerLink="/login" [queryParams]="{mode: 'signup'}"
-                            class="font-medium text-gray-900 dark:text-slate-300 hover:underline cursor-pointer">{{
-                            'INSTRUCTOR_REGISTER.LINK_STUDENT' | translate }}</a>
+                            class="font-bold text-slate-900 dark:text-white hover:text-lotus transition-colors ml-1 cursor-pointer">
+                            {{ 'INSTRUCTOR_REGISTER.LINK_STUDENT' | translate }}
+                        </a>
                     </p>
                 </div>
 
@@ -146,19 +158,21 @@
     </div>
 
     <div class="hidden lg:block relative w-0 flex-1">
-        <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 dark:from-slate-900 dark:to-black">
-            <div class="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-30"
+        <div class="absolute inset-0 bg-ds-black">
+            <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-luminosity"
                 style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200');">
             </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-ds-black via-transparent to-transparent"></div>
         </div>
         <div class="absolute inset-0 flex items-center justify-center p-12">
             <div class="max-w-lg text-center text-white">
-                <div class="mb-8 inline-flex p-3 rounded-2xl bg-white/10 backdrop-blur-md">
-                    <lucide-icon [name]="icons.CheckCircle2" class="w-8 h-8 text-indigo-400"></lucide-icon>
+                <div
+                    class="mb-8 inline-flex h-16 w-16 items-center justify-center rounded bg-lotus/10 border border-lotus/20 backdrop-blur-md">
+                    <lucide-icon [name]="icons.CheckCircle2" class="w-8 h-8 text-lotus stroke-[1.5px]"></lucide-icon>
                 </div>
-                <h2 class="text-4xl font-bold mb-6 leading-tight">{{ 'INSTRUCTOR_REGISTER.BANNER_TITLE' | translate }}
-                </h2>
-                <p class="text-lg text-slate-300 mb-8 leading-relaxed">
+                <h2 class="font-cormorant text-5xl font-light mb-6 leading-tight">{{ 'INSTRUCTOR_REGISTER.BANNER_TITLE'
+                    | translate }}</h2>
+                <p class="font-syne text-lg text-ds-muted/70 leading-relaxed">
                     {{ 'INSTRUCTOR_REGISTER.BANNER_DESC' | translate }}
                 </p>
             </div>

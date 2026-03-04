@@ -3,7 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import {
   LucideAngularModule, Menu, X, LogOut, Bell, Globe, Sun, Moon, ChevronDown,
-  CheckCircle, AlertTriangle, Info, AlertCircle, FileEdit
+  CheckCircle, AlertTriangle, Info, AlertCircle, FileEdit, CheckCheck
 } from 'lucide-angular';
 
 import { AuthService } from '../../../core/services/auth.service';
@@ -26,33 +26,25 @@ export interface NavLink {
   templateUrl: './shared-layout.component.html'
 })
 export class SharedLayoutComponent implements OnInit, OnDestroy {
-  // --- PARAMÈTRES REÇUS DES COMPOSANTS ENFANTS (Admin, Instructor, Student) ---
   @Input({ required: true }) title!: string;
   @Input({ required: true }) navLinks!: NavLink[];
-
   @Input({ required: true }) badgeText!: string;
   @Input({ required: true }) badgeClasses!: string;
-
   @Input({ required: true }) profileLink!: string;
   @Input({ required: true }) profileRoleText!: string;
-
-  // Spécifique à l'instructeur
   @Input() profileStatus?: 'LOADING' | 'MISSING' | 'PENDING' | 'APPROVED' | 'REJECTED';
 
-  // --- INJECTIONS DES SERVICES ---
   private authService = inject(AuthService);
   public themeService = inject(ThemeService);
   private router = inject(Router);
   private notificationService = inject(NotificationService);
   public languageService = inject(LanguageService);
 
-  // --- GESTION DES ICÔNES ---
   readonly icons = {
     Menu, X, LogOut, Bell, Globe, Sun, Moon, ChevronDown,
-    CheckCircle, AlertTriangle, Info, AlertCircle, FileEdit
+    CheckCircle, AlertTriangle, Info, AlertCircle, FileEdit, CheckCheck
   };
 
-  // --- ÉTATS RÉACTIFS ---
   isSidebarOpen = signal<boolean>(false);
   user = computed(() => this.authService.getUser());
 
@@ -60,10 +52,8 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
   notifications = signal<AppNotification[]>([]);
   unreadNotifications = computed(() => this.notifications().filter(n => !n.read).length);
 
-  // Signal pour le menu des langues
   isLanguageMenuOpen = signal<boolean>(false);
 
-  // --- CYCLE DE VIE ---
   ngOnInit(): void {
     this.notificationService.getNotifications().subscribe({
       next: (data) => this.notifications.set(data),
@@ -79,7 +69,6 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
     this.notificationService.disconnectStream();
   }
 
-  // --- MÉTHODES D'INTERACTION ---
   toggleSidebar(): void {
     this.isSidebarOpen.update(v => !v);
   }
@@ -96,7 +85,6 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
     this.isNotificationsOpen.set(false);
   }
 
-  // --- GESTION DES LANGUES ---
   toggleLanguageMenu(): void {
     this.isLanguageMenuOpen.update(v => !v);
   }
@@ -112,9 +100,31 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
 
   markAsRead(notification: AppNotification): void {
     if (notification.read) return;
+
     this.notifications.update(notifs =>
       notifs.map(n => n.id === notification.id ? { ...n, read: true } : n)
     );
+
+    this.notificationService.markAsRead(notification.id).subscribe({
+      error: (err) => {
+        console.error('Erreur lors du marquage de la notification', err);
+        this.notifications.update(notifs =>
+          notifs.map(n => n.id === notification.id ? { ...n, read: false } : n)
+        );
+      }
+    });
+  }
+
+  markAllAsRead(): void {
+    if (this.unreadNotifications() === 0) return;
+
+    this.notifications.update(notifs =>
+      notifs.map(n => ({ ...n, read: true }))
+    );
+
+    this.notificationService.markAllAsRead().subscribe({
+      error: (err) => console.error('Erreur lors du marquage global des notifications', err)
+    });
   }
 
   handleSignOut(): void {

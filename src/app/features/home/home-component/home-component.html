@@ -1,10 +1,10 @@
 <app-navbar></app-navbar>
 
-<main class="overflow-x-hidden bg-white dark:bg-slate-900 transition-colors duration-300">
+<main class="overflow-x-hidden bg-white dark:bg-ds-black transition-colors duration-300">
 
     <section id="hero"
-        class="relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 pb-16 pt-12 md:pb-24 md:pt-20">
-        <div class="absolute inset-0 -z-10 opacity-20 dark:opacity-10">
+        class="relative bg-gradient-to-b from-slate-50 to-white dark:from-ds-black dark:to-ds-surface pb-16 pt-12 md:pb-24 md:pt-20">
+        <div class="absolute inset-0 -z-10 opacity-20 dark:opacity-5">
             <div
                 class="absolute inset-0 bg-[grid-size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]">
             </div>
@@ -13,45 +13,50 @@
         <div class="container mx-auto px-4">
             <div class="mx-auto max-w-4xl text-center">
                 <div
-                    class="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 shadow-sm animate-fade-in">
-                    <span class="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-                    <span class="text-sm font-medium text-slate-600 dark:text-slate-400">{{ 'HOME.HERO.BADGE' |
+                    class="mb-8 inline-flex items-center gap-2 rounded border border-slate-200 dark:border-ds-border bg-white dark:bg-ds-surface px-4 py-2 shadow-sm animate-fade-in-up">
+                    <span class="flex h-1.5 w-1.5 rounded-full bg-green animate-pulse"></span>
+                    <span
+                        class="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-600 dark:text-ds-muted/70">{{
+                        'HOME.HERO.BADGE' |
                         translate }}</span>
                 </div>
 
-                <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-7xl">
+                <h1 class="font-cormorant font-light tracking-tight text-slate-900 dark:text-white text-5xl md:text-7xl leading-tight animate-fade-in-up"
+                    style="animation-delay: 0.1s;">
                     {{ 'HOME.HERO.TITLE_1' | translate }} <br>
-                    <span class="text-blue-600 dark:text-blue-400">{{ 'HOME.HERO.TITLE_2' | translate }}</span>
+                    <span class="text-lotus">{{ 'HOME.HERO.TITLE_2' | translate }}</span>
                 </h1>
 
-                <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-300 md:text-xl">
+                <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-600 dark:text-ds-muted/70 md:text-xl font-syne animate-fade-in-up"
+                    style="animation-delay: 0.2s;">
                     {{ 'HOME.HERO.SUBTITLE' | translate }}
                 </p>
 
-                <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <div class="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row animate-fade-in-up"
+                    style="animation-delay: 0.3s;">
                     <button routerLink="/courses"
-                        class="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition flex items-center gap-2 shadow-lg shadow-blue-200">
+                        class="px-9 py-4 bg-lotus text-ds-black rounded font-mono uppercase tracking-[0.12em] text-[12px] hover:bg-lotus-light transition-all flex items-center gap-2">
                         {{ 'HOME.HERO.BTN_BROWSE' | translate }} <lucide-icon [name]="icons.ArrowRight"
-                            class="w-5 h-5"></lucide-icon>
+                            class="w-4 h-4"></lucide-icon>
                     </button>
                     <button routerLink="/register"
-                        class="px-8 py-4 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition flex items-center gap-2">
-                        <lucide-icon [name]="icons.Play" class="w-5 h-5 text-blue-600 dark:text-blue-400"></lucide-icon>
+                        class="px-9 py-4 border border-slate-200 dark:border-ds-border bg-white dark:bg-ds-surface text-slate-900 dark:text-white rounded font-mono uppercase tracking-[0.12em] text-[12px] hover:bg-slate-50 dark:hover:bg-ds-border/50 transition-all flex items-center gap-2 group">
+                        <lucide-icon [name]="icons.Play"
+                            class="w-4 h-4 text-lotus group-hover:translate-x-1 transition-transform"></lucide-icon>
                         {{ 'HOME.HERO.BTN_START' | translate }}
                     </button>
                 </div>
 
-                <div class="mt-16 grid grid-cols-3 gap-8 border-t border-slate-100 dark:border-slate-800 pt-8">
+                <div class="mt-20 grid grid-cols-3 gap-8 border-t border-slate-100 dark:border-ds-border pt-12 animate-fade-in-up"
+                    style="animation-delay: 0.4s;">
                     @for (stat of stats; track stat.labelKey) {
                     <div class="text-center">
+                        <div class="text-3xl font-cormorant font-light text-slate-900 dark:text-white md:text-5xl mb-2">
+                            {{ stat.value }}
+                        </div>
                         <div
-                            class="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/30">
-                            <lucide-icon [name]="stat.icon"
-                                class="h-6 w-6 text-blue-600 dark:text-blue-400"></lucide-icon>
-                        </div>
-                        <div class="text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">{{ stat.value }}
-                        </div>
-                        <div class="text-sm text-slate-500 dark:text-slate-400">{{ stat.labelKey | translate }}</div>
+                            class="font-mono text-[10px] uppercase tracking-[0.15em] text-slate-500 dark:text-ds-muted/50">
+                            {{ stat.labelKey | translate }}</div>
                     </div>
                     }
                 </div>
@@ -59,26 +64,28 @@
         </div>
     </section>
 
-    <section id="topics" class="py-16 md:py-24 bg-slate-50/50 dark:bg-slate-800/50">
+    <section id="topics"
+        class="py-16 md:py-24 bg-slate-50/50 dark:bg-ds-surface/30 border-y border-slate-100 dark:border-ds-border/50">
         <div class="container mx-auto px-4">
-            <div class="mb-12 text-center">
-                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">{{ 'HOME.TOPICS.TITLE' |
-                    translate }}</h2>
-                <p class="mt-2 text-slate-600 dark:text-slate-400">{{ 'HOME.TOPICS.SUBTITLE' | translate }}</p>
+            <div class="mb-16 text-center">
+                <h2 class="font-cormorant font-light text-4xl text-slate-900 dark:text-white md:text-5xl">{{
+                    'HOME.TOPICS.TITLE' | translate }}</h2>
+                <p class="mt-4 text-slate-600 dark:text-ds-muted/70">{{ 'HOME.TOPICS.SUBTITLE' | translate }}</p>
             </div>
 
             <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                 @for (topic of topics; track topic.nameKey) {
                 <a [routerLink]="['/courses']" [queryParams]="{topic: topic.query}"
-                    class="group flex flex-col items-center rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 text-center transition-all hover:shadow-xl hover:-translate-y-1">
-                    <div [class]="'mb-4 flex h-14 w-14 items-center justify-center rounded-xl ' + topic.color">
-                        <lucide-icon [name]="topic.icon" class="h-7 w-7"></lucide-icon>
+                    class="group flex flex-col items-center rounded border border-slate-100 dark:border-ds-border bg-white dark:bg-ds-surface p-8 text-center transition-all hover:border-lotus/50 dark:hover:border-lotus/30">
+                    <div [class]="'mb-6 flex h-12 w-12 items-center justify-center rounded ' + topic.color">
+                        <lucide-icon [name]="topic.icon" class="h-6 w-6 stroke-[1.5px]"></lucide-icon>
                     </div>
                     <h3
-                        class="font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        class="font-syne font-semibold text-slate-900 dark:text-white group-hover:text-lotus transition-colors">
                         {{ topic.nameKey | translate }}
                     </h3>
-                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ topic.courses }} {{
+                    <p class="mt-2 font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/50">
+                        {{ topic.courses }} {{
                         'HOME.TOPICS.COURSES' | translate }}</p>
                 </a>
                 }
@@ -86,82 +93,16 @@
         </div>
     </section>
 
-    <section id="testimonials"
-        class="border-t border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/30 py-16 md:py-24">
-        <div class="container mx-auto px-4">
-            <div class="mb-12 text-center">
-                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">{{ 'HOME.TESTIMONIALS.TITLE' |
-                    translate }}</h2>
-                <p class="mt-2 text-slate-600 dark:text-slate-400">{{ 'HOME.TESTIMONIALS.SUBTITLE' | translate }}</p>
-            </div>
-
-            <div class="grid gap-8 md:grid-cols-3">
-                @for (testimonial of testimonials; track testimonial.name) {
-                <div
-                    class="rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
-                    <div class="mb-4 flex gap-1">
-                        @for (star of [1,2,3,4,5]; track star) {
-                        <lucide-icon [name]="icons.Star" class="h-5 w-5 fill-yellow-400 text-yellow-400"></lucide-icon>
-                        }
-                    </div>
-
-                    <p class="mb-6 text-slate-700 dark:text-slate-300 leading-relaxed italic">
-                        "{{ testimonial.content }}"
-                    </p>
-
-                    <div class="flex items-center gap-3">
-                        <img [src]="testimonial.image" [alt]="testimonial.name"
-                            class="h-12 w-12 rounded-full object-cover">
-                        <div>
-                            <p class="font-semibold text-slate-900 dark:text-white">{{ testimonial.name }}</p>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ testimonial.role }}</p>
-                        </div>
-                    </div>
-                </div>
-                }
-            </div>
-        </div>
-    </section>
-
-    <section id="faq" class="py-16 md:py-24 dark:bg-slate-900">
-        <div class="container mx-auto px-4 max-w-3xl">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4 dark:text-white">{{ 'HOME.FAQ.TITLE' | translate }}</h2>
-                <p class="text-slate-600 dark:text-slate-400">{{ 'HOME.FAQ.SUBTITLE' | translate }}</p>
-            </div>
-
-            <div class="space-y-4">
-                @for (faq of faqs; track faq.questionKey; let i = $index) {
-                <div
-                    class="border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 overflow-hidden">
-                    <button (click)="toggleFaq(i)"
-                        class="w-full flex justify-between items-center p-6 text-left font-medium text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                        {{ faq.questionKey | translate }}
-                        <span class="transform transition-transform duration-200"
-                            [class.rotate-180]="activeIndex === i">▼</span>
-                    </button>
-
-                    @if (activeIndex === i) {
-                    <div class="p-6 pt-0 text-slate-600 dark:text-slate-400 animate-fade-down">
-                        {{ faq.answerKey | translate }}
-                    </div>
-                    }
-                </div>
-                }
-            </div>
-        </div>
-    </section>
-
-    <section id="courses" class="py-16 md:py-24 border-t border-slate-100 dark:border-slate-800">
+    <section id="courses" class="py-16 md:py-24">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
                 <div>
-                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">{{ 'HOME.COURSES.TITLE' |
-                        translate }}</h2>
-                    <p class="mt-2 text-slate-600 dark:text-slate-400">{{ 'HOME.COURSES.SUBTITLE' | translate }}</p>
+                    <h2 class="font-cormorant font-light text-4xl text-slate-900 dark:text-white md:text-5xl">{{
+                        'HOME.COURSES.TITLE' | translate }}</h2>
+                    <p class="mt-4 text-slate-600 dark:text-ds-muted/70">{{ 'HOME.COURSES.SUBTITLE' | translate }}</p>
                 </div>
                 <button routerLink="/courses"
-                    class="text-blue-600 dark:text-blue-400 font-semibold hover:underline flex items-center gap-2">
+                    class="font-mono text-[11px] uppercase tracking-[0.12em] text-lotus hover:text-lotus-light flex items-center gap-2 transition-colors">
                     {{ 'HOME.COURSES.VIEW_ALL' | translate }} <lucide-icon [name]="icons.ArrowRight"
                         class="w-4 h-4"></lucide-icon>
                 </button>
@@ -170,26 +111,29 @@
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 @for (course of featuredCourses; track course.id) {
                 <div
-                    class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-xl transition-all">
+                    class="group bg-white dark:bg-ds-surface rounded border border-slate-100 dark:border-ds-border overflow-hidden hover:border-lotus/30 transition-all">
                     <div class="relative h-48 overflow-hidden">
                         <img [src]="course.thumbnailUrl"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
                         <div
-                            class="absolute top-4 left-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold shadow-sm dark:text-white">
+                            class="absolute top-4 left-4 bg-white/95 dark:bg-ds-black/95 backdrop-blur px-3 py-1.5 rounded font-mono text-[9px] uppercase tracking-widest text-slate-900 dark:text-ds-muted border border-slate-200 dark:border-ds-border">
                             {{ course.categoryName }}
                         </div>
                     </div>
-                    <div class="p-5">
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 h-12">{{ course.title }}
-                        </h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">{{ course.instructorName }}</p>
+                    <div class="p-6">
+                        <h3
+                            class="font-cormorant text-2xl text-slate-900 dark:text-white mb-2 line-clamp-2 h-16 leading-tight">
+                            {{ course.title }}</h3>
+                        <p
+                            class="font-mono text-[11px] text-slate-500 dark:text-ds-muted/50 mb-6 uppercase tracking-wider">
+                            {{ course.instructorName }}</p>
                         <div
-                            class="flex items-center justify-between border-t border-slate-50 dark:border-slate-700 pt-4">
-                            <span class="text-xl font-bold text-blue-600 dark:text-blue-400">
+                            class="flex items-center justify-between border-t border-slate-100 dark:border-ds-border/50 pt-5">
+                            <span class="text-lg font-mono text-lotus">
                                 {{ course.price === 0 ? ('HOME.COURSES.FREE' | translate) : (course.price | currency) }}
                             </span>
                             <button [routerLink]="['/courses', course.id]"
-                                class="p-2 rounded-lg bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors">
+                                class="px-4 py-2 rounded bg-slate-50 dark:bg-ds-border/30 text-slate-900 dark:text-white font-mono text-[10px] uppercase tracking-[0.12em] hover:bg-lotus hover:text-ds-black transition-colors">
                                 {{ 'HOME.COURSES.DETAILS' | translate }}
                             </button>
                         </div>
@@ -200,54 +144,119 @@
         </div>
     </section>
 
-    <section class="py-16 md:py-24 bg-white dark:bg-slate-900">
+    <section id="testimonials"
+        class="border-y border-slate-100 dark:border-ds-border bg-slate-50/30 dark:bg-ds-surface py-16 md:py-24">
         <div class="container mx-auto px-4">
-            <div class="mb-12 text-center">
-                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">{{ 'HOME.WHY.TITLE' |
-                    translate }}</h2>
-                <p class="mx-auto mt-2 max-w-2xl text-slate-600 dark:text-slate-400">{{ 'HOME.WHY.SUBTITLE' | translate
-                    }}</p>
+            <div class="mb-16 text-center">
+                <h2 class="font-cormorant font-light text-4xl text-slate-900 dark:text-white md:text-5xl">{{
+                    'HOME.TESTIMONIALS.TITLE' | translate }}</h2>
+                <p class="mt-4 text-slate-600 dark:text-ds-muted/70">{{ 'HOME.TESTIMONIALS.SUBTITLE' | translate }}</p>
             </div>
 
-            <div class="grid gap-8 md:grid-cols-3">
-                <div
-                    class="group relative rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 p-8 transition-all hover:shadow-lg">
-                    <div
-                        class="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-blue-600/10 dark:bg-blue-400/10 transition-colors group-hover:bg-blue-600 dark:group-hover:bg-blue-500">
-                        <lucide-icon [name]="icons.Award"
-                            class="h-7 w-7 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors"></lucide-icon>
+            <div class="grid gap-6 md:grid-cols-3">
+                @for (testimonial of testimonials; track testimonial.name) {
+                <div class="rounded border border-slate-100 dark:border-ds-border bg-white dark:bg-ds-black p-8">
+                    <div class="mb-6 flex gap-1">
+                        @for (star of [1,2,3,4,5]; track star) {
+                        <lucide-icon [name]="icons.Star" class="h-4 w-4 fill-lotus text-lotus"></lucide-icon>
+                        }
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ 'HOME.WHY.REASON1_TITLE' |
-                        translate }}</h3>
-                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">{{ 'HOME.WHY.REASON1_DESC' | translate
-                        }}</p>
+
+                    <p class="mb-8 font-cormorant text-xl italic text-slate-700 dark:text-ds-muted leading-relaxed">
+                        "{{ testimonial.content }}"
+                    </p>
+
+                    <div class="flex items-center gap-4">
+                        <img [src]="testimonial.image" [alt]="testimonial.name"
+                            class="h-10 w-10 rounded-full object-cover">
+                        <div>
+                            <p class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{ testimonial.name }}
+                            </p>
+                            <p
+                                class="font-mono text-[9px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/50 mt-1">
+                                {{ testimonial.role }}</p>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 md:py-24 bg-white dark:bg-ds-black">
+        <div class="container mx-auto px-4">
+            <div class="mb-16 text-center">
+                <h2 class="font-cormorant font-light text-4xl text-slate-900 dark:text-white md:text-5xl">{{
+                    'HOME.WHY.TITLE' | translate }}</h2>
+                <p class="mx-auto mt-4 max-w-2xl text-slate-600 dark:text-ds-muted/70">{{ 'HOME.WHY.SUBTITLE' |
+                    translate }}</p>
+            </div>
+
+            <div class="grid gap-6 md:grid-cols-3">
+                <div
+                    class="group relative rounded border border-slate-100 dark:border-ds-border bg-slate-50/50 dark:bg-ds-surface p-10 transition-all hover:border-lotus/30">
+                    <div class="mb-8 flex h-12 w-12 items-center justify-center rounded bg-lotus/10">
+                        <lucide-icon [name]="icons.Award" class="h-6 w-6 stroke-[1.5px] text-lotus"></lucide-icon>
+                    </div>
+                    <h3 class="font-cormorant text-2xl text-slate-900 dark:text-white mb-4">{{ 'HOME.WHY.REASON1_TITLE'
+                        | translate }}</h3>
+                    <p class="text-sm text-slate-600 dark:text-ds-muted/70 leading-relaxed">{{ 'HOME.WHY.REASON1_DESC' |
+                        translate }}</p>
                 </div>
 
                 <div
-                    class="group relative rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 p-8 transition-all hover:shadow-lg">
-                    <div
-                        class="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-blue-600/10 dark:bg-blue-400/10 transition-colors group-hover:bg-blue-600 dark:group-hover:bg-blue-500">
-                        <lucide-icon [name]="icons.Database"
-                            class="h-7 w-7 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors"></lucide-icon>
+                    class="group relative rounded border border-slate-100 dark:border-ds-border bg-slate-50/50 dark:bg-ds-surface p-10 transition-all hover:border-lotus/30">
+                    <div class="mb-8 flex h-12 w-12 items-center justify-center rounded bg-lotus/10">
+                        <lucide-icon [name]="icons.Database" class="h-6 w-6 stroke-[1.5px] text-lotus"></lucide-icon>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ 'HOME.WHY.REASON2_TITLE' |
-                        translate }}</h3>
-                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">{{ 'HOME.WHY.REASON2_DESC' | translate
-                        }}</p>
+                    <h3 class="font-cormorant text-2xl text-slate-900 dark:text-white mb-4">{{ 'HOME.WHY.REASON2_TITLE'
+                        | translate }}</h3>
+                    <p class="text-sm text-slate-600 dark:text-ds-muted/70 leading-relaxed">{{ 'HOME.WHY.REASON2_DESC' |
+                        translate }}</p>
                 </div>
 
                 <div
-                    class="group relative rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 p-8 transition-all hover:shadow-lg">
-                    <div
-                        class="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-blue-600/10 dark:bg-blue-400/10 transition-colors group-hover:bg-blue-600 dark:group-hover:bg-blue-500">
-                        <lucide-icon [name]="icons.BookOpen"
-                            class="h-7 w-7 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors"></lucide-icon>
+                    class="group relative rounded border border-slate-100 dark:border-ds-border bg-slate-50/50 dark:bg-ds-surface p-10 transition-all hover:border-lotus/30">
+                    <div class="mb-8 flex h-12 w-12 items-center justify-center rounded bg-lotus/10">
+                        <lucide-icon [name]="icons.BookOpen" class="h-6 w-6 stroke-[1.5px] text-lotus"></lucide-icon>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ 'HOME.WHY.REASON3_TITLE' |
-                        translate }}</h3>
-                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">{{ 'HOME.WHY.REASON3_DESC' | translate
-                        }}</p>
+                    <h3 class="font-cormorant text-2xl text-slate-900 dark:text-white mb-4">{{ 'HOME.WHY.REASON3_TITLE'
+                        | translate }}</h3>
+                    <p class="text-sm text-slate-600 dark:text-ds-muted/70 leading-relaxed">{{ 'HOME.WHY.REASON3_DESC' |
+                        translate }}</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq"
+        class="py-16 md:py-24 bg-slate-50/50 dark:bg-ds-surface border-t border-slate-100 dark:border-ds-border/50">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <div class="text-center mb-16">
+                <h2 class="font-cormorant font-light text-4xl mb-4 dark:text-white">{{ 'HOME.FAQ.TITLE' | translate }}
+                </h2>
+                <p class="text-slate-600 dark:text-ds-muted/70">{{ 'HOME.FAQ.SUBTITLE' | translate }}</p>
+            </div>
+
+            <div class="space-y-4">
+                @for (faq of faqs; track faq.questionKey; let i = $index) {
+                <div
+                    class="border border-slate-200 dark:border-ds-border rounded bg-white dark:bg-ds-black overflow-hidden transition-colors">
+                    <button (click)="toggleFaq(i)"
+                        class="w-full flex justify-between items-center p-6 text-left font-syne font-bold text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-ds-border/30 transition-colors">
+                        {{ faq.questionKey | translate }}
+                        <span class="font-mono text-[10px] transform transition-transform duration-200 text-lotus"
+                            [class.rotate-180]="activeIndex === i">▼</span>
+                    </button>
+
+                    @if (activeIndex === i) {
+                    <div
+                        class="p-6 pt-0 text-sm leading-relaxed text-slate-600 dark:text-ds-muted/70 animate-fade-down">
+                        {{ faq.answerKey | translate }}
+                    </div>
+                    }
+                </div>
+                }
             </div>
         </div>
     </section>

@@ -25,7 +25,8 @@
     "NOTIFICATIONS": {
         "TITLE": "Notifications",
         "NEW": "new",
-        "EMPTY": "No notifications"
+        "EMPTY": "No notifications",
+        "MARK_ALL_READ": "Mark all as read"
     },
     "BANNERS": {
         "LOCKED_FEATURE": "Your profile must be approved to use this feature.",
@@ -179,5 +180,38 @@
         "SUCCESS_PROFILE": "Profile successfully updated.",
         "SUCCESS_PASSWORD": "Password successfully updated.",
         "ERROR_GENERIC": "An error occurred while processing your request."
+    },
+    "LOGIN": {
+        "BACK_HOME": "Back to Home",
+        "TITLE_LOGIN": "Welcome back",
+        "TITLE_REGISTER": "Create your account",
+        "SUBTITLE_LOGIN": "Sign in to access your courses",
+        "SUBTITLE_REGISTER": "Start your journey to mastering new skills",
+        "BTN_GOOGLE": "Continue with Google",
+        "OR_EMAIL": "Or email",
+        "FIRST_NAME": "First Name",
+        "LAST_NAME": "Last Name",
+        "EMAIL": "Email",
+        "PASSWORD": "Password",
+        "FORGOT_PASSWORD": "Forgot?",
+        "BTN_SUBMIT_LOGIN": "Sign in",
+        "BTN_SUBMIT_REGISTER": "Create account",
+        "LOADING": "Loading...",
+        "NO_ACCOUNT": "Don't have an account?",
+        "HAVE_ACCOUNT": "Already have an account?",
+        "LINK_SIGNUP": "Sign up",
+        "LINK_SIGNIN": "Sign in",
+        "EXPERT_PROMPT": "Are you an expert in your field?",
+        "LINK_INSTRUCTOR": "Become an Instructor on Lotus Academy",
+        "BANNER_TITLE": "Start your learning journey today",
+        "BANNER_DESC": "Join thousands of learners discovering new skills and advancing their careers at the intersection of finance and tech.",
+        "ERRORS": {
+            "REQUIRED_MIN_2": "Required (min 2 chars)",
+            "REQUIRED": "Required",
+            "VALID_EMAIL": "Valid email required",
+            "MIN_8_CHARS": "Min 8 chars required",
+            "INVALID_CREDENTIALS": "Invalid email or password.",
+            "GENERIC": "An error occurred during registration."
+        }
     }
 }
