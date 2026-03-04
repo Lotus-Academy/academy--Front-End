@@ -15,33 +15,34 @@
                 <div
                     class="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 shadow-sm animate-fade-in">
                     <span class="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-                    <span class="text-sm font-medium text-slate-600 dark:text-slate-400">New courses added weekly</span>
+                    <span class="text-sm font-medium text-slate-600 dark:text-slate-400">{{ 'HOME.HERO.BADGE' |
+                        translate }}</span>
                 </div>
 
                 <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-7xl">
-                    Learn from the Best. <br>
-                    <span class="text-blue-600 dark:text-blue-400">Grow with Lotus Academy.</span>
+                    {{ 'HOME.HERO.TITLE_1' | translate }} <br>
+                    <span class="text-blue-600 dark:text-blue-400">{{ 'HOME.HERO.TITLE_2' | translate }}</span>
                 </h1>
 
                 <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-300 md:text-xl">
-                    Join thousands of learners discovering new skills from expert instructors in our vibrant learning
-                    community.
+                    {{ 'HOME.HERO.SUBTITLE' | translate }}
                 </p>
 
                 <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                     <button routerLink="/courses"
                         class="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition flex items-center gap-2 shadow-lg shadow-blue-200">
-                        Browse Courses <lucide-icon [name]="icons.ArrowRight" class="w-5 h-5"></lucide-icon>
+                        {{ 'HOME.HERO.BTN_BROWSE' | translate }} <lucide-icon [name]="icons.ArrowRight"
+                            class="w-5 h-5"></lucide-icon>
                     </button>
-                    <button routerLink="/auth"
+                    <button routerLink="/register"
                         class="px-8 py-4 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition flex items-center gap-2">
                         <lucide-icon [name]="icons.Play" class="w-5 h-5 text-blue-600 dark:text-blue-400"></lucide-icon>
-                        Start Learning Free
+                        {{ 'HOME.HERO.BTN_START' | translate }}
                     </button>
                 </div>
 
                 <div class="mt-16 grid grid-cols-3 gap-8 border-t border-slate-100 dark:border-slate-800 pt-8">
-                    @for (stat of stats; track stat.label) {
+                    @for (stat of stats; track stat.labelKey) {
                     <div class="text-center">
                         <div
                             class="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/30">
@@ -50,7 +51,7 @@
                         </div>
                         <div class="text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">{{ stat.value }}
                         </div>
-                        <div class="text-sm text-slate-500 dark:text-slate-400">{{ stat.label }}</div>
+                        <div class="text-sm text-slate-500 dark:text-slate-400">{{ stat.labelKey | translate }}</div>
                     </div>
                     }
                 </div>
@@ -61,22 +62,24 @@
     <section id="topics" class="py-16 md:py-24 bg-slate-50/50 dark:bg-slate-800/50">
         <div class="container mx-auto px-4">
             <div class="mb-12 text-center">
-                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">Trending Topics</h2>
-                <p class="mt-2 text-slate-600 dark:text-slate-400">Explore the most popular areas of study</p>
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">{{ 'HOME.TOPICS.TITLE' |
+                    translate }}</h2>
+                <p class="mt-2 text-slate-600 dark:text-slate-400">{{ 'HOME.TOPICS.SUBTITLE' | translate }}</p>
             </div>
 
             <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-                @for (topic of topics; track topic.name) {
-                <a [routerLink]="['/courses']" [queryParams]="{topic: topic.name}"
+                @for (topic of topics; track topic.nameKey) {
+                <a [routerLink]="['/courses']" [queryParams]="{topic: topic.query}"
                     class="group flex flex-col items-center rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 text-center transition-all hover:shadow-xl hover:-translate-y-1">
                     <div [class]="'mb-4 flex h-14 w-14 items-center justify-center rounded-xl ' + topic.color">
                         <lucide-icon [name]="topic.icon" class="h-7 w-7"></lucide-icon>
                     </div>
                     <h3
                         class="font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                        {{ topic.name }}
+                        {{ topic.nameKey | translate }}
                     </h3>
-                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ topic.courses }} courses</p>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ topic.courses }} {{
+                        'HOME.TOPICS.COURSES' | translate }}</p>
                 </a>
                 }
             </div>
@@ -87,8 +90,9 @@
         class="border-t border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/30 py-16 md:py-24">
         <div class="container mx-auto px-4">
             <div class="mb-12 text-center">
-                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">What Our Students Say</h2>
-                <p class="mt-2 text-slate-600 dark:text-slate-400">Join thousands of successful traders</p>
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">{{ 'HOME.TESTIMONIALS.TITLE' |
+                    translate }}</h2>
+                <p class="mt-2 text-slate-600 dark:text-slate-400">{{ 'HOME.TESTIMONIALS.SUBTITLE' | translate }}</p>
             </div>
 
             <div class="grid gap-8 md:grid-cols-3">
@@ -122,24 +126,24 @@
     <section id="faq" class="py-16 md:py-24 dark:bg-slate-900">
         <div class="container mx-auto px-4 max-w-3xl">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4 dark:text-white">Frequently Asked Questions</h2>
-                <p class="text-slate-600 dark:text-slate-400">Find answers to common questions about Lotus Academy</p>
+                <h2 class="text-3xl font-bold mb-4 dark:text-white">{{ 'HOME.FAQ.TITLE' | translate }}</h2>
+                <p class="text-slate-600 dark:text-slate-400">{{ 'HOME.FAQ.SUBTITLE' | translate }}</p>
             </div>
 
             <div class="space-y-4">
-                @for (faq of faqs; track faq.question; let i = $index) {
+                @for (faq of faqs; track faq.questionKey; let i = $index) {
                 <div
                     class="border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 overflow-hidden">
                     <button (click)="toggleFaq(i)"
                         class="w-full flex justify-between items-center p-6 text-left font-medium text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                        {{ faq.question }}
+                        {{ faq.questionKey | translate }}
                         <span class="transform transition-transform duration-200"
                             [class.rotate-180]="activeIndex === i">▼</span>
                     </button>
 
                     @if (activeIndex === i) {
                     <div class="p-6 pt-0 text-slate-600 dark:text-slate-400 animate-fade-down">
-                        {{ faq.answer }}
+                        {{ faq.answerKey | translate }}
                     </div>
                     }
                 </div>
@@ -152,13 +156,14 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
                 <div>
-                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">Featured Courses</h2>
-                    <p class="mt-2 text-slate-600 dark:text-slate-400">Hand-picked courses to accelerate your trading
-                        journey</p>
+                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">{{ 'HOME.COURSES.TITLE' |
+                        translate }}</h2>
+                    <p class="mt-2 text-slate-600 dark:text-slate-400">{{ 'HOME.COURSES.SUBTITLE' | translate }}</p>
                 </div>
                 <button routerLink="/courses"
                     class="text-blue-600 dark:text-blue-400 font-semibold hover:underline flex items-center gap-2">
-                    View all courses <lucide-icon [name]="icons.ArrowRight" class="w-4 h-4"></lucide-icon>
+                    {{ 'HOME.COURSES.VIEW_ALL' | translate }} <lucide-icon [name]="icons.ArrowRight"
+                        class="w-4 h-4"></lucide-icon>
                 </button>
             </div>
 
@@ -180,11 +185,12 @@
                         <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">{{ course.instructorName }}</p>
                         <div
                             class="flex items-center justify-between border-t border-slate-50 dark:border-slate-700 pt-4">
-                            <span class="text-xl font-bold text-blue-600 dark:text-blue-400">{{ course.price === 0 ?
-                                'Free' : (course.price | currency) }}</span>
+                            <span class="text-xl font-bold text-blue-600 dark:text-blue-400">
+                                {{ course.price === 0 ? ('HOME.COURSES.FREE' | translate) : (course.price | currency) }}
+                            </span>
                             <button [routerLink]="['/courses', course.id]"
                                 class="p-2 rounded-lg bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors">
-                                Details
+                                {{ 'HOME.COURSES.DETAILS' | translate }}
                             </button>
                         </div>
                     </div>
@@ -197,10 +203,10 @@
     <section class="py-16 md:py-24 bg-white dark:bg-slate-900">
         <div class="container mx-auto px-4">
             <div class="mb-12 text-center">
-                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">Why Learn With Lotus Academy?
-                </h2>
-                <p class="mx-auto mt-2 max-w-2xl text-slate-600 dark:text-slate-400">Join thousands of successful
-                    traders who started their journey here</p>
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">{{ 'HOME.WHY.TITLE' |
+                    translate }}</h2>
+                <p class="mx-auto mt-2 max-w-2xl text-slate-600 dark:text-slate-400">{{ 'HOME.WHY.SUBTITLE' | translate
+                    }}</p>
             </div>
 
             <div class="grid gap-8 md:grid-cols-3">
@@ -211,9 +217,10 @@
                         <lucide-icon [name]="icons.Award"
                             class="h-7 w-7 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors"></lucide-icon>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Industry Expertise</h3>
-                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Learn from professionals with decades
-                        of experience at top hedge funds and investment banks.</p>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ 'HOME.WHY.REASON1_TITLE' |
+                        translate }}</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">{{ 'HOME.WHY.REASON1_DESC' | translate
+                        }}</p>
                 </div>
 
                 <div
@@ -223,9 +230,10 @@
                         <lucide-icon [name]="icons.Database"
                             class="h-7 w-7 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors"></lucide-icon>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Real Data Examples</h3>
-                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Practice with real market data and
-                        build strategies that work in actual trading environments.</p>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ 'HOME.WHY.REASON2_TITLE' |
+                        translate }}</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">{{ 'HOME.WHY.REASON2_DESC' | translate
+                        }}</p>
                 </div>
 
                 <div
@@ -235,9 +243,10 @@
                         <lucide-icon [name]="icons.BookOpen"
                             class="h-7 w-7 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors"></lucide-icon>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Structured Curriculum</h3>
-                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Follow a carefully designed learning
-                        path from fundamentals to advanced trading strategies.</p>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ 'HOME.WHY.REASON3_TITLE' |
+                        translate }}</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">{{ 'HOME.WHY.REASON3_DESC' | translate
+                        }}</p>
                 </div>
             </div>
         </div>

@@ -10,12 +10,12 @@
         </a>
 
         <nav class="hidden md:flex items-center gap-1">
-            @for (link of navLinks; track link.label) {
+            @for (link of navLinks; track link.labelKey) {
             <a [routerLink]="[link.href]" [fragment]="link.fragment"
                 routerLinkActive="text-blue-600 bg-blue-50 dark:bg-blue-900/20"
                 [routerLinkActiveOptions]="{exact: link.href === '/'}"
                 class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                {{ link.label }}
+                {{ link.labelKey | translate }}
             </a>
             }
         </nav>
@@ -26,10 +26,43 @@
                 <lucide-icon [name]="icons.Search" class="w-5 h-5"></lucide-icon>
             </button>
 
-            <button
-                class="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
-                <lucide-icon [name]="icons.Globe" class="w-5 h-5"></lucide-icon>
-            </button>
+            <div class="relative">
+                <button (click)="toggleLanguageMenu()"
+                    class="flex items-center gap-1.5 p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg transition-colors cursor-pointer"
+                    [ngClass]="isLanguageMenuOpen() ? 'bg-slate-100 dark:bg-slate-800' : ''">
+                    <span class="text-lg leading-none">{{ languageService.getCurrentLanguage() === 'fr' ? '🇫🇷' :
+                        '🇬🇧' }}</span>
+                    <lucide-icon [name]="icons.ChevronDown" class="w-3.5 h-3.5 opacity-70 transition-transform"
+                        [ngClass]="isLanguageMenuOpen() ? 'rotate-180' : ''"></lucide-icon>
+                </button>
+
+                @if (isLanguageMenuOpen()) {
+                <div class="fixed inset-0 z-40 cursor-default" (click)="closeLanguageMenu()"></div>
+                <div
+                    class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 z-50 overflow-hidden origin-top-right animate-fade-in-up">
+                    <div class="py-2">
+                        <button (click)="switchLanguage('fr')"
+                            class="w-full text-left px-4 py-2.5 text-sm font-medium transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 flex items-center justify-between"
+                            [ngClass]="languageService.getCurrentLanguage() === 'fr' ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/10' : 'text-slate-700 dark:text-slate-300'">
+                            <span class="flex items-center gap-2"><span class="text-lg leading-none">🇫🇷</span>
+                                Français</span>
+                            @if (languageService.getCurrentLanguage() === 'fr') {
+                            <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4"></lucide-icon>
+                            }
+                        </button>
+                        <button (click)="switchLanguage('en')"
+                            class="w-full text-left px-4 py-2.5 text-sm font-medium transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 flex items-center justify-between"
+                            [ngClass]="languageService.getCurrentLanguage() === 'en' ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/10' : 'text-slate-700 dark:text-slate-300'">
+                            <span class="flex items-center gap-2"><span class="text-lg leading-none">🇬🇧</span>
+                                English</span>
+                            @if (languageService.getCurrentLanguage() === 'en') {
+                            <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4"></lucide-icon>
+                            }
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
 
             <button (click)="themeService.toggleTheme()"
                 class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:ring-2 hover:ring-blue-500 transition-all">
@@ -42,11 +75,11 @@
 
             <a routerLink="/login"
                 class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
-                Login
+                {{ 'NAVBAR.LOGIN' | translate }}
             </a>
             <a [routerLink]="['/login']" [queryParams]="{mode: 'signup'}"
                 class="px-8 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md shadow-blue-200 dark:shadow-none transition">
-                Sign up
+                {{ 'NAVBAR.SIGNUP' | translate }}
             </a>
         </div>
 
@@ -58,17 +91,19 @@
     @if (isMobileMenuOpen) {
     <div
         class="md:hidden border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 space-y-2 animate-fade-down">
-        @for (link of navLinks; track link.label) {
+        @for (link of navLinks; track link.labelKey) {
         <a [routerLink]="[link.href]" [fragment]="link.fragment" (click)="isMobileMenuOpen = false"
             class="block px-4 py-3 text-base font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
-            {{ link.label }}
+            {{ link.labelKey | translate }}
         </a>
         }
         <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
             <a routerLink="/login" (click)="isMobileMenuOpen = false"
-                class="w-full py-3 text-center font-medium border border-slate-200 dark:border-slate-700 dark:text-white rounded-lg">Login</a>
+                class="w-full py-3 text-center font-medium border border-slate-200 dark:border-slate-700 dark:text-white rounded-lg">{{
+                'NAVBAR.LOGIN' | translate }}</a>
             <a [routerLink]="['/login']" [queryParams]="{mode: 'signup'}" (click)="isMobileMenuOpen = false"
-                class="w-full py-3 text-center font-medium bg-blue-600 text-white rounded-lg">Sign up</a>
+                class="w-full py-3 text-center font-medium bg-blue-600 text-white rounded-lg">{{ 'NAVBAR.SIGNUP' |
+                translate }}</a>
         </div>
     </div>
     }

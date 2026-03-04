@@ -176,6 +176,7 @@
                     {{ isLogin() ? 'Sign in' : 'Create account' }}
                 </button>
 
+
                 <p class="text-center text-sm text-gray-600 dark:text-slate-400">
                     {{ isLogin() ? "Don't have an account?" : "Already have an account?" }}
                     <button type="button" (click)="toggleMode()"
@@ -183,6 +184,17 @@
                         {{ isLogin() ? "Sign up" : "Sign in" }}
                     </button>
                 </p>
+                @if (!isLogin()) {
+                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-slate-800 text-center">
+                    <p class="text-sm text-gray-500 dark:text-slate-500">
+                        Vous êtes un expert dans votre domaine ? <br>
+                        <a routerLink="/instructor-register"
+                            class="font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors mt-1 inline-block">
+                            Devenir Formateur sur Lotus Academy
+                        </a>
+                    </p>
+                </div>
+                }
 
             </form>
         </div>

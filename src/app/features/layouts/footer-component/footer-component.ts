@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core'; // Importation nécessaire
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './footer-component.html'
 })
 export class FooterComponent {
@@ -13,19 +14,19 @@ export class FooterComponent {
 
   footerLinks = {
     company: [
-      { label: 'About Us', href: '/about' },
-      { label: 'Careers', href: '/careers' },
-      { label: 'Press', href: '/press' },
+      { labelKey: 'FOOTER.COMPANY.ABOUT', href: '/about' },
+      { labelKey: 'FOOTER.COMPANY.CAREERS', href: '/careers' },
+      { labelKey: 'FOOTER.COMPANY.PRESS', href: '/press' },
     ],
     resources: [
-      { label: 'Blog', href: '/blog' },
-      { label: 'Help Center', href: '/help' },
-      { label: 'FAQ', href: '/faq' },
+      { labelKey: 'FOOTER.RESOURCES.BLOG', href: '/blog' },
+      { labelKey: 'FOOTER.RESOURCES.HELP', href: '/help' },
+      { labelKey: 'FOOTER.RESOURCES.FAQ', href: '/faq' },
     ],
     legal: [
-      { label: 'Terms', href: '/terms' },
-      { label: 'Privacy', href: '/privacy' },
-      { label: 'Cookies', href: '/cookies' },
+      { labelKey: 'FOOTER.LEGAL.TERMS', href: '/terms' },
+      { labelKey: 'FOOTER.LEGAL.PRIVACY', href: '/privacy' },
+      { labelKey: 'FOOTER.LEGAL.COOKIES', href: '/cookies' },
     ],
   };
 }

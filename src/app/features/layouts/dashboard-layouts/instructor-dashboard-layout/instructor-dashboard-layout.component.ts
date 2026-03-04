@@ -1,68 +1,42 @@
-
-
-
-import { Component, Input, inject, signal, computed } from '@angular/core';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, Router } from '@angular/router';
-import {
-  LucideAngularModule,
-  Home,
-  Play,
-  Heart,
-  Settings,
-  LogOut,
-  Menu,
-  X,
-  Bell,         // Pour les notifications
-  Globe,        // Pour la langue
-  Sun,          // Pour le mode clair
-  Moon,         // Pour le mode sombre
-  ChevronDown,   // Pour les menus déroulants
-  LayoutDashboard,
-  Upload,
-  BarChart3
-} from 'lucide-angular';
-
-import { AuthService } from '../../../../core/services/auth.service';
-import { ThemeService } from '../../../../core/services/theme-service'; // Assurez-vous du chemin
+import { LayoutDashboard, Upload, BarChart3 } from 'lucide-angular';
+import { SharedLayoutComponent } from '../../../../shared/components/shared-layout/shared-layout.component';
+import { InstructorProfileService } from '../../../../core/services/instructor-profile.service';
 
 @Component({
   selector: 'app-instructor-layout',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, LucideAngularModule],
-  templateUrl: './instructor-dashboard-layout.component.html'
+  imports: [CommonModule, SharedLayoutComponent],
+  template: `
+    <app-shared-layout 
+      [title]="title"
+      [navLinks]="navLinks"
+      badgeText="Espace Instructeur"
+      badgeClasses="bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-400 dark:border-violet-800"
+      profileLink="/instructor/profile"
+      profileRoleText="Instructeur"
+      [profileStatus]="profileStatus()">
+      <ng-content></ng-content>
+    </app-shared-layout>
+  `
 })
-export class InstructorLayoutComponent {
+export class InstructorLayoutComponent implements OnInit {
   @Input({ required: true }) title!: string;
+  private instructorProfileService = inject(InstructorProfileService);
 
-  private authService = inject(AuthService);
-  public themeService = inject(ThemeService); // Rendu public pour le HTML
-  private router = inject(Router);
-
-  readonly icons = { Menu, X, LogOut, Bell, Globe, Sun, Moon, ChevronDown };
-
-  isSidebarOpen = signal<boolean>(false);
-  user = computed(() => this.authService.getUser());
-
-  // Simulation du nombre de notifications non lues
-  unreadNotifications = signal<number>(3);
+  profileStatus = signal<'LOADING' | 'MISSING' | 'PENDING' | 'APPROVED' | 'REJECTED'>('LOADING');
 
   navLinks = [
-    { href: '/dashboard', label: 'Vue d\'ensemble', icon: LayoutDashboard },
-    { href: '/instructor/courses/new', label: 'Créer un cours', icon: Upload },
-    { href: '/dashboard/analytics', label: 'Analytiques', icon: BarChart3 }
+    { href: '/dashboard', label: 'Vue d\'ensemble', icon: LayoutDashboard, requiresApproval: false },
+    { href: '/instructor/courses/new', label: 'Créer un cours', icon: Upload, requiresApproval: true },
+    { href: '/instructor/analytics', label: 'Analytiques', icon: BarChart3, requiresApproval: true }
   ];
 
-  toggleSidebar() {
-    this.isSidebarOpen.update(v => !v);
-  }
-
-  closeSidebar() {
-    this.isSidebarOpen.set(false);
-  }
-
-  handleSignOut() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  ngOnInit(): void {
+    this.instructorProfileService.getMyProfile().subscribe({
+      next: (profile) => this.profileStatus.set(profile.approvalStatus),
+      error: (err) => this.profileStatus.set(err.status === 404 ? 'MISSING' : 'MISSING')
+    });
   }
 }

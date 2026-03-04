@@ -10,42 +10,42 @@
                     <span class="text-xl font-bold text-slate-900 dark:text-white">Lotus Academy</span>
                 </a>
                 <p class="mt-4 text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm">
-                    Learn from expert instructors with professional-grade video content and real-world trading
-                    strategies.
+                    {{ 'FOOTER.DESC' | translate }}
                 </p>
             </div>
 
             <div>
-                <h4 class="font-bold text-slate-900 dark:text-white mb-4">Company</h4>
+                <h4 class="font-bold text-slate-900 dark:text-white mb-4">{{ 'FOOTER.COMPANY.TITLE' | translate }}</h4>
                 <ul class="space-y-3">
                     @for (link of footerLinks.company; track link.href) {
                     <li><a [routerLink]="link.href"
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-                            {{ link.label }}</a>
+                            {{ link.labelKey | translate }}</a>
                     </li>
                     }
                 </ul>
             </div>
 
             <div>
-                <h4 class="font-bold text-slate-900 dark:text-white mb-4">Resources</h4>
+                <h4 class="font-bold text-slate-900 dark:text-white mb-4">{{ 'FOOTER.RESOURCES.TITLE' | translate }}
+                </h4>
                 <ul class="space-y-3">
                     @for (link of footerLinks.resources; track link.href) {
                     <li><a [routerLink]="link.href"
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-                            {{ link.label }}</a>
+                            {{ link.labelKey | translate }}</a>
                     </li>
                     }
                 </ul>
             </div>
 
             <div>
-                <h4 class="font-bold text-slate-900 dark:text-white mb-4">Legal</h4>
+                <h4 class="font-bold text-slate-900 dark:text-white mb-4">{{ 'FOOTER.LEGAL.TITLE' | translate }}</h4>
                 <ul class="space-y-3">
                     @for (link of footerLinks.legal; track link.href) {
                     <li><a [routerLink]="link.href"
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-                            {{ link.label }}</a>
+                            {{ link.labelKey | translate }}</a>
                     </li>
                     }
                 </ul>
@@ -55,7 +55,7 @@
         <div
             class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="text-sm text-slate-500 dark:text-slate-400">
-                © {{ currentYear }} Lotus Academy. All rights reserved.
+                © {{ currentYear }} Lotus Academy. {{ 'FOOTER.COPYRIGHT' | translate }}
             </p>
             <div class="flex gap-6">
                 <a href="#"
