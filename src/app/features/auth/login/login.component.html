@@ -22,6 +22,28 @@
                     Academy</span>
             </div>
 
+            @if (isRegistrationSuccess()) {
+            <div
+                class="text-center bg-green/5 dark:bg-green/10 p-8 rounded border border-green/20 dark:border-green/30 animate-fade-in-up">
+                <div class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-green/20 mb-6">
+                    <lucide-icon [name]="icons.CheckCircle2" class="w-8 h-8 text-green stroke-[1.5px]"></lucide-icon>
+                </div>
+                <h3 class="font-cormorant text-3xl font-light text-slate-900 dark:text-white mb-3">{{
+                    'LOGIN.REGISTER_SUCCESS_TITLE' | translate }}</h3>
+                <p class="font-syne text-sm text-slate-600 dark:text-ds-muted/70 mb-4 leading-relaxed">
+                    {{ 'LOGIN.REGISTER_SUCCESS_DESC' | translate }}
+                </p>
+                <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/50 mb-8">
+                    {{ 'LOGIN.REGISTER_SUCCESS_NOTE' | translate }}
+                </p>
+                <button type="button" (click)="resetToLogin()"
+                    class="block w-full py-4 px-6 bg-lotus text-ds-black rounded font-mono text-[12px] uppercase tracking-[0.12em] hover:bg-lotus-light transition-all text-center">
+                    {{ 'LOGIN.BTN_BACK_TO_LOGIN' | translate }}
+                </button>
+            </div>
+            }
+
+            @else {
             <div class="mb-8 animate-fade-in-up">
                 <h1 class="font-cormorant font-light text-4xl text-slate-900 dark:text-white">
                     @if (isLogin()) { {{ 'LOGIN.TITLE_LOGIN' | translate }} } @else { {{ 'LOGIN.TITLE_REGISTER' |
@@ -38,6 +60,20 @@
                 class="mb-6 p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded animate-fade-in-up">
                 <p class="font-syne text-sm font-bold text-red-800 dark:text-red-400">{{ errorMessage() | translate }}
                 </p>
+            </div>
+            }
+
+            @if (isUnverified()) {
+            <div class="mb-6 p-5 bg-lotus/5 border border-lotus/30 rounded animate-fade-in-up">
+                <div class="flex items-start gap-3">
+                    <lucide-icon [name]="icons.Info" class="w-5 h-5 text-lotus shrink-0 mt-0.5"></lucide-icon>
+                    <div>
+                        <h4 class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{
+                            'LOGIN.UNVERIFIED_TITLE' | translate }}</h4>
+                        <p class="font-syne text-sm mt-1 text-slate-600 dark:text-ds-muted/70">{{
+                            'LOGIN.UNVERIFIED_DESC' | translate }}</p>
+                    </div>
+                </div>
             </div>
             }
 
@@ -106,12 +142,7 @@
                     <div class="relative">
                         <div
                             class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-ds-muted/40">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <rect width="20" height="16" x="2" y="4" rx="2" />
-                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                            </svg>
+                            <lucide-icon [name]="icons.Mail" class="w-4 h-4 stroke-[1.5px]"></lucide-icon>
                         </div>
                         <input type="email" formControlName="email" placeholder="you@example.com"
                             class="block w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
@@ -178,7 +209,8 @@
 
                 <button type="submit" [disabled]="authForm.invalid || isLoading()"
                     class="w-full flex justify-center items-center py-4 px-6 rounded font-mono text-[12px] uppercase tracking-[0.12em] bg-lotus text-ds-black hover:bg-lotus-light disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-                    @if (isLoading()) { <span class="mr-3 animate-spin">⌛</span> {{ 'LOGIN.LOADING' | translate }} }
+                    @if (isLoading()) { <lucide-icon [name]="icons.Loader2"
+                        class="w-4 h-4 mr-3 animate-spin"></lucide-icon> {{ 'LOGIN.LOADING' | translate }} }
                     @else { {{ isLogin() ? ('LOGIN.BTN_SUBMIT_LOGIN' | translate) : ('LOGIN.BTN_SUBMIT_REGISTER' |
                     translate) }} }
                 </button>
@@ -204,6 +236,7 @@
                 }
 
             </form>
+            }
         </div>
     </div>
 

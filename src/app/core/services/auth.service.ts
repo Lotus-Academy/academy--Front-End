@@ -64,7 +64,12 @@ export class AuthService {
    */
   register(request: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.baseUrl}/register`, request).pipe(
-      tap(response => this.saveSession(response))
+      tap(response => {
+        if (response.token) {
+          this.saveSession(response);
+        }
+      }
+      )
     );
   }
 

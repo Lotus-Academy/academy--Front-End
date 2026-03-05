@@ -1,14 +1,15 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { Info, Mail, Loader2, CheckCircle2, LucideAngularModule } from 'lucide-angular';
+
 import { AuthService, LoginRequest, RegisterRequest } from '../../../core/services/auth.service';
-import { TranslateModule } from '@ngx-translate/core'; // IMPORTATION AJOUTÉE
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  // AJOUT DE TranslateModule DANS LES IMPORTS
-  imports: [ReactiveFormsModule, RouterLink, TranslateModule],
+  imports: [ReactiveFormsModule, RouterLink, TranslateModule, LucideAngularModule],
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
@@ -18,10 +19,15 @@ export class LoginComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
+  readonly icons = { Mail, Info, Loader2, CheckCircle2 };
+
   isLogin = signal<boolean>(true);
   isLoading = signal<boolean>(false);
   showPassword = signal<boolean>(false);
   errorMessage = signal<string>('');
+
+  isUnverified = signal<boolean>(false);
+  isRegistrationSuccess = signal<boolean>(false);
 
   authForm: FormGroup = this.fb.group({
     firstName: [''],
@@ -52,6 +58,8 @@ export class LoginComponent implements OnInit {
     });
 
     this.errorMessage.set('');
+    this.isUnverified.set(false);
+    this.isRegistrationSuccess.set(false);
     this.updateValidators();
   }
 
@@ -99,8 +107,16 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        // Utilisation de la clé de traduction
-        this.errorMessage.set('LOGIN.ERRORS.INVALID_CREDENTIALS');
+
+        const errorMsg = err.error?.message?.toLowerCase() || '';
+
+        if (err.status === 403 || errorMsg.includes('disabled') || errorMsg.includes('verif')) {
+          this.isUnverified.set(true);
+          this.errorMessage.set('');
+        } else {
+          this.isUnverified.set(false);
+          this.errorMessage.set('LOGIN.ERRORS.INVALID_CREDENTIALS');
+        }
       }
     });
   }
@@ -115,12 +131,17 @@ export class LoginComponent implements OnInit {
     };
 
     this.authService.register(request).subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard']);
+      next: (response) => {
+        this.isLoading.set(false);
+
+        if (!response.token) {
+          this.isRegistrationSuccess.set(true);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
       },
       error: (err) => {
         this.isLoading.set(false);
-        // L'API renvoie le message d'erreur réel ou on utilise la clé générique
         this.errorMessage.set(err.error?.message || 'LOGIN.ERRORS.GENERIC');
       }
     });
@@ -128,5 +149,12 @@ export class LoginComponent implements OnInit {
 
   togglePasswordVisibility() {
     this.showPassword.update(current => !current);
+  }
+
+  resetToLogin() {
+    this.isRegistrationSuccess.set(false);
+    this.isLogin.set(true);
+    this.authForm.reset();
+    this.updateValidators();
   }
 }

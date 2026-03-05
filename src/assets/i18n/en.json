@@ -215,7 +215,13 @@
             "MIN_8_CHARS": "Min 8 chars required",
             "INVALID_CREDENTIALS": "Invalid email or password.",
             "GENERIC": "An error occurred during registration."
-        }
+        },
+        "UNVERIFIED_TITLE": "Verification required",
+        "UNVERIFIED_DESC": "Your account is not activated yet. Please click the verification link we sent to your email to be able to log in.",
+        "REGISTER_SUCCESS_TITLE": "Check your inbox",
+        "REGISTER_SUCCESS_DESC": "Your account has been successfully created. A confirmation link has been sent to your email address. Please click this link to activate your account.",
+        "REGISTER_SUCCESS_NOTE": "If you cannot find the email, please check your spam folder.",
+        "BTN_BACK_TO_LOGIN": "Back to login"
     },
     "FORGOT_PASSWORD": {
         "TITLE": "Forgot password",
