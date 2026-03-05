@@ -3,10 +3,12 @@
         "ADMIN_SPACE": "Espace Administrateur",
         "INSTRUCTOR_SPACE": "Espace Instructeur",
         "STUDENT_SPACE": "Espace Étudiant",
-        "ADMIN_ROLE": "Admin",
         "INSTRUCTOR_ROLE": "Instructeur",
         "STUDENT_ROLE": "Étudiant",
-        "LOGOUT": "Déconnexion"
+        "INSTRUCTOR_BADGE": "Espace Formateur",
+        "LOGOUT": "Déconnexion",
+        "ADMIN_BADGE": "Administration",
+        "ADMIN_ROLE": "Super Admin"
     },
     "MENU": {
         "DASHBOARD": "Vue d'ensemble",
@@ -253,5 +255,33 @@
         "ERROR_DESC": "Le lien de vérification est invalide ou a expiré. Vous pouvez demander un nouveau lien ou réinitialiser votre mot de passe.",
         "BTN_LOGIN": "Se connecter",
         "BTN_FORGOT": "Mot de passe oublié"
+    },
+    "SIDEBAR": {
+        "INSTRUCTOR": {
+            "DASHBOARD": "Tableau de bord",
+            "MY_COURSES": "Mes cours",
+            "CREATE_COURSE": "Créer un cours",
+            "LIVE_SESSIONS": "Sessions en direct",
+            "STUDENTS": "Suivi des étudiants",
+            "EARNINGS": "Revenus",
+            "MENTORING": "Q&A et Mentorat",
+            "PROFILE": "Profil Instructeur",
+            "SETTINGS": "Paramètres"
+        },
+        "BADGES": {
+            "SOON": "Bientôt",
+            "ACTION": "Action requise"
+        },
+        "ADMIN": {
+            "DASHBOARD": "Vue d'ensemble",
+            "INSTRUCTORS": "Formateurs & Validations",
+            "USERS": "Étudiants",
+            "COURSES": "Modération des cours",
+            "CATEGORIES": "Catégories & Tags",
+            "FINANCE": "Finance & Coupons",
+            "REVIEWS": "Avis & Modération",
+            "ANALYTICS": "Analytiques Globales",
+            "SETTINGS": "Paramètres Plateforme"
+        }
     }
 }

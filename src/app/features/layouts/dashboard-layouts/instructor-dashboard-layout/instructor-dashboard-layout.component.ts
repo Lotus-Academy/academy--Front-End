@@ -1,8 +1,9 @@
 import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LayoutDashboard, Upload, BarChart3 } from 'lucide-angular';
 import { SharedLayoutComponent } from '../../../../shared/components/shared-layout/shared-layout.component';
 import { InstructorProfileService } from '../../../../core/services/instructor-profile.service';
+
+import { INSTRUCTOR_SIDEBAR_LINKS } from './instructor-sidebar.config';
 
 @Component({
   selector: 'app-instructor-layout',
@@ -12,10 +13,10 @@ import { InstructorProfileService } from '../../../../core/services/instructor-p
     <app-shared-layout 
       [title]="title"
       [navLinks]="navLinks"
-      badgeText="Espace Instructeur"
-      badgeClasses="bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-400 dark:border-violet-800"
+      badgeText="LAYOUT.INSTRUCTOR_BADGE"
+      badgeClasses="bg-lotus/10 text-lotus border-lotus/20 dark:bg-lotus/10 dark:text-lotus dark:border-lotus/30"
       profileLink="/instructor/profile"
-      profileRoleText="Instructeur"
+      profileRoleText="LAYOUT.INSTRUCTOR_ROLE"
       [profileStatus]="profileStatus()">
       <ng-content></ng-content>
     </app-shared-layout>
@@ -27,11 +28,7 @@ export class InstructorLayoutComponent implements OnInit {
 
   profileStatus = signal<'LOADING' | 'MISSING' | 'PENDING' | 'APPROVED' | 'REJECTED'>('LOADING');
 
-  navLinks = [
-    { href: '/dashboard', label: 'Vue d\'ensemble', icon: LayoutDashboard, requiresApproval: false },
-    { href: '/instructor/courses/new', label: 'Créer un cours', icon: Upload, requiresApproval: true },
-    { href: '/instructor/analytics', label: 'Analytiques', icon: BarChart3, requiresApproval: true }
-  ];
+  navLinks = INSTRUCTOR_SIDEBAR_LINKS;
 
   ngOnInit(): void {
     this.instructorProfileService.getMyProfile().subscribe({

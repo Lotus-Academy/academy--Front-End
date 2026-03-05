@@ -3,10 +3,12 @@
         "ADMIN_SPACE": "Administrator Area",
         "INSTRUCTOR_SPACE": "Instructor Area",
         "STUDENT_SPACE": "Student Area",
-        "ADMIN_ROLE": "Admin",
         "INSTRUCTOR_ROLE": "Instructor",
+        "INSTRUCTOR_BADGE": "Instructor Portal",
         "STUDENT_ROLE": "Student",
-        "LOGOUT": "Sign Out"
+        "LOGOUT": "Sign Out",
+        "ADMIN_BADGE": "Administration",
+        "ADMIN_ROLE": "Super Admin"
     },
     "MENU": {
         "DASHBOARD": "Dashboard",
@@ -253,5 +255,33 @@
         "ERROR_DESC": "The verification link is invalid or has expired. You can request a new link or reset your password.",
         "BTN_LOGIN": "Log in",
         "BTN_FORGOT": "Forgot password"
+    },
+    "SIDEBAR": {
+        "INSTRUCTOR": {
+            "DASHBOARD": "Dashboard",
+            "MY_COURSES": "My Courses",
+            "CREATE_COURSE": "Create Course",
+            "LIVE_SESSIONS": "Live Sessions",
+            "STUDENTS": "Student Progress",
+            "EARNINGS": "Earnings",
+            "MENTORING": "Q&A & Mentoring",
+            "PROFILE": "Instructor Profile",
+            "SETTINGS": "Settings"
+        },
+        "BADGES": {
+            "SOON": "Soon",
+            "ACTION": "Action required"
+        },
+        "ADMIN": {
+            "DASHBOARD": "Overview",
+            "INSTRUCTORS": "Instructors & Approvals",
+            "USERS": "Students",
+            "COURSES": "Course Moderation",
+            "CATEGORIES": "Categories & Tags",
+            "FINANCE": "Finance & Coupons",
+            "REVIEWS": "Reviews & Moderation",
+            "ANALYTICS": "Global Analytics",
+            "SETTINGS": "Platform Settings"
+        }
     }
 }

@@ -12,11 +12,14 @@ import { AppNotification, NotificationService } from '../../../core/services/not
 import { LanguageService } from '../../../core/services/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 
+// Interface mise à jour pour supporter les badges (ex: "BIENTÔT") et les séparateurs
 export interface NavLink {
+  labelKey: string;
   href: string;
-  label: string;
   icon: any;
-  requiresApproval?: boolean;
+  requiresApproval: boolean;
+  dividerBefore?: boolean;
+  badgeKey?: string;
 }
 
 @Component({
