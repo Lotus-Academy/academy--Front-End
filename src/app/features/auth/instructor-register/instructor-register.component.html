@@ -1,0 +1,182 @@
+<div class="min-h-screen bg-slate-50 dark:bg-ds-black flex transition-colors duration-300">
+
+    <div
+        class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white dark:bg-ds-black">
+        <div class="mx-auto w-full max-w-sm lg:w-96">
+
+            <a routerLink="/"
+                class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.15em] text-slate-500 dark:text-ds-muted/50 hover:text-lotus dark:hover:text-lotus transition-colors mb-10 cursor-pointer">
+                <lucide-icon [name]="icons.ArrowLeft" class="w-3.5 h-3.5 stroke-[1.5px]"></lucide-icon>
+                {{ 'INSTRUCTOR_REGISTER.BACK_HOME' | translate }}
+            </a>
+
+            <div class="flex items-center gap-3 mb-10">
+                <div class="flex h-8 w-8 items-center justify-center rounded bg-lotus/10 border border-lotus/20">
+                    <span class="text-base font-cormorant font-bold text-lotus">L</span>
+                </div>
+                <span class="text-2xl font-cormorant font-bold text-slate-900 dark:text-white tracking-wide">Lotus
+                    Academy</span>
+            </div>
+
+            @if (isRegistrationSuccess()) {
+            <div
+                class="text-center bg-green/5 dark:bg-green/10 p-8 rounded border border-green/20 dark:border-green/30 animate-fade-in-up">
+                <div class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-green/20 mb-6">
+                    <lucide-icon [name]="icons.CheckCircle2" class="w-8 h-8 text-green stroke-[1.5px]"></lucide-icon>
+                </div>
+                <h3 class="font-cormorant text-3xl font-light text-slate-900 dark:text-white mb-3">{{
+                    'INSTRUCTOR_REGISTER.VERIFY_TITLE' | translate }}</h3>
+                <p class="font-syne text-sm text-slate-600 dark:text-ds-muted/70 mb-8 leading-relaxed">
+                    {{ 'INSTRUCTOR_REGISTER.VERIFY_TXT_1' | translate }} <strong
+                        class="text-slate-900 dark:text-white">{{ registerForm.get('email')?.value }}</strong>{{
+                    'INSTRUCTOR_REGISTER.VERIFY_TXT_2' | translate }}
+                </p>
+                <button (click)="goToLogin()"
+                    class="w-full py-4 px-6 bg-lotus text-ds-black rounded font-mono text-[12px] uppercase tracking-[0.12em] hover:bg-lotus-light transition-all">
+                    {{ 'INSTRUCTOR_REGISTER.BTN_GO_LOGIN' | translate }}
+                </button>
+            </div>
+            }
+
+            @else {
+            <div class="mb-8 animate-fade-in-up">
+                <span
+                    class="inline-block px-3 py-1.5 rounded border border-slate-200 dark:border-ds-border font-mono text-[9px] uppercase tracking-[0.2em] text-slate-600 dark:text-ds-muted/70 mb-5">
+                    {{ 'INSTRUCTOR_REGISTER.BADGE' | translate }}
+                </span>
+                <h1 class="font-cormorant font-light text-4xl text-slate-900 dark:text-white mb-3">
+                    {{ 'INSTRUCTOR_REGISTER.TITLE' | translate }}
+                </h1>
+                <p class="font-syne text-slate-600 dark:text-ds-muted/70">
+                    {{ 'INSTRUCTOR_REGISTER.SUBTITLE' | translate }}
+                </p>
+            </div>
+
+            @if (errorMessage()) {
+            <div
+                class="mb-6 p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded animate-fade-in-up">
+                <p class="font-syne text-sm font-bold text-red-800 dark:text-red-400">{{ errorMessage() }}</p>
+            </div>
+            }
+
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6 animate-fade-in-up"
+                style="animation-delay: 0.1s;">
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
+                            'INSTRUCTOR_REGISTER.FIRST_NAME' | translate }}</label>
+                        <input type="text" formControlName="firstName" placeholder="Jean"
+                            class="block w-full px-4 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
+                        @if (registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid) {
+                        <div class="font-mono text-[9px] uppercase tracking-wider text-red-500 mt-1">{{
+                            'INSTRUCTOR_REGISTER.ERRORS.REQUIRED_MIN_2' | translate }}</div>
+                        }
+                    </div>
+
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
+                            'INSTRUCTOR_REGISTER.LAST_NAME' | translate }}</label>
+                        <input type="text" formControlName="lastName" placeholder="Dupont"
+                            class="block w-full px-4 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
+                        @if (registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid) {
+                        <div class="font-mono text-[9px] uppercase tracking-wider text-red-500 mt-1">{{
+                            'INSTRUCTOR_REGISTER.ERRORS.REQUIRED' | translate }}</div>
+                        }
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label
+                        class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
+                        'INSTRUCTOR_REGISTER.EMAIL' | translate }}</label>
+                    <input type="email" formControlName="email" placeholder="expert@domaine.com"
+                        class="block w-full px-4 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
+                    @if (registerForm.get('email')?.touched && registerForm.get('email')?.invalid) {
+                    <div class="font-mono text-[9px] uppercase tracking-wider text-red-500 mt-1">{{
+                        'INSTRUCTOR_REGISTER.ERRORS.VALID_EMAIL' | translate }}</div>
+                    }
+                </div>
+
+                <div class="space-y-2">
+                    <label
+                        class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
+                        'INSTRUCTOR_REGISTER.PASSWORD' | translate }}</label>
+                    <div class="relative">
+                        <input [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+                            placeholder="••••••••"
+                            class="block w-full px-4 py-3 pr-11 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
+                        <button type="button" (click)="togglePasswordVisibility()"
+                            class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 dark:text-ds-muted/40 hover:text-lotus transition-colors cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                @if (!showPassword()) {
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                <circle cx="12" cy="12" r="3" />
+                                } @else {
+                                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                                <path
+                                    d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+                                <line x1="2" x2="22" y1="2" y2="22" />
+                                }
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" [disabled]="registerForm.invalid || isLoading()"
+                    class="w-full flex justify-center items-center py-4 px-6 rounded font-mono text-[12px] uppercase tracking-[0.12em] bg-lotus text-ds-black hover:bg-lotus-light disabled:opacity-50 disabled:cursor-not-allowed transition-all mt-8">
+                    @if (isLoading()) { <span class="mr-3 animate-spin">⌛</span> {{ 'INSTRUCTOR_REGISTER.LOADING' |
+                    translate }} }
+                    @else { {{ 'INSTRUCTOR_REGISTER.BTN_SUBMIT' | translate }} }
+                </button>
+
+                <div class="mt-8 pt-6 border-t border-slate-200 dark:border-ds-border space-y-4">
+                    <p class="text-center font-syne text-sm text-slate-600 dark:text-ds-muted/70">
+                        {{ 'INSTRUCTOR_REGISTER.ALREADY_HAVE_ACCOUNT' | translate }}
+                        <a routerLink="/login"
+                            class="font-bold text-lotus hover:text-lotus-light transition-colors ml-1 cursor-pointer">
+                            {{ 'INSTRUCTOR_REGISTER.LINK_LOGIN' | translate }}
+                        </a>
+                    </p>
+                    <p class="text-center font-syne text-sm text-slate-500 dark:text-ds-muted/50">
+                        {{ 'INSTRUCTOR_REGISTER.WANT_TO_LEARN' | translate }}
+                        <a routerLink="/login" [queryParams]="{mode: 'signup'}"
+                            class="font-bold text-slate-900 dark:text-white hover:text-lotus transition-colors ml-1 cursor-pointer">
+                            {{ 'INSTRUCTOR_REGISTER.LINK_STUDENT' | translate }}
+                        </a>
+                    </p>
+                </div>
+
+            </form>
+            }
+        </div>
+    </div>
+
+    <div class="hidden lg:block relative w-0 flex-1">
+        <div class="absolute inset-0 bg-ds-black">
+            <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-luminosity"
+                style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200');">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-ds-black via-transparent to-transparent"></div>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center p-12">
+            <div class="max-w-lg text-center text-white">
+                <div
+                    class="mb-8 inline-flex h-16 w-16 items-center justify-center rounded bg-lotus/10 border border-lotus/20 backdrop-blur-md">
+                    <lucide-icon [name]="icons.CheckCircle2" class="w-8 h-8 text-lotus stroke-[1.5px]"></lucide-icon>
+                </div>
+                <h2 class="font-cormorant text-5xl font-light mb-6 leading-tight">{{ 'INSTRUCTOR_REGISTER.BANNER_TITLE'
+                    | translate }}</h2>
+                <p class="font-syne text-lg text-ds-muted/70 leading-relaxed">
+                    {{ 'INSTRUCTOR_REGISTER.BANNER_DESC' | translate }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>

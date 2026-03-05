@@ -1,8 +1,36 @@
+/* 1. Importation des polices officielles du Design System */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap');
+
 @import "tailwindcss";
 
-@layer base {
+/* 2. Injection des couleurs et réglages Lotus Academy dans Tailwind */
+@theme {
+    /* Couleurs de marque */
+    --color-lotus: #C8A97E;
+    --color-lotus-light: #E2C9A0;
+    --color-green: #4AE68A;
 
-    /* On définit explicitement comment Tailwind doit réagir à la classe .dark */
+    /* Couleurs sombres spécifiques (Fintech Terminal) */
+    --color-ds-black: #080A08;
+    --color-ds-surface: #161A16;
+    --color-ds-border: #1F261F;
+    --color-ds-muted: #F4F0E8;
+
+    /* Typographie */
+    --font-cormorant: "Cormorant Garamond", serif;
+    --font-mono: "DM Mono", monospace;
+    --font-syne: "Syne", sans-serif;
+
+    /* Border Radius strict du Design System : 2px presque partout */
+    --radius-sm: 2px;
+    --radius-md: 2px;
+    --radius-lg: 2px;
+    --radius-xl: 2px;
+    --radius-2xl: 2px;
+    --radius-3xl: 2px;
+}
+
+@layer base {
     :root {
         color-scheme: light;
     }
@@ -12,15 +40,18 @@
     }
 }
 
+/* Activation manuelle du mode sombre via votre ThemeService */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Styles de base pour tester immédiatement */
+/* 3. Styles par défaut appliqués au corps de la page */
 body {
-    @apply bg-white text-slate-900 transition-colors duration-300;
+    /* Mode Clair par défaut : on utilise la police Syne et des couleurs claires */
+    @apply bg-slate-50 text-slate-900 font-syne transition-colors duration-300 antialiased selection:bg-lotus selection:text-white;
 }
 
 .dark body {
-    @apply bg-slate-900 text-slate-100;
+    /* Mode Sombre : on utilise le noir absolu du Design System */
+    @apply bg-ds-black text-ds-muted selection:text-ds-black;
 }
 
 html {
@@ -29,13 +60,13 @@ html {
 
 section {
     scroll-margin-top: 5rem;
-    /* Ajustez selon la hauteur de votre navbar (h-16 = 4rem) */
 }
 
-@keyframes fadeInUp {
+/* 4. Animations */
+@keyframes fadeUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(24px);
     }
 
     to {
@@ -46,6 +77,5 @@ section {
 
 .animate-fade-in-up {
     opacity: 0;
-    /* Assure que l'élément est invisible avant l'animation */
-    animation: fadeInUp 0.4s ease-out forwards;
+    animation: fadeUp 0.8s ease forwards;
 }

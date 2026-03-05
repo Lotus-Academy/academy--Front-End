@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -20,9 +20,16 @@ export interface LoginRequest {
   password: string;
 }
 
-// 3. DTO LOGIN RESPONSE
+// 3. DTO RESET PASSWORD REQUEST
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}
+
+// 4. DTO LOGIN RESPONSE (Mise à jour avec refreshToken)
 export interface AuthResponse {
   token: string;
+  refreshToken: string; // Nouvel élément ajouté par le backend
   type: string;
   userId: string;
   email: string;
@@ -43,14 +50,12 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  // Utilisation de l'environnement au lieu du localhost en dur
   private baseUrl = `${environment.apiUrl}/api/v1/auth`;
 
-  // ÉTAT RÉACTIF GLOBAL : Toute l'application peut s'y abonner
+  // ÉTAT RÉACTIF GLOBAL
   public currentUser = signal<AuthResponse | null>(null);
 
   constructor() {
-    // Au démarrage de l'app, on vérifie si une session valide existe
     this.restoreSession();
   }
 
@@ -72,13 +77,52 @@ export class AuthService {
     );
   }
 
+  /**
+   * Demander la réinitialisation du mot de passe (Envoie un email)
+   * Endpoint: POST /api/v1/auth/forgot-password?email=...
+   */
+  forgotPassword(email: string): Observable<any> {
+    const params = new HttpParams().set('email', email);
+    return this.http.post(`${this.baseUrl}/forgot-password`, null, { params, responseType: 'text' });
+  }
+
+  /**
+   * Valider le nouveau mot de passe avec le token reçu par email
+   * Endpoint: POST /api/v1/auth/reset-password
+   */
+  resetPassword(request: ResetPasswordRequest): Observable<any> {
+    return this.http.post(`${this.baseUrl}/reset-password`, request, { responseType: 'text' });
+  }
+
+  /**
+   * Valider l'adresse email
+   * Endpoint: GET /api/v1/auth/verify-email?token=...
+   */
+  verifyEmail(token: string): Observable<any> {
+    const params = new HttpParams().set('token', token);
+    return this.http.get(`${this.baseUrl}/verify-email`, { params, responseType: 'text' });
+  }
+
+  /**
+   * Rafraîchir le jeton d'accès (Access Token) à partir du Refresh Token
+   * Endpoint: POST /api/v1/auth/refresh-token
+   */
+  refreshToken(): Observable<AuthResponse> {
+    const refreshToken = this.getRefreshToken();
+    return this.http.post<AuthResponse>(`${this.baseUrl}/refresh-token`, { refreshToken }).pipe(
+      tap(response => this.saveSession(response))
+    );
+  }
+
   // --- Gestion du Token & Session Réactive ---
 
-  private saveSession(response: AuthResponse): void {
+  public saveSession(response: AuthResponse): void {
     localStorage.setItem('token', response.token);
+    if (response.refreshToken) {
+      localStorage.setItem('refreshToken', response.refreshToken);
+    }
     localStorage.setItem('user', JSON.stringify(response));
 
-    // On met à jour le Signal. Tous les composants branchés dessus se rafraîchissent !
     this.currentUser.set(response);
   }
 
@@ -88,7 +132,9 @@ export class AuthService {
 
     if (token && userStr) {
       if (this.isTokenExpired(token)) {
-        this.logout(); // Nettoie tout si le token est périmé
+        // Le token est expiré, mais nous ne déconnectons pas immédiatement.
+        // L'intercepteur HTTP tentera d'utiliser le refreshToken lors de la prochaine requête.
+        this.currentUser.set(JSON.parse(userStr));
       } else {
         this.currentUser.set(JSON.parse(userStr));
       }
@@ -99,44 +145,39 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  /**
-   * Renvoie l'utilisateur actuel via le Signal
-   * Utilisation dans un composant : this.authService.currentUser()
-   */
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
+  }
+
   getUser(): AuthResponse | null {
     return this.currentUser();
   }
 
-  /**
-   * Vérifie si l'utilisateur est connecté ET si le token est valide
-   */
   isAuthenticated(): boolean {
     const token = this.getToken();
     if (!token) return false;
-    return !this.isTokenExpired(token);
+
+    // Si le token est expiré, l'intercepteur se chargera de le rafraîchir.
+    // Pour l'interface UI (guards), on considère l'utilisateur authentifié s'il possède un refresh token.
+    if (this.isTokenExpired(token)) {
+      return this.getRefreshToken() !== null;
+    }
+    return true;
   }
 
-  /**
-   * Déconnexion complète
-   */
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
-    this.currentUser.set(null); // Vide l'état réactif
+    this.currentUser.set(null);
     this.router.navigate(['/login']);
   }
 
-  /**
-   * Vérifie le rôle pour les Guards
-   */
   hasRole(role: string): boolean {
     const user = this.currentUser();
     return user ? user.role === role : false;
   }
 
-  /**
-   * Vérifie l'expiration du JWT
-   */
   private isTokenExpired(token: string): boolean {
     try {
       const decodedToken: any = jwtDecode(token);
@@ -145,10 +186,9 @@ export class AuthService {
       const expirationDate = new Date(0);
       expirationDate.setUTCSeconds(decodedToken.exp);
 
-      // On compare la date d'expiration avec l'heure actuelle
-      return expirationDate.valueOf() < new Date().valueOf();
+      // Marge de sécurité (ex: on considère expiré 1 minute avant l'heure réelle)
+      return (expirationDate.valueOf() - 60000) < new Date().valueOf();
     } catch (err) {
-      // Si le token est malformé, on le considère comme expiré
       return true;
     }
   }

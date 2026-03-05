@@ -1,0 +1,299 @@
+{
+    "LAYOUT": {
+        "ADMIN_SPACE": "Espace Administrateur",
+        "INSTRUCTOR_SPACE": "Espace Instructeur",
+        "STUDENT_SPACE": "Espace Étudiant",
+        "INSTRUCTOR_ROLE": "Instructeur",
+        "INSTRUCTOR_BADGE": "Espace Formateur",
+        "LOGOUT": "Déconnexion",
+        "ADMIN_BADGE": "Administration",
+        "ADMIN_ROLE": "Super Admin",
+        "STUDENT_BADGE": "Espace Étudiant",
+        "STUDENT_ROLE": "Apprenant"
+    },
+    "MENU": {
+        "DASHBOARD": "Vue d'ensemble",
+        "COURSES": "Cours",
+        "COURSE_CATALOG": "Catalogue",
+        "CREATE_COURSE": "Créer un cours",
+        "ANALYTICS": "Analytiques",
+        "SETTINGS": "Paramètres",
+        "USERS": "Utilisateurs",
+        "INSTRUCTORS": "Instructeurs",
+        "CATEGORIES": "Catégories",
+        "PAYMENTS": "Paiements",
+        "STUDENT_TRACKING": "Suivi des étudiants",
+        "FAVORITES": "Mes Favoris"
+    },
+    "NOTIFICATIONS": {
+        "TITLE": "Notifications",
+        "NEW": "nouvelle(s)",
+        "EMPTY": "Aucune notification",
+        "MARK_ALL_READ": "Tout marquer comme lu"
+    },
+    "BANNERS": {
+        "LOCKED_FEATURE": "Votre profil doit être approuvé pour utiliser cette fonctionnalité.",
+        "MISSING_TITLE": "Bienvenue sur Lotus Academy !",
+        "MISSING_DESC": "Pour pouvoir publier des cours et accéder aux statistiques, vous devez d'abord compléter votre profil professionnel.",
+        "MISSING_BTN": "Compléter mon profil",
+        "PENDING_TITLE": "Candidature en cours de traitement",
+        "PENDING_DESC": "Votre profil a bien été soumis. Notre équipe l'examine actuellement.",
+        "REJECTED_TITLE": "Candidature nécessitant des corrections",
+        "REJECTED_DESC": "Votre profil n'a pas pu être validé en l'état.",
+        "REJECTED_BTN": "Modifier mon profil",
+        "EMPTY_TITLE": "Votre profil est vide",
+        "EMPTY_DESC": "Avant de pouvoir créer votre premier cours, nous avons besoin d'en savoir un peu plus sur vous et votre expertise.",
+        "EMPTY_BTN": "Démarrer l'intégration"
+    },
+    "HOME": {
+        "HERO": {
+            "BADGE": "Nouveaux cours ajoutés chaque semaine",
+            "TITLE_1": "Apprenez des meilleurs.",
+            "TITLE_2": "Évoluez avec Lotus Academy.",
+            "SUBTITLE": "Rejoignez des milliers d'apprenants et découvrez de nouvelles compétences grâce à des instructeurs experts dans notre communauté d'apprentissage dynamique.",
+            "BTN_BROWSE": "Parcourir les cours",
+            "BTN_START": "Commencer gratuitement"
+        },
+        "STATS": {
+            "STUDENTS": "Étudiants",
+            "COURSES": "Cours",
+            "RATING": "Note Moyenne"
+        },
+        "TOPICS": {
+            "TITLE": "Sujets Tendances",
+            "SUBTITLE": "Explorez les domaines d'études les plus populaires",
+            "COURSES": "cours",
+            "ITEMS": {
+                "ALGO": "Trading Algorithmique",
+                "QUANT": "Finance Quantitative",
+                "ML": "Machine Learning",
+                "RISK": "Gestion des Risques",
+                "PSYCHO": "Psychologie du Trading"
+            }
+        },
+        "TESTIMONIALS": {
+            "TITLE": "Ce Que Disent Nos Étudiants",
+            "SUBTITLE": "Rejoignez des milliers de traders à succès"
+        },
+        "FAQ": {
+            "TITLE": "Questions Fréquemment Posées",
+            "SUBTITLE": "Trouvez des réponses aux questions courantes sur Lotus Academy",
+            "Q1": "Comment commencer avec Lotus Academy ?",
+            "A1": "Créez simplement un compte gratuit, parcourez notre catalogue de cours et inscrivez-vous à tout cours qui vous intéresse.",
+            "Q2": "Des certificats sont-ils fournis à la fin du cours ?",
+            "A2": "Oui, vous recevrez un certificat de fin d'études vérifié avec un code QR unique pour chaque cours terminé."
+        },
+        "COURSES": {
+            "TITLE": "Cours à la Une",
+            "SUBTITLE": "Des cours triés sur le volet pour accélérer votre parcours de trading",
+            "VIEW_ALL": "Voir tous les cours",
+            "FREE": "Gratuit",
+            "DETAILS": "Détails"
+        },
+        "WHY": {
+            "TITLE": "Pourquoi Apprendre Avec Lotus Academy ?",
+            "SUBTITLE": "Rejoignez des milliers de traders à succès qui ont commencé leur parcours ici",
+            "REASON1_TITLE": "Expertise de l'Industrie",
+            "REASON1_DESC": "Apprenez de professionnels avec des décennies d'expérience dans les meilleurs fonds spéculatifs et banques d'investissement.",
+            "REASON2_TITLE": "Exemples de Données Réelles",
+            "REASON2_DESC": "Pratiquez avec des données de marché réelles et construisez des stratégies qui fonctionnent dans des environnements de trading réels.",
+            "REASON3_TITLE": "Programme Structuré",
+            "REASON3_DESC": "Suivez un parcours d'apprentissage soigneusement conçu, des principes fondamentaux aux stratégies de trading avancées."
+        }
+    },
+    "NAVBAR": {
+        "HOME": "Accueil",
+        "COURSES": "Cours",
+        "TEACH": "Enseigner",
+        "FAQ": "FAQ",
+        "LOGIN": "Connexion",
+        "SIGNUP": "S'inscrire"
+    },
+    "FOOTER": {
+        "DESC": "Apprenez auprès d'instructeurs experts avec du contenu vidéo de qualité professionnelle et des stratégies de trading concrètes.",
+        "COMPANY": {
+            "TITLE": "Entreprise",
+            "ABOUT": "À propos",
+            "CAREERS": "Carrières",
+            "PRESS": "Presse"
+        },
+        "RESOURCES": {
+            "TITLE": "Ressources",
+            "BLOG": "Blog",
+            "HELP": "Centre d'aide",
+            "FAQ": "FAQ"
+        },
+        "LEGAL": {
+            "TITLE": "Légal",
+            "TERMS": "Conditions",
+            "PRIVACY": "Confidentialité",
+            "COOKIES": "Cookies"
+        },
+        "COPYRIGHT": "Tous droits réservés."
+    },
+    "INSTRUCTOR_REGISTER": {
+        "BACK_HOME": "Retour à l'accueil",
+        "VERIFY_TITLE": "Vérifiez votre boîte mail",
+        "VERIFY_TXT_1": "Nous avons envoyé un lien de vérification à",
+        "VERIFY_TXT_2": ". Veuillez cliquer sur ce lien pour activer votre compte instructeur.",
+        "BTN_GO_LOGIN": "Aller à la connexion",
+        "BADGE": "Espace Formateur",
+        "TITLE": "Devenez Instructeur",
+        "SUBTITLE": "Partagez votre expertise et monétisez votre savoir auprès de milliers d'étudiants.",
+        "FIRST_NAME": "Prénom",
+        "LAST_NAME": "Nom",
+        "EMAIL": "Email professionnel",
+        "PASSWORD": "Mot de passe",
+        "BTN_SUBMIT": "Créer mon compte instructeur",
+        "LOADING": "Création en cours...",
+        "ALREADY_HAVE_ACCOUNT": "Déjà un compte ?",
+        "LINK_LOGIN": "Connectez-vous",
+        "WANT_TO_LEARN": "Vous cherchez plutôt à apprendre ?",
+        "LINK_STUDENT": "Créer un compte étudiant",
+        "BANNER_TITLE": "Inspirez la prochaine génération",
+        "BANNER_DESC": "Rejoignez une communauté d'experts. Créez des cours impactants, développez votre audience et générez des revenus grâce à votre savoir-faire.",
+        "ERRORS": {
+            "REQUIRED_MIN_2": "Requis (min 2 caractères).",
+            "REQUIRED": "Requis.",
+            "VALID_EMAIL": "Email valide requis."
+        }
+    },
+    "PROFILE": {
+        "TITLE": "Paramètres du compte",
+        "SUBTITLE": "Gérez vos informations personnelles et les paramètres de sécurité de votre compte.",
+        "TAB_GENERAL": "Informations Générales",
+        "TAB_SECURITY": "Sécurité",
+        "PHOTO_TITLE": "Photo de profil",
+        "PHOTO_DESC": "Formats recommandés : JPG, PNG. Taille maximale : 2MB.",
+        "BTN_CHANGE_PHOTO": "Modifier la photo",
+        "FIRST_NAME": "Prénom",
+        "LAST_NAME": "Nom",
+        "HEADLINE": "Titre (Optionnel)",
+        "BIO": "Biographie (Optionnel)",
+        "BTN_SAVE": "Enregistrer les modifications",
+        "SAVING": "Enregistrement en cours...",
+        "PASSWORD_TITLE": "Modifier le mot de passe",
+        "OLD_PASSWORD": "Mot de passe actuel",
+        "NEW_PASSWORD": "Nouveau mot de passe",
+        "BTN_UPDATE_PASSWORD": "Mettre à jour le mot de passe",
+        "DANGER_ZONE": "Zone de danger",
+        "DELETE_TITLE": "Archiver le compte",
+        "DELETE_DESC": "En archivant votre compte, vous perdrez l'accès à vos cours et à votre tableau de bord. Cette action est irréversible par l'utilisateur.",
+        "BTN_DELETE": "Archiver mon compte définitivement",
+        "SUCCESS_PROFILE": "Profil mis à jour avec succès.",
+        "SUCCESS_PASSWORD": "Mot de passe mis à jour avec succès.",
+        "ERROR_GENERIC": "Une erreur est survenue lors du traitement de votre demande."
+    },
+    "LOGIN": {
+        "BACK_HOME": "Retour à l'accueil",
+        "TITLE_LOGIN": "Bon retour",
+        "TITLE_REGISTER": "Créez votre compte",
+        "SUBTITLE_LOGIN": "Connectez-vous pour accéder à vos cours",
+        "SUBTITLE_REGISTER": "Commencez votre voyage pour maîtriser de nouvelles compétences",
+        "BTN_GOOGLE": "Continuer avec Google",
+        "OR_EMAIL": "Ou par e-mail",
+        "FIRST_NAME": "Prénom",
+        "LAST_NAME": "Nom",
+        "EMAIL": "Email",
+        "PASSWORD": "Mot de passe",
+        "FORGOT_PASSWORD": "Mot de passe oublié ?",
+        "BTN_SUBMIT_LOGIN": "Se connecter",
+        "BTN_SUBMIT_REGISTER": "Créer un compte",
+        "LOADING": "En cours...",
+        "NO_ACCOUNT": "Vous n'avez pas de compte ?",
+        "HAVE_ACCOUNT": "Déjà un compte ?",
+        "LINK_SIGNUP": "S'inscrire",
+        "LINK_SIGNIN": "Se connecter",
+        "EXPERT_PROMPT": "Vous êtes un expert dans votre domaine ?",
+        "LINK_INSTRUCTOR": "Devenir Formateur sur Lotus Academy",
+        "BANNER_TITLE": "Commencez votre apprentissage aujourd'hui",
+        "BANNER_DESC": "Rejoignez des milliers d'apprenants qui découvrent de nouvelles compétences et font avancer leur carrière à l'intersection de la finance et de la technologie.",
+        "ERRORS": {
+            "REQUIRED_MIN_2": "Requis (min 2 car.)",
+            "REQUIRED": "Requis",
+            "VALID_EMAIL": "Email valide requis",
+            "MIN_8_CHARS": "Min 8 caractères requis",
+            "INVALID_CREDENTIALS": "Email ou mot de passe incorrect.",
+            "GENERIC": "Une erreur est survenue lors de l'inscription."
+        }
+    },
+    "FORGOT_PASSWORD": {
+        "TITLE": "Mot de passe oublié",
+        "SUBTITLE": "Entrez votre adresse e-mail pour recevoir un lien de réinitialisation.",
+        "EMAIL": "Adresse e-mail",
+        "BTN_SUBMIT": "Envoyer le lien",
+        "BACK_TO_LOGIN": "Retour à la connexion",
+        "SUCCESS_TITLE": "Vérifiez votre boîte de réception",
+        "SUCCESS_DESC": "Nous avons envoyé un lien de réinitialisation à",
+        "SUCCESS_DESC_2": "Si vous ne le trouvez pas, vérifiez vos courriers indésirables.",
+        "LOADING": "Envoi en cours...",
+        "ERRORS": {
+            "VALID_EMAIL": "Email valide requis"
+        }
+    },
+    "RESET_PASSWORD": {
+        "TITLE": "Nouveau mot de passe",
+        "SUBTITLE": "Veuillez saisir votre nouveau mot de passe sécurisé.",
+        "NEW_PASSWORD": "Nouveau mot de passe",
+        "CONFIRM_PASSWORD": "Confirmer le mot de passe",
+        "BTN_SUBMIT": "Réinitialiser le mot de passe",
+        "SUCCESS_TITLE": "Mot de passe mis à jour",
+        "SUCCESS_DESC": "Votre mot de passe a été modifié avec succès. Vous pouvez maintenant vous connecter avec vos nouveaux identifiants.",
+        "BTN_GO_LOGIN": "Se connecter",
+        "LOADING": "Mise à jour...",
+        "ERRORS": {
+            "MIN_8_CHARS": "Min 8 caractères requis",
+            "PASSWORD_MISMATCH": "Les mots de passe ne correspondent pas",
+            "MISSING_TOKEN": "Lien de réinitialisation invalide ou expiré."
+        }
+    },
+    "VERIFY_EMAIL": {
+        "LOADING_TITLE": "Vérification en cours",
+        "LOADING_DESC": "Veuillez patienter pendant que nous validons votre adresse e-mail...",
+        "SUCCESS_TITLE": "Email vérifié !",
+        "SUCCESS_DESC": "Votre compte Lotus Academy est désormais actif. Vous pouvez vous connecter pour accéder à votre espace.",
+        "ERROR_TITLE": "Échec de la vérification",
+        "ERROR_DESC": "Le lien de vérification est invalide ou a expiré. Vous pouvez demander un nouveau lien ou réinitialiser votre mot de passe.",
+        "BTN_LOGIN": "Se connecter",
+        "BTN_FORGOT": "Mot de passe oublié"
+    },
+    "SIDEBAR": {
+        "INSTRUCTOR": {
+            "DASHBOARD": "Tableau de bord",
+            "MY_COURSES": "Mes cours",
+            "CREATE_COURSE": "Créer un cours",
+            "LIVE_SESSIONS": "Sessions en direct",
+            "STUDENTS": "Suivi des étudiants",
+            "EARNINGS": "Revenus",
+            "MENTORING": "Q&A et Mentorat",
+            "PROFILE": "Profil Instructeur",
+            "SETTINGS": "Paramètres"
+        },
+        "BADGES": {
+            "SOON": "Bientôt",
+            "ACTION": "Action requise"
+        },
+        "ADMIN": {
+            "DASHBOARD": "Vue d'ensemble",
+            "INSTRUCTORS": "Formateurs & Validations",
+            "USERS": "Étudiants",
+            "COURSES": "Modération des cours",
+            "CATEGORIES": "Catégories & Tags",
+            "FINANCE": "Finance & Coupons",
+            "REVIEWS": "Avis & Modération",
+            "ANALYTICS": "Analytiques Globales",
+            "SETTINGS": "Paramètres Plateforme"
+        },
+        "STUDENT": {
+            "DASHBOARD": "Tableau de bord",
+            "MY_LEARNING": "Mon apprentissage",
+            "CATALOG": "Catalogue des cours",
+            "FAVORITES": "Mes favoris",
+            "LIVE_CLASSES": "Classes en direct",
+            "QNA": "Questions & Mentorat",
+            "CERTIFICATES": "Mes Certificats",
+            "PURCHASES": "Historique d'achats",
+            "SETTINGS": "Paramètres du profil"
+        }
+    }
+}

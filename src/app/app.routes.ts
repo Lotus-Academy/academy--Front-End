@@ -1,45 +1,73 @@
 import { Routes } from '@angular/router';
+
+// ==========================================
+// IMPORTS : PUBLIC & AUTHENTIFICATION
+// ==========================================
 import { HomeComponent } from './features/home/home-component/home-component';
 import { LoginComponent } from './features/auth/login/login.component';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { CourseCreateComponent } from './features/instructor/course-create-component/course-create-component';
-import { CourseListComponent } from "./features/courses/course-list/course-list-component";
+import { InstructorRegisterComponent } from './features/auth/instructor-register/instructor-register.component';
 
+// ==========================================
+// IMPORTS : COURS PUBLICS
+// ==========================================
+import { CourseListComponent } from "./features/courses/course-list/course-list-component";
+import { CourseDetailComponent } from './features/courses/course-detail/course-detail-component';
+
+// ==========================================
+// IMPORTS : DASHBOARD GÉNÉRAL (Étudiant)
+// ==========================================
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+
+// ==========================================
+// IMPORTS : INSTRUCTEUR
+// ==========================================
+import { InstructorOnboardingComponent } from './features/instructor/onboarding/onboarding.component';
+import { CourseCreateComponent } from './features/instructor/course-create-component/course-create-component';
 import { CourseEditorShellComponent } from './features/instructor/course-editor-shell/course-editor-shell.component';
 import { CourseEditBasicComponent } from './features/instructor/course-edit-basic/course-edit-basic.component';
 import { CourseCurriculumComponent } from './features/instructor/course-curriculum/course-curriculum.component';
 import { CoursePricingComponent } from './features/instructor/course-pricing/course-pricing.component';
-
-import { CourseDetailComponent } from './features/courses/course-detail/course-detail-component';
 import { CourseQuizComponent } from './features/instructor/course-quiz/course-quiz.component';
 import { CourseEditPreviewComponent } from './features/instructor/course-edit-preview/course-edit-preview.component';
+
+// ==========================================
+// IMPORTS : ADMINISTRATION
+// ==========================================
 import { AdminUsersComponent } from './features/admin/admin-users/admin-users.component';
 import { AdminCoursesComponent } from './features/admin/admin-courses/admin-courses.component';
 import { AdminInstructorsComponent } from './features/admin/admin-instructors/admin-instructors.component';
 import { AdminCategoriesComponent } from './features/admin/admin-categories/admin-categories.component';
 import { AdminAnalyticsComponent } from './features/admin/admin-analytics/admin-analytics.component';
 import { AdminPaymentsComponent } from './features/admin/admin-payments/admin-payments.component';
+import { ProfileComponent } from './features/user/profile/profile.component';
+import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
+import { VerifyEmailComponent } from './features/auth/verify-email/verify-email.component';
 
 export const routes: Routes = [
-    // La page d'accueil est maintenant la route par défaut
+    // --- ROUTES PUBLIQUES ---
     { path: '', component: HomeComponent },
-
-    { path: 'login', component: LoginComponent },
-
-
-    { path: 'register', redirectTo: '/login', pathMatch: 'full' },
-
-    { path: 'dashboard', component: DashboardComponent },
-
     { path: 'courses', component: CourseListComponent },
-
     { path: 'courses/:id', component: CourseDetailComponent },
 
-    {
-        path: 'instructor/courses/new',
-        component: CourseCreateComponent
-    },
-    // L'Éditeur complet du cours avec ses sous-sections
+    // --- ROUTES D'AUTHENTIFICATION ---
+    { path: 'login', component: LoginComponent },
+    { path: 'register', redirectTo: '/login', pathMatch: 'full' },
+    { path: 'forgot-password', component: ForgotPasswordComponent },
+    { path: 'reset-password', component: ResetPasswordComponent },
+    { path: 'verify-email', component: VerifyEmailComponent },
+    { path: 'student/profile', component: ProfileComponent },
+    { path: 'instructor/profile', component: ProfileComponent },
+    // Inscription des instructeurs
+    { path: 'instructor-register', component: InstructorRegisterComponent },
+
+    // --- DASHBOARD GÉNÉRAL ---
+    { path: 'dashboard', component: DashboardComponent },
+
+    // --- ROUTES INSTRUCTEUR ---
+    // Nouvelle route pour le formulaire d'intégration (Onboarding)
+    { path: 'instructor/onboarding', component: InstructorOnboardingComponent },
+    { path: 'instructor/courses/new', component: CourseCreateComponent },
     {
         path: 'instructor/courses/:id/edit',
         component: CourseEditorShellComponent,
@@ -50,26 +78,18 @@ export const routes: Routes = [
             { path: 'quiz', component: CourseQuizComponent },
             { path: 'preview', component: CourseEditPreviewComponent },
             { path: '', redirectTo: 'basic', pathMatch: 'full' } // Redirection par défaut
-
         ]
     },
 
-    //routes des elements du navbar
-    //{ path: 'become-instructor', component: InstructorComponent }, // À remplacer par InstructorComponent plus tard
-    //{ path: 'faq', component: HomeComponent }, // À remplacer par FaqComponent plus tard
-
-    // Gestion des pages non trouvées (optionnel mais conseillé)
-    // Cette route (wildcard) DOIT toujours rester à la toute fin du tableau.
-
-
-    // Routes d'administration (chaque vue embarque le layout)
+    // --- ROUTES ADMINISTRATION ---
     { path: 'dashboard/users', component: AdminUsersComponent },
     { path: 'dashboard/videos', component: AdminCoursesComponent },
-
     { path: 'dashboard/instructors', component: AdminInstructorsComponent },
     { path: 'dashboard/categories', component: AdminCategoriesComponent },
     { path: 'dashboard/analytics', component: AdminAnalyticsComponent },
     { path: 'dashboard/payments', component: AdminPaymentsComponent },
-    // { path: 'dashboard', component: AdminOverviewComponent },
+
+    // --- FALLBACK (Page 404) ---
+    // DOIT ABSOLUMENT RESTER EN DERNIÈRE POSITION
     { path: '**', redirectTo: '' }
 ];

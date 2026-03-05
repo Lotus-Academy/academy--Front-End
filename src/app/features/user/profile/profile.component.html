@@ -1,0 +1,182 @@
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in-up">
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">{{ 'PROFILE.TITLE' | translate }}
+        </h1>
+        <p class="mt-2 text-slate-600 dark:text-slate-400">{{ 'PROFILE.SUBTITLE' | translate }}</p>
+    </div>
+
+    @if (isLoading()) {
+    <div class="flex items-center justify-center py-20">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+    </div>
+    } @else {
+    <div class="flex flex-col md:flex-row gap-8">
+
+        <div class="w-full md:w-64 shrink-0">
+            <nav class="flex flex-col space-y-1">
+                <button (click)="setTab('GENERAL')"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors text-left"
+                    [ngClass]="activeTab() === 'GENERAL' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400' : 'text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50'">
+                    <lucide-icon [name]="icons.User" class="w-5 h-5"></lucide-icon>
+                    {{ 'PROFILE.TAB_GENERAL' | translate }}
+                </button>
+                <button (click)="setTab('SECURITY')"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors text-left"
+                    [ngClass]="activeTab() === 'SECURITY' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400' : 'text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50'">
+                    <lucide-icon [name]="icons.Shield" class="w-5 h-5"></lucide-icon>
+                    {{ 'PROFILE.TAB_SECURITY' | translate }}
+                </button>
+            </nav>
+        </div>
+
+        <div class="flex-1">
+
+            @if (successMessage()) {
+            <div
+                class="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 dark:bg-green-900/20 dark:border-green-800/50 flex items-center gap-3 text-green-800 dark:text-green-400">
+                <lucide-icon [name]="icons.CheckCircle" class="w-5 h-5 shrink-0"></lucide-icon>
+                <p class="text-sm font-bold">{{ successMessage() | translate }}</p>
+            </div>
+            }
+
+            @if (errorMessage()) {
+            <div
+                class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 dark:bg-red-900/20 dark:border-red-800/50 flex items-center gap-3 text-red-800 dark:text-red-400">
+                <lucide-icon [name]="icons.AlertTriangle" class="w-5 h-5 shrink-0"></lucide-icon>
+                <p class="text-sm font-bold">{{ errorMessage() | translate }}</p>
+            </div>
+            }
+
+            @if (activeTab() === 'GENERAL') {
+            <div
+                class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8">
+
+                <div class="flex items-center gap-6 mb-8 pb-8 border-b border-slate-100 dark:border-slate-800">
+                    <div
+                        class="relative w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 overflow-hidden shrink-0">
+                        @if (photoPreview()) {
+                        <img [src]="photoPreview()" alt="Avatar" class="w-full h-full object-cover">
+                        } @else {
+                        <div class="w-full h-full flex items-center justify-center text-slate-400">
+                            <lucide-icon [name]="icons.User" class="w-10 h-10"></lucide-icon>
+                        </div>
+                        }
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1">{{ 'PROFILE.PHOTO_TITLE' |
+                            translate }}</h3>
+                        <p class="text-xs text-slate-500 mb-3">{{ 'PROFILE.PHOTO_DESC' | translate }}</p>
+                        <div class="relative inline-block">
+                            <button type="button"
+                                class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
+                                <lucide-icon [name]="icons.Camera" class="w-4 h-4"></lucide-icon>
+                                {{ 'PROFILE.BTN_CHANGE_PHOTO' | translate }}
+                            </button>
+                            <input type="file" accept="image/png, image/jpeg" (change)="onFileSelected($event)"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <form [formGroup]="profileForm" (ngSubmit)="submitProfile()" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">{{
+                                'PROFILE.FIRST_NAME' | translate }}</label>
+                            <input type="text" formControlName="firstName"
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">{{
+                                'PROFILE.LAST_NAME' | translate }}</label>
+                            <input type="text" formControlName="lastName"
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">{{ 'PROFILE.HEADLINE'
+                            | translate }}</label>
+                        <input type="text" formControlName="headline"
+                            class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">{{ 'PROFILE.BIO' |
+                            translate }}</label>
+                        <textarea formControlName="bio" rows="4"
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors resize-none"></textarea>
+                    </div>
+
+                    <div class="pt-4 flex justify-end">
+                        <button type="submit" [disabled]="profileForm.invalid || isSaving()"
+                            class="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center gap-2">
+                            <lucide-icon [name]="icons.Save" class="w-4 h-4"></lucide-icon>
+                            {{ (isSaving() ? 'PROFILE.SAVING' : 'PROFILE.BTN_SAVE') | translate }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+            }
+
+            @if (activeTab() === 'SECURITY') {
+            <div class="space-y-8">
+                <div
+                    class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8">
+                    <h2
+                        class="text-lg font-bold text-slate-900 dark:text-white mb-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+                        {{ 'PROFILE.PASSWORD_TITLE' | translate }}</h2>
+
+                    <form [formGroup]="passwordForm" (ngSubmit)="submitPassword()" class="space-y-6">
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">{{
+                                'PROFILE.OLD_PASSWORD' | translate }}</label>
+                            <input type="password" formControlName="oldPassword"
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors max-w-md">
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">{{
+                                'PROFILE.NEW_PASSWORD' | translate }}</label>
+                            <input type="password" formControlName="newPassword"
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-colors max-w-md">
+                        </div>
+
+                        <div class="pt-2">
+                            <button type="submit" [disabled]="passwordForm.invalid || isSaving()"
+                                class="px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold hover:bg-slate-800 dark:hover:bg-slate-100 disabled:opacity-50 transition-colors flex items-center gap-2">
+                                <lucide-icon [name]="icons.Shield" class="w-4 h-4"></lucide-icon>
+                                {{ (isSaving() ? 'PROFILE.SAVING' : 'PROFILE.BTN_UPDATE_PASSWORD') | translate }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div
+                    class="bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-200 dark:border-red-900/30 shadow-sm p-6 sm:p-8">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-red-100 dark:bg-red-900/30 rounded-full shrink-0">
+                            <lucide-icon [name]="icons.AlertTriangle"
+                                class="w-6 h-6 text-red-600 dark:text-red-500"></lucide-icon>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-red-800 dark:text-red-400">{{ 'PROFILE.DELETE_TITLE' |
+                                translate }}</h3>
+                            <p class="mt-1 text-sm text-red-700 dark:text-red-300 max-w-2xl leading-relaxed">
+                                {{ 'PROFILE.DELETE_DESC' | translate }}
+                            </p>
+                            <button (click)="archiveAccount()"
+                                class="mt-6 px-6 py-2.5 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-colors shadow-sm">
+                                {{ 'PROFILE.BTN_DELETE' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+
+        </div>
+    </div>
+    }
+</div>

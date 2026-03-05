@@ -1,0 +1,325 @@
+<div class="min-h-screen bg-slate-50 dark:bg-ds-black flex transition-colors duration-300">
+
+    @if (isSidebarOpen()) {
+    <div (click)="closeSidebar()"
+        class="fixed inset-0 z-30 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm lg:hidden transition-opacity"></div>
+    }
+
+    <aside [ngClass]="isSidebarOpen() ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+        class="fixed inset-y-0 left-0 z-40 w-64 transform border-r border-slate-200 dark:border-ds-border bg-white dark:bg-ds-surface transition-transform duration-300 ease-in-out lg:static lg:h-screen lg:sticky lg:top-0">
+
+        <div class="flex h-full flex-col">
+            <div class="h-16 items-center gap-3 border-b border-slate-200 dark:border-ds-border px-6 flex shrink-0">
+                <a routerLink="/" class="flex items-center gap-3">
+                    <div class="flex h-8 w-8 items-center justify-center rounded bg-lotus/10 border border-lotus/20">
+                        <span class="text-base font-cormorant font-bold text-lotus">L</span>
+                    </div>
+                    <span class="font-cormorant font-bold text-xl text-slate-900 dark:text-white tracking-wide">Lotus
+                        Academy</span>
+                </a>
+            </div>
+
+            <div class="px-6 py-5 shrink-0">
+                <div class="inline-flex items-center rounded px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.15em] border"
+                    [ngClass]="badgeClasses">
+                    {{ badgeText | translate }}
+                </div>
+            </div>
+
+            <nav class="flex-1 space-y-1 px-4 overflow-y-auto hide-scrollbar">
+                @for (link of navLinks; track link.href) {
+
+                @if (link.dividerBefore) {
+                <div class="my-4 border-t border-slate-100 dark:border-ds-border mx-2"></div>
+                }
+
+                @if (link.requiresApproval && profileStatus && profileStatus !== 'APPROVED') {
+                <div class="flex items-center gap-3 rounded px-4 py-3 text-sm font-syne text-slate-400 dark:text-ds-muted/40 cursor-not-allowed opacity-60"
+                    [title]="'BANNERS.LOCKED_FEATURE' | translate">
+                    <lucide-icon [name]="link.icon" class="h-5 w-5 stroke-[1.5px]"></lucide-icon>
+                    {{ link.labelKey | translate }}
+                    <lucide-icon [name]="icons.AlertCircle" class="h-3.5 w-3.5 ml-auto"></lucide-icon>
+                </div>
+                } @else {
+                <a [routerLink]="link.href" routerLinkActive="bg-lotus/10 text-lotus dark:bg-lotus/10 dark:text-lotus"
+                    [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()"
+                    class="flex items-center gap-3 rounded px-4 py-3 text-sm font-syne transition-all text-slate-600 dark:text-ds-muted/70 hover:bg-slate-50 dark:hover:bg-ds-border/30 hover:text-slate-900 dark:hover:text-white group">
+                    <lucide-icon [name]="link.icon"
+                        class="h-5 w-5 stroke-[1.5px] group-[.active]:text-lotus"></lucide-icon>
+                    {{ link.labelKey | translate }}
+
+                    @if (link.badgeKey) {
+                    <span
+                        class="ml-auto bg-green/10 text-green font-mono text-[9px] uppercase tracking-widest px-2 py-0.5 rounded border border-green/20">
+                        {{ link.badgeKey | translate }}
+                    </span>
+                    }
+                </a>
+                }
+                }
+            </nav>
+
+            <div class="border-t border-slate-200 dark:border-ds-border p-4 shrink-0">
+                <button (click)="handleSignOut()"
+                    class="w-full flex items-center gap-2 justify-center px-4 py-3 rounded font-mono text-[11px] uppercase tracking-[0.12em] font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+                    <lucide-icon [name]="icons.LogOut" class="h-4 w-4"></lucide-icon> {{ 'LAYOUT.LOGOUT' | translate }}
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+
+        <header
+            class="h-16 bg-white/80 dark:bg-ds-black/80 backdrop-blur-md border-b border-slate-200 dark:border-ds-border flex items-center justify-between px-4 sm:px-6 lg:px-8 z-20 shrink-0 transition-colors">
+
+            <div class="flex items-center gap-4">
+                <button (click)="toggleSidebar()"
+                    class="lg:hidden p-2 -ml-2 text-slate-600 dark:text-ds-muted/70 hover:text-lotus dark:hover:text-lotus transition-colors">
+                    <lucide-icon [name]="icons.Menu" class="h-6 w-6"></lucide-icon>
+                </button>
+                <h1
+                    class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white hidden sm:block tracking-tight">
+                    {{ title | translate }}</h1>
+            </div>
+
+            <div class="flex items-center gap-2 sm:gap-4">
+
+                <div class="relative">
+                    <button (click)="toggleLanguageMenu()"
+                        class="hidden sm:flex items-center gap-1.5 p-2 font-mono text-[11px] uppercase tracking-widest text-slate-600 dark:text-ds-muted/70 hover:text-lotus dark:hover:text-lotus rounded transition-colors cursor-pointer"
+                        [ngClass]="isLanguageMenuOpen() ? 'bg-slate-100 dark:bg-ds-border/50' : ''">
+                        <span class="text-lg leading-none">{{ languageService.getCurrentLanguage() === 'fr' ? '🇫🇷' :
+                            '🇬🇧' }}</span>
+                        <span>{{ languageService.getCurrentLanguage() }}</span>
+                        <lucide-icon [name]="icons.ChevronDown" class="w-3.5 h-3.5 opacity-70 transition-transform"
+                            [ngClass]="isLanguageMenuOpen() ? 'rotate-180' : ''"></lucide-icon>
+                    </button>
+
+                    @if (isLanguageMenuOpen()) {
+                    <div class="fixed inset-0 z-40 cursor-default" (click)="closeLanguageMenu()"></div>
+                    <div
+                        class="absolute right-0 mt-2 w-48 bg-white dark:bg-ds-surface rounded shadow-xl border border-slate-200 dark:border-ds-border z-50 overflow-hidden origin-top-right animate-fade-in-up">
+                        <div class="py-2">
+                            <button (click)="switchLanguage('fr')"
+                                class="w-full text-left px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest transition-colors hover:bg-slate-50 dark:hover:bg-ds-border/50 flex items-center justify-between"
+                                [ngClass]="languageService.getCurrentLanguage() === 'fr' ? 'text-lotus bg-lotus/10' : 'text-slate-700 dark:text-ds-muted'">
+                                <span class="flex items-center gap-2"><span class="text-lg leading-none">🇫🇷</span>
+                                    Français</span>
+                                @if (languageService.getCurrentLanguage() === 'fr') { <lucide-icon
+                                    [name]="icons.CheckCircle" class="w-3.5 h-3.5"></lucide-icon> }
+                            </button>
+                            <button (click)="switchLanguage('en')"
+                                class="w-full text-left px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest transition-colors hover:bg-slate-50 dark:hover:bg-ds-border/50 flex items-center justify-between"
+                                [ngClass]="languageService.getCurrentLanguage() === 'en' ? 'text-lotus bg-lotus/10' : 'text-slate-700 dark:text-ds-muted'">
+                                <span class="flex items-center gap-2"><span class="text-lg leading-none">🇬🇧</span>
+                                    English</span>
+                                @if (languageService.getCurrentLanguage() === 'en') { <lucide-icon
+                                    [name]="icons.CheckCircle" class="w-3.5 h-3.5"></lucide-icon> }
+                            </button>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <button (click)="themeService.toggleTheme()"
+                    class="p-2 text-slate-600 dark:text-ds-muted/70 hover:text-lotus dark:hover:text-lotus rounded transition-colors">
+                    @if (themeService.darkMode()) { <lucide-icon [name]="icons.Sun" class="w-4 h-4"></lucide-icon> }
+                    @else { <lucide-icon [name]="icons.Moon" class="w-4 h-4"></lucide-icon> }
+                </button>
+
+                <div class="relative">
+                    <button (click)="toggleNotifications()"
+                        class="relative z-50 p-2 text-slate-600 dark:text-ds-muted/70 hover:text-lotus dark:hover:text-lotus rounded transition-colors cursor-pointer"
+                        [ngClass]="isNotificationsOpen() ? 'bg-slate-100 dark:bg-ds-border/50' : ''">
+                        <lucide-icon [name]="icons.Bell" class="w-5 h-5 pointer-events-none"></lucide-icon>
+                        @if (unreadNotifications() > 0) {
+                        <span
+                            class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-lotus border-2 border-white dark:border-ds-black rounded-full pointer-events-none"></span>
+                        }
+                    </button>
+
+                    @if (isNotificationsOpen()) {
+                    <div class="fixed inset-0 z-40 cursor-default" (click)="closeNotifications()"></div>
+                    <div
+                        class="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-ds-surface rounded shadow-xl border border-slate-200 dark:border-ds-border z-50 overflow-hidden origin-top-right animate-fade-in-up">
+
+                        <div
+                            class="p-4 border-b border-slate-200 dark:border-ds-border flex justify-between items-center bg-slate-50/50 dark:bg-ds-border/30">
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-syne font-bold text-slate-900 dark:text-white">{{ 'NOTIFICATIONS.TITLE'
+                                    | translate }}</h3>
+                                @if (unreadNotifications() > 0) {
+                                <span
+                                    class="bg-lotus/10 text-lotus font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 rounded">
+                                    {{ unreadNotifications() }} {{ 'NOTIFICATIONS.NEW' | translate }}
+                                </span>
+                                }
+                            </div>
+
+                            @if (notifications().length > 0) {
+                            <button (click)="markAllAsRead()" [disabled]="unreadNotifications() === 0"
+                                class="p-1.5 rounded transition-colors flex items-center justify-center text-slate-500 hover:text-lotus dark:text-ds-muted/50 dark:hover:text-lotus disabled:opacity-30 disabled:cursor-not-allowed"
+                                [title]="'NOTIFICATIONS.MARK_ALL_READ' | translate">
+                                <lucide-icon [name]="icons.CheckCheck" class="w-4 h-4"></lucide-icon>
+                            </button>
+                            }
+                        </div>
+
+                        <div class="max-h-[400px] overflow-y-auto">
+                            @if (notifications().length === 0) {
+                            <div
+                                class="p-8 text-center text-slate-500 dark:text-ds-muted/50 flex flex-col items-center font-syne">
+                                <lucide-icon [name]="icons.Bell" class="w-8 h-8 opacity-20 mb-2"></lucide-icon>
+                                <p>{{ 'NOTIFICATIONS.EMPTY' | translate }}</p>
+                            </div>
+                            } @else {
+                            <div class="divide-y divide-slate-100 dark:divide-ds-border/50">
+                                @for (notif of notifications(); track notif.id) {
+                                <div (click)="markAsRead(notif)"
+                                    class="p-4 flex gap-4 cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-ds-border/30"
+                                    [ngClass]="!notif.read ? 'bg-lotus/5 dark:bg-lotus/5' : ''">
+                                    <div class="shrink-0 mt-1">
+                                        @if (notif.type === 'SUCCESS') { <lucide-icon [name]="icons.CheckCircle"
+                                            class="w-4 h-4 text-green"></lucide-icon> }
+                                        @else if (notif.type === 'WARNING' || notif.type === 'ERROR') { <lucide-icon
+                                            [name]="icons.AlertTriangle" class="w-4 h-4 text-lotus"></lucide-icon> }
+                                        @else { <lucide-icon [name]="icons.Info"
+                                            class="w-4 h-4 text-slate-400"></lucide-icon> }
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-syne text-slate-900 dark:text-ds-muted"
+                                            [ngClass]="!notif.read ? 'font-bold' : ''">{{ notif.message }}</p>
+                                        <p
+                                            class="font-mono text-[9px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/50 mt-1">
+                                            {{ notif.createdAt | date:'short' }}</p>
+                                    </div>
+                                    @if (!notif.read) { <div class="shrink-0 w-2 h-2 rounded-full bg-lotus mt-2"></div>
+                                    }
+                                </div>
+                                }
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="hidden sm:block w-px h-6 bg-slate-200 dark:bg-ds-border mx-1"></div>
+
+                <a [routerLink]="profileLink"
+                    class="flex items-center gap-3 p-1 sm:p-1.5 sm:pr-3 rounded hover:bg-slate-100 dark:hover:bg-ds-border/50 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-ds-border cursor-pointer">
+                    <div
+                        class="h-8 w-8 rounded-full bg-lotus/10 flex items-center justify-center text-lotus font-cormorant font-bold border border-lotus/30 shadow-sm shrink-0 overflow-hidden">
+                        @if (user()?.profilePictureUrl) { <img [src]="user()?.profilePictureUrl"
+                            class="w-full h-full object-cover"> }
+                        @else { {{ user()?.firstName?.charAt(0) || 'U' }} }
+                    </div>
+                    <div class="hidden sm:block text-left">
+                        <p class="font-syne text-sm font-bold text-slate-900 dark:text-white leading-tight">{{
+                            user()?.firstName }}</p>
+                        <p
+                            class="font-mono text-[9px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/50 mt-0.5 leading-tight">
+                            {{ profileRoleText | translate }}</p>
+                    </div>
+                </a>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-ds-black">
+
+            @if (profileStatus && profileStatus !== 'LOADING' && profileStatus !== 'APPROVED') {
+            <div
+                class="p-4 sm:px-6 lg:px-8 bg-white dark:bg-ds-surface border-b border-slate-200 dark:border-ds-border shadow-sm animate-fade-in-up">
+
+                @if (profileStatus === 'MISSING') {
+                <div
+                    class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded border border-lotus/30 bg-lotus/5 dark:bg-lotus/5">
+                    <div class="flex items-start gap-3 text-lotus">
+                        <lucide-icon [name]="icons.Info" class="w-5 h-5 shrink-0 mt-0.5"></lucide-icon>
+                        <div>
+                            <h4 class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{
+                                'BANNERS.MISSING_TITLE' | translate }}</h4>
+                            <p class="font-syne text-sm mt-1 text-slate-600 dark:text-ds-muted/70">{{
+                                'BANNERS.MISSING_DESC' | translate }}</p>
+                        </div>
+                    </div>
+                    <a routerLink="/instructor/onboarding"
+                        class="shrink-0 w-full sm:w-auto text-center px-6 py-2.5 bg-lotus hover:bg-lotus-light text-ds-black font-mono text-[11px] uppercase tracking-[0.12em] rounded transition-colors shadow-sm">
+                        {{ 'BANNERS.MISSING_BTN' | translate }}
+                    </a>
+                </div>
+                }
+
+                @else if (profileStatus === 'PENDING') {
+                <div class="flex items-start gap-3 p-5 rounded border border-lotus/30 bg-lotus/5 dark:bg-lotus/5">
+                    <lucide-icon [name]="icons.AlertCircle" class="w-5 h-5 shrink-0 mt-0.5 text-lotus"></lucide-icon>
+                    <div>
+                        <h4 class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{
+                            'BANNERS.PENDING_TITLE' | translate }}</h4>
+                        <p class="font-syne text-sm mt-1 text-slate-600 dark:text-ds-muted/70">{{ 'BANNERS.PENDING_DESC'
+                            | translate }}</p>
+                    </div>
+                </div>
+                }
+
+                @else if (profileStatus === 'REJECTED') {
+                <div
+                    class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded border border-red-500/30 bg-red-500/5 dark:bg-red-500/10">
+                    <div class="flex items-start gap-3 text-red-600 dark:text-red-400">
+                        <lucide-icon [name]="icons.AlertTriangle" class="w-5 h-5 shrink-0 mt-0.5"></lucide-icon>
+                        <div>
+                            <h4 class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{
+                                'BANNERS.REJECTED_TITLE' | translate }}</h4>
+                            <p class="font-syne text-sm mt-1 text-slate-600 dark:text-ds-muted/70">{{
+                                'BANNERS.REJECTED_DESC' | translate }}</p>
+                        </div>
+                    </div>
+                    <a routerLink="/instructor/profile"
+                        class="shrink-0 w-full sm:w-auto text-center flex items-center justify-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-500 text-white font-mono text-[11px] uppercase tracking-[0.12em] rounded transition-colors shadow-sm">
+                        <lucide-icon [name]="icons.FileEdit" class="w-4 h-4"></lucide-icon> {{ 'BANNERS.REJECTED_BTN' |
+                        translate }}
+                    </a>
+                </div>
+                }
+            </div>
+            }
+
+            <div class="p-4 sm:p-6 lg:p-8">
+                <h1 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white sm:hidden mb-6">{{ title |
+                    translate }}</h1>
+
+                @if (profileStatus === 'MISSING') {
+                <div class="flex flex-col items-center justify-center py-20 text-center animate-fade-in-up">
+                    <div
+                        class="w-20 h-20 bg-slate-100 dark:bg-ds-surface rounded-full flex items-center justify-center mb-6 border border-slate-200 dark:border-ds-border">
+                        <lucide-icon [name]="icons.FileEdit"
+                            class="w-8 h-8 text-slate-400 dark:text-ds-muted/50 stroke-[1.5px]"></lucide-icon>
+                    </div>
+                    <h2 class="font-cormorant text-3xl text-slate-900 dark:text-white mb-3">{{ 'BANNERS.EMPTY_TITLE' |
+                        translate }}</h2>
+                    <p class="font-syne text-slate-500 dark:text-ds-muted/70 max-w-md">{{ 'BANNERS.EMPTY_DESC' |
+                        translate }}</p>
+                    <a routerLink="/instructor/onboarding"
+                        class="mt-8 px-9 py-4 bg-lotus hover:bg-lotus-light text-ds-black font-mono text-[12px] uppercase tracking-[0.12em] rounded transition-all">
+                        {{ 'BANNERS.EMPTY_BTN' | translate }}
+                    </a>
+                </div>
+                } @else {
+                <ng-content></ng-content>
+                }
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>

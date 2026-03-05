@@ -1,54 +1,52 @@
-<div class="min-h-screen bg-white dark:bg-slate-900 flex transition-colors duration-300">
+<div class="min-h-screen bg-slate-50 dark:bg-ds-black flex transition-colors duration-300">
 
-    <div class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+    <div
+        class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white dark:bg-ds-black">
         <div class="mx-auto w-full max-w-sm lg:w-96">
 
             <a routerLink="/"
-                class="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors mb-8 cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.15em] text-slate-500 dark:text-ds-muted/50 hover:text-lotus dark:hover:text-lotus transition-colors mb-10 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m12 19-7-7 7-7" />
                     <path d="M19 12H5" />
                 </svg>
-                Back to Home
+                {{ 'LOGIN.BACK_HOME' | translate }}
             </a>
 
-            <div class="flex items-center gap-2 mb-10">
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
-                    <span class="text-xl font-bold text-white">L</span>
+            <div class="flex items-center gap-3 mb-10">
+                <div class="flex h-8 w-8 items-center justify-center rounded bg-lotus/10 border border-lotus/20">
+                    <span class="text-base font-cormorant font-bold text-lotus">L</span>
                 </div>
-                <span class="text-2xl font-bold text-gray-900 dark:text-white">Lotus Academy</span>
+                <span class="text-2xl font-cormorant font-bold text-slate-900 dark:text-white tracking-wide">Lotus
+                    Academy</span>
             </div>
 
-            <div class="mb-6">
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-                    @if (isLogin()) {
-                    Welcome back
-                    } @else {
-                    Create your account
-                    }
+            <div class="mb-8 animate-fade-in-up">
+                <h1 class="font-cormorant font-light text-4xl text-slate-900 dark:text-white">
+                    @if (isLogin()) { {{ 'LOGIN.TITLE_LOGIN' | translate }} } @else { {{ 'LOGIN.TITLE_REGISTER' |
+                    translate }} }
                 </h1>
-                <p class="mt-2 text-gray-600 dark:text-slate-400">
-                    @if (isLogin()) {
-                    Sign in to access your courses
-                    } @else {
-                    Start your journey to mastering new skills
-                    }
+                <p class="mt-3 font-syne text-slate-600 dark:text-ds-muted/70">
+                    @if (isLogin()) { {{ 'LOGIN.SUBTITLE_LOGIN' | translate }} } @else { {{ 'LOGIN.SUBTITLE_REGISTER' |
+                    translate }} }
                 </p>
             </div>
 
             @if (errorMessage()) {
             <div
-                class="mb-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-sm rounded-md border border-red-200 dark:border-red-900/30">
-                {{ errorMessage() }}
+                class="mb-6 p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded animate-fade-in-up">
+                <p class="font-syne text-sm font-bold text-red-800 dark:text-red-400">{{ errorMessage() | translate }}
+                </p>
             </div>
             }
 
-            <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="space-y-6">
+            <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="space-y-6 animate-fade-in-up"
+                style="animation-delay: 0.1s;">
 
                 <button type="button"
-                    class="w-full flex justify-center items-center gap-3 py-2.5 border border-gray-300 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition font-medium text-gray-700 dark:text-slate-200 bg-white dark:bg-slate-800">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24">
+                    class="w-full flex justify-center items-center gap-3 px-4 py-3.5 border border-slate-200 dark:border-ds-border rounded font-mono text-[11px] uppercase tracking-[0.12em] text-slate-700 dark:text-ds-muted hover:bg-slate-50 dark:hover:bg-ds-surface transition-colors bg-white dark:bg-ds-black">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24">
                         <path fill="currentColor"
                             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                         <path fill="currentColor"
@@ -58,79 +56,88 @@
                         <path fill="currentColor"
                             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                     </svg>
-                    Continue with Google
+                    {{ 'LOGIN.BTN_GOOGLE' | translate }}
                 </button>
 
                 <div class="relative">
                     <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-200 dark:border-slate-700"></div>
+                        <div class="w-full border-t border-slate-200 dark:border-ds-border"></div>
                     </div>
-                    <div class="relative flex justify-center text-sm">
+                    <div class="relative flex justify-center">
                         <span
-                            class="bg-white dark:bg-slate-900 px-2 text-gray-500 dark:text-slate-500 text-xs uppercase tracking-wider">
-                            Or email
+                            class="bg-white dark:bg-ds-black px-4 font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-ds-muted/40">
+                            {{ 'LOGIN.OR_EMAIL' | translate }}
                         </span>
                     </div>
                 </div>
 
                 @if (!isLogin()) {
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">First Name</label>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
+                            'LOGIN.FIRST_NAME' | translate }}</label>
                         <input type="text" formControlName="firstName" placeholder="John"
-                            class="block w-full px-3 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500">
-
+                            class="block w-full px-4 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                         @if (authForm.get('firstName')?.touched && authForm.get('firstName')?.invalid) {
-                        <div class="text-xs text-red-500 mt-1">Required (min 2).</div>
+                        <div class="font-mono text-[9px] uppercase tracking-wider text-red-500 mt-1">{{
+                            'LOGIN.ERRORS.REQUIRED_MIN_2' | translate }}</div>
                         }
                     </div>
 
-                    <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Last Name</label>
+                    <div class="space-y-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
+                            'LOGIN.LAST_NAME' | translate }}</label>
                         <input type="text" formControlName="lastName" placeholder="Doe"
-                            class="block w-full px-3 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500">
-
+                            class="block w-full px-4 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                         @if (authForm.get('lastName')?.touched && authForm.get('lastName')?.invalid) {
-                        <div class="text-xs text-red-500 mt-1">Required.</div>
+                        <div class="font-mono text-[9px] uppercase tracking-wider text-red-500 mt-1">{{
+                            'LOGIN.ERRORS.REQUIRED' | translate }}</div>
                         }
                     </div>
                 </div>
                 }
 
-                <div class="space-y-1">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Email</label>
+                <div class="space-y-2">
+                    <label
+                        class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
+                        'LOGIN.EMAIL' | translate }}</label>
                     <div class="relative">
                         <div
-                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-slate-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-ds-muted/40">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round">
                                 <rect width="20" height="16" x="2" y="4" rx="2" />
                                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                             </svg>
                         </div>
                         <input type="email" formControlName="email" placeholder="you@example.com"
-                            class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500">
+                            class="block w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
                     </div>
                     @if (authForm.get('email')?.touched && authForm.get('email')?.invalid) {
-                    <div class="text-xs text-red-500 mt-1">Valid email required.</div>
+                    <div class="font-mono text-[9px] uppercase tracking-wider text-red-500 mt-1">{{
+                        'LOGIN.ERRORS.VALID_EMAIL' | translate }}</div>
                     }
                 </div>
 
-                <div class="space-y-1">
+                <div class="space-y-2">
                     <div class="flex items-center justify-between">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Password</label>
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
+                            'LOGIN.PASSWORD' | translate }}</label>
                         @if (isLogin()) {
-                        <a href="#"
-                            class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">Forgot
-                            password?</a>
+                        <a routerLink="/forgot-password"
+                            class="font-mono text-[10px] uppercase tracking-wider text-lotus hover:text-lotus-light transition-colors">{{
+                            'LOGIN.FORGOT_PASSWORD' | translate }}</a>
                         }
                     </div>
                     <div class="relative">
                         <div
-                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-slate-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-ds-muted/40">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round">
                                 <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -139,20 +146,20 @@
 
                         <input [type]="showPassword() ? 'text' : 'password'" formControlName="password"
                             placeholder="••••••••"
-                            class="block w-full pl-10 pr-10 py-2.5 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500">
+                            class="block w-full pl-11 pr-11 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30">
 
                         <button type="button" (click)="togglePasswordVisibility()"
-                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 cursor-pointer transition-colors">
+                            class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 dark:text-ds-muted/40 hover:text-lotus transition-colors cursor-pointer">
                             @if (!showPassword()) {
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round">
                                 <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
                                 <circle cx="12" cy="12" r="3" />
                             </svg>
                             } @else {
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round">
                                 <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
                                 <path
@@ -164,42 +171,54 @@
                         </button>
                     </div>
                     @if (authForm.get('password')?.touched && authForm.get('password')?.invalid) {
-                    <div class="text-xs text-red-500 mt-1">Min 8 chars required.</div>
+                    <div class="font-mono text-[9px] uppercase tracking-wider text-red-500 mt-1">{{
+                        'LOGIN.ERRORS.MIN_8_CHARS' | translate }}</div>
                     }
                 </div>
 
                 <button type="submit" [disabled]="authForm.invalid || isLoading()"
-                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-                    @if (isLoading()) {
-                    <span class="mr-2 animate-spin">⌛</span>
-                    }
-                    {{ isLogin() ? 'Sign in' : 'Create account' }}
+                    class="w-full flex justify-center items-center py-4 px-6 rounded font-mono text-[12px] uppercase tracking-[0.12em] bg-lotus text-ds-black hover:bg-lotus-light disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                    @if (isLoading()) { <span class="mr-3 animate-spin">⌛</span> {{ 'LOGIN.LOADING' | translate }} }
+                    @else { {{ isLogin() ? ('LOGIN.BTN_SUBMIT_LOGIN' | translate) : ('LOGIN.BTN_SUBMIT_REGISTER' |
+                    translate) }} }
                 </button>
 
-                <p class="text-center text-sm text-gray-600 dark:text-slate-400">
-                    {{ isLogin() ? "Don't have an account?" : "Already have an account?" }}
+                <p class="text-center font-syne text-sm text-slate-600 dark:text-ds-muted/70">
+                    {{ isLogin() ? ('LOGIN.NO_ACCOUNT' | translate) : ('LOGIN.HAVE_ACCOUNT' | translate) }}
                     <button type="button" (click)="toggleMode()"
-                        class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 hover:underline ml-1 cursor-pointer">
-                        {{ isLogin() ? "Sign up" : "Sign in" }}
+                        class="font-bold text-lotus hover:text-lotus-light transition-colors ml-1 cursor-pointer">
+                        {{ isLogin() ? ('LOGIN.LINK_SIGNUP' | translate) : ('LOGIN.LINK_SIGNIN' | translate) }}
                     </button>
                 </p>
+
+                @if (!isLogin()) {
+                <div class="mt-8 pt-6 border-t border-slate-200 dark:border-ds-border text-center">
+                    <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/50">
+                        {{ 'LOGIN.EXPERT_PROMPT' | translate }} <br>
+                        <a routerLink="/instructor-register"
+                            class="font-bold text-lotus hover:text-lotus-light transition-colors mt-2 inline-block">
+                            {{ 'LOGIN.LINK_INSTRUCTOR' | translate }}
+                        </a>
+                    </p>
+                </div>
+                }
 
             </form>
         </div>
     </div>
 
     <div class="hidden lg:block relative w-0 flex-1">
-        <div
-            class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-indigo-800 dark:from-indigo-900 dark:to-slate-900">
-            <div class="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-20"
+        <div class="absolute inset-0 bg-ds-black">
+            <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-luminosity"
                 style="background-image: url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200');">
             </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-ds-black via-transparent to-transparent"></div>
         </div>
         <div class="absolute inset-0 flex items-center justify-center p-12">
             <div class="max-w-lg text-center text-white">
-                <h2 class="text-4xl font-bold mb-4">Start your learning journey today</h2>
-                <p class="text-lg opacity-90">Join thousands of learners discovering new skills and advancing their
-                    careers.</p>
+                <h2 class="font-cormorant text-5xl font-light mb-6 leading-tight">{{ 'LOGIN.BANNER_TITLE' | translate }}
+                </h2>
+                <p class="font-syne text-lg text-ds-muted/70 leading-relaxed">{{ 'LOGIN.BANNER_DESC' | translate }}</p>
             </div>
         </div>
     </div>

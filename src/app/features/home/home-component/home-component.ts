@@ -18,54 +18,46 @@ import {
 } from 'lucide-angular';
 import { NavbarComponent } from "../../layouts/navbar-component/navbar-component";
 import { FooterComponent } from "../../layouts/footer-component/footer-component";
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, NavbarComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, LucideAngularModule, NavbarComponent, FooterComponent, TranslateModule],
   templateUrl: './home-component.html',
   styleUrls: ['./home-component.css']
 })
 export class HomeComponent {
-  // Déclaration des icônes pour le template
   readonly icons = {
     ArrowRight, Play, TrendingUp, Users, Award,
     BarChart3, Brain, Shield, Heart, Database, BookOpen, Star
   };
 
   stats = [
-    { icon: Users, value: "50,000+", label: "Students" },
-    { icon: TrendingUp, value: "200+", label: "Courses" },
-    { icon: Award, value: "4.9", label: "Avg Rating" },
+    { icon: Users, value: "50,000+", labelKey: "HOME.STATS.STUDENTS" },
+    { icon: TrendingUp, value: "200+", labelKey: "HOME.STATS.COURSES" },
+    { icon: Award, value: "4.9", labelKey: "HOME.STATS.RATING" },
   ];
 
   topics = [
-    { name: "Algorithmic Trading", icon: TrendingUp, courses: 45, color: "bg-blue-500/10 text-blue-500" },
-    { name: "Quantitative Finance", icon: BarChart3, courses: 32, color: "bg-green-500/10 text-green-500" },
-    { name: "Machine Learning", icon: Brain, courses: 28, color: "bg-yellow-500/10 text-yellow-500" },
-    { name: "Risk Management", icon: Shield, courses: 24, color: "bg-red-500/10 text-red-500" },
-    { name: "Trading Psychology", icon: Heart, courses: 18, color: "bg-purple-500/10 text-purple-500" },
+    { nameKey: "HOME.TOPICS.ITEMS.ALGO", query: "Algorithmic Trading", icon: TrendingUp, courses: 45, color: "bg-lotus/10 text-lotus" },
+    { nameKey: "HOME.TOPICS.ITEMS.QUANT", query: "Quantitative Finance", icon: BarChart3, courses: 32, color: "bg-lotus/10 text-lotus" },
+    { nameKey: "HOME.TOPICS.ITEMS.ML", query: "Machine Learning", icon: Brain, courses: 28, color: "bg-green/10 text-green" },
+    { nameKey: "HOME.TOPICS.ITEMS.RISK", query: "Risk Management", icon: Shield, courses: 24, color: "bg-lotus/10 text-lotus" },
+    { nameKey: "HOME.TOPICS.ITEMS.PSYCHO", query: "Trading Psychology", icon: Heart, courses: 18, color: "bg-lotus/10 text-lotus" },
   ];
 
   activeIndex: number | null = null;
 
   faqs = [
-    {
-      question: "How do I get started with Lotus Academy?",
-      answer: "Simply create a free account, browse our course catalog, and enroll in any course that interests you."
-    },
-    {
-      question: "Are certificates provided upon course completion?",
-      answer: "Yes, you'll receive a verified certificate of completion with a unique QR code for each course you finish."
-    }
+    { questionKey: "HOME.FAQ.Q1", answerKey: "HOME.FAQ.A1" },
+    { questionKey: "HOME.FAQ.Q2", answerKey: "HOME.FAQ.A2" }
   ];
 
-  toggleFaq(index: number) {
+  toggleFaq(index: number): void {
     this.activeIndex = this.activeIndex === index ? null : index;
   }
 
-  // Données statiques pour les cours à la une
-  // Respecte le schéma CourseResponseDTO de votre API
   featuredCourses = [
     {
       id: '123e4567-e89b-12d3-a456-426614174000',
@@ -105,7 +97,6 @@ export class HomeComponent {
     }
   ];
 
-  // Données statiques pour les témoignages
   testimonials = [
     {
       name: 'Alex Thompson',

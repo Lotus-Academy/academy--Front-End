@@ -1,0 +1,299 @@
+{
+    "LAYOUT": {
+        "ADMIN_SPACE": "Administrator Area",
+        "INSTRUCTOR_SPACE": "Instructor Area",
+        "STUDENT_SPACE": "Student Area",
+        "INSTRUCTOR_ROLE": "Instructor",
+        "INSTRUCTOR_BADGE": "Instructor Portal",
+        "STUDENT_ROLE": "Learner",
+        "LOGOUT": "Sign Out",
+        "ADMIN_BADGE": "Administration",
+        "ADMIN_ROLE": "Super Admin",
+        "STUDENT_BADGE": "Student Portal"
+    },
+    "MENU": {
+        "DASHBOARD": "Dashboard",
+        "COURSES": "Courses",
+        "COURSE_CATALOG": "Catalog",
+        "CREATE_COURSE": "Create Course",
+        "ANALYTICS": "Analytics",
+        "SETTINGS": "Settings",
+        "STUDENT_TRACKING": "Student Tracking",
+        "USERS": "Users",
+        "INSTRUCTORS": "Instructors",
+        "CATEGORIES": "Categories",
+        "PAYMENTS": "Payments",
+        "FAVORITES": "My Favorites"
+    },
+    "NOTIFICATIONS": {
+        "TITLE": "Notifications",
+        "NEW": "new",
+        "EMPTY": "No notifications",
+        "MARK_ALL_READ": "Mark all as read"
+    },
+    "BANNERS": {
+        "LOCKED_FEATURE": "Your profile must be approved to use this feature.",
+        "MISSING_TITLE": "Welcome to Lotus Academy!",
+        "MISSING_DESC": "To publish courses and access statistics, you must first complete your professional profile.",
+        "MISSING_BTN": "Complete my profile",
+        "PENDING_TITLE": "Application under review",
+        "PENDING_DESC": "Your profile has been successfully submitted. Our team is currently reviewing it.",
+        "REJECTED_TITLE": "Application requires corrections",
+        "REJECTED_DESC": "Your profile could not be validated as is.",
+        "REJECTED_BTN": "Edit my profile",
+        "EMPTY_TITLE": "Your profile is empty",
+        "EMPTY_DESC": "Before you can create your first course, we need to know a bit more about you and your expertise.",
+        "EMPTY_BTN": "Start onboarding"
+    },
+    "HOME": {
+        "HERO": {
+            "BADGE": "New courses added weekly",
+            "TITLE_1": "Learn from the Best.",
+            "TITLE_2": "Grow with Lotus Academy.",
+            "SUBTITLE": "Join thousands of learners discovering new skills from expert instructors in our vibrant learning community.",
+            "BTN_BROWSE": "Browse Courses",
+            "BTN_START": "Start Learning Free"
+        },
+        "STATS": {
+            "STUDENTS": "Students",
+            "COURSES": "Courses",
+            "RATING": "Avg Rating"
+        },
+        "TOPICS": {
+            "TITLE": "Trending Topics",
+            "SUBTITLE": "Explore the most popular areas of study",
+            "COURSES": "courses",
+            "ITEMS": {
+                "ALGO": "Algorithmic Trading",
+                "QUANT": "Quantitative Finance",
+                "ML": "Machine Learning",
+                "RISK": "Risk Management",
+                "PSYCHO": "Trading Psychology"
+            }
+        },
+        "TESTIMONIALS": {
+            "TITLE": "What Our Students Say",
+            "SUBTITLE": "Join thousands of successful traders"
+        },
+        "FAQ": {
+            "TITLE": "Frequently Asked Questions",
+            "SUBTITLE": "Find answers to common questions about Lotus Academy",
+            "Q1": "How do I get started with Lotus Academy?",
+            "A1": "Simply create a free account, browse our course catalog, and enroll in any course that interests you.",
+            "Q2": "Are certificates provided upon course completion?",
+            "A2": "Yes, you'll receive a verified certificate of completion with a unique QR code for each course you finish."
+        },
+        "COURSES": {
+            "TITLE": "Featured Courses",
+            "SUBTITLE": "Hand-picked courses to accelerate your trading journey",
+            "VIEW_ALL": "View all courses",
+            "FREE": "Free",
+            "DETAILS": "Details"
+        },
+        "WHY": {
+            "TITLE": "Why Learn With Lotus Academy?",
+            "SUBTITLE": "Join thousands of successful traders who started their journey here",
+            "REASON1_TITLE": "Industry Expertise",
+            "REASON1_DESC": "Learn from professionals with decades of experience at top hedge funds and investment banks.",
+            "REASON2_TITLE": "Real Data Examples",
+            "REASON2_DESC": "Practice with real market data and build strategies that work in actual trading environments.",
+            "REASON3_TITLE": "Structured Curriculum",
+            "REASON3_DESC": "Follow a carefully designed learning path from fundamentals to advanced trading strategies."
+        }
+    },
+    "NAVBAR": {
+        "HOME": "Home",
+        "COURSES": "Courses",
+        "TEACH": "Teach",
+        "FAQ": "FAQ",
+        "LOGIN": "Login",
+        "SIGNUP": "Sign up"
+    },
+    "FOOTER": {
+        "DESC": "Learn from expert instructors with professional-grade video content and real-world trading strategies.",
+        "COMPANY": {
+            "TITLE": "Company",
+            "ABOUT": "About Us",
+            "CAREERS": "Careers",
+            "PRESS": "Press"
+        },
+        "RESOURCES": {
+            "TITLE": "Resources",
+            "BLOG": "Blog",
+            "HELP": "Help Center",
+            "FAQ": "FAQ"
+        },
+        "LEGAL": {
+            "TITLE": "Legal",
+            "TERMS": "Terms",
+            "PRIVACY": "Privacy",
+            "COOKIES": "Cookies"
+        },
+        "COPYRIGHT": "All rights reserved."
+    },
+    "INSTRUCTOR_REGISTER": {
+        "BACK_HOME": "Back to Home",
+        "VERIFY_TITLE": "Check your inbox",
+        "VERIFY_TXT_1": "We have sent a verification link to",
+        "VERIFY_TXT_2": ". Please click this link to activate your instructor account.",
+        "BTN_GO_LOGIN": "Go to login",
+        "BADGE": "Instructor Area",
+        "TITLE": "Become an Instructor",
+        "SUBTITLE": "Share your expertise and monetize your knowledge with thousands of students.",
+        "FIRST_NAME": "First Name",
+        "LAST_NAME": "Last Name",
+        "EMAIL": "Professional Email",
+        "PASSWORD": "Password",
+        "BTN_SUBMIT": "Create my instructor account",
+        "LOADING": "Creating account...",
+        "ALREADY_HAVE_ACCOUNT": "Already have an account?",
+        "LINK_LOGIN": "Sign in",
+        "WANT_TO_LEARN": "Looking to learn instead?",
+        "LINK_STUDENT": "Create a student account",
+        "BANNER_TITLE": "Inspire the next generation",
+        "BANNER_DESC": "Join a community of experts. Create impactful courses, grow your audience, and generate revenue with your expertise.",
+        "ERRORS": {
+            "REQUIRED_MIN_2": "Required (min 2 chars).",
+            "REQUIRED": "Required.",
+            "VALID_EMAIL": "Valid email required."
+        }
+    },
+    "PROFILE": {
+        "TITLE": "Account Settings",
+        "SUBTITLE": "Manage your personal information and account security settings.",
+        "TAB_GENERAL": "General Information",
+        "TAB_SECURITY": "Security",
+        "PHOTO_TITLE": "Profile Picture",
+        "PHOTO_DESC": "Recommended formats: JPG, PNG. Maximum size: 2MB.",
+        "BTN_CHANGE_PHOTO": "Change picture",
+        "FIRST_NAME": "First Name",
+        "LAST_NAME": "Last Name",
+        "HEADLINE": "Headline (Optional)",
+        "BIO": "Biography (Optional)",
+        "BTN_SAVE": "Save changes",
+        "SAVING": "Saving...",
+        "PASSWORD_TITLE": "Change Password",
+        "OLD_PASSWORD": "Current password",
+        "NEW_PASSWORD": "New password",
+        "BTN_UPDATE_PASSWORD": "Update password",
+        "DANGER_ZONE": "Danger Zone",
+        "DELETE_TITLE": "Archive Account",
+        "DELETE_DESC": "By archiving your account, you will lose access to your courses and dashboard. This action is irreversible by the user.",
+        "BTN_DELETE": "Archive my account permanently",
+        "SUCCESS_PROFILE": "Profile successfully updated.",
+        "SUCCESS_PASSWORD": "Password successfully updated.",
+        "ERROR_GENERIC": "An error occurred while processing your request."
+    },
+    "LOGIN": {
+        "BACK_HOME": "Back to Home",
+        "TITLE_LOGIN": "Welcome back",
+        "TITLE_REGISTER": "Create your account",
+        "SUBTITLE_LOGIN": "Sign in to access your courses",
+        "SUBTITLE_REGISTER": "Start your journey to mastering new skills",
+        "BTN_GOOGLE": "Continue with Google",
+        "OR_EMAIL": "Or email",
+        "FIRST_NAME": "First Name",
+        "LAST_NAME": "Last Name",
+        "EMAIL": "Email",
+        "PASSWORD": "Password",
+        "FORGOT_PASSWORD": "Forgot?",
+        "BTN_SUBMIT_LOGIN": "Sign in",
+        "BTN_SUBMIT_REGISTER": "Create account",
+        "LOADING": "Loading...",
+        "NO_ACCOUNT": "Don't have an account?",
+        "HAVE_ACCOUNT": "Already have an account?",
+        "LINK_SIGNUP": "Sign up",
+        "LINK_SIGNIN": "Sign in",
+        "EXPERT_PROMPT": "Are you an expert in your field?",
+        "LINK_INSTRUCTOR": "Become an Instructor on Lotus Academy",
+        "BANNER_TITLE": "Start your learning journey today",
+        "BANNER_DESC": "Join thousands of learners discovering new skills and advancing their careers at the intersection of finance and tech.",
+        "ERRORS": {
+            "REQUIRED_MIN_2": "Required (min 2 chars)",
+            "REQUIRED": "Required",
+            "VALID_EMAIL": "Valid email required",
+            "MIN_8_CHARS": "Min 8 chars required",
+            "INVALID_CREDENTIALS": "Invalid email or password.",
+            "GENERIC": "An error occurred during registration."
+        }
+    },
+    "FORGOT_PASSWORD": {
+        "TITLE": "Forgot password",
+        "SUBTITLE": "Enter your email address to receive a reset link.",
+        "EMAIL": "Email address",
+        "BTN_SUBMIT": "Send reset link",
+        "BACK_TO_LOGIN": "Back to login",
+        "SUCCESS_TITLE": "Check your inbox",
+        "SUCCESS_DESC": "We have sent a reset link to",
+        "SUCCESS_DESC_2": "If you can't find it, check your spam folder.",
+        "LOADING": "Sending...",
+        "ERRORS": {
+            "VALID_EMAIL": "Valid email required"
+        }
+    },
+    "RESET_PASSWORD": {
+        "TITLE": "New Password",
+        "SUBTITLE": "Please enter your new secure password.",
+        "NEW_PASSWORD": "New password",
+        "CONFIRM_PASSWORD": "Confirm password",
+        "BTN_SUBMIT": "Reset password",
+        "SUCCESS_TITLE": "Password updated",
+        "SUCCESS_DESC": "Your password has been successfully changed. You can now log in with your new credentials.",
+        "BTN_GO_LOGIN": "Log in",
+        "LOADING": "Updating...",
+        "ERRORS": {
+            "MIN_8_CHARS": "Min 8 characters required",
+            "PASSWORD_MISMATCH": "Passwords do not match",
+            "MISSING_TOKEN": "Invalid or expired reset link."
+        }
+    },
+    "VERIFY_EMAIL": {
+        "LOADING_TITLE": "Verifying...",
+        "LOADING_DESC": "Please wait while we validate your email address...",
+        "SUCCESS_TITLE": "Email verified!",
+        "SUCCESS_DESC": "Your Lotus Academy account is now active. You can log in to access your workspace.",
+        "ERROR_TITLE": "Verification failed",
+        "ERROR_DESC": "The verification link is invalid or has expired. You can request a new link or reset your password.",
+        "BTN_LOGIN": "Log in",
+        "BTN_FORGOT": "Forgot password"
+    },
+    "SIDEBAR": {
+        "INSTRUCTOR": {
+            "DASHBOARD": "Dashboard",
+            "MY_COURSES": "My Courses",
+            "CREATE_COURSE": "Create Course",
+            "LIVE_SESSIONS": "Live Sessions",
+            "STUDENTS": "Student Progress",
+            "EARNINGS": "Earnings",
+            "MENTORING": "Q&A & Mentoring",
+            "PROFILE": "Instructor Profile",
+            "SETTINGS": "Settings"
+        },
+        "BADGES": {
+            "SOON": "Soon",
+            "ACTION": "Action required"
+        },
+        "ADMIN": {
+            "DASHBOARD": "Overview",
+            "INSTRUCTORS": "Instructors & Approvals",
+            "USERS": "Students",
+            "COURSES": "Course Moderation",
+            "CATEGORIES": "Categories & Tags",
+            "FINANCE": "Finance & Coupons",
+            "REVIEWS": "Reviews & Moderation",
+            "ANALYTICS": "Global Analytics",
+            "SETTINGS": "Platform Settings"
+        },
+        "STUDENT": {
+            "DASHBOARD": "Dashboard",
+            "MY_LEARNING": "My Learning",
+            "CATALOG": "Course Catalog",
+            "FAVORITES": "My Favorites",
+            "LIVE_CLASSES": "Live Classes",
+            "QNA": "Q&A & Mentoring",
+            "CERTIFICATES": "My Certificates",
+            "PURCHASES": "Purchase History",
+            "SETTINGS": "Profile Settings"
+        }
+    }
+}
