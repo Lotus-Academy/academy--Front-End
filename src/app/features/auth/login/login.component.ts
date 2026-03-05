@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Info, Mail, Loader2, CheckCircle2, LucideAngularModule } from 'lucide-angular';
+import { Info, Mail, Loader2, CheckCircle2, LucideAngularModule, Ticket } from 'lucide-angular';
 
 import { AuthService, LoginRequest, RegisterRequest } from '../../../core/services/auth.service';
 
@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  readonly icons = { Mail, Info, Loader2, CheckCircle2 };
+  readonly icons = { Mail, Info, Loader2, CheckCircle2, Ticket };
 
   isLogin = signal<boolean>(true);
   isLoading = signal<boolean>(false);

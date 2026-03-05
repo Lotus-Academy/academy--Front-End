@@ -221,7 +221,9 @@
         "REGISTER_SUCCESS_TITLE": "Check your inbox",
         "REGISTER_SUCCESS_DESC": "Your account has been successfully created. A confirmation link has been sent to your email address. Please click this link to activate your account.",
         "REGISTER_SUCCESS_NOTE": "If you cannot find the email, please check your spam folder.",
-        "BTN_BACK_TO_LOGIN": "Back to login"
+        "BTN_BACK_TO_LOGIN": "Back to login",
+        "REFERRAL_CODE": "Referral Code (Optional)",
+        "REFERRAL_PLACEHOLDER": "Ex: MARTIN-A1B2C3"
     },
     "FORGOT_PASSWORD": {
         "TITLE": "Forgot password",

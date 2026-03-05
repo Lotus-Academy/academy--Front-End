@@ -221,7 +221,9 @@
         "REGISTER_SUCCESS_TITLE": "Vérifiez votre boîte mail",
         "REGISTER_SUCCESS_DESC": "Votre compte a été créé avec succès. Un lien de confirmation a été envoyé à votre adresse e-mail. Veuillez cliquer sur ce lien pour activer votre compte.",
         "REGISTER_SUCCESS_NOTE": "Si vous ne trouvez pas l'e-mail, pensez à vérifier vos courriers indésirables (spams).",
-        "BTN_BACK_TO_LOGIN": "Retourner à la connexion"
+        "BTN_BACK_TO_LOGIN": "Retourner à la connexion",
+        "REFERRAL_CODE": "Code de parrainage (Optionnel)",
+        "REFERRAL_PLACEHOLDER": "Ex: MARTIN-A1B2C3"
     },
     "FORGOT_PASSWORD": {
         "TITLE": "Mot de passe oublié",

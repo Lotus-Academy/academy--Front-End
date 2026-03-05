@@ -206,6 +206,22 @@
                         'LOGIN.ERRORS.MIN_8_CHARS' | translate }}</div>
                     }
                 </div>
+                @if (!isLogin()) {
+                <div class="space-y-2 animate-fade-in-up">
+                    <label
+                        class="block font-mono text-[10px] uppercase tracking-[0.1em] text-slate-700 dark:text-ds-muted/70">{{
+                        'LOGIN.REFERRAL_CODE' | translate }}</label>
+                    <div class="relative">
+                        <div
+                            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-ds-muted/40">
+                            <lucide-icon [name]="icons.Ticket" class="w-4 h-4 stroke-[1.5px]"></lucide-icon>
+                        </div>
+                        <input type="text" formControlName="referredByCode"
+                            [placeholder]="'LOGIN.REFERRAL_PLACEHOLDER' | translate"
+                            class="block w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors placeholder:text-slate-400 dark:placeholder:text-ds-muted/30 uppercase">
+                    </div>
+                </div>
+                }
 
                 <button type="submit" [disabled]="authForm.invalid || isLoading()"
                     class="w-full flex justify-center items-center py-4 px-6 rounded font-mono text-[12px] uppercase tracking-[0.12em] bg-lotus text-ds-black hover:bg-lotus-light disabled:opacity-50 disabled:cursor-not-allowed transition-all">

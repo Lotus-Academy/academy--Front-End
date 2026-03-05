@@ -12,6 +12,7 @@ export interface RegisterRequest {
   email: string;
   password: string;
   role: 'STUDENT' | 'INSTRUCTOR' | 'ADMIN';
+  referredByCode?: string;
 }
 
 // 2. DTO LOGIN REQUEST
