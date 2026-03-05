@@ -4,11 +4,12 @@
         "INSTRUCTOR_SPACE": "Espace Instructeur",
         "STUDENT_SPACE": "Espace Étudiant",
         "INSTRUCTOR_ROLE": "Instructeur",
-        "STUDENT_ROLE": "Étudiant",
         "INSTRUCTOR_BADGE": "Espace Formateur",
         "LOGOUT": "Déconnexion",
         "ADMIN_BADGE": "Administration",
-        "ADMIN_ROLE": "Super Admin"
+        "ADMIN_ROLE": "Super Admin",
+        "STUDENT_BADGE": "Espace Étudiant",
+        "STUDENT_ROLE": "Apprenant"
     },
     "MENU": {
         "DASHBOARD": "Vue d'ensemble",
@@ -282,6 +283,17 @@
             "REVIEWS": "Avis & Modération",
             "ANALYTICS": "Analytiques Globales",
             "SETTINGS": "Paramètres Plateforme"
+        },
+        "STUDENT": {
+            "DASHBOARD": "Tableau de bord",
+            "MY_LEARNING": "Mon apprentissage",
+            "CATALOG": "Catalogue des cours",
+            "FAVORITES": "Mes favoris",
+            "LIVE_CLASSES": "Classes en direct",
+            "QNA": "Questions & Mentorat",
+            "CERTIFICATES": "Mes Certificats",
+            "PURCHASES": "Historique d'achats",
+            "SETTINGS": "Paramètres du profil"
         }
     }
 }

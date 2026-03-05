@@ -5,10 +5,11 @@
         "STUDENT_SPACE": "Student Area",
         "INSTRUCTOR_ROLE": "Instructor",
         "INSTRUCTOR_BADGE": "Instructor Portal",
-        "STUDENT_ROLE": "Student",
+        "STUDENT_ROLE": "Learner",
         "LOGOUT": "Sign Out",
         "ADMIN_BADGE": "Administration",
-        "ADMIN_ROLE": "Super Admin"
+        "ADMIN_ROLE": "Super Admin",
+        "STUDENT_BADGE": "Student Portal"
     },
     "MENU": {
         "DASHBOARD": "Dashboard",
@@ -282,6 +283,17 @@
             "REVIEWS": "Reviews & Moderation",
             "ANALYTICS": "Global Analytics",
             "SETTINGS": "Platform Settings"
+        },
+        "STUDENT": {
+            "DASHBOARD": "Dashboard",
+            "MY_LEARNING": "My Learning",
+            "CATALOG": "Course Catalog",
+            "FAVORITES": "My Favorites",
+            "LIVE_CLASSES": "Live Classes",
+            "QNA": "Q&A & Mentoring",
+            "CERTIFICATES": "My Certificates",
+            "PURCHASES": "Purchase History",
+            "SETTINGS": "Profile Settings"
         }
     }
 }

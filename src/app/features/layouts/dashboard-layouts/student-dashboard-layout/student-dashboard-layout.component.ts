@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Home, Play, Heart, Settings } from 'lucide-angular';
 import { SharedLayoutComponent } from '../../../../shared/components/shared-layout/shared-layout.component';
+import { STUDENT_SIDEBAR_LINKS } from './student-sidebar.config';
 
 @Component({
   selector: 'app-student-layout',
@@ -11,21 +11,18 @@ import { SharedLayoutComponent } from '../../../../shared/components/shared-layo
     <app-shared-layout 
       [title]="title"
       [navLinks]="navLinks"
-      badgeText="Espace Étudiant"
-      badgeClasses="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800"
-      profileLink="/student/profile"
-      profileRoleText="Étudiant">
+      badgeText="LAYOUT.STUDENT_BADGE"
+      badgeClasses="bg-slate-100 text-slate-700 border-slate-200 dark:bg-ds-surface dark:text-ds-muted dark:border-ds-border"
+      profileLink="/student/settings"
+      profileRoleText="LAYOUT.STUDENT_ROLE">
+      
       <ng-content></ng-content>
+      
     </app-shared-layout>
   `
 })
 export class StudentLayoutComponent {
   @Input({ required: true }) title!: string;
 
-  navLinks = [
-    { href: '/dashboard', label: 'Mon Apprentissage', icon: Home },
-    { href: '/courses', label: 'Catalogue', icon: Play },
-    { href: '/student/favorites', label: 'Mes Favoris', icon: Heart },
-    { href: '/student/profile', label: 'Paramètres', icon: Settings }
-  ];
+  navLinks = STUDENT_SIDEBAR_LINKS;
 }
