@@ -40,6 +40,9 @@ import { AdminCategoriesComponent } from './features/admin/admin-categories/admi
 import { AdminAnalyticsComponent } from './features/admin/admin-analytics/admin-analytics.component';
 import { AdminPaymentsComponent } from './features/admin/admin-payments/admin-payments.component';
 import { ProfileComponent } from './features/user/profile/profile.component';
+import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
+import { VerifyEmailComponent } from './features/auth/verify-email/verify-email.component';
 
 export const routes: Routes = [
     // --- ROUTES PUBLIQUES ---
@@ -50,10 +53,12 @@ export const routes: Routes = [
     // --- ROUTES D'AUTHENTIFICATION ---
     { path: 'login', component: LoginComponent },
     { path: 'register', redirectTo: '/login', pathMatch: 'full' },
-
+    { path: 'forgot-password', component: ForgotPasswordComponent },
+    { path: 'reset-password', component: ResetPasswordComponent },
+    { path: 'verify-email', component: VerifyEmailComponent },
     { path: 'student/profile', component: ProfileComponent },
     { path: 'instructor/profile', component: ProfileComponent },
-    // Nouvelle route pour l'inscription des instructeurs
+    // Inscription des instructeurs
     { path: 'instructor-register', component: InstructorRegisterComponent },
 
     // --- DASHBOARD GÉNÉRAL ---

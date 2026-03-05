@@ -1,0 +1,73 @@
+<div class="min-h-screen bg-slate-50 dark:bg-ds-black flex transition-colors duration-300">
+
+    <div
+        class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white dark:bg-ds-black">
+        <div class="mx-auto w-full max-w-sm lg:w-96 text-center">
+
+            <div class="flex items-center justify-center gap-3 mb-10">
+                <div class="flex h-8 w-8 items-center justify-center rounded bg-lotus/10 border border-lotus/20">
+                    <span class="text-base font-cormorant font-bold text-lotus">L</span>
+                </div>
+                <span class="text-2xl font-cormorant font-bold text-slate-900 dark:text-white tracking-wide">Lotus
+                    Academy</span>
+            </div>
+
+            @if (status() === 'LOADING') {
+            <div class="animate-fade-in-up">
+                <lucide-icon [name]="icons.Loader2"
+                    class="w-12 h-12 text-lotus animate-spin mx-auto mb-6 stroke-[1.5px]"></lucide-icon>
+                <h3 class="font-cormorant text-3xl font-light text-slate-900 dark:text-white mb-3">{{
+                    'VERIFY_EMAIL.LOADING_TITLE' | translate }}</h3>
+                <p class="font-syne text-sm text-slate-600 dark:text-ds-muted/70">{{ 'VERIFY_EMAIL.LOADING_DESC' |
+                    translate }}</p>
+            </div>
+            }
+
+            @else if (status() === 'SUCCESS') {
+            <div
+                class="bg-green/5 dark:bg-green/10 p-8 rounded border border-green/20 dark:border-green/30 animate-fade-in-up">
+                <div class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-green/20 mb-6">
+                    <lucide-icon [name]="icons.CheckCircle2" class="w-8 h-8 text-green stroke-[1.5px]"></lucide-icon>
+                </div>
+                <h3 class="font-cormorant text-3xl font-light text-slate-900 dark:text-white mb-3">{{
+                    'VERIFY_EMAIL.SUCCESS_TITLE' | translate }}</h3>
+                <p class="font-syne text-sm text-slate-600 dark:text-ds-muted/70 mb-8 leading-relaxed">
+                    {{ 'VERIFY_EMAIL.SUCCESS_DESC' | translate }}
+                </p>
+                <a routerLink="/login"
+                    class="block w-full py-4 px-6 bg-lotus text-ds-black rounded font-mono text-[12px] uppercase tracking-[0.12em] hover:bg-lotus-light transition-all text-center shadow-sm">
+                    {{ 'VERIFY_EMAIL.BTN_LOGIN' | translate }}
+                </a>
+            </div>
+            }
+
+            @else {
+            <div
+                class="bg-red-500/5 dark:bg-red-500/10 p-8 rounded border border-red-500/20 dark:border-red-500/30 animate-fade-in-up">
+                <div class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-red-500/20 mb-6">
+                    <lucide-icon [name]="icons.XCircle" class="w-8 h-8 text-red-500 stroke-[1.5px]"></lucide-icon>
+                </div>
+                <h3 class="font-cormorant text-3xl font-light text-slate-900 dark:text-white mb-3">{{
+                    'VERIFY_EMAIL.ERROR_TITLE' | translate }}</h3>
+                <p class="font-syne text-sm text-slate-600 dark:text-ds-muted/70 mb-8 leading-relaxed">
+                    {{ 'VERIFY_EMAIL.ERROR_DESC' | translate }}
+                </p>
+                <a routerLink="/forgot-password"
+                    class="block w-full py-4 px-6 border border-slate-200 dark:border-ds-border text-slate-900 dark:text-white rounded font-mono text-[12px] uppercase tracking-[0.12em] hover:bg-slate-50 dark:hover:bg-ds-surface transition-all text-center">
+                    {{ 'VERIFY_EMAIL.BTN_FORGOT' | translate }}
+                </a>
+            </div>
+            }
+        </div>
+    </div>
+
+    <div class="hidden lg:block relative w-0 flex-1">
+        <div class="absolute inset-0 bg-ds-black">
+            <div class="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-luminosity"
+                style="background-image: url('https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=1200');">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-ds-black via-transparent to-transparent"></div>
+        </div>
+    </div>
+
+</div>

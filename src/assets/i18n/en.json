@@ -213,5 +213,45 @@
             "INVALID_CREDENTIALS": "Invalid email or password.",
             "GENERIC": "An error occurred during registration."
         }
+    },
+    "FORGOT_PASSWORD": {
+        "TITLE": "Forgot password",
+        "SUBTITLE": "Enter your email address to receive a reset link.",
+        "EMAIL": "Email address",
+        "BTN_SUBMIT": "Send reset link",
+        "BACK_TO_LOGIN": "Back to login",
+        "SUCCESS_TITLE": "Check your inbox",
+        "SUCCESS_DESC": "We have sent a reset link to",
+        "SUCCESS_DESC_2": "If you can't find it, check your spam folder.",
+        "LOADING": "Sending...",
+        "ERRORS": {
+            "VALID_EMAIL": "Valid email required"
+        }
+    },
+    "RESET_PASSWORD": {
+        "TITLE": "New Password",
+        "SUBTITLE": "Please enter your new secure password.",
+        "NEW_PASSWORD": "New password",
+        "CONFIRM_PASSWORD": "Confirm password",
+        "BTN_SUBMIT": "Reset password",
+        "SUCCESS_TITLE": "Password updated",
+        "SUCCESS_DESC": "Your password has been successfully changed. You can now log in with your new credentials.",
+        "BTN_GO_LOGIN": "Log in",
+        "LOADING": "Updating...",
+        "ERRORS": {
+            "MIN_8_CHARS": "Min 8 characters required",
+            "PASSWORD_MISMATCH": "Passwords do not match",
+            "MISSING_TOKEN": "Invalid or expired reset link."
+        }
+    },
+    "VERIFY_EMAIL": {
+        "LOADING_TITLE": "Verifying...",
+        "LOADING_DESC": "Please wait while we validate your email address...",
+        "SUCCESS_TITLE": "Email verified!",
+        "SUCCESS_DESC": "Your Lotus Academy account is now active. You can log in to access your workspace.",
+        "ERROR_TITLE": "Verification failed",
+        "ERROR_DESC": "The verification link is invalid or has expired. You can request a new link or reset your password.",
+        "BTN_LOGIN": "Log in",
+        "BTN_FORGOT": "Forgot password"
     }
 }

@@ -213,5 +213,45 @@
             "INVALID_CREDENTIALS": "Email ou mot de passe incorrect.",
             "GENERIC": "Une erreur est survenue lors de l'inscription."
         }
+    },
+    "FORGOT_PASSWORD": {
+        "TITLE": "Mot de passe oublié",
+        "SUBTITLE": "Entrez votre adresse e-mail pour recevoir un lien de réinitialisation.",
+        "EMAIL": "Adresse e-mail",
+        "BTN_SUBMIT": "Envoyer le lien",
+        "BACK_TO_LOGIN": "Retour à la connexion",
+        "SUCCESS_TITLE": "Vérifiez votre boîte de réception",
+        "SUCCESS_DESC": "Nous avons envoyé un lien de réinitialisation à",
+        "SUCCESS_DESC_2": "Si vous ne le trouvez pas, vérifiez vos courriers indésirables.",
+        "LOADING": "Envoi en cours...",
+        "ERRORS": {
+            "VALID_EMAIL": "Email valide requis"
+        }
+    },
+    "RESET_PASSWORD": {
+        "TITLE": "Nouveau mot de passe",
+        "SUBTITLE": "Veuillez saisir votre nouveau mot de passe sécurisé.",
+        "NEW_PASSWORD": "Nouveau mot de passe",
+        "CONFIRM_PASSWORD": "Confirmer le mot de passe",
+        "BTN_SUBMIT": "Réinitialiser le mot de passe",
+        "SUCCESS_TITLE": "Mot de passe mis à jour",
+        "SUCCESS_DESC": "Votre mot de passe a été modifié avec succès. Vous pouvez maintenant vous connecter avec vos nouveaux identifiants.",
+        "BTN_GO_LOGIN": "Se connecter",
+        "LOADING": "Mise à jour...",
+        "ERRORS": {
+            "MIN_8_CHARS": "Min 8 caractères requis",
+            "PASSWORD_MISMATCH": "Les mots de passe ne correspondent pas",
+            "MISSING_TOKEN": "Lien de réinitialisation invalide ou expiré."
+        }
+    },
+    "VERIFY_EMAIL": {
+        "LOADING_TITLE": "Vérification en cours",
+        "LOADING_DESC": "Veuillez patienter pendant que nous validons votre adresse e-mail...",
+        "SUCCESS_TITLE": "Email vérifié !",
+        "SUCCESS_DESC": "Votre compte Lotus Academy est désormais actif. Vous pouvez vous connecter pour accéder à votre espace.",
+        "ERROR_TITLE": "Échec de la vérification",
+        "ERROR_DESC": "Le lien de vérification est invalide ou a expiré. Vous pouvez demander un nouveau lien ou réinitialiser votre mot de passe.",
+        "BTN_LOGIN": "Se connecter",
+        "BTN_FORGOT": "Mot de passe oublié"
     }
 }
