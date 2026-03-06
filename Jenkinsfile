@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "lotus-frontend:latest"
         REPO_URL = "git@github.com:Lotus-Academy/academy--Front-End.git"
         BRANCH = "main"
-        SSH_CREDENTIAL_ID = "github-ssh"
+        SSH_CREDENTIAL_ID = "git-new"
     }
 
     triggers {
