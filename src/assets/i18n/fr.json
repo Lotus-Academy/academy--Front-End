@@ -303,5 +303,208 @@
             "PURCHASES": "Historique d'achats",
             "SETTINGS": "Paramètres du profil"
         }
+    },
+    "INSTRUCTOR_DASHBOARD": {
+        "STATS": {
+            "TOTAL_COURSES": "Cours Totaux",
+            "APPROVED": "Approuvés",
+            "PENDING": "En attente",
+            "STUDENTS": "Étudiants"
+        },
+        "TABS": {
+            "MY_COURSES": "Mes Cours",
+            "STUDENTS_PROGRESS": "Progression Étudiants"
+        },
+        "COURSES": {
+            "TITLE": "Gestion de mes cours",
+            "NEW_COURSE": "Créer un cours",
+            "EMPTY_TITLE": "Aucun cours créé",
+            "EMPTY_DESC": "Commencez par créer votre premier cours pour le partager avec les étudiants.",
+            "MODIFIED_ON": "Modifié le",
+            "BTN_EDIT": "Modifier"
+        },
+        "STUDENTS": {
+            "TITLE": "Aperçu de la progression",
+            "EMPTY_DESC": "Le tableau de progression des étudiants sera affiché ici."
+        },
+        "STATUS": {
+            "APPROVED": "Approuvé",
+            "REJECTED": "Rejeté",
+            "PENDING": "En révision",
+            "DRAFT": "Brouillon"
+        }
+    },
+    "COURSE_EDITOR": {
+        "SHELL": {
+            "BACK_TO_DASHBOARD": "Retour au tableau de bord",
+            "EDIT_COURSE": "Édition du cours",
+            "STATUS_PENDING": "En validation",
+            "STATUS_DRAFT": "Brouillon",
+            "BTN_PREVIEW": "Aperçu",
+            "NAV_BASIC": "Informations de base",
+            "NAV_CURRICULUM": "Programme (Médias)",
+            "NAV_PRICING": "Tarification & Affiche",
+            "NAV_QUIZ": "Examen (Quiz)",
+            "NAV_PUBLISH": "Soumettre le cours"
+        },
+        "CREATE": {
+            "TITLE": "Initier un nouveau cours",
+            "DESC": "Définissez les bases. Vous pourrez ajouter les vidéos et l'examen à l'étape suivante.",
+            "FORM_TITLE": "Titre du cours *",
+            "FORM_TITLE_PLACEHOLDER": "Ex: Maîtriser l'Analyse Technique",
+            "ERR_TITLE": "Le titre est requis (minimum 5 caractères).",
+            "FORM_SUBTITLE": "Sous-titre (Accroche) *",
+            "FORM_SUBTITLE_PLACEHOLDER": "Apprenez à trader de A à Z...",
+            "FORM_CATEGORY": "Catégorie *",
+            "CAT_PLACEHOLDER": "Choisir une catégorie",
+            "FORM_LEVEL": "Niveau *",
+            "LEVEL_BEGINNER": "Débutant",
+            "LEVEL_INTERMEDIATE": "Intermédiaire",
+            "LEVEL_ADVANCED": "Avancé",
+            "LEVEL_ALL": "Tous niveaux",
+            "FORM_PRICE": "Prix de base (USD) *",
+            "PRICE_NOTE": "La conversion dynamique s'appliquera pour les étudiants internationaux.",
+            "FORM_LANG": "Langue *",
+            "LANG_FR": "Français",
+            "LANG_EN": "Anglais",
+            "LANG_AR": "Arabe",
+            "FORM_DESC": "Description détaillée",
+            "DESC_PLACEHOLDER": "Décrivez les objectifs de votre cours...",
+            "BTN_CANCEL": "Annuler",
+            "BTN_LOADING": "Création...",
+            "BTN_SUBMIT": "Sauvegarder et Continuer"
+        },
+        "BASIC": {
+            "TITLE": "Informations de base",
+            "DESC": "Ces informations seront visibles publiquement sur la page de présentation de votre cours.",
+            "TITLE_NOTE": "Un titre accrocheur attire plus d'étudiants.",
+            "BTN_LOADING": "Enregistrement...",
+            "BTN_SUBMIT": "Enregistrer les modifications"
+        },
+        "PRICING": {
+            "THUMBNAIL_TITLE": "Affiche du cours",
+            "BTN_UPLOAD_THUMBNAIL": "Changer l'image",
+            "TRAILER_TITLE": "Vidéo de présentation (Trailer)",
+            "BTN_UPLOAD_TRAILER": "Uploader Vidéo MP4",
+            "LOADING": "Upload...",
+            "PRICE_TITLE": "Prix de vente (USD)",
+            "BTN_SAVE": "Enregistrer"
+        },
+        "CURRICULUM": {
+            "TITLE": "Programme du cours",
+            "DESC": "Structurez votre cours en sections et leçons (Vidéos MP4 ou documents PDF).",
+            "BTN_SUBMIT": "Soumettre pour validation",
+            "SECTION": "Section",
+            "LESSON": "Leçon",
+            "SEC": "sec",
+            "FREE_PREVIEW": "Aperçu gratuit",
+            "BTN_UPLOAD": "Uploader (MP4/PDF)",
+            "MEDIA_READY": "Média prêt",
+            "LESSON_TITLE": "Titre de la leçon",
+            "LESSON_DURATION": "Durée (secondes)",
+            "LESSON_FREE_LABEL": "Rendre cette leçon accessible gratuitement (Aperçu)",
+            "BTN_CANCEL": "Annuler",
+            "BTN_ADD_LESSON": "Ajouter la leçon",
+            "LINK_ADD_LESSON": "Ajouter une leçon",
+            "SECTION_TITLE_LABEL": "Titre de la nouvelle section",
+            "SECTION_TITLE_PLACEHOLDER": "Ex: Introduction aux marchés financiers",
+            "BTN_ADD_SECTION": "Créer la section",
+            "LINK_ADD_SECTION": "Ajouter une nouvelle section",
+            "ERR_FORMAT": "Format non supporté. Veuillez uploader uniquement un fichier .MP4 ou .PDF"
+        },
+        "PREVIEW": {
+            "TITLE": "Aperçu du cours",
+            "DESC": "Vérifiez l'apparence de votre cours avant de le soumettre.",
+            "BTN_VIEW_PUBLIC": "Voir la page publique",
+            "CARD_TITLE": "Aperçu dans le catalogue",
+            "CARD_DESC": "C'est ainsi que les étudiants verront votre cours lors de leurs recherches.",
+            "LANDING_TITLE": "Aperçu de la page de vente",
+            "LANDING_DESC": "La section principale qui doit convaincre l'étudiant de s'inscrire.",
+            "VIDEO_DURATION": "de vidéo",
+            "FREE": "Gratuit",
+            "BTN_ENROLL": "S'inscrire",
+            "LESSONS": "leçons",
+            "CERTIFICATE": "Certificat de réussite"
+        },
+        "QUIZ": {
+            "TITLE": "Création de l'Examen",
+            "DESC": "Créez le quiz final que les étudiants devront réussir pour obtenir leur certificat.",
+            "FORM_TITLE": "Titre du Quiz",
+            "FORM_SCORE": "Score requis pour réussir (%)",
+            "QUESTION": "Question",
+            "QUESTION_PLACEHOLDER": "Posez votre question ici...",
+            "OPTION_PLACEHOLDER": "Réponse possible...",
+            "BTN_ADD_OPTION": "Ajouter une option",
+            "BTN_NEW_QUESTION": "Nouvelle Question",
+            "BTN_SAVE": "Enregistrer l'examen",
+            "BTN_SAVING": "Enregistrement...",
+            "MARK_CORRECT": "Marquer comme bonne réponse",
+            "ALERT_SUCCESS": "Quiz enregistré avec succès !",
+            "ALERT_ERROR": "Erreur lors de la sauvegarde du quiz."
+        }
+    },
+    "STUDENT_DASHBOARD": {
+        "CONTINUE": {
+            "TITLE": "Continuer à regarder",
+            "VIEW_ALL": "Voir tout",
+            "CURRENT_LESSON": "Leçon actuelle :",
+            "COMPLETED": "complété"
+        },
+        "SEARCH": {
+            "PLACEHOLDER": "Rechercher un cours ou un instructeur...",
+            "ALL_CATEGORIES": "Toutes les catégories"
+        },
+        "FOLLOWING": {
+            "TITLE": "Instructeurs que vous suivez"
+        },
+        "DISCOVER": {
+            "TITLE_NEW": "Découvrir de nouveaux cours",
+            "TITLE_SEARCH": "Résultats de recherche",
+            "EMPTY_TITLE": "Aucun cours trouvé",
+            "EMPTY_DESC": "Essayez de modifier vos filtres de recherche ou parcourez une autre catégorie."
+        }
+    },
+    "COURSE_CARD": {
+        "LEVEL_BEGINNER": "Débutant",
+        "LEVEL_INTERMEDIATE": "Intermédiaire",
+        "LEVEL_ADVANCED": "Avancé",
+        "LEVEL_ALL_LEVELS": "Tous niveaux",
+        "FREE": "Gratuit",
+        "VIEW_COURSE": "Voir le cours →"
+    },
+    "COURSE_DETAIL": {
+        "CATALOG_LINK": "Catalogue",
+        "BY": "Par",
+        "ABOUT_COURSE": "À propos de ce cours",
+        "CURRICULUM_TITLE": "Programme du cours",
+        "SECTIONS": "sections",
+        "LESSONS": "leçons",
+        "FREE_PREVIEW": "Aperçu gratuit",
+        "ENROLL_NOW": "S'inscrire maintenant",
+        "FREE": "Gratuit",
+        "COURSE_INCLUDES": "Ce cours comprend :",
+        "VIDEO_HOURS": "de vidéo",
+        "CERTIFICATE": "Certificat de réussite",
+        "ABOUT_INSTRUCTOR": "À propos de l'instructeur",
+        "VIEW_PROFILE": "Voir le profil"
+    },
+    "COURSE_LIST": {
+        "TITLE": "Explorer les Cours",
+        "SUBTITLE": "Découvrez plus de {{count}} cours pour faire avancer votre carrière.",
+        "SEARCH_PLACEHOLDER": "Rechercher des cours ou des instructeurs...",
+        "FILTERS_LABEL": "Filtres :",
+        "CLEAR_FILTERS": "Effacer",
+        "SHOWING_RESULTS": "Affichage de {{filtered}} sur {{total}} cours",
+        "EMPTY_TITLE": "Aucun cours trouvé",
+        "EMPTY_DESC": "Essayez de modifier vos filtres ou votre terme de recherche.",
+        "BTN_RESET": "Réinitialiser les filtres",
+        "FILTERS": {
+            "ALL": "Tous",
+            "BEGINNER": "Débutant",
+            "INTERMEDIATE": "Intermédiaire",
+            "ADVANCED": "Avancé",
+            "FREE": "Gratuit",
+            "PAID": "Payant"
+        }
     }
 }

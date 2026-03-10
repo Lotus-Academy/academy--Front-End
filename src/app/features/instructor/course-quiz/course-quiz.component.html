@@ -1,86 +1,110 @@
-<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm p-6 sm:p-8">
+<div
+    class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-sm p-6 sm:p-8 animate-fade-in-up">
 
     <div class="mb-8">
-        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Création de l'Examen</h2>
-        <p class="text-slate-500 dark:text-slate-400 mt-1">Créez le quiz final que les étudiants devront réussir pour
-            obtenir leur certificat.</p>
+        <h2 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white">{{ 'COURSE_EDITOR.QUIZ.TITLE' |
+            translate }}</h2>
+        <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 mt-1">{{ 'COURSE_EDITOR.QUIZ.DESC' | translate
+            }}</p>
     </div>
 
-    <div class="space-y-6">
+    @if (isLoading()) {
+    <div class="flex justify-center items-center py-20">
+        <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin"></lucide-icon>
+    </div>
+    } @else {
+    <div class="space-y-8">
+
         <div
-            class="grid md:grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+            class="grid md:grid-cols-2 gap-6 bg-slate-50 dark:bg-ds-black p-6 rounded border border-slate-200 dark:border-ds-border">
             <div>
-                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Titre du Quiz</label>
+                <label
+                    class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">{{
+                    'COURSE_EDITOR.QUIZ.FORM_TITLE' | translate }}</label>
                 <input type="text" [ngModel]="quizTitle()" (ngModelChange)="quizTitle.set($event)"
-                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700">
+                    class="w-full px-4 py-3 bg-white dark:bg-ds-surface border border-slate-300 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none transition-colors dark:text-white">
             </div>
             <div>
-                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Score requis pour réussir
-                    (%)</label>
+                <label
+                    class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">{{
+                    'COURSE_EDITOR.QUIZ.FORM_SCORE' | translate }}</label>
                 <input type="number" [ngModel]="passingScore()" (ngModelChange)="passingScore.set($event)" min="1"
                     max="100"
-                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700">
+                    class="w-full px-4 py-3 bg-white dark:bg-ds-surface border border-slate-300 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none transition-colors dark:text-white">
             </div>
         </div>
 
-        @for (question of questions(); track $index; let qIndex = $index) {
-        <div
-            class="border border-indigo-100 dark:border-indigo-900/50 rounded-xl p-6 bg-white dark:bg-slate-900 shadow-sm relative">
+        <div class="space-y-6">
+            @for (question of questions(); track $index; let qIndex = $index) {
+            <div
+                class="border border-slate-200 dark:border-ds-border rounded p-6 bg-slate-50/50 dark:bg-ds-black/30 shadow-sm relative group">
 
-            <button (click)="removeQuestion(qIndex)"
-                class="absolute top-4 right-4 text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors">
-                <lucide-icon [name]="icons.Trash2" class="w-4 h-4"></lucide-icon>
-            </button>
+                <button (click)="removeQuestion(qIndex)"
+                    class="absolute top-5 right-5 text-slate-400 hover:text-red-500 dark:text-ds-muted/50 dark:hover:text-red-500 transition-colors p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-500/10">
+                    <lucide-icon [name]="icons.Trash2" class="w-4 h-4"></lucide-icon>
+                </button>
 
-            <h4 class="font-bold text-slate-900 dark:text-white mb-4">Question {{ qIndex + 1 }}</h4>
+                <h4 class="font-syne font-bold text-slate-900 dark:text-white mb-4">{{ 'COURSE_EDITOR.QUIZ.QUESTION' |
+                    translate }} {{ qIndex + 1 }}</h4>
 
-            <input type="text" [(ngModel)]="question.text" placeholder="Posez votre question ici..."
-                class="w-full px-4 py-3 mb-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 font-medium">
+                <input type="text" [(ngModel)]="question.text"
+                    [placeholder]="'COURSE_EDITOR.QUIZ.QUESTION_PLACEHOLDER' | translate"
+                    class="w-full px-4 py-3 mb-6 bg-white dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded focus:ring-1 focus:ring-lotus focus:outline-none font-syne text-sm dark:text-white transition-colors shadow-sm">
 
-            <div class="space-y-3 pl-4 md:pl-8">
-                @for (option of question.options; track $index; let oIndex = $index) {
-                <div class="flex items-center gap-3">
-                    <button (click)="setCorrectOption(qIndex, oIndex)"
-                        [ngClass]="option.isCorrect ? 'text-green-500 bg-green-50 border-green-200' : 'text-slate-300 bg-white border-slate-200'"
-                        class="w-8 h-8 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors"
-                        title="Marquer comme bonne réponse">
-                        @if (option.isCorrect) {
-                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                        }
-                    </button>
+                <div class="space-y-3 pl-2 md:pl-6 border-l-2 border-slate-200 dark:border-ds-border ml-2">
+                    @for (option of question.options; track $index; let oIndex = $index) {
+                    <div class="flex items-center gap-3">
+                        <button (click)="setCorrectOption(qIndex, oIndex)"
+                            [ngClass]="option.isCorrect ? 'text-green bg-green/10 border-green/30' : 'text-slate-300 dark:text-ds-muted/30 bg-white dark:bg-ds-black border-slate-200 dark:border-ds-border'"
+                            class="w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors"
+                            [title]="'COURSE_EDITOR.QUIZ.MARK_CORRECT' | translate">
+                            @if (option.isCorrect) {
+                            <div class="w-2.5 h-2.5 bg-green rounded-full"></div>
+                            }
+                        </button>
 
-                    <input type="text" [(ngModel)]="option.text" placeholder="Réponse possible..."
-                        [ngClass]="option.isCorrect ? 'border-green-300 bg-green-50/30' : 'border-slate-200'"
-                        class="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:border-slate-700">
+                        <input type="text" [(ngModel)]="option.text"
+                            [placeholder]="'COURSE_EDITOR.QUIZ.OPTION_PLACEHOLDER' | translate"
+                            [ngClass]="option.isCorrect ? 'border-green/50 bg-green/5 dark:bg-green/5 dark:text-white' : 'border-slate-200 dark:border-ds-border bg-white dark:bg-ds-surface dark:text-white'"
+                            class="flex-1 px-4 py-2.5 border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none transition-colors">
 
-                    <button (click)="removeOption(qIndex, oIndex)"
-                        class="p-2 text-slate-400 hover:text-red-500 transition-colors"
-                        [disabled]="question.options.length <= 2">
-                        <lucide-icon [name]="icons.Trash2" class="w-4 h-4"></lucide-icon>
-                    </button>
+                        <button (click)="removeOption(qIndex, oIndex)"
+                            class="p-2 text-slate-400 dark:text-ds-muted/50 hover:text-red-500 dark:hover:text-red-500 transition-colors"
+                            [disabled]="question.options.length <= 2">
+                            <lucide-icon [name]="icons.Trash2" class="w-4 h-4"></lucide-icon>
+                        </button>
+                    </div>
+                    }
                 </div>
-                }
-            </div>
 
-            <button (click)="addOption(qIndex)"
-                class="mt-4 ml-4 md:ml-8 text-sm font-bold text-indigo-600 flex items-center gap-1 hover:text-indigo-800">
-                <lucide-icon [name]="icons.Plus" class="w-4 h-4"></lucide-icon> Ajouter une option
-            </button>
+                <button (click)="addOption(qIndex)"
+                    class="mt-5 ml-4 md:ml-8 font-mono text-[10px] uppercase tracking-widest font-bold text-lotus flex items-center gap-1 hover:text-lotus-light transition-colors">
+                    <lucide-icon [name]="icons.Plus" class="w-3.5 h-3.5"></lucide-icon> {{
+                    'COURSE_EDITOR.QUIZ.BTN_ADD_OPTION' | translate }}
+                </button>
+            </div>
+            }
         </div>
-        }
 
         <button (click)="addQuestion()"
-            class="w-full py-4 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-slate-600 font-bold hover:border-indigo-500 hover:text-indigo-600 transition-colors flex justify-center items-center gap-2">
-            <lucide-icon [name]="icons.Plus" class="w-5 h-5"></lucide-icon> Nouvelle Question
+            class="w-full py-5 border border-dashed border-slate-300 dark:border-ds-border rounded text-slate-600 dark:text-ds-muted/70 font-mono text-[11px] uppercase tracking-[0.1em] font-bold hover:border-lotus hover:text-lotus dark:hover:border-lotus dark:hover:text-lotus transition-colors flex justify-center items-center gap-2 bg-slate-50/50 dark:bg-ds-black/30">
+            <lucide-icon [name]="icons.Plus" class="w-4 h-4"></lucide-icon> {{ 'COURSE_EDITOR.QUIZ.BTN_NEW_QUESTION' |
+            translate }}
         </button>
 
     </div>
 
-    <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+    <div class="mt-8 pt-6 border-t border-slate-200 dark:border-ds-border flex justify-end">
         <button (click)="saveQuiz()" [disabled]="isSaving() || questions().length === 0"
-            class="px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 flex items-center gap-2">
-            <lucide-icon [name]="icons.Save" class="w-5 h-5"></lucide-icon>
-            Enregistrer l'examen
+            class="px-6 py-3 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-[0.12em] font-bold rounded hover:bg-lotus-light disabled:opacity-50 flex items-center gap-2 transition-all shadow-sm">
+            @if (isSaving()) {
+            <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
+            {{ 'COURSE_EDITOR.QUIZ.BTN_SAVING' | translate }}
+            } @else {
+            <lucide-icon [name]="icons.Save" class="w-4 h-4"></lucide-icon>
+            {{ 'COURSE_EDITOR.QUIZ.BTN_SAVE' | translate }}
+            }
         </button>
     </div>
+    }
 </div>

@@ -2,17 +2,17 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule, Save, Loader2, AlertCircle } from 'lucide-angular';
 
 import { CourseService } from '../../../core/services/course-service';
-import { CourseResponseDTO } from '../../../core/models/course.dto';
-// Assurez-vous d'avoir une interface Category dans vos modèles
-interface Category { id: string; name: string; }
+import { CategoryDTO, CourseResponseDTO } from '../../../core/models/course.dto';
+
 
 @Component({
   selector: 'app-course-edit-basic',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule],
   templateUrl: './course-edit-basic.component.html'
 })
 export class CourseEditBasicComponent implements OnInit {
@@ -24,7 +24,7 @@ export class CourseEditBasicComponent implements OnInit {
 
   courseId = signal<string>('');
   originalCourse = signal<CourseResponseDTO | null>(null);
-  categories = signal<Category[]>([]);
+  categories = signal<CategoryDTO[]>([]);
 
   isLoading = signal<boolean>(true);
   isSaving = signal<boolean>(false);
@@ -39,10 +39,8 @@ export class CourseEditBasicComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    // 1. Récupération des catégories pour le menu déroulant
     this.loadCategories();
 
-    // 2. Récupération de l'ID depuis la route parente de l'éditeur
     this.route.parent?.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -53,12 +51,13 @@ export class CourseEditBasicComponent implements OnInit {
   }
 
   loadCategories(): void {
-    // Simulation / Remplacer par this.courseService.getCategories()
-    this.categories.set([
-      { id: 'cat-1', name: 'Trading & Investissement' },
-      { id: 'cat-2', name: 'Cryptomonnaie' },
-      { id: 'cat-3', name: 'Programmation' }
-    ]);
+    this.courseService.getCategories().subscribe({
+      next: (cats) => this.categories.set(cats),
+      error: (err) => {
+        console.error('Erreur de chargement des catégories', err);
+        alert("Erreur lors du chargement des catégories");
+      }
+    });
   }
 
   loadCourseDetails(id: string): void {
@@ -67,7 +66,6 @@ export class CourseEditBasicComponent implements OnInit {
       next: (course: CourseResponseDTO) => {
         this.originalCourse.set(course);
 
-        // On remplit le formulaire avec les données récupérées
         this.basicForm.patchValue({
           title: course.title,
           subtitle: course.subtitle,
@@ -86,7 +84,6 @@ export class CourseEditBasicComponent implements OnInit {
     });
   }
 
-  // Helper pour l'affichage des erreurs dans le HTML
   isFieldInvalid(field: string): boolean {
     const control = this.basicForm.get(field);
     return control ? control.invalid && (control.dirty || control.touched) : false;
@@ -100,8 +97,6 @@ export class CourseEditBasicComponent implements OnInit {
 
     this.isSaving.set(true);
 
-    // On fusionne les nouvelles données du formulaire avec les anciennes 
-    // (pour ne pas écraser le prix, le statut ou le thumbnailUrl)
     const updatedData = {
       ...this.originalCourse(),
       ...this.basicForm.value
@@ -109,9 +104,8 @@ export class CourseEditBasicComponent implements OnInit {
 
     this.courseService.updateCourse(this.courseId(), updatedData).subscribe({
       next: (updatedCourse) => {
-        this.originalCourse.set(updatedCourse); // Met à jour l'état local
+        this.originalCourse.set(updatedCourse);
         this.isSaving.set(false);
-        // Afficher un message de succès (Toast) idéalement ici
       },
       error: (err) => {
         console.error('Erreur lors de la mise à jour', err);

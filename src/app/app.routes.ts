@@ -43,6 +43,8 @@ import { ProfileComponent } from './features/user/profile/profile.component';
 import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
 import { VerifyEmailComponent } from './features/auth/verify-email/verify-email.component';
+import { instructorApprovedGuard } from './core/guards/instructor-approved.guard-guard';
+import { authGuard } from './core/guards/auth.guard-guard';
 
 export const routes: Routes = [
     // --- ROUTES PUBLIQUES ---
@@ -56,8 +58,8 @@ export const routes: Routes = [
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'verify-email', component: VerifyEmailComponent },
-    { path: 'student/profile', component: ProfileComponent },
-    { path: 'instructor/profile', component: ProfileComponent },
+    { path: 'student/profile', component: ProfileComponent, canActivate: [authGuard] },
+    { path: 'instructor/profile', component: ProfileComponent, canActivate: [authGuard] },
     // Inscription des instructeurs
     { path: 'instructor-register', component: InstructorRegisterComponent },
 
@@ -67,7 +69,10 @@ export const routes: Routes = [
     // --- ROUTES INSTRUCTEUR ---
     // Nouvelle route pour le formulaire d'intégration (Onboarding)
     { path: 'instructor/onboarding', component: InstructorOnboardingComponent },
-    { path: 'instructor/courses/new', component: CourseCreateComponent },
+    {
+        path: 'instructor/courses/new', component: CourseCreateComponent,
+        canActivate: [authGuard, instructorApprovedGuard]
+    },
     {
         path: 'instructor/courses/:id/edit',
         component: CourseEditorShellComponent,
@@ -90,6 +95,5 @@ export const routes: Routes = [
     { path: 'dashboard/payments', component: AdminPaymentsComponent },
 
     // --- FALLBACK (Page 404) ---
-    // DOIT ABSOLUMENT RESTER EN DERNIÈRE POSITION
     { path: '**', redirectTo: '' }
 ];

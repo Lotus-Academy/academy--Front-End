@@ -13,6 +13,6 @@ export class QuizService {
 
 
   getCourseQuiz(courseId: string) {
-    return this.http.get<QuizRequestDto>(`${this.apiUrl}/quiz/instructor/course/${courseId}`);
+    return this.http.get<QuizRequestDto>(`${this.apiUrl}/courses/${courseId}/quiz/edit`);
   }
 }

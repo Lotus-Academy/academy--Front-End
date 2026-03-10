@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   LucideAngularModule,
   ExternalLink,
@@ -8,24 +9,25 @@ import {
   MonitorPlay,
   BookOpen,
   Award,
-  Globe
+  Globe,
+  Loader2
 } from 'lucide-angular';
 
 import { CourseService } from '../../../core/services/course-service';
 import { CourseResponseDTO } from '../../../core/models/course.dto';
-import { CourseCardComponent } from '../../../shared/components/course-card/course-card-component';
+import { CourseCardComponent } from '../../../shared/components/course-card/course-card-component'; // Ajustez le chemin si nécessaire
 
 @Component({
   selector: 'app-course-edit-preview',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, CourseCardComponent, CurrencyPipe],
+  imports: [CommonModule, RouterLink, LucideAngularModule, CourseCardComponent, CurrencyPipe, TranslateModule],
   templateUrl: './course-edit-preview.component.html'
 })
 export class CourseEditPreviewComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private courseService = inject(CourseService);
 
-  readonly icons = { ExternalLink, Eye, MonitorPlay, BookOpen, Award, Globe };
+  readonly icons = { ExternalLink, Eye, MonitorPlay, BookOpen, Award, Globe, Loader2 };
 
   courseId = signal<string>('');
   course = signal<CourseResponseDTO | null>(null);

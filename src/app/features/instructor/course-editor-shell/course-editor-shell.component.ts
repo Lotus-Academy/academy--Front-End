@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   LucideAngularModule,
   Settings,
@@ -17,7 +18,7 @@ import { CourseResponseDTO } from '../../../core/models/course.dto';
 @Component({
   selector: 'app-course-editor-shell',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, LucideAngularModule],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, LucideAngularModule, TranslateModule],
   templateUrl: './course-editor-shell.component.html'
 })
 export class CourseEditorShellComponent implements OnInit {

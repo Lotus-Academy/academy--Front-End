@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   LucideAngularModule,
   PlayCircle,
@@ -13,7 +14,9 @@ import {
   Award,
   Globe,
   MonitorPlay,
-  Unlock // Ajout pour les vidéos gratuites
+  Unlock,
+  User,
+  Loader2
 } from 'lucide-angular';
 
 import { NavbarComponent } from '../../layouts/navbar-component/navbar-component';
@@ -30,7 +33,8 @@ import { CourseResponseDTO } from '../../../core/models/course.dto';
     LucideAngularModule,
     NavbarComponent,
     FooterComponent,
-    CurrencyPipe
+    CurrencyPipe,
+    TranslateModule
   ],
   templateUrl: './course-detail-component.html'
 })
@@ -40,14 +44,12 @@ export class CourseDetailComponent implements OnInit {
 
   readonly icons = {
     PlayCircle, Clock, BookOpen, CheckCircle, Lock,
-    ChevronDown, ChevronUp, Award, Globe, MonitorPlay, Unlock
+    ChevronDown, ChevronUp, Award, Globe, MonitorPlay, Unlock, User, Loader2
   };
 
-  // État du composant avec le vrai type du backend
   course = signal<CourseResponseDTO | null>(null);
   isLoading = signal<boolean>(true);
 
-  // Valeurs calculées dynamiquement à partir des sections du backend
   totalSections = computed(() => this.course()?.sections?.length || 0);
 
   totalLessons = computed(() => {
@@ -63,7 +65,6 @@ export class CourseDetailComponent implements OnInit {
     }, 0);
   });
 
-  // Gestion de l'accordéon
   expandedSections = signal<Set<string>>(new Set());
 
   ngOnInit(): void {
@@ -94,7 +95,6 @@ export class CourseDetailComponent implements OnInit {
     });
   }
 
-  // Formate la durée en secondes vers "Xh Ym"
   formatDuration(seconds: number): string {
     if (!seconds) return '0m';
     const hours = Math.floor(seconds / 3600);
@@ -105,7 +105,6 @@ export class CourseDetailComponent implements OnInit {
     return `${minutes}m`;
   }
 
-  // Gestionnaire pour l'accordéon
   toggleSection(sectionId: string): void {
     const currentExpanded = new Set(this.expandedSections());
     if (currentExpanded.has(sectionId)) {
@@ -120,53 +119,3 @@ export class CourseDetailComponent implements OnInit {
     return this.expandedSections().has(sectionId);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* const mockDetail: CourseDetailDTO = {
-    id: '123e4567-e89b-12d3-a456-426614174000',
-    title: 'Maîtriser l\'Analyse Technique et le Price Action',
-    description: 'Ce cours intensif vous apprendra à lire n\'importe quel graphique financier sans utiliser le moindre indicateur technique. Nous aborderons la psychologie des marchés, les structures de prix, et les stratégies institutionnelles de liquidité.',
-    price: 149.99,
-    status: 'APPROVED',
-    createdAt: new Date().toISOString(),
-    publishedAt: new Date().toISOString(),
-    instructorId: 'inst-1',
-    instructorEmail: 'contact@lotusacademy.com',
-    instructorName: 'Martinien GABA',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200',
-    totalSections: 2,
-    totalLessons: 5,
-    totalDuration: 5400, // 1h 30m en secondes
-    sections: [
-      {
-        id: 'sec-1', title: 'Introduction aux Marchés', orderIndex: 1, courseId: '123',
-        lessons: [
-          { id: 'les-1', title: 'Comprendre l\'offre et la demande', duration: 900, orderIndex: 1, sectionId: 'sec-1', mediaUrl: '', isCompleted: false },
-          { id: 'les-2', title: 'La psychologie du trader', duration: 1200, orderIndex: 2, sectionId: 'sec-1', mediaUrl: '', isCompleted: false }
-        ]
-      },
-      {
-        id: 'sec-2', title: 'Structures de Marché Avancées', orderIndex: 2, courseId: '123',
-        lessons: [
-          { id: 'les-3', title: 'Identification des cassures (BOS)', duration: 1500, orderIndex: 1, sectionId: 'sec-2', mediaUrl: '', isCompleted: false },
-          { id: 'les-4', title: 'Zones de liquidité', duration: 1800, orderIndex: 2, sectionId: 'sec-2', mediaUrl: '', isCompleted: false }
-        ]
-      }
-    ]
-  };*/

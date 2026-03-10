@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule, Image as ImageIcon, DollarSign, Save, Loader2, UploadCloud, Film } from 'lucide-angular';
 
 import { CourseService } from '../../../core/services/course-service';
@@ -9,7 +10,7 @@ import { CourseService } from '../../../core/services/course-service';
 @Component({
   selector: 'app-course-pricing',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule],
   templateUrl: './course-pricing.component.html'
 })
 export class CoursePricingComponent implements OnInit {
@@ -20,7 +21,7 @@ export class CoursePricingComponent implements OnInit {
   readonly icons = { ImageIcon, DollarSign, Save, Loader2, UploadCloud, Film };
 
   courseId = signal<string>('');
-  currentCourse = signal<any>(null); // Stocke le cours complet
+  currentCourse = signal<any>(null);
   isLoading = signal<boolean>(true);
   isSaving = signal<boolean>(false);
   isUploadingThumbnail = signal<boolean>(false);
@@ -49,7 +50,7 @@ export class CoursePricingComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error(err);
+        console.error('Erreur de chargement', err);
         this.isLoading.set(false);
       }
     });
@@ -87,8 +88,6 @@ export class CoursePricingComponent implements OnInit {
     if (this.pricingForm.invalid) return;
     this.isSaving.set(true);
 
-    // Votre backend demande un CourseCreateDTO entier pour le PUT.
-    // On fusionne les anciennes données avec le nouveau prix.
     const updatedData = {
       ...this.currentCourse(),
       price: this.pricingForm.value.price

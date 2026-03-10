@@ -1,13 +1,21 @@
+export interface CategoryDTO {
+    id: string;
+    name: string;
+    description?: string;
+}
+
 export interface LessonDTO {
     id: string;
-    title: string;
-    duration: number; // en secondes
-    orderIndex: number;
     sectionId: string;
-    freePreview: boolean; // Ajouté depuis le JSON
-    type: string;         // Ajouté depuis le JSON
+    title: string;
+    description?: string;
+    orderIndex: number;
+    type: string;
     mediaUrl: string;
-    isCompleted: boolean;
+    duration: number; // en secondes
+    freePreview: boolean;
+    processingStatus?: string;
+    completed: boolean; // Corrigé (était isCompleted)
 }
 
 export interface SectionDTO {
@@ -33,12 +41,28 @@ export interface CourseResponseDTO {
     categoryName: string;
     instructorId: string;
     instructorName: string;
+    instructorHeadline?: string;
+    instructorPictureUrl?: string;
 
     studentsCount?: number;
     totalDuration?: string;
-    rating?: number;
+    averageRating?: number;
+    reviewCount?: number;
+
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
     sections: SectionDTO[];
+}
+
+// Interface pour gérer la pagination renvoyée par Spring Boot
+export interface PageCourseResponseDTO {
+    content: CourseResponseDTO[];
+    totalElements: number;
+    totalPages: number;
+    size: number;
+    number: number; // Page actuelle
+    first: boolean;
+    last: boolean;
+    empty: boolean;
 }

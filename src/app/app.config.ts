@@ -34,7 +34,7 @@ export const appConfig: ApplicationConfig = {
     // 2. AJOUT : Configuration globale du module de traduction
     importProvidersFrom(
       TranslateModule.forRoot({
-        defaultLanguage: 'fr',
+        fallbackLang: 'en',
         loader: {
           provide: TranslateLoader,
           useFactory: HttpLoaderFactory,

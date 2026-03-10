@@ -2,20 +2,22 @@
 
     @if (isLoading()) {
     <div class="flex justify-center py-20">
-        <div class="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+        <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin"></lucide-icon>
     </div>
     } @else {
 
     @if (continueWatching().length > 0) {
     <section>
         <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-2">
-                <lucide-icon [name]="icons.Clock" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></lucide-icon>
-                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Continuer à regarder</h2>
+            <div class="flex items-center gap-3">
+                <lucide-icon [name]="icons.Clock" class="w-5 h-5 text-lotus stroke-[1.5px]"></lucide-icon>
+                <h2 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white tracking-tight">{{
+                    'STUDENT_DASHBOARD.CONTINUE.TITLE' | translate }}</h2>
             </div>
             <button
-                class="flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
-                Voir tout <lucide-icon [name]="icons.ChevronRight" class="w-4 h-4"></lucide-icon>
+                class="flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 hover:text-lotus dark:text-ds-muted/70 dark:hover:text-lotus transition-colors">
+                {{ 'STUDENT_DASHBOARD.CONTINUE.VIEW_ALL' | translate }} <lucide-icon [name]="icons.ChevronRight"
+                    class="w-4 h-4"></lucide-icon>
             </button>
         </div>
 
@@ -25,40 +27,55 @@
             <a [routerLink]="['/learn/course', course.courseId]"
                 class="snap-start shrink-0 w-[300px] sm:w-[340px] group block">
                 <div
-                    class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-700 transition-all">
+                    class="bg-white dark:bg-ds-surface rounded border border-slate-200 dark:border-ds-border overflow-hidden shadow-sm hover:border-lotus/50 transition-colors">
 
-                    <div class="relative aspect-video bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                    <div
+                        class="relative aspect-video bg-slate-50 dark:bg-ds-black overflow-hidden border-b border-slate-200 dark:border-ds-border">
+                        @if (course.courseThumbnail) {
                         <img [src]="course.courseThumbnail"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-500">
+                        } @else {
+                        <div class="w-full h-full flex items-center justify-center">
+                            <lucide-icon [name]="icons.Video"
+                                class="w-8 h-8 text-slate-300 dark:text-ds-muted/30 stroke-[1px]"></lucide-icon>
+                        </div>
+                        }
+
                         <div
-                            class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                            class="absolute inset-0 bg-black/20 dark:bg-black/40 group-hover:bg-black/50 transition-colors flex items-center justify-center backdrop-blur-[1px]">
                             <div
-                                class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all shadow-lg">
-                                <lucide-icon [name]="icons.Play" class="w-5 h-5 text-indigo-600 ml-1"></lucide-icon>
+                                class="w-12 h-12 bg-white/90 dark:bg-ds-surface/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all border border-slate-200 dark:border-ds-border shadow-lg">
+                                <lucide-icon [name]="icons.Play"
+                                    class="w-5 h-5 text-lotus ml-1 stroke-[1.5px]"></lucide-icon>
                             </div>
                         </div>
                         <div
-                            class="absolute bottom-2 right-2 bg-black/80 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-md">
+                            class="absolute bottom-2 right-2 bg-ds-black/80 backdrop-blur-sm text-white font-mono text-[9px] uppercase tracking-widest font-bold px-2 py-1 rounded">
                             {{ formatTime(course.lastWatchedTimestamp) }}
                         </div>
                     </div>
 
-                    <div class="p-4">
+                    <div class="p-5">
                         <h3
-                            class="font-bold text-slate-900 dark:text-white line-clamp-1 mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                            class="font-syne font-bold text-slate-900 dark:text-white line-clamp-1 mb-1 group-hover:text-lotus transition-colors">
                             {{ course.courseTitle }}
                         </h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mb-3">
-                            Leçon actuelle : {{ course.lastWatchedLessonTitle }}
+                        <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 line-clamp-1 mb-4">
+                            {{ 'STUDENT_DASHBOARD.CONTINUE.CURRENT_LESSON' | translate }} {{
+                            course.lastWatchedLessonTitle }}
                         </p>
 
-                        <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                            <div class="bg-indigo-600 h-full rounded-full transition-all duration-1000 ease-out"
+                        <div
+                            class="w-full bg-slate-100 dark:bg-ds-black h-1.5 rounded-full overflow-hidden border border-slate-200 dark:border-ds-border">
+                            <div class="bg-lotus h-full rounded-full transition-all duration-1000 ease-out"
                                 [style.width.%]="course.courseProgressPercentage"></div>
                         </div>
                         <div class="flex justify-between items-center mt-2">
-                            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">{{
-                                course.courseProgressPercentage }}% complété</span>
+                            <span
+                                class="font-mono text-[9px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ course.courseProgressPercentage }}% {{ 'STUDENT_DASHBOARD.CONTINUE.COMPLETED' |
+                                translate }}
+                            </span>
                         </div>
                     </div>
 
@@ -70,20 +87,20 @@
     }
 
     <section
-        class="flex flex-col sm:flex-row gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        class="flex flex-col sm:flex-row gap-4 bg-white dark:bg-ds-surface p-4 rounded border border-slate-200 dark:border-ds-border shadow-sm">
         <div class="relative flex-1">
             <lucide-icon [name]="icons.Search"
-                class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400"></lucide-icon>
+                class="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 stroke-[1.5px]"></lucide-icon>
             <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
-                placeholder="Rechercher un cours ou un instructeur..."
-                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white transition-colors">
+                [placeholder]="'STUDENT_DASHBOARD.SEARCH.PLACEHOLDER' | translate"
+                class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border/50 rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors">
         </div>
         <div class="relative w-full sm:w-64">
             <lucide-icon [name]="icons.Filter"
-                class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"></lucide-icon>
+                class="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 stroke-[1.5px]"></lucide-icon>
             <select [ngModel]="selectedCategory()" (ngModelChange)="selectedCategory.set($event)"
-                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white transition-colors appearance-none">
-                <option value="all">Toutes les catégories</option>
+                class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border/50 rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors appearance-none">
+                <option value="all">{{ 'STUDENT_DASHBOARD.SEARCH.ALL_CATEGORIES' | translate }}</option>
                 @for (cat of categories(); track cat.id) {
                 <option [value]="cat.id">{{ cat.name }}</option>
                 }
@@ -93,15 +110,16 @@
 
     @if (following().length > 0) {
     <section>
-        <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Instructeurs que vous suivez</h2>
+        <h2 class="font-syne font-bold text-slate-900 dark:text-white mb-5 uppercase tracking-wider text-sm">{{
+            'STUDENT_DASHBOARD.FOLLOWING.TITLE' | translate }}</h2>
         <div class="flex gap-6 overflow-x-auto pb-2 hide-scrollbar">
             @for (instructor of following(); track instructor.id) {
             <a routerLink="/instructor/profile/{{instructor.instructorId}}"
-                class="flex flex-col items-center gap-2 min-w-[80px] group cursor-pointer">
+                class="flex flex-col items-center gap-3 min-w-[80px] group cursor-pointer">
                 <div
-                    class="w-16 h-16 rounded-full border-2 border-transparent group-hover:border-indigo-500 p-0.5 transition-all">
+                    class="w-16 h-16 rounded-full border border-slate-200 dark:border-ds-border group-hover:border-lotus p-1 transition-all">
                     <div
-                        class="w-full h-full rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-xl overflow-hidden">
+                        class="w-full h-full rounded-full bg-slate-100 dark:bg-ds-black flex items-center justify-center text-lotus font-cormorant font-bold text-xl overflow-hidden shadow-sm">
                         @if (instructor.avatarUrl) {
                         <img [src]="instructor.avatarUrl" class="w-full h-full object-cover">
                         } @else {
@@ -110,7 +128,7 @@
                     </div>
                 </div>
                 <span
-                    class="text-sm font-medium text-slate-700 dark:text-slate-300 text-center truncate w-24 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    class="font-syne text-xs font-bold text-slate-700 dark:text-ds-muted/70 text-center truncate w-24 group-hover:text-lotus transition-colors">
                     {{ instructor.displayName }}
                 </span>
             </a>
@@ -120,9 +138,9 @@
     }
 
     <section>
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">
-            {{ selectedCategory() === 'all' && searchQuery() === '' ? 'Découvrir de nouveaux cours' : 'Résultats de
-            recherche' }}
+        <h2 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-6">
+            {{ selectedCategory() === 'all' && searchQuery() === '' ? ('STUDENT_DASHBOARD.DISCOVER.TITLE_NEW' |
+            translate) : ('STUDENT_DASHBOARD.DISCOVER.TITLE_SEARCH' | translate) }}
         </h2>
 
         @if (filteredCourses().length > 0) {
@@ -133,12 +151,13 @@
         </div>
         } @else {
         <div
-            class="bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 py-16 text-center">
-            <lucide-icon [name]="icons.Video"
-                class="mx-auto h-12 w-12 text-slate-300 dark:text-slate-600 mb-4"></lucide-icon>
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Aucun cours trouvé</h3>
-            <p class="text-slate-500 dark:text-slate-400">Essayez de modifier vos filtres de recherche ou parcourez une
-                autre catégorie.</p>
+            class="bg-white dark:bg-ds-surface rounded border border-dashed border-slate-300 dark:border-ds-border py-20 text-center">
+            <lucide-icon [name]="icons.Search"
+                class="mx-auto h-8 w-8 text-slate-300 dark:text-ds-muted/30 mb-4 stroke-[1.5px]"></lucide-icon>
+            <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">{{
+                'STUDENT_DASHBOARD.DISCOVER.EMPTY_TITLE' | translate }}</h3>
+            <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70">{{ 'STUDENT_DASHBOARD.DISCOVER.EMPTY_DESC'
+                | translate }}</p>
         </div>
         }
     </section>

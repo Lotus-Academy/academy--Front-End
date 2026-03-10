@@ -303,5 +303,208 @@
             "PURCHASES": "Purchase History",
             "SETTINGS": "Profile Settings"
         }
+    },
+    "INSTRUCTOR_DASHBOARD": {
+        "STATS": {
+            "TOTAL_COURSES": "Total Courses",
+            "APPROVED": "Approved",
+            "PENDING": "Pending",
+            "STUDENTS": "Students"
+        },
+        "TABS": {
+            "MY_COURSES": "My Courses",
+            "STUDENTS_PROGRESS": "Student Progress"
+        },
+        "COURSES": {
+            "TITLE": "Course Management",
+            "NEW_COURSE": "Create a course",
+            "EMPTY_TITLE": "No courses created",
+            "EMPTY_DESC": "Start by creating your first course to share it with your students.",
+            "MODIFIED_ON": "Modified on",
+            "BTN_EDIT": "Edit"
+        },
+        "STUDENTS": {
+            "TITLE": "Progress Overview",
+            "EMPTY_DESC": "Student progress tracking will be displayed here."
+        },
+        "STATUS": {
+            "APPROVED": "Approved",
+            "REJECTED": "Rejected",
+            "PENDING": "Under review",
+            "DRAFT": "Draft"
+        }
+    },
+    "COURSE_EDITOR": {
+        "SHELL": {
+            "BACK_TO_DASHBOARD": "Back to dashboard",
+            "EDIT_COURSE": "Edit Course",
+            "STATUS_PENDING": "Under review",
+            "STATUS_DRAFT": "Draft",
+            "BTN_PREVIEW": "Preview",
+            "NAV_BASIC": "Basic Information",
+            "NAV_CURRICULUM": "Curriculum (Media)",
+            "NAV_PRICING": "Pricing & Assets",
+            "NAV_QUIZ": "Exam (Quiz)",
+            "NAV_PUBLISH": "Submit Course"
+        },
+        "CREATE": {
+            "TITLE": "Start a new course",
+            "DESC": "Define the basics. You can add videos and the exam in the next step.",
+            "FORM_TITLE": "Course Title *",
+            "FORM_TITLE_PLACEHOLDER": "Ex: Master Technical Analysis",
+            "ERR_TITLE": "Title is required (minimum 5 characters).",
+            "FORM_SUBTITLE": "Subtitle (Catchphrase) *",
+            "FORM_SUBTITLE_PLACEHOLDER": "Learn trading from A to Z...",
+            "FORM_CATEGORY": "Category *",
+            "CAT_PLACEHOLDER": "Select a category",
+            "FORM_LEVEL": "Level *",
+            "LEVEL_BEGINNER": "Beginner",
+            "LEVEL_INTERMEDIATE": "Intermediate",
+            "LEVEL_ADVANCED": "Advanced",
+            "LEVEL_ALL": "All levels",
+            "FORM_PRICE": "Base Price (USD) *",
+            "PRICE_NOTE": "Dynamic conversion will apply for international students.",
+            "FORM_LANG": "Language *",
+            "LANG_FR": "French",
+            "LANG_EN": "English",
+            "LANG_AR": "Arabic",
+            "FORM_DESC": "Detailed Description",
+            "DESC_PLACEHOLDER": "Describe the objectives of your course...",
+            "BTN_CANCEL": "Cancel",
+            "BTN_LOADING": "Creating...",
+            "BTN_SUBMIT": "Save and Continue"
+        },
+        "BASIC": {
+            "TITLE": "Basic Information",
+            "DESC": "This information will be publicly visible on your course landing page.",
+            "TITLE_NOTE": "A catchy title attracts more students.",
+            "BTN_LOADING": "Saving...",
+            "BTN_SUBMIT": "Save Changes"
+        },
+        "PRICING": {
+            "THUMBNAIL_TITLE": "Course Thumbnail",
+            "BTN_UPLOAD_THUMBNAIL": "Change image",
+            "TRAILER_TITLE": "Promotional Video (Trailer)",
+            "BTN_UPLOAD_TRAILER": "Upload MP4 Video",
+            "LOADING": "Uploading...",
+            "PRICE_TITLE": "Selling Price (USD)",
+            "BTN_SAVE": "Save Changes"
+        },
+        "CURRICULUM": {
+            "TITLE": "Course Curriculum",
+            "DESC": "Structure your course into sections and lessons (MP4 Videos or PDF documents).",
+            "BTN_SUBMIT": "Submit for review",
+            "SECTION": "Section",
+            "LESSON": "Lesson",
+            "SEC": "sec",
+            "FREE_PREVIEW": "Free preview",
+            "BTN_UPLOAD": "Upload (MP4/PDF)",
+            "MEDIA_READY": "Media ready",
+            "LESSON_TITLE": "Lesson Title",
+            "LESSON_DURATION": "Duration (seconds)",
+            "LESSON_FREE_LABEL": "Make this lesson available for free (Preview)",
+            "BTN_CANCEL": "Cancel",
+            "BTN_ADD_LESSON": "Add lesson",
+            "LINK_ADD_LESSON": "Add a lesson",
+            "SECTION_TITLE_LABEL": "New section title",
+            "SECTION_TITLE_PLACEHOLDER": "Ex: Introduction to financial markets",
+            "BTN_ADD_SECTION": "Create section",
+            "LINK_ADD_SECTION": "Add a new section",
+            "ERR_FORMAT": "Unsupported format. Please upload only an .MP4 or .PDF file"
+        },
+        "PREVIEW": {
+            "TITLE": "Course Preview",
+            "DESC": "Check the appearance of your course before submitting it.",
+            "BTN_VIEW_PUBLIC": "View public page",
+            "CARD_TITLE": "Catalog Preview",
+            "CARD_DESC": "This is how students will see your course when searching.",
+            "LANDING_TITLE": "Landing Page Preview",
+            "LANDING_DESC": "The main section that must convince the student to enroll.",
+            "VIDEO_DURATION": "of video",
+            "FREE": "Free",
+            "BTN_ENROLL": "Enroll now",
+            "LESSONS": "lessons",
+            "CERTIFICATE": "Certificate of completion"
+        },
+        "QUIZ": {
+            "TITLE": "Exam Creation",
+            "DESC": "Create the final quiz that students must pass to earn their certificate.",
+            "FORM_TITLE": "Quiz Title",
+            "FORM_SCORE": "Passing Score (%)",
+            "QUESTION": "Question",
+            "QUESTION_PLACEHOLDER": "Ask your question here...",
+            "OPTION_PLACEHOLDER": "Possible answer...",
+            "BTN_ADD_OPTION": "Add an option",
+            "BTN_NEW_QUESTION": "New Question",
+            "BTN_SAVE": "Save Exam",
+            "BTN_SAVING": "Saving...",
+            "MARK_CORRECT": "Mark as correct answer",
+            "ALERT_SUCCESS": "Quiz saved successfully!",
+            "ALERT_ERROR": "Error saving the quiz."
+        }
+    },
+    "STUDENT_DASHBOARD": {
+        "CONTINUE": {
+            "TITLE": "Continue watching",
+            "VIEW_ALL": "View all",
+            "CURRENT_LESSON": "Current lesson:",
+            "COMPLETED": "completed"
+        },
+        "SEARCH": {
+            "PLACEHOLDER": "Search a course or an instructor...",
+            "ALL_CATEGORIES": "All categories"
+        },
+        "FOLLOWING": {
+            "TITLE": "Instructors you follow"
+        },
+        "DISCOVER": {
+            "TITLE_NEW": "Discover new courses",
+            "TITLE_SEARCH": "Search results",
+            "EMPTY_TITLE": "No courses found",
+            "EMPTY_DESC": "Try changing your search filters or browse another category."
+        }
+    },
+    "COURSE_CARD": {
+        "LEVEL_BEGINNER": "Beginner",
+        "LEVEL_INTERMEDIATE": "Intermediate",
+        "LEVEL_ADVANCED": "Advanced",
+        "LEVEL_ALL_LEVELS": "All Levels",
+        "FREE": "Free",
+        "VIEW_COURSE": "View course →"
+    },
+    "COURSE_DETAIL": {
+        "CATALOG_LINK": "Catalog",
+        "BY": "By",
+        "ABOUT_COURSE": "About this course",
+        "CURRICULUM_TITLE": "Course Curriculum",
+        "SECTIONS": "sections",
+        "LESSONS": "lessons",
+        "FREE_PREVIEW": "Free preview",
+        "ENROLL_NOW": "Enroll now",
+        "FREE": "Free",
+        "COURSE_INCLUDES": "This course includes:",
+        "VIDEO_HOURS": "of video",
+        "CERTIFICATE": "Certificate of completion",
+        "ABOUT_INSTRUCTOR": "About the instructor",
+        "VIEW_PROFILE": "View profile"
+    },
+    "COURSE_LIST": {
+        "TITLE": "Explore Courses",
+        "SUBTITLE": "Discover over {{count}} courses to advance your career.",
+        "SEARCH_PLACEHOLDER": "Search for courses or instructors...",
+        "FILTERS_LABEL": "Filters:",
+        "CLEAR_FILTERS": "Clear",
+        "SHOWING_RESULTS": "Showing {{filtered}} of {{total}} courses",
+        "EMPTY_TITLE": "No courses found",
+        "EMPTY_DESC": "Try changing your filters or your search term.",
+        "BTN_RESET": "Reset filters",
+        "FILTERS": {
+            "ALL": "All",
+            "BEGINNER": "Beginner",
+            "INTERMEDIATE": "Intermediate",
+            "ADVANCED": "Advanced",
+            "FREE": "Free",
+            "PAID": "Paid"
+        }
     }
 }

@@ -1,94 +1,108 @@
 <div class="space-y-8 animate-fade-in-up">
 
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Aperçu du cours</h2>
-            <p class="text-slate-500 dark:text-slate-400 mt-1">Vérifiez l'apparence de votre cours avant de le
-                soumettre.</p>
+            <h2 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white">{{
+                'COURSE_EDITOR.PREVIEW.TITLE' | translate }}</h2>
+            <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 mt-1">{{ 'COURSE_EDITOR.PREVIEW.DESC' |
+                translate }}</p>
         </div>
 
         <a [routerLink]="['/courses', courseId()]" target="_blank"
-            class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
-            <lucide-icon [name]="icons.ExternalLink" class="w-4 h-4"></lucide-icon>
-            Voir la page publique complète
+            class="px-5 py-2.5 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border text-slate-700 dark:text-ds-muted font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-slate-50 dark:hover:bg-ds-border/50 transition-colors flex items-center justify-center gap-2 shadow-sm">
+            <lucide-icon [name]="icons.ExternalLink" class="w-3.5 h-3.5"></lucide-icon>
+            {{ 'COURSE_EDITOR.PREVIEW.BTN_VIEW_PUBLIC' | translate }}
         </a>
     </div>
 
     @if (isLoading()) {
-    <div class="flex justify-center py-12">
-        <div class="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+    <div class="flex justify-center items-center py-20">
+        <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin"></lucide-icon>
     </div>
     } @else if (course(); as data) {
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
         <div class="lg:col-span-1 space-y-4">
-            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <lucide-icon [name]="icons.Eye" class="w-5 h-5 text-indigo-500"></lucide-icon>
-                Aperçu dans le catalogue
+            <h3 class="font-syne font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <lucide-icon [name]="icons.Eye" class="w-4 h-4 text-lotus stroke-[2px]"></lucide-icon>
+                {{ 'COURSE_EDITOR.PREVIEW.CARD_TITLE' | translate }}
             </h3>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">C'est ainsi que les étudiants verront votre cours
-                lors de leurs recherches.</p>
+            <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 mb-4">{{ 'COURSE_EDITOR.PREVIEW.CARD_DESC'
+                | translate }}</p>
 
-            <div class="w-full max-w-[320px] mx-auto lg:mx-0 pointer-events-none">
+            <div class="w-full max-w-[320px] mx-auto lg:mx-0 pointer-events-none opacity-90">
                 <app-course-card [course]="data" [index]="0"></app-course-card>
             </div>
         </div>
 
         <div class="lg:col-span-2 space-y-4">
-            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <lucide-icon [name]="icons.MonitorPlay" class="w-5 h-5 text-indigo-500"></lucide-icon>
-                Aperçu de la page de vente
+            <h3 class="font-syne font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <lucide-icon [name]="icons.MonitorPlay" class="w-4 h-4 text-lotus stroke-[2px]"></lucide-icon>
+                {{ 'COURSE_EDITOR.PREVIEW.LANDING_TITLE' | translate }}
             </h3>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">La section principale qui doit convaincre
-                l'étudiant de s'inscrire.</p>
+            <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 mb-4">{{
+                'COURSE_EDITOR.PREVIEW.LANDING_DESC' | translate }}</p>
 
             <div
-                class="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden bg-slate-900 text-white shadow-sm relative">
+                class="border border-slate-200 dark:border-ds-border rounded overflow-hidden bg-ds-black text-white shadow-sm relative pointer-events-none">
 
                 @if (data.thumbnailUrl) {
-                <div class="absolute inset-0 opacity-20 bg-cover bg-center blur-sm"
+                <div class="absolute inset-0 opacity-20 bg-cover bg-center blur-md"
                     [style.backgroundImage]="'url(' + data.thumbnailUrl + ')'"></div>
                 }
-                <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-ds-black via-ds-black/90 to-transparent"></div>
 
-                <div class="relative p-6 sm:p-8 z-10 flex flex-col sm:flex-row gap-6 items-start">
+                <div class="relative p-6 sm:p-8 z-10 flex flex-col sm:flex-row gap-8 items-start">
+
                     <div class="flex-1">
                         <div
-                            class="flex items-center gap-2 text-xs font-bold text-indigo-300 mb-4 uppercase tracking-wider">
+                            class="flex items-center gap-2 font-mono text-[9px] font-bold text-lotus mb-4 uppercase tracking-widest">
                             <span>{{ data.categoryName }}</span>
                         </div>
-                        <h1 class="text-2xl sm:text-3xl font-bold leading-tight mb-3">{{ data.title }}</h1>
-                        <p class="text-slate-300 text-sm mb-6 line-clamp-2">{{ data.subtitle || data.description }}</p>
 
-                        <div class="flex flex-wrap items-center gap-4 text-xs font-medium">
-                            <div class="flex items-center gap-1.5 text-slate-300">
-                                <lucide-icon [name]="icons.Globe" class="w-4 h-4"></lucide-icon>
+                        <h1 class="font-cormorant text-3xl sm:text-4xl font-bold leading-tight mb-3 text-white">{{
+                            data.title }}</h1>
+                        <p class="font-syne text-ds-muted text-sm mb-6 line-clamp-2">{{ data.subtitle ||
+                            data.description }}</p>
+
+                        <div
+                            class="flex flex-wrap items-center gap-5 font-mono text-[10px] uppercase tracking-wider text-ds-muted/70">
+                            <div class="flex items-center gap-1.5">
+                                <lucide-icon [name]="icons.Globe" class="w-3.5 h-3.5"></lucide-icon>
                                 <span>{{ data.language }}</span>
                             </div>
-                            <div class="flex items-center gap-1.5 text-slate-300">
-                                <lucide-icon [name]="icons.MonitorPlay" class="w-4 h-4"></lucide-icon>
-                                <span>{{ formatDuration(totalDuration()) }} de vidéo</span>
+                            <div class="flex items-center gap-1.5">
+                                <lucide-icon [name]="icons.MonitorPlay" class="w-3.5 h-3.5"></lucide-icon>
+                                <span>{{ formatDuration(totalDuration()) }} {{ 'COURSE_EDITOR.PREVIEW.VIDEO_DURATION' |
+                                    translate }}</span>
                             </div>
                         </div>
                     </div>
 
                     <div
-                        class="w-full sm:w-48 shrink-0 bg-white dark:bg-slate-800 rounded-xl p-4 text-slate-900 dark:text-white shadow-xl border border-slate-100 dark:border-slate-700">
-                        <div class="text-2xl font-bold mb-4">
-                            @if (data.price === 0) { Gratuit } @else { {{ data.price | currency:'USD':'symbol':'1.2-2'
-                            }} }
+                        class="w-full sm:w-56 shrink-0 bg-ds-surface rounded p-5 text-white shadow-xl border border-ds-border">
+                        <div class="font-cormorant text-3xl font-bold mb-4">
+                            @if (data.price === 0) {
+                            {{ 'COURSE_EDITOR.PREVIEW.FREE' | translate }}
+                            } @else {
+                            {{ data.price | currency:'USD':'symbol':'1.2-2' }}
+                            }
                         </div>
-                        <button class="w-full py-2 bg-indigo-600 text-white text-sm font-bold rounded-lg mb-3">
-                            S'inscrire
+
+                        <button
+                            class="w-full py-3 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded mb-4">
+                            {{ 'COURSE_EDITOR.PREVIEW.BTN_ENROLL' | translate }}
                         </button>
-                        <ul class="space-y-2">
-                            <li class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                                <lucide-icon [name]="icons.BookOpen" class="w-3.5 h-3.5"></lucide-icon> {{
-                                totalLessons() }} leçons
+
+                        <ul class="space-y-3">
+                            <li class="flex items-center gap-2 font-syne text-xs text-ds-muted/80">
+                                <lucide-icon [name]="icons.BookOpen" class="w-4 h-4 text-lotus"></lucide-icon>
+                                {{ totalLessons() }} {{ 'COURSE_EDITOR.PREVIEW.LESSONS' | translate }}
                             </li>
-                            <li class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                                <lucide-icon [name]="icons.Award" class="w-3.5 h-3.5"></lucide-icon> Certificat
+                            <li class="flex items-center gap-2 font-syne text-xs text-ds-muted/80">
+                                <lucide-icon [name]="icons.Award" class="w-4 h-4 text-lotus"></lucide-icon>
+                                {{ 'COURSE_EDITOR.PREVIEW.CERTIFICATE' | translate }}
                             </li>
                         </ul>
                     </div>
