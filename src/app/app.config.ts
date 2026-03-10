@@ -7,10 +7,15 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 // --- Imports pour la traduction ---
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
-// Fonction qui indique à ngx-translate où trouver les fichiers JSON
+
 export function HttpLoaderFactory(http: HttpClient): TranslateLoader {
   return {
-    getTranslation: (lang: string) => http.get<any>(`/assets/i18n/${lang}.json`)
+    getTranslation: (lang: string) => {
+      // Génération d'un horodatage unique en millisecondes
+      const cacheBuster = Date.now();
+      // Concaténation de l'horodatage à l'URL du fichier JSON
+      return http.get<any>(`/assets/i18n/${lang}.json?v=${cacheBuster}`);
+    }
   };
 }
 
@@ -25,13 +30,13 @@ export const appConfig: ApplicationConfig = {
       })
     ),
 
-    // 1. CORRECTION : Un seul provideHttpClient regroupant toutes vos options
+    // 1. Configuration du client HTTP avec fetch et les intercepteurs (dont l'authentification)
     provideHttpClient(
       withFetch(),
       withInterceptors([authInterceptor])
     ),
 
-    // 2. AJOUT : Configuration globale du module de traduction
+    // 2. Configuration globale du module de traduction
     importProvidersFrom(
       TranslateModule.forRoot({
         fallbackLang: 'en',
