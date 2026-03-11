@@ -506,5 +506,65 @@
             "FREE": "Free",
             "PAID": "Paid"
         }
+    },
+    "ONBOARDING": {
+        "TITLE": "Become an Instructor",
+        "SUBTITLE": "Complete your professional profile to start teaching on Lotus Academy.",
+        "STEPS": {
+            "PUBLIC_PROFILE": "Public Profile",
+            "EXPERTISE": "Expertise",
+            "ONLINE_PRESENCE": "Online Presence",
+            "LEGAL_FINANCE": "Legal & Finance",
+            "VALIDATION": "Validation"
+        },
+        "STEP1": {
+            "HEADLINE_LABEL": "Professional Headline *",
+            "HEADLINE_PLACEHOLDER": "E.g.: Quant Finance & Python Expert",
+            "HEADLINE_ERR": "Headline is required (max 100 characters).",
+            "BIO_LABEL": "Biography *",
+            "BIO_PLACEHOLDER": "Tell us about your background, degrees, and experience...",
+            "BIO_ERR": "Minimum 50 characters required."
+        },
+        "STEP2": {
+            "EXPERTISE_LABEL": "Areas of Expertise *",
+            "EXPERTISE_PLACEHOLDER": "E.g.: Quant Finance, Python, C++",
+            "EXPERTISE_HINT": "Separate areas with commas.",
+            "YEARS_LABEL": "Years of Experience *",
+            "LANGUAGES_LABEL": "Teaching Languages *",
+            "LANGUAGES_PLACEHOLDER": "E.g.: English, French"
+        },
+        "STEP3": {
+            "LINKEDIN_LABEL": "LinkedIn Profile *",
+            "LINKEDIN_PLACEHOLDER": "https://linkedin.com/in/yourname",
+            "LINKEDIN_ERR": "A valid LinkedIn URL is required.",
+            "WEBSITE_LABEL": "Website (Optional)",
+            "WEBSITE_PLACEHOLDER": "https://yoursite.com",
+            "GITHUB_LABEL": "GitHub Profile (Optional)",
+            "GITHUB_PLACEHOLDER": "https://github.com/yourname"
+        },
+        "STEP4": {
+            "LEGAL_NAME_LABEL": "Full Legal Name *",
+            "LEGAL_NAME_PLACEHOLDER": "Exactly as it appears on your official ID",
+            "PHONE_LABEL": "Phone Number *",
+            "PHONE_PLACEHOLDER": "+1234567890",
+            "ADDRESS_LABEL": "Billing Address *",
+            "TAX_LABEL": "Tax ID / VAT Number (Optional)"
+        },
+        "STEP5": {
+            "MENTORING_TITLE": "Available for mentoring",
+            "MENTORING_DESC": "Check this box if you accept students contacting you for private mentoring sessions.",
+            "TERMS_TITLE": "Terms and Conditions *",
+            "TERMS_DESC": "I accept the Lotus Academy instructor terms and conditions and I certify that the information provided is accurate.",
+            "TERMS_ERR": "Acceptance is mandatory to submit your application."
+        },
+        "NAV": {
+            "PREV": "Previous",
+            "NEXT": "Next",
+            "SUBMIT": "Submit application",
+            "SUBMITTING": "Submitting..."
+        },
+        "ERRORS": {
+            "GENERIC": "An error occurred while submitting your application."
+        }
     }
 }

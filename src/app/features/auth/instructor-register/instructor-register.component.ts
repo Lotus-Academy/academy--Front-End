@@ -46,7 +46,7 @@ export class InstructorRegisterComponent {
       lastName: this.registerForm.value.lastName,
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
-      role: 'INSTRUCTOR' // Forçage strict du rôle
+      role: 'INSTRUCTOR'
     };
 
     this.authService.register(request).subscribe({

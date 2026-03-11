@@ -506,5 +506,65 @@
             "FREE": "Gratuit",
             "PAID": "Payant"
         }
+    },
+    "ONBOARDING": {
+        "TITLE": "Devenez Instructeur",
+        "SUBTITLE": "Complétez votre profil professionnel pour commencer à enseigner sur Lotus Academy.",
+        "STEPS": {
+            "PUBLIC_PROFILE": "Profil Public",
+            "EXPERTISE": "Expertise",
+            "ONLINE_PRESENCE": "Présence",
+            "LEGAL_FINANCE": "Légal & Finance",
+            "VALIDATION": "Validation"
+        },
+        "STEP1": {
+            "HEADLINE_LABEL": "Titre professionnel *",
+            "HEADLINE_PLACEHOLDER": "Ex: Expert Quant Finance & Python",
+            "HEADLINE_ERR": "Titre obligatoire (max 100 caractères).",
+            "BIO_LABEL": "Biographie *",
+            "BIO_PLACEHOLDER": "Parlez-nous de votre parcours, de vos diplômes et de votre expérience...",
+            "BIO_ERR": "Minimum 50 caractères requis."
+        },
+        "STEP2": {
+            "EXPERTISE_LABEL": "Domaines d'expertise *",
+            "EXPERTISE_PLACEHOLDER": "Ex: Quant Finance, Python, C++",
+            "EXPERTISE_HINT": "Séparez les domaines par des virgules.",
+            "YEARS_LABEL": "Années d'expérience *",
+            "LANGUAGES_LABEL": "Langues d'enseignement *",
+            "LANGUAGES_PLACEHOLDER": "Ex: Français, Anglais"
+        },
+        "STEP3": {
+            "LINKEDIN_LABEL": "Profil LinkedIn *",
+            "LINKEDIN_PLACEHOLDER": "https://linkedin.com/in/votrenom",
+            "LINKEDIN_ERR": "Lien LinkedIn valide requis.",
+            "WEBSITE_LABEL": "Site Web (Optionnel)",
+            "WEBSITE_PLACEHOLDER": "https://votresite.com",
+            "GITHUB_LABEL": "Profil GitHub (Optionnel)",
+            "GITHUB_PLACEHOLDER": "https://github.com/votrenom"
+        },
+        "STEP4": {
+            "LEGAL_NAME_LABEL": "Nom Légal Complet *",
+            "LEGAL_NAME_PLACEHOLDER": "Identique à votre pièce d'identité officielle",
+            "PHONE_LABEL": "Téléphone *",
+            "PHONE_PLACEHOLDER": "+33612345678",
+            "ADDRESS_LABEL": "Adresse de Facturation *",
+            "TAX_LABEL": "Numéro fiscal / SIRET (Optionnel)"
+        },
+        "STEP5": {
+            "MENTORING_TITLE": "Disponible pour le mentorat",
+            "MENTORING_DESC": "Cochez si vous acceptez que les étudiants vous sollicitent pour des sessions privées d'accompagnement.",
+            "TERMS_TITLE": "Conditions Générales *",
+            "TERMS_DESC": "J'accepte les conditions générales des instructeurs de Lotus Academy et je certifie sur l'honneur que les informations fournies sont exactes.",
+            "TERMS_ERR": "L'acceptation est obligatoire pour soumettre votre dossier."
+        },
+        "NAV": {
+            "PREV": "Précédent",
+            "NEXT": "Suivant",
+            "SUBMIT": "Soumettre le dossier",
+            "SUBMITTING": "Soumission en cours..."
+        },
+        "ERRORS": {
+            "GENERIC": "Une erreur est survenue lors de l'envoi du dossier."
+        }
     }
 }

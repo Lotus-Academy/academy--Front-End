@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal, untracked, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -12,7 +13,7 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../../core/servic
   imports: [ReactiveFormsModule, RouterLink, TranslateModule, LucideAngularModule],
   templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -21,11 +22,16 @@ export class LoginComponent implements OnInit {
 
   readonly icons = { Mail, Info, Loader2, CheckCircle2, Ticket };
 
-  isLogin = signal<boolean>(true);
+  private routeParams = toSignal(this.route.queryParams);
+
+  readonly isLogin = computed(() => {
+    const params = this.routeParams();
+    return params ? params['mode'] !== 'signup' : true;
+  });
+
   isLoading = signal<boolean>(false);
   showPassword = signal<boolean>(false);
   errorMessage = signal<string>('');
-
   isUnverified = signal<boolean>(false);
   isRegistrationSuccess = signal<boolean>(false);
 
@@ -33,46 +39,47 @@ export class LoginComponent implements OnInit {
     firstName: [''],
     lastName: [''],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]]
+    password: ['', [Validators.required, Validators.minLength(8)]],
+    referredByCode: ['']
   });
 
-  ngOnInit(): void {
+  constructor() {
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
-      return;
     }
 
-    this.route.queryParams.subscribe(params => {
-      this.isLogin.set(params['mode'] !== 'signup');
-      this.updateValidators();
+    effect(() => {
+      const loginMode = this.isLogin();
+
+      untracked(() => {
+        this.updateValidators(loginMode);
+        this.errorMessage.set('');
+      });
     });
   }
 
   toggleMode() {
-    this.isLogin.update(current => !current);
+    const nextMode = this.isLogin() ? 'signup' : 'login';
 
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { mode: this.isLogin() ? 'login' : 'signup' },
+      queryParams: { mode: nextMode },
       queryParamsHandling: 'merge',
     });
-
-    this.errorMessage.set('');
-    this.isUnverified.set(false);
-    this.isRegistrationSuccess.set(false);
-    this.updateValidators();
   }
 
-  private updateValidators() {
+  private updateValidators(isLoginMode: boolean) {
     const firstNameControl = this.authForm.get('firstName');
     const lastNameControl = this.authForm.get('lastName');
 
-    if (!this.isLogin()) {
-      firstNameControl?.setValidators([Validators.required, Validators.minLength(2)]);
-      lastNameControl?.setValidators([Validators.required, Validators.minLength(2)]);
-    } else {
+    if (isLoginMode) {
       firstNameControl?.clearValidators();
       lastNameControl?.clearValidators();
+      firstNameControl?.reset('');
+      lastNameControl?.reset('');
+    } else {
+      firstNameControl?.setValidators([Validators.required, Validators.minLength(2)]);
+      lastNameControl?.setValidators([Validators.required, Validators.minLength(2)]);
     }
 
     firstNameControl?.updateValueAndValidity();
@@ -96,9 +103,10 @@ export class LoginComponent implements OnInit {
   }
 
   private performLogin() {
+    const formValues = this.authForm.getRawValue();
     const request: LoginRequest = {
-      email: this.authForm.value.email,
-      password: this.authForm.value.password
+      email: formValues.email,
+      password: formValues.password
     };
 
     this.authService.login(request).subscribe({
@@ -122,11 +130,12 @@ export class LoginComponent implements OnInit {
   }
 
   private performSignup() {
+    const formValues = this.authForm.getRawValue();
     const request: RegisterRequest = {
-      firstName: this.authForm.value.firstName,
-      lastName: this.authForm.value.lastName,
-      email: this.authForm.value.email,
-      password: this.authForm.value.password,
+      firstName: formValues.firstName,
+      lastName: formValues.lastName,
+      email: formValues.email,
+      password: formValues.password,
       role: 'STUDENT'
     };
 
@@ -153,8 +162,11 @@ export class LoginComponent implements OnInit {
 
   resetToLogin() {
     this.isRegistrationSuccess.set(false);
-    this.isLogin.set(true);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { mode: 'login' },
+      queryParamsHandling: 'merge',
+    });
     this.authForm.reset();
-    this.updateValidators();
   }
 }

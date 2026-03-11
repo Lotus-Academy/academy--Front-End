@@ -2,19 +2,21 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule, User, BookOpen, Globe, FileText, CheckCircle, ChevronRight, ChevronLeft, Loader2 } from 'lucide-angular';
 import { InstructorProfileService, InstructorOnboardingRequestDTO } from '../../../core/services/instructor-profile.service';
 
 @Component({
   selector: 'app-instructor-onboarding',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule],
   templateUrl: './onboarding.component.html'
 })
 export class InstructorOnboardingComponent {
   private fb = inject(FormBuilder);
   private instructorService = inject(InstructorProfileService);
   private router = inject(Router);
+  private translate = inject(TranslateService);
 
   readonly icons = { User, BookOpen, Globe, FileText, CheckCircle, ChevronRight, ChevronLeft, Loader2 };
 
@@ -22,13 +24,13 @@ export class InstructorOnboardingComponent {
   isSubmitting = signal<boolean>(false);
   errorMessage = signal<string>('');
 
-  // Tableau de gestion des étapes
+  // Utilisation de clés de traduction pour les titres des étapes
   steps = [
-    { num: 1, title: 'Profil Public', icon: this.icons.User, formGroupName: 'step1' },
-    { num: 2, title: 'Expertise', icon: this.icons.BookOpen, formGroupName: 'step2' },
-    { num: 3, title: 'Présence', icon: this.icons.Globe, formGroupName: 'step3' },
-    { num: 4, title: 'Légal & Finance', icon: this.icons.FileText, formGroupName: 'step4' },
-    { num: 5, title: 'Validation', icon: this.icons.CheckCircle, formGroupName: 'step5' }
+    { num: 1, titleKey: 'ONBOARDING.STEPS.PUBLIC_PROFILE', icon: this.icons.User, formGroupName: 'step1' },
+    { num: 2, titleKey: 'ONBOARDING.STEPS.EXPERTISE', icon: this.icons.BookOpen, formGroupName: 'step2' },
+    { num: 3, titleKey: 'ONBOARDING.STEPS.ONLINE_PRESENCE', icon: this.icons.Globe, formGroupName: 'step3' },
+    { num: 4, titleKey: 'ONBOARDING.STEPS.LEGAL_FINANCE', icon: this.icons.FileText, formGroupName: 'step4' },
+    { num: 5, titleKey: 'ONBOARDING.STEPS.VALIDATION', icon: this.icons.CheckCircle, formGroupName: 'step5' }
   ];
 
   onboardingForm: FormGroup = this.fb.group({
@@ -37,7 +39,6 @@ export class InstructorOnboardingComponent {
       bio: ['', [Validators.required, Validators.minLength(50)]]
     }),
     step2: this.fb.group({
-      // Pour simplifier l'UI, on demande une chaîne séparée par des virgules qu'on transformera en tableau
       expertiseDomainsStr: ['', [Validators.required]],
       yearsOfExperience: [0, [Validators.required, Validators.min(0)]],
       teachingLanguagesStr: ['', [Validators.required]]
@@ -54,12 +55,11 @@ export class InstructorOnboardingComponent {
       taxId: ['']
     }),
     step5: this.fb.group({
-      availableForMentoring: [false, Validators.required],
+      availableForMentoring: [false],
       termsAccepted: [false, Validators.requiredTrue]
     })
   });
 
-  // Propriété calculée pour la barre de progression
   progressPercentage = computed(() => ((this.currentStep() - 1) / (this.steps.length - 1)) * 100);
 
   nextStep(): void {
@@ -90,7 +90,6 @@ export class InstructorOnboardingComponent {
 
     const formValues = this.onboardingForm.value;
 
-    // Transformation des chaînes séparées par des virgules en tableaux (Set côté Java)
     const expertiseArray = formValues.step2.expertiseDomainsStr.split(',').map((s: string) => s.trim()).filter(Boolean);
     const languagesArray = formValues.step2.teachingLanguagesStr.split(',').map((s: string) => s.trim()).filter(Boolean);
 
@@ -107,12 +106,11 @@ export class InstructorOnboardingComponent {
     this.instructorService.submitOnboarding(requestDTO).subscribe({
       next: () => {
         this.isSubmitting.set(false);
-        // Redirection vers une page de succès ou le tableau de bord
         this.router.navigate(['/instructor/dashboard']);
       },
       error: (err) => {
         this.isSubmitting.set(false);
-        this.errorMessage.set(err.error?.message || err.error || "Une erreur est survenue lors de l'envoi du dossier.");
+        this.errorMessage.set(err.error?.message || err.error || this.translate.instant('ONBOARDING.ERRORS.GENERIC'));
       }
     });
   }
