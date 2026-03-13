@@ -2,12 +2,11 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { LucideAngularModule, Save, Loader2, AlertCircle } from 'lucide-angular';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LucideAngularModule, Save, Loader2, AlertCircle, CheckCircle, AlertTriangle } from 'lucide-angular';
 
 import { CourseService } from '../../../core/services/course-service';
 import { CategoryDTO, CourseResponseDTO } from '../../../core/models/course.dto';
-
 
 @Component({
   selector: 'app-course-edit-basic',
@@ -19,8 +18,9 @@ export class CourseEditBasicComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private courseService = inject(CourseService);
   private fb = inject(FormBuilder);
+  private translate = inject(TranslateService);
 
-  readonly icons = { Save, Loader2, AlertCircle };
+  readonly icons = { Save, Loader2, AlertCircle, CheckCircle, AlertTriangle };
 
   courseId = signal<string>('');
   originalCourse = signal<CourseResponseDTO | null>(null);
@@ -28,6 +28,10 @@ export class CourseEditBasicComponent implements OnInit {
 
   isLoading = signal<boolean>(true);
   isSaving = signal<boolean>(false);
+
+  // Feedback visuel
+  saveSuccessMessage = signal<boolean>(false);
+  errorMessage = signal<string>('');
 
   basicForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(5)]],
@@ -55,7 +59,7 @@ export class CourseEditBasicComponent implements OnInit {
       next: (cats) => this.categories.set(cats),
       error: (err) => {
         console.error('Erreur de chargement des catégories', err);
-        alert("Erreur lors du chargement des catégories");
+        this.errorMessage.set('Erreur lors du chargement des catégories.');
       }
     });
   }
@@ -79,6 +83,7 @@ export class CourseEditBasicComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erreur lors du chargement des informations de base', err);
+        this.errorMessage.set('Impossible de charger le cours.');
         this.isLoading.set(false);
       }
     });
@@ -96,6 +101,8 @@ export class CourseEditBasicComponent implements OnInit {
     }
 
     this.isSaving.set(true);
+    this.saveSuccessMessage.set(false);
+    this.errorMessage.set('');
 
     const updatedData = {
       ...this.originalCourse(),
@@ -106,10 +113,15 @@ export class CourseEditBasicComponent implements OnInit {
       next: (updatedCourse) => {
         this.originalCourse.set(updatedCourse);
         this.isSaving.set(false);
+        this.saveSuccessMessage.set(true);
+
+        // Disparition du message de succès après 3 secondes
+        setTimeout(() => this.saveSuccessMessage.set(false), 3000);
       },
       error: (err) => {
         console.error('Erreur lors de la mise à jour', err);
         this.isSaving.set(false);
+        this.errorMessage.set(this.translate.instant('COURSE_EDITOR.BASIC.ERROR_SAVE'));
       }
     });
   }

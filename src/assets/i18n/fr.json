@@ -159,30 +159,29 @@
         }
     },
     "PROFILE": {
-        "TITLE": "Paramètres du compte",
-        "SUBTITLE": "Gérez vos informations personnelles et les paramètres de sécurité de votre compte.",
+        "TITLE": "Paramètres du Profil",
+        "SUBTITLE": "Gérez vos informations personnelles et vos paramètres de sécurité.",
         "TAB_GENERAL": "Informations Générales",
-        "TAB_SECURITY": "Sécurité",
+        "TAB_SECURITY": "Sécurité & Accès",
         "PHOTO_TITLE": "Photo de profil",
-        "PHOTO_DESC": "Formats recommandés : JPG, PNG. Taille maximale : 2MB.",
-        "BTN_CHANGE_PHOTO": "Modifier la photo",
-        "FIRST_NAME": "Prénom",
-        "LAST_NAME": "Nom",
-        "HEADLINE": "Titre (Optionnel)",
-        "BIO": "Biographie (Optionnel)",
+        "PHOTO_DESC": "Formats acceptés : JPEG, PNG. Max 5MB.",
+        "BTN_CHANGE_PHOTO": "Changer l'image",
+        "FIRST_NAME": "Prénom *",
+        "LAST_NAME": "Nom *",
+        "HEADLINE": "Titre / Profession",
+        "BIO": "Biographie",
         "BTN_SAVE": "Enregistrer les modifications",
-        "SAVING": "Enregistrement en cours...",
+        "SAVING": "Enregistrement...",
         "PASSWORD_TITLE": "Modifier le mot de passe",
-        "OLD_PASSWORD": "Mot de passe actuel",
-        "NEW_PASSWORD": "Nouveau mot de passe",
+        "OLD_PASSWORD": "Mot de passe actuel *",
+        "NEW_PASSWORD": "Nouveau mot de passe *",
         "BTN_UPDATE_PASSWORD": "Mettre à jour le mot de passe",
-        "DANGER_ZONE": "Zone de danger",
-        "DELETE_TITLE": "Archiver le compte",
-        "DELETE_DESC": "En archivant votre compte, vous perdrez l'accès à vos cours et à votre tableau de bord. Cette action est irréversible par l'utilisateur.",
-        "BTN_DELETE": "Archiver mon compte définitivement",
+        "DELETE_TITLE": "Zone de Danger",
+        "DELETE_DESC": "La suppression de votre compte est irréversible. Toutes vos données, y compris vos cours et certificats, seront définitivement perdues.",
+        "BTN_DELETE": "Supprimer définitivement mon compte",
         "SUCCESS_PROFILE": "Profil mis à jour avec succès.",
-        "SUCCESS_PASSWORD": "Mot de passe mis à jour avec succès.",
-        "ERROR_GENERIC": "Une erreur est survenue lors du traitement de votre demande."
+        "SUCCESS_PASSWORD": "Mot de passe modifié avec succès.",
+        "ERROR_GENERIC": "Une erreur s'est produite. Veuillez réessayer."
     },
     "LOGIN": {
         "BACK_HOME": "Retour à l'accueil",
@@ -376,19 +375,29 @@
         },
         "BASIC": {
             "TITLE": "Informations de base",
-            "DESC": "Ces informations seront visibles publiquement sur la page de présentation de votre cours.",
-            "TITLE_NOTE": "Un titre accrocheur attire plus d'étudiants.",
+            "DESC": "Modifiez les métadonnées de votre cours.",
+            "TITLE_NOTE": "Le titre de votre cours apparaîtra sur la page de destination et dans les résultats de recherche.",
+            "BTN_SUBMIT": "Enregistrer",
             "BTN_LOADING": "Enregistrement...",
-            "BTN_SUBMIT": "Enregistrer les modifications"
+            "SAVED_SUCCESS": "Enregistré avec succès !",
+            "ERROR_SAVE": "Erreur lors de la sauvegarde."
         },
         "PRICING": {
-            "THUMBNAIL_TITLE": "Affiche du cours",
-            "BTN_UPLOAD_THUMBNAIL": "Changer l'image",
+            "PAGE_TITLE": "Médias & Prix",
+            "PAGE_DESC": "Configurez l'image de couverture, la vidéo de présentation et le tarif de votre cours.",
+            "THUMBNAIL_TITLE": "Image de couverture",
+            "THUMBNAIL_HINT": "Format recommandé : 1920x1080 (16:9)",
             "TRAILER_TITLE": "Vidéo de présentation (Trailer)",
-            "BTN_UPLOAD_TRAILER": "Uploader Vidéo MP4",
-            "LOADING": "Upload...",
-            "PRICE_TITLE": "Prix de vente (USD)",
-            "BTN_SAVE": "Enregistrer"
+            "TRAILER_HINT": "Format mp4 uniquement. Max 100MB.",
+            "LOADING": "Chargement...",
+            "BTN_UPLOAD_THUMBNAIL": "Uploader l'image",
+            "BTN_UPLOAD_TRAILER": "Uploader la vidéo",
+            "BTN_REPLACE_TRAILER": "Remplacer la vidéo",
+            "PRICE_TITLE": "Tarif du cours",
+            "PRICE_HINT": "Mettez \"0\" pour rendre le cours entièrement gratuit. Les étudiants y auront accès immédiatement sans carte bancaire.",
+            "BTN_SAVE": "Enregistrer",
+            "SAVING": "Enregistrement...",
+            "SAVED_SUCCESS": "Enregistré !"
         },
         "CURRICULUM": {
             "TITLE": "Programme du cours",
@@ -410,7 +419,13 @@
             "SECTION_TITLE_PLACEHOLDER": "Ex: Introduction aux marchés financiers",
             "BTN_ADD_SECTION": "Créer la section",
             "LINK_ADD_SECTION": "Ajouter une nouvelle section",
-            "ERR_FORMAT": "Format non supporté. Veuillez uploader uniquement un fichier .MP4 ou .PDF"
+            "ERR_FORMAT": "Format non supporté. Veuillez uploader uniquement un fichier .MP4 ou .PDF",
+            "BTN_EDIT": "Modifier",
+            "BTN_DELETE": "Supprimer",
+            "BTN_SAVE": "Enregistrer",
+            "UPLOADING": "Envoi du fichier...",
+            "UPLOAD_SUCCESS": "Média prêt",
+            "REPLACE_MEDIA": "Remplacer le média"
         },
         "PREVIEW": {
             "TITLE": "Aperçu du cours",
@@ -427,20 +442,20 @@
             "CERTIFICATE": "Certificat de réussite"
         },
         "QUIZ": {
-            "TITLE": "Création de l'Examen",
-            "DESC": "Créez le quiz final que les étudiants devront réussir pour obtenir leur certificat.",
-            "FORM_TITLE": "Titre du Quiz",
-            "FORM_SCORE": "Score requis pour réussir (%)",
+            "TITLE": "Quiz final de validation",
+            "DESC": "Évaluez les connaissances de vos étudiants. Ils devront obtenir le score minimum pour recevoir leur certificat.",
+            "FORM_TITLE": "Titre du Quiz *",
+            "FORM_SCORE": "Score minimum requis (%) *",
             "QUESTION": "Question",
-            "QUESTION_PLACEHOLDER": "Posez votre question ici...",
-            "OPTION_PLACEHOLDER": "Réponse possible...",
-            "BTN_ADD_OPTION": "Ajouter une option",
-            "BTN_NEW_QUESTION": "Nouvelle Question",
-            "BTN_SAVE": "Enregistrer l'examen",
-            "BTN_SAVING": "Enregistrement...",
+            "QUESTION_PLACEHOLDER": "Saisissez votre question ici...",
+            "OPTION_PLACEHOLDER": "Saisissez une réponse possible...",
             "MARK_CORRECT": "Marquer comme bonne réponse",
-            "ALERT_SUCCESS": "Quiz enregistré avec succès !",
-            "ALERT_ERROR": "Erreur lors de la sauvegarde du quiz."
+            "BTN_ADD_OPTION": "Ajouter une option",
+            "BTN_NEW_QUESTION": "Ajouter une question",
+            "BTN_SAVE": "Enregistrer le quiz",
+            "BTN_SAVING": "Enregistrement...",
+            "ALERT_SUCCESS": "Quiz enregistré !",
+            "ALERT_ERROR": "Erreur lors de la sauvegarde."
         }
     },
     "STUDENT_DASHBOARD": {
@@ -561,10 +576,59 @@
             "PREV": "Précédent",
             "NEXT": "Suivant",
             "SUBMIT": "Soumettre le dossier",
-            "SUBMITTING": "Soumission en cours..."
+            "SUBMITTING": "Soumission en cours...",
+            "UPDATE": "Mettre à jour le dossier",
+            "UPDATING": "Mise à jour..."
         },
         "ERRORS": {
             "GENERIC": "Une erreur est survenue lors de l'envoi du dossier."
+        },
+        "REJECTED_BANNER_TITLE": "Candidature nécessitant des modifications",
+        "REJECTED_BANNER_DESC": "Votre précédent dossier a été examiné par notre équipe. Veuillez corriger ou compléter les informations ci-dessous et soumettre à nouveau votre profil."
+    },
+    "ADMIN_DASHBOARD": {
+        "STATS": {
+            "USERS": "Utilisateurs Totaux",
+            "PENDING_INSTRUCTORS": "Candidatures Instructeurs",
+            "PENDING_COURSES": "Cours en attente",
+            "APPROVED_COURSES": "Cours Approuvés"
+        },
+        "TABS": {
+            "OVERVIEW": "Vue d'ensemble",
+            "COURSES": "Validation Cours",
+            "INSTRUCTORS": "Instructeurs",
+            "CATEGORIES": "Catégories"
+        },
+        "OVERVIEW": {
+            "TITLE": "Bienvenue sur l'interface d'administration",
+            "DESC": "Utilisez les onglets ci-dessus pour gérer la plateforme Lotus Academy."
+        },
+        "COURSES": {
+            "TITLE": "Validation des Cours",
+            "SEARCH": "Rechercher un cours...",
+            "BY": "Par",
+            "STATUS_PENDING": "En attente",
+            "STATUS_APPROVED": "Approuvé",
+            "STATUS_REJECTED": "Rejeté",
+            "STATUS_DRAFT": "Brouillon",
+            "EMPTY": "Aucun cours trouvé."
+        },
+        "INSTRUCTORS": {
+            "TITLE": "Candidatures Instructeurs",
+            "BTN_APPROVE": "Approuver",
+            "BTN_REJECT": "Rejeter",
+            "EMPTY": "Aucun instructeur trouvé."
+        },
+        "CATEGORIES": {
+            "TITLE": "Gestion des Catégories",
+            "BTN_ADD": "Ajouter",
+            "NO_DESC": "Aucune description fournie.",
+            "MODAL_TITLE": "Nouvelle Catégorie",
+            "FORM_NAME": "Nom de la catégorie *",
+            "FORM_DESC": "Description (Optionnel)",
+            "BTN_CANCEL": "Annuler",
+            "BTN_CREATE": "Créer la catégorie",
+            "BTN_LOADING": "Création..."
         }
     }
 }

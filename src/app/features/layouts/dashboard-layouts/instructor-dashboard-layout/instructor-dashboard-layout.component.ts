@@ -15,7 +15,7 @@ import { INSTRUCTOR_SIDEBAR_LINKS } from './instructor-sidebar.config';
       [navLinks]="navLinks"
       badgeText="LAYOUT.INSTRUCTOR_BADGE"
       badgeClasses="bg-lotus/10 text-lotus border-lotus/20 dark:bg-lotus/10 dark:text-lotus dark:border-lotus/30"
-      profileLink="/instructor/profile"
+      profileLink="/user/profile"
       profileRoleText="LAYOUT.INSTRUCTOR_ROLE"
       [profileStatus]="profileStatus()">
       <ng-content></ng-content>

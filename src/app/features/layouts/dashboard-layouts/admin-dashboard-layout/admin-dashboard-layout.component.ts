@@ -13,7 +13,7 @@ import { ADMIN_SIDEBAR_LINKS } from './admin-sidebar.config';
       [navLinks]="navLinks"
       badgeText="LAYOUT.ADMIN_BADGE"
       badgeClasses="bg-green/10 text-green border-green/20 dark:bg-green/10 dark:text-green dark:border-green/30"
-      profileLink="/admin/profile"
+      profileLink="/user/profile"
       profileRoleText="LAYOUT.ADMIN_ROLE">
       
       <ng-content></ng-content>

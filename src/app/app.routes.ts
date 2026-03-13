@@ -58,17 +58,17 @@ export const routes: Routes = [
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'verify-email', component: VerifyEmailComponent },
-    { path: 'student/profile', component: ProfileComponent, canActivate: [authGuard] },
+    { path: 'user/profile', component: ProfileComponent, canActivate: [authGuard] },
     { path: 'instructor/profile', component: ProfileComponent, canActivate: [authGuard] },
     // Inscription des instructeurs
     { path: 'instructor-register', component: InstructorRegisterComponent },
 
     // --- DASHBOARD GÉNÉRAL ---
-    { path: 'dashboard', component: DashboardComponent },
+    { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
 
     // --- ROUTES INSTRUCTEUR ---
     // Nouvelle route pour le formulaire d'intégration (Onboarding)
-    { path: 'instructor/onboarding', component: InstructorOnboardingComponent },
+    { path: 'instructor/onboarding', component: InstructorOnboardingComponent, canActivate: [authGuard] },
     {
         path: 'instructor/courses/new', component: CourseCreateComponent,
         canActivate: [authGuard, instructorApprovedGuard]

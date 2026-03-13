@@ -4,15 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
-  LucideAngularModule,
-  Plus,
-  GripVertical,
-  FileBox,
-  Edit2,
-  Trash2,
-  CheckCircle,
-  UploadCloud,
-  Loader2
+  LucideAngularModule, Plus, GripVertical, FileBox, Edit2, Trash2, CheckCircle, UploadCloud, Loader2, X
 } from 'lucide-angular';
 
 import { CourseService } from '../../../core/services/course-service';
@@ -31,16 +23,25 @@ export class CourseCurriculumComponent implements OnInit {
   private fb = inject(FormBuilder);
   private translate = inject(TranslateService);
 
-  readonly icons = { Plus, GripVertical, FileBox, Edit2, Trash2, CheckCircle, UploadCloud, Loader2 };
+  readonly icons = { Plus, GripVertical, FileBox, Edit2, Trash2, CheckCircle, UploadCloud, Loader2, X };
 
   courseId = signal<string>('');
   course = signal<CourseResponseDTO | null>(null);
   isLoading = signal<boolean>(true);
   isSubmittingReview = signal<boolean>(false);
 
+  // État des ajouts
   isAddingSection = signal<boolean>(false);
   activeLessonFormSectionId = signal<string | null>(null);
 
+  // NOUVEAU : État des modifications (Inline Editing)
+  editSectionId = signal<string | null>(null);
+  editLessonId = signal<string | null>(null);
+
+  // NOUVEAU : État des Uploads en cours (permet d'avoir plusieurs uploads simultanés)
+  uploadingMedia = signal<Set<string>>(new Set());
+
+  // Formulaires
   sectionForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(3)]]
   });
@@ -48,7 +49,7 @@ export class CourseCurriculumComponent implements OnInit {
   lessonForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(3)]],
     duration: [0, [Validators.required, Validators.min(0)]],
-    isFreePreview: [false]
+    freePreview: [false]
   });
 
   ngOnInit(): void {
@@ -63,17 +64,23 @@ export class CourseCurriculumComponent implements OnInit {
 
   loadCourseData(id: string): void {
     this.isLoading.set(true);
+    this.fetchCourseSilent(id, () => this.isLoading.set(false));
+  }
+
+  // Recharge silencieuse pour éviter que toute la page clignote
+  private fetchCourseSilent(id: string, callback?: () => void): void {
     this.courseService.getCourseById(id).subscribe({
       next: (data) => {
-        if (!data.sections) {
-          data.sections = [];
-        }
+        if (!data.sections) data.sections = [];
+        // Tri des sections et des leçons par orderIndex si nécessaire
+        data.sections.sort((a: any, b: any) => a.orderIndex - b.orderIndex);
+        data.sections.forEach((s: any) => s.lessons?.sort((a: any, b: any) => a.orderIndex - b.orderIndex));
         this.course.set(data);
-        this.isLoading.set(false);
+        if (callback) callback();
       },
       error: (err) => {
-        console.error('Erreur lors du chargement du cours', err);
-        this.isLoading.set(false);
+        console.error('Erreur de rafraîchissement', err);
+        if (callback) callback();
       }
     });
   }
@@ -82,90 +89,128 @@ export class CourseCurriculumComponent implements OnInit {
 
   toggleAddSection(): void {
     this.isAddingSection.set(!this.isAddingSection());
-    if (this.isAddingSection()) {
-      this.sectionForm.reset();
-    }
+    if (this.isAddingSection()) this.sectionForm.reset();
   }
 
   onSaveSection(): void {
     if (this.sectionForm.invalid) return;
-
-    const newSectionData = this.sectionForm.value;
-
-    this.courseService.createSection(this.courseId(), newSectionData).subscribe({
-      next: (createdSection) => {
-        createdSection.lessons = [];
-        const currentCourse = this.course();
-        if (currentCourse) {
-          this.course.set({
-            ...currentCourse,
-            sections: [...currentCourse.sections, createdSection]
-          });
-        }
+    this.courseService.createSection(this.courseId(), this.sectionForm.value).subscribe({
+      next: () => {
+        this.fetchCourseSilent(this.courseId());
         this.toggleAddSection();
-      },
-      error: (err) => console.error('Erreur lors de la création de la section', err)
+      }
     });
+  }
+
+  deleteSection(sectionId: string): void {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cette section et toutes ses leçons ?")) {
+      this.courseService.deleteSection(this.courseId(), sectionId).subscribe({
+        next: () => this.fetchCourseSilent(this.courseId())
+      });
+    }
   }
 
   // --- GESTION DES LEÇONS ---
 
   toggleAddLesson(sectionId: string): void {
+    this.editLessonId.set(null); // Ferme l'édition si on ouvre l'ajout
     if (this.activeLessonFormSectionId() === sectionId) {
       this.activeLessonFormSectionId.set(null);
     } else {
-      this.lessonForm.reset({ duration: 0, isFreePreview: false });
+      this.lessonForm.reset({ duration: 0, freePreview: false });
       this.activeLessonFormSectionId.set(sectionId);
     }
   }
 
   onSaveLesson(sectionId: string): void {
     if (this.lessonForm.invalid) return;
-
-    const newLessonData = this.lessonForm.value;
-
-    this.courseService.createLesson(sectionId, newLessonData).subscribe({
-      next: (createdLesson) => {
-        const currentCourse = this.course();
-        if (currentCourse) {
-          const updatedSections = currentCourse.sections.map(section => {
-            if (section.id === sectionId) {
-              return {
-                ...section,
-                lessons: [...(section.lessons || []), createdLesson]
-              };
-            }
-            return section;
-          });
-          this.course.set({ ...currentCourse, sections: updatedSections });
-        }
+    this.courseService.createLesson(sectionId, this.lessonForm.value).subscribe({
+      next: () => {
+        this.fetchCourseSilent(this.courseId());
         this.activeLessonFormSectionId.set(null);
-      },
-      error: (err) => console.error('Erreur lors de la création de la leçon', err)
+      }
     });
   }
 
-  // --- GESTION DES MÉDIAS (SÉCURITÉ) ---
+  // NOUVEAU : Édition d'une leçon existante
+  startEditLesson(lesson: any): void {
+    this.activeLessonFormSectionId.set(null); // Ferme l'ajout
+    this.editLessonId.set(lesson.id);
+    this.lessonForm.patchValue({
+      title: lesson.title,
+      duration: lesson.duration,
+      freePreview: lesson.freePreview
+    });
+  }
+
+  cancelEditLesson(): void {
+    this.editLessonId.set(null);
+  }
+
+  onUpdateLesson(sectionId: string, lessonId: string): void {
+    if (this.lessonForm.invalid) return;
+    this.courseService.updateLesson(sectionId, lessonId, this.lessonForm.value).subscribe({
+      next: () => {
+        this.fetchCourseSilent(this.courseId());
+        this.editLessonId.set(null);
+      }
+    });
+  }
+
+  deleteLesson(sectionId: string, lessonId: string): void {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cette leçon ?")) {
+      this.courseService.deleteLesson(sectionId, lessonId).subscribe({
+        next: () => this.fetchCourseSilent(this.courseId())
+      });
+    }
+  }
+
+  // --- GESTION DES MÉDIAS (AVEC LOADER) ---
+
+  isMediaUploading(lessonId: string): boolean {
+    return this.uploadingMedia().has(lessonId);
+  }
 
   onFileSelected(event: any, sectionId: string, lessonId: string): void {
     const file: File = event.target.files[0];
 
     if (file) {
-      // Vérification stricte du type MIME
       const isValidFormat = file.type === 'video/mp4' || file.type === 'application/pdf';
-
       if (!isValidFormat) {
-        // Alerte traduite
         alert(this.translate.instant('COURSE_EDITOR.CURRICULUM.ERR_FORMAT'));
-        event.target.value = ''; // Réinitialisation de l'input HTML
+        event.target.value = '';
         return;
       }
 
+      // 1. Activer le loader spécifique à cette leçon
+      this.uploadingMedia.update(set => {
+        const newSet = new Set(set);
+        newSet.add(lessonId);
+        return newSet;
+      });
+
+      // 2. Lancer l'upload
       this.courseService.uploadLessonMedia(sectionId, lessonId, file).subscribe({
         next: () => {
-          this.loadCourseData(this.courseId());
+          // 3. Succès : recharger les données et couper le loader
+          this.fetchCourseSilent(this.courseId(), () => {
+            this.uploadingMedia.update(set => {
+              const newSet = new Set(set);
+              newSet.delete(lessonId);
+              return newSet;
+            });
+          });
         },
-        error: (err) => console.error('Erreur upload', err)
+        error: (err) => {
+          console.error('Erreur upload', err);
+          alert('Échec du téléchargement. Fichier trop volumineux ou erreur réseau.');
+          // Couper le loader en cas d'erreur
+          this.uploadingMedia.update(set => {
+            const newSet = new Set(set);
+            newSet.delete(lessonId);
+            return newSet;
+          });
+        }
       });
     }
   }
@@ -179,10 +224,7 @@ export class CourseCurriculumComponent implements OnInit {
         this.isSubmittingReview.set(false);
         this.router.navigate(['/instructor/dashboard']);
       },
-      error: (err) => {
-        console.error('Erreur lors de la soumission', err);
-        this.isSubmittingReview.set(false);
-      }
+      error: () => this.isSubmittingReview.set(false)
     });
   }
 }

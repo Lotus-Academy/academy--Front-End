@@ -16,12 +16,13 @@ import {
   MonitorPlay,
   Unlock,
   User,
-  Loader2
+  Loader2,
+  X // <-- AJOUT DE L'ICÔNE X
 } from 'lucide-angular';
 
 import { NavbarComponent } from '../../layouts/navbar-component/navbar-component';
 import { FooterComponent } from '../../layouts/footer-component/footer-component';
-import { CourseService } from '../../../core/services/course-service';
+import { CourseService } from '../../../core/services/course-service'; // Correction de l'import (tiret vers point)
 import { CourseResponseDTO } from '../../../core/models/course.dto';
 
 @Component({
@@ -44,11 +45,14 @@ export class CourseDetailComponent implements OnInit {
 
   readonly icons = {
     PlayCircle, Clock, BookOpen, CheckCircle, Lock,
-    ChevronDown, ChevronUp, Award, Globe, MonitorPlay, Unlock, User, Loader2
+    ChevronDown, ChevronUp, Award, Globe, MonitorPlay, Unlock, User, Loader2, X // <-- AJOUT ICI
   };
 
   course = signal<CourseResponseDTO | null>(null);
   isLoading = signal<boolean>(true);
+
+  // NOUVEAU : État pour gérer la modale de la vidéo
+  isPlayingTrailer = signal<boolean>(false);
 
   totalSections = computed(() => this.course()?.sections?.length || 0);
 
@@ -80,12 +84,9 @@ export class CourseDetailComponent implements OnInit {
     this.courseService.getCourseById(id).subscribe({
       next: (data: CourseResponseDTO) => {
         this.course.set(data);
-
-        // Ouvrir la première section par défaut
         if (data.sections && data.sections.length > 0) {
           this.toggleSection(data.sections[0].id);
         }
-
         this.isLoading.set(false);
       },
       error: (error) => {
@@ -117,5 +118,20 @@ export class CourseDetailComponent implements OnInit {
 
   isSectionExpanded(sectionId: string): boolean {
     return this.expandedSections().has(sectionId);
+  }
+
+  // NOUVEAU : Méthodes pour ouvrir/fermer le trailer
+  openTrailer(): void {
+    if (this.course()?.trailerUrl) {
+      this.isPlayingTrailer.set(true);
+      // Optionnel : Bloquer le scroll du body quand la modale est ouverte
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  closeTrailer(): void {
+    this.isPlayingTrailer.set(false);
+    // Rétablir le scroll
+    document.body.style.overflow = 'auto';
   }
 }

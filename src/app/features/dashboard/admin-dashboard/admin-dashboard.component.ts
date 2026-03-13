@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   LucideAngularModule,
   Users,
@@ -17,17 +18,16 @@ import {
   Search,
   LayoutDashboard,
   Loader2,
-  X // Ajout de l'icône X pour fermer la modale
+  X
 } from 'lucide-angular';
 
-import { AdminService, AdminInstructorDTO, CategoryDTO, DashboardStatsDTO } from '../../../core/services/admin.service';
-import { CourseResponseDTO } from '../../../core/models/course.dto';
+import { AdminService, AdminInstructorDTO, DashboardStatsDTO } from '../../../core/services/admin.service';
+import { CourseResponseDTO, CategoryDTO } from '../../../core/models/course.dto';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  // Ajout de ReactiveFormsModule ici
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule, TranslateModule],
   templateUrl: './admin-dashboard.component.html'
 })
 export class AdminDashboardComponent implements OnInit {
@@ -39,22 +39,18 @@ export class AdminDashboardComponent implements OnInit {
     XCircle, Eye, FolderPlus, Pencil, BookOpen, Search, LayoutDashboard, Loader2, X
   };
 
-  // État de la navigation
   activeTab = signal<'overview' | 'courses' | 'instructors' | 'categories'>('overview');
   isLoading = signal<boolean>(true);
   processingActionIds = signal<Set<string>>(new Set());
 
-  // Gestion de la modale Catégorie
   isCategoryModalOpen = signal<boolean>(false);
   isSavingCategory = signal<boolean>(false);
 
-  // Formulaire de catégorie (Aligné sur CategoryCreateDTO)
   categoryForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     description: ['', [Validators.maxLength(255)]]
   });
 
-  // Données
   courses = signal<CourseResponseDTO[]>([]);
   instructors = signal<AdminInstructorDTO[]>([]);
   categories = signal<CategoryDTO[]>([]);
@@ -65,10 +61,10 @@ export class AdminDashboardComponent implements OnInit {
   stats = computed(() => {
     const apiStats = this.dashboardStats();
     return [
-      { label: 'Utilisateurs Totaux', value: apiStats?.totalUsers || 1284, icon: this.icons.Users, color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400' },
-      { label: 'Candidatures Instructeurs', value: this.instructors().filter(i => i.status === 'PENDING').length, icon: this.icons.UserCheck, color: 'text-indigo-600', bg: 'bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400' },
-      { label: 'Cours en attente', value: this.courses().filter(c => c.status === 'PENDING_REVIEW').length, icon: this.icons.Clock, color: 'text-yellow-600', bg: 'bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400' },
-      { label: 'Cours Approuvés', value: this.courses().filter(c => c.status === 'APPROVED').length, icon: this.icons.CheckCircle, color: 'text-green-600', bg: 'bg-green-100 dark:bg-green-900/30 dark:text-green-400' }
+      { labelKey: 'ADMIN_DASHBOARD.STATS.USERS', value: apiStats?.totalStudents || 0, icon: this.icons.Users, color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400' },
+      { labelKey: 'ADMIN_DASHBOARD.STATS.PENDING_INSTRUCTORS', value: this.instructors().filter(i => i.approvalStatus === 'PENDING').length, icon: this.icons.UserCheck, color: 'text-indigo-600', bg: 'bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400' },
+      { labelKey: 'ADMIN_DASHBOARD.STATS.PENDING_COURSES', value: apiStats?.pendingCoursesCount || 0, icon: this.icons.Clock, color: 'text-yellow-600', bg: 'bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400' },
+      { labelKey: 'ADMIN_DASHBOARD.STATS.APPROVED_COURSES', value: apiStats?.totalCourses || 0, icon: this.icons.CheckCircle, color: 'text-green-600', bg: 'bg-green-100 dark:bg-green-900/30 dark:text-green-400' }
     ];
   });
 
@@ -94,6 +90,7 @@ export class AdminDashboardComponent implements OnInit {
       statsRes: this.adminService.getDashboardStats()
     }).subscribe({
       next: (results) => {
+        // Extraction depuis les objets paginés
         this.courses.set(results.coursesRes.content);
         this.instructors.set(results.instructorsRes.content);
         this.categories.set(results.categoriesRes);
@@ -101,13 +98,11 @@ export class AdminDashboardComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Erreur lors du chargement des données du dashboard :', err);
+        console.error('Erreur de chargement Admin', err);
         this.isLoading.set(false);
       }
     });
   }
-
-  // --- ACTIONS SUR LES COURS ---
 
   isProcessing(id: string): boolean {
     return this.processingActionIds().has(id);
@@ -121,6 +116,7 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
+  // --- ACTIONS COURS ---
   approveCourse(courseId: string): void {
     this.setProcessing(courseId, true);
     this.adminService.approveCourse(courseId).subscribe({
@@ -128,10 +124,7 @@ export class AdminDashboardComponent implements OnInit {
         this.courses.update(courses => courses.map(c => c.id === courseId ? { ...c, status: 'APPROVED' } : c));
         this.setProcessing(courseId, false);
       },
-      error: (err) => {
-        console.error('Erreur lors de l\'approbation du cours', err);
-        this.setProcessing(courseId, false);
-      }
+      error: () => this.setProcessing(courseId, false)
     });
   }
 
@@ -142,15 +135,36 @@ export class AdminDashboardComponent implements OnInit {
         this.courses.update(courses => courses.map(c => c.id === courseId ? { ...c, status: 'REJECTED' } : c));
         this.setProcessing(courseId, false);
       },
-      error: (err) => {
-        console.error('Erreur lors du rejet du cours', err);
-        this.setProcessing(courseId, false);
-      }
+      error: () => this.setProcessing(courseId, false)
     });
   }
 
-  // --- GESTION DE LA MODALE CATÉGORIE ---
+  // --- ACTIONS INSTRUCTEURS ---
+  approveInstructor(profileId: string): void {
+    if (!profileId) return;
 
+    this.setProcessing(profileId, true);
+    this.adminService.approveInstructor(profileId).subscribe({
+      next: () => {
+        this.instructors.update(inst => inst.map(i => i.profileId === profileId ? { ...i, approvalStatus: 'APPROVED' } : i));
+        this.setProcessing(profileId, false);
+      },
+      error: () => this.setProcessing(profileId, false)
+    });
+  }
+
+  rejectInstructor(profileId: string): void {
+    this.setProcessing(profileId, true);
+    this.adminService.rejectInstructor(profileId).subscribe({
+      next: () => {
+        this.instructors.update(inst => inst.map(i => i.profileId === profileId ? { ...i, approvalStatus: 'REJECTED' } : i));
+        this.setProcessing(profileId, false);
+      },
+      error: () => this.setProcessing(profileId, false)
+    });
+  }
+
+  // --- CATÉGORIES ---
   openCategoryModal(): void {
     this.categoryForm.reset();
     this.isCategoryModalOpen.set(true);
@@ -161,27 +175,15 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   submitCategory(): void {
-    if (this.categoryForm.invalid) {
-      this.categoryForm.markAllAsTouched();
-      return;
-    }
-
+    if (this.categoryForm.invalid) return;
     this.isSavingCategory.set(true);
-
     this.adminService.createCategory(this.categoryForm.value).subscribe({
       next: () => {
         this.isSavingCategory.set(false);
         this.closeCategoryModal();
-        // On recharge uniquement les catégories pour mettre à jour la liste
-        this.adminService.getCategories().subscribe({
-          next: (cats) => this.categories.set(cats),
-          error: (err) => console.error('Erreur lors du rafraîchissement des catégories', err)
-        });
+        this.adminService.getCategories().subscribe(cats => this.categories.set(cats));
       },
-      error: (err) => {
-        console.error('Erreur lors de la création de la catégorie', err);
-        this.isSavingCategory.set(false);
-      }
+      error: () => this.isSavingCategory.set(false)
     });
   }
 }

@@ -106,4 +106,6 @@ export class CourseService {
   submitForReview(courseId: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/courses/${courseId}/submit-review`, {}, { responseType: 'text' });
   }
+
+
 }

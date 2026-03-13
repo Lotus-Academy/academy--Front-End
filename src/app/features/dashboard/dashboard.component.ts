@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-
+import { TranslateModule } from "@ngx-translate/core";
 
 import { StudentDashboardComponent } from './student-dashboard/student-dashboard.component';
 import { InstructorDashboardComponent } from './instructor-dashboard/instructor-dashboard.component';
@@ -16,6 +16,7 @@ import { AdminLayoutComponent } from '../layouts/dashboard-layouts/admin-dashboa
   standalone: true,
   imports: [
     CommonModule,
+    TranslateModule,
     StudentDashboardComponent,
     InstructorDashboardComponent,
     AdminDashboardComponent,

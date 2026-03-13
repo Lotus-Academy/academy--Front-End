@@ -1,8 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LucideAngularModule, User, Shield, Camera, AlertTriangle, Save, CheckCircle } from 'lucide-angular';
-import { TranslateModule } from '@ngx-translate/core';
+import { LucideAngularModule, User, Shield, Camera, AlertTriangle, Save, CheckCircle, Loader2 } from 'lucide-angular';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 
 import { UserService } from '../../../core/services/user-service';
@@ -19,8 +19,9 @@ export class ProfileComponent implements OnInit {
   private userService = inject(UserService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private translate = inject(TranslateService);
 
-  readonly icons = { User, Shield, Camera, AlertTriangle, Save, CheckCircle };
+  readonly icons = { User, Shield, Camera, AlertTriangle, Save, CheckCircle, Loader2 };
 
   activeTab = signal<'GENERAL' | 'SECURITY'>('GENERAL');
 
@@ -110,22 +111,18 @@ export class ProfileComponent implements OnInit {
     this.userService.updateProfile(this.profileForm.value, this.selectedFile || undefined).subscribe({
       next: (updatedProfile) => {
         this.isSaving.set(false);
-        this.successMessage.set('PROFILE.SUCCESS_PROFILE');
+        this.successMessage.set(this.translate.instant('PROFILE.SUCCESS_PROFILE'));
 
-        // Rafraîchissement du profil global dans l'application pour mettre à jour la Navbar
-        const currentUser = this.authService.getUser();
-        if (currentUser) {
-          this.authService.currentUser.set({
-            ...currentUser,
-            firstName: updatedProfile.firstName,
-            lastName: updatedProfile.lastName,
-            profilePictureUrl: updatedProfile.profilePictureUrl
-          });
-        }
+        // UTILISATION DE LA NOUVELLE MÉTHODE DU AUTH SERVICE
+        this.authService.updateCurrentUserState({
+          firstName: updatedProfile.firstName,
+          lastName: updatedProfile.lastName,
+          profilePictureUrl: updatedProfile.profilePictureUrl
+        });
       },
       error: () => {
         this.isSaving.set(false);
-        this.errorMessage.set('PROFILE.ERROR_GENERIC');
+        this.errorMessage.set(this.translate.instant('PROFILE.ERROR_GENERIC'));
       }
     });
   }
@@ -143,11 +140,11 @@ export class ProfileComponent implements OnInit {
       next: () => {
         this.isSaving.set(false);
         this.passwordForm.reset();
-        this.successMessage.set('PROFILE.SUCCESS_PASSWORD');
+        this.successMessage.set(this.translate.instant('PROFILE.SUCCESS_PASSWORD'));
       },
       error: (err) => {
         this.isSaving.set(false);
-        this.errorMessage.set(err.error?.message || 'PROFILE.ERROR_GENERIC');
+        this.errorMessage.set(err.error?.message || this.translate.instant('PROFILE.ERROR_GENERIC'));
       }
     });
   }
@@ -157,10 +154,9 @@ export class ProfileComponent implements OnInit {
       this.userService.archiveAccount().subscribe({
         next: () => {
           this.authService.logout();
-          this.router.navigate(['/']);
         },
         error: () => {
-          this.errorMessage.set('PROFILE.ERROR_GENERIC');
+          this.errorMessage.set(this.translate.instant('PROFILE.ERROR_GENERIC'));
         }
       });
     }

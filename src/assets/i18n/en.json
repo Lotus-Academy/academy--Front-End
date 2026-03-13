@@ -376,19 +376,29 @@
         },
         "BASIC": {
             "TITLE": "Basic Information",
-            "DESC": "This information will be publicly visible on your course landing page.",
-            "TITLE_NOTE": "A catchy title attracts more students.",
+            "DESC": "Edit the metadata of your course.",
+            "TITLE_NOTE": "Your course title will appear on the landing page and in search results.",
+            "BTN_SUBMIT": "Save",
             "BTN_LOADING": "Saving...",
-            "BTN_SUBMIT": "Save Changes"
+            "SAVED_SUCCESS": "Successfully saved!",
+            "ERROR_SAVE": "Error saving data."
         },
         "PRICING": {
-            "THUMBNAIL_TITLE": "Course Thumbnail",
-            "BTN_UPLOAD_THUMBNAIL": "Change image",
+            "PAGE_TITLE": "Media & Pricing",
+            "PAGE_DESC": "Configure the cover image, promotional video, and the price of your course.",
+            "THUMBNAIL_TITLE": "Cover Image",
+            "THUMBNAIL_HINT": "Recommended format: 1920x1080 (16:9)",
             "TRAILER_TITLE": "Promotional Video (Trailer)",
-            "BTN_UPLOAD_TRAILER": "Upload MP4 Video",
-            "LOADING": "Uploading...",
-            "PRICE_TITLE": "Selling Price (USD)",
-            "BTN_SAVE": "Save Changes"
+            "TRAILER_HINT": "MP4 format only. Max 100MB.",
+            "LOADING": "Loading...",
+            "BTN_UPLOAD_THUMBNAIL": "Upload image",
+            "BTN_UPLOAD_TRAILER": "Upload video",
+            "BTN_REPLACE_TRAILER": "Replace video",
+            "PRICE_TITLE": "Course Price",
+            "PRICE_HINT": "Set to \"0\" to make the course completely free. Students will have immediate access without a credit card.",
+            "BTN_SAVE": "Save",
+            "SAVING": "Saving...",
+            "SAVED_SUCCESS": "Saved!"
         },
         "CURRICULUM": {
             "TITLE": "Course Curriculum",
@@ -410,7 +420,13 @@
             "SECTION_TITLE_PLACEHOLDER": "Ex: Introduction to financial markets",
             "BTN_ADD_SECTION": "Create section",
             "LINK_ADD_SECTION": "Add a new section",
-            "ERR_FORMAT": "Unsupported format. Please upload only an .MP4 or .PDF file"
+            "ERR_FORMAT": "Unsupported format. Please upload only an .MP4 or .PDF file",
+            "BTN_EDIT": "Edit",
+            "BTN_DELETE": "Delete",
+            "BTN_SAVE": "Save",
+            "UPLOADING": "Uploading file...",
+            "UPLOAD_SUCCESS": "Media ready",
+            "REPLACE_MEDIA": "Replace media"
         },
         "PREVIEW": {
             "TITLE": "Course Preview",
@@ -561,10 +577,59 @@
             "PREV": "Previous",
             "NEXT": "Next",
             "SUBMIT": "Submit application",
-            "SUBMITTING": "Submitting..."
+            "SUBMITTING": "Submitting...",
+            "UPDATE": "Update application",
+            "UPDATING": "Updating..."
         },
         "ERRORS": {
             "GENERIC": "An error occurred while submitting your application."
+        },
+        "REJECTED_BANNER_TITLE": "Application requires changes",
+        "REJECTED_BANNER_DESC": "Your previous application was reviewed by our team. Please correct or complete the information below and resubmit your profile."
+    },
+    "ADMIN_DASHBOARD": {
+        "STATS": {
+            "USERS": "Total Users",
+            "PENDING_INSTRUCTORS": "Instructor Applications",
+            "PENDING_COURSES": "Pending Courses",
+            "APPROVED_COURSES": "Approved Courses"
+        },
+        "TABS": {
+            "OVERVIEW": "Overview",
+            "COURSES": "Course Validation",
+            "INSTRUCTORS": "Instructors",
+            "CATEGORIES": "Categories"
+        },
+        "OVERVIEW": {
+            "TITLE": "Welcome to the admin interface",
+            "DESC": "Use the tabs above to manage the Lotus Academy platform."
+        },
+        "COURSES": {
+            "TITLE": "Course Validation",
+            "SEARCH": "Search for a course...",
+            "BY": "By",
+            "STATUS_PENDING": "Pending",
+            "STATUS_APPROVED": "Approved",
+            "STATUS_REJECTED": "Rejected",
+            "STATUS_DRAFT": "Draft",
+            "EMPTY": "No courses found."
+        },
+        "INSTRUCTORS": {
+            "TITLE": "Instructor Applications",
+            "BTN_APPROVE": "Approve",
+            "BTN_REJECT": "Reject",
+            "EMPTY": "No instructors found."
+        },
+        "CATEGORIES": {
+            "TITLE": "Category Management",
+            "BTN_ADD": "Add",
+            "NO_DESC": "No description provided.",
+            "MODAL_TITLE": "New Category",
+            "FORM_NAME": "Category Name *",
+            "FORM_DESC": "Description (Optional)",
+            "BTN_CANCEL": "Cancel",
+            "BTN_CREATE": "Create category",
+            "BTN_LOADING": "Creating..."
         }
     }
 }

@@ -1,16 +1,16 @@
 @switch (user?.role) {
 @case ('ADMIN') {
-<app-admin-layout title="Panneau d'Administration">
+<app-admin-layout title="{{ 'LAYOUT.ADMIN_SPACE' | translate }}">
     <app-admin-dashboard></app-admin-dashboard>
 </app-admin-layout>
 }
 @case ('INSTRUCTOR') {
-<app-instructor-layout title="Espace Instructeur">
+<app-instructor-layout title="{{ 'LAYOUT.INSTRUCTOR_SPACE' | translate }}">
     <app-instructor-dashboard></app-instructor-dashboard>
 </app-instructor-layout>
 }
 @case ('STUDENT') {
-<app-student-layout title="Bienvenue, {{ user?.firstName }} !">
+<app-student-layout title="{{ 'LAYOUT.STUDENT_SPACE' | translate }}">
     <app-student-dashboard></app-student-dashboard>
 </app-student-layout>
 }

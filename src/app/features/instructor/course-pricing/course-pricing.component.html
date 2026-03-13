@@ -1,51 +1,94 @@
-<div class="space-y-8 bg-white dark:bg-ds-surface p-8 rounded border border-slate-200 dark:border-ds-border shadow-sm">
+<div
+    class="space-y-10 bg-white dark:bg-ds-surface p-6 sm:p-10 rounded border border-slate-200 dark:border-ds-border shadow-sm animate-fade-in-up">
+
+    @if (isLoading()) {
+    <div class="flex justify-center items-center py-20">
+        <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin stroke-[2px]"></lucide-icon>
+    </div>
+    } @else {
+
+    <div class="border-b border-slate-200 dark:border-ds-border pb-6">
+        <h2 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white">
+            {{ 'COURSE_EDITOR.PRICING.PAGE_TITLE' | translate }}
+        </h2>
+        <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 mt-1">
+            {{ 'COURSE_EDITOR.PRICING.PAGE_DESC' | translate }}
+        </p>
+    </div>
 
     <div class="grid md:grid-cols-2 gap-8">
+
         <div>
-            <h3 class="font-syne font-bold text-slate-900 dark:text-white mb-4">{{
-                'COURSE_EDITOR.PRICING.THUMBNAIL_TITLE' | translate }}</h3>
+            <h3
+                class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-3">
+                {{ 'COURSE_EDITOR.PRICING.THUMBNAIL_TITLE' | translate }}
+            </h3>
+
             <div
-                class="aspect-video bg-slate-50 dark:bg-ds-black rounded border border-slate-200 dark:border-ds-border flex items-center justify-center relative group overflow-hidden">
+                class="aspect-video bg-slate-50 dark:bg-ds-black rounded border border-slate-200 dark:border-ds-border flex items-center justify-center relative group overflow-hidden shadow-sm transition-all hover:border-lotus/50">
                 @if (currentCourse()?.thumbnailUrl) {
                 <img [src]="currentCourse()?.thumbnailUrl" class="w-full h-full object-cover">
                 } @else {
-                <lucide-icon [name]="icons.ImageIcon"
-                    class="w-8 h-8 text-slate-300 dark:text-ds-muted/30 stroke-[1.5px]"></lucide-icon>
+                <div class="text-center p-4">
+                    <lucide-icon [name]="icons.ImageIcon"
+                        class="w-8 h-8 text-slate-300 dark:text-ds-muted/30 mx-auto mb-2 stroke-[1.5px]"></lucide-icon>
+                    <p class="font-syne text-xs text-slate-400 dark:text-ds-muted/50">
+                        {{ 'COURSE_EDITOR.PRICING.THUMBNAIL_HINT' | translate }}
+                    </p>
+                </div>
                 }
 
                 <div
-                    class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-all backdrop-blur-sm">
+                    class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-all backdrop-blur-[2px]">
                     <label
-                        class="cursor-pointer bg-white text-slate-900 px-5 py-2.5 rounded font-mono text-[10px] uppercase tracking-widest font-bold hover:bg-slate-100 transition-colors">
+                        class="cursor-pointer bg-white text-slate-900 px-5 py-2.5 rounded font-mono text-[10px] uppercase tracking-widest font-bold hover:bg-slate-100 transition-colors shadow-lg">
                         @if (isUploadingThumbnail()) {
-                        <lucide-icon [name]="icons.Loader2" class="w-4 h-4 inline animate-spin mr-1"></lucide-icon>
+                        <lucide-icon [name]="icons.Loader2" class="w-4 h-4 inline animate-spin mr-1.5"></lucide-icon>
                         {{ 'COURSE_EDITOR.PRICING.LOADING' | translate }}
                         } @else {
+                        <lucide-icon [name]="icons.UploadCloud" class="w-4 h-4 inline mr-1.5"></lucide-icon>
                         {{ 'COURSE_EDITOR.PRICING.BTN_UPLOAD_THUMBNAIL' | translate }}
                         }
-                        <input type="file" class="hidden" (change)="onThumbnailSelected($event)" accept="image/*">
+                        <input type="file" class="hidden" (change)="onThumbnailSelected($event)"
+                            accept="image/jpeg, image/png, image/webp">
                     </label>
                 </div>
             </div>
         </div>
 
         <div>
-            <h3 class="font-syne font-bold text-slate-900 dark:text-white mb-4">{{ 'COURSE_EDITOR.PRICING.TRAILER_TITLE'
-                | translate }}</h3>
+            <h3
+                class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-3">
+                {{ 'COURSE_EDITOR.PRICING.TRAILER_TITLE' | translate }}
+            </h3>
+
             <div
-                class="aspect-video bg-slate-50 dark:bg-ds-black rounded border border-slate-200 dark:border-ds-border flex items-center justify-center relative group overflow-hidden">
-                <lucide-icon [name]="icons.Film"
-                    class="w-8 h-8 text-slate-300 dark:text-ds-muted/30 stroke-[1.5px]"></lucide-icon>
+                class="aspect-video bg-slate-50 dark:bg-ds-black rounded border border-slate-200 dark:border-ds-border flex items-center justify-center relative group overflow-hidden shadow-sm transition-all hover:border-lotus/50">
+
+                @if (currentCourse()?.trailerUrl) {
+                <video [src]="currentCourse()?.trailerUrl" controls controlsList="nodownload"
+                    oncontextmenu="return false;" class="w-full h-full object-cover outline-none"></video>
+                } @else {
+                <div class="text-center p-4">
+                    <lucide-icon [name]="icons.Film"
+                        class="w-8 h-8 text-slate-300 dark:text-ds-muted/30 mx-auto mb-2 stroke-[1.5px]"></lucide-icon>
+                    <p class="font-syne text-xs text-slate-400 dark:text-ds-muted/50">
+                        {{ 'COURSE_EDITOR.PRICING.TRAILER_HINT' | translate }}
+                    </p>
+                </div>
+                }
 
                 <div
-                    class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-all backdrop-blur-sm">
+                    class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-all backdrop-blur-[2px] z-10">
                     <label
-                        class="cursor-pointer bg-lotus text-ds-black px-5 py-2.5 rounded font-mono text-[10px] uppercase tracking-widest font-bold hover:bg-lotus-light transition-colors">
+                        class="cursor-pointer bg-lotus text-ds-black px-5 py-2.5 rounded font-mono text-[10px] uppercase tracking-widest font-bold hover:bg-lotus-light transition-colors shadow-lg">
                         @if (isUploadingTrailer()) {
-                        <lucide-icon [name]="icons.Loader2" class="w-4 h-4 inline animate-spin mr-1"></lucide-icon>
+                        <lucide-icon [name]="icons.Loader2" class="w-4 h-4 inline animate-spin mr-1.5"></lucide-icon>
                         {{ 'COURSE_EDITOR.PRICING.LOADING' | translate }}
                         } @else {
-                        {{ 'COURSE_EDITOR.PRICING.BTN_UPLOAD_TRAILER' | translate }}
+                        <lucide-icon [name]="icons.UploadCloud" class="w-4 h-4 inline mr-1.5"></lucide-icon>
+                        {{ currentCourse()?.trailerUrl ? ('COURSE_EDITOR.PRICING.BTN_REPLACE_TRAILER' | translate) :
+                        ('COURSE_EDITOR.PRICING.BTN_UPLOAD_TRAILER' | translate) }}
                         }
                         <input type="file" class="hidden" (change)="onTrailerSelected($event)" accept="video/mp4">
                     </label>
@@ -54,25 +97,49 @@
         </div>
     </div>
 
-    <form [formGroup]="pricingForm" (ngSubmit)="onSave()"
-        class="border-t border-slate-200 dark:border-ds-border pt-8 mt-8">
-        <label
-            class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">{{
-            'COURSE_EDITOR.PRICING.PRICE_TITLE' | translate }}</label>
-        <div class="relative w-full md:w-1/3">
-            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-ds-muted font-bold">$</span>
-            <input type="number" formControlName="price" min="0" step="0.01"
-                class="w-full pl-8 px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-300 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white">
-        </div>
+    <div class="border-t border-slate-200 dark:border-ds-border pt-8 mt-4">
+        <form [formGroup]="pricingForm" (ngSubmit)="onSave()">
 
-        <div class="mt-6 flex justify-end">
-            <button type="submit" [disabled]="isSaving()"
-                class="px-6 py-3 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-[0.12em] font-bold rounded hover:bg-lotus-light disabled:opacity-50 transition-colors">
-                @if (isSaving()) {
-                <lucide-icon [name]="icons.Loader2" class="w-4 h-4 inline animate-spin mr-1"></lucide-icon>
+            <label
+                class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-3">
+                {{ 'COURSE_EDITOR.PRICING.PRICE_TITLE' | translate }}
+            </label>
+
+            <div class="flex flex-col sm:flex-row sm:items-center gap-6">
+                <div class="relative w-full sm:w-64">
+                    <span
+                        class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-ds-muted font-mono font-bold text-lg">$</span>
+                    <input type="number" formControlName="price" min="0" step="1"
+                        class="w-full pl-9 pr-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-300 dark:border-ds-border rounded font-mono text-lg font-bold focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors shadow-sm">
+                </div>
+
+                <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 max-w-sm leading-relaxed">
+                    {{ 'COURSE_EDITOR.PRICING.PRICE_HINT' | translate }}
+                </p>
+            </div>
+
+            <div class="mt-8 flex items-center justify-end gap-4">
+                @if (saveSuccessMessage()) {
+                <span
+                    class="font-mono text-[10px] uppercase tracking-widest font-bold text-green flex items-center gap-1.5 animate-fade-in">
+                    <lucide-icon [name]="icons.CheckCircle" class="w-3.5 h-3.5"></lucide-icon>
+                    {{ 'COURSE_EDITOR.PRICING.SAVED_SUCCESS' | translate }}
+                </span>
                 }
-                {{ 'COURSE_EDITOR.PRICING.BTN_SAVE' | translate }}
-            </button>
-        </div>
-    </form>
+
+                <button type="submit" [disabled]="pricingForm.invalid || isSaving()"
+                    class="px-8 py-3.5 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-[0.12em] font-bold rounded hover:bg-lotus-light disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm">
+                    @if (isSaving()) {
+                    <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
+                    {{ 'COURSE_EDITOR.PRICING.SAVING' | translate }}
+                    } @else {
+                    <lucide-icon [name]="icons.Save" class="w-4 h-4 stroke-[2px]"></lucide-icon>
+                    {{ 'COURSE_EDITOR.PRICING.BTN_SAVE' | translate }}
+                    }
+                </button>
+            </div>
+        </form>
+    </div>
+
+    }
 </div>

@@ -4,19 +4,10 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CourseResponseDTO } from '../models/course.dto';
 
-// --- DTOs ---
+// ==========================================
+// DTOs (Strictement alignés sur le Swagger)
+// ==========================================
 
-export interface PageCourseResponseDTO {
-  content: CourseResponseDTO[];
-  pageable: any;
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
-  size: number;
-  number: number;
-}
-
-// Typage générique pour les réponses paginées de Spring Boot
 export interface PageResponseDTO<T> {
   content: T[];
   pageable: any;
@@ -25,16 +16,21 @@ export interface PageResponseDTO<T> {
   last: boolean;
   size: number;
   number: number;
+  first: boolean;
+  empty: boolean;
+  numberOfElements: number;
 }
 
 export interface AdminInstructorDTO {
-  id: string;
+  userId: string;
+  profileId: string;
   firstName: string;
   lastName: string;
   email: string;
-  role: string;
-  status: string;
-  createdAt: string;
+  profilePictureUrl?: string;
+  userStatus: string;
+  approvalStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
+  registeredAt: string;
 }
 
 export interface CategoryDTO {
@@ -49,11 +45,13 @@ export interface CategoryCreateDTO {
 }
 
 export interface DashboardStatsDTO {
-  // Ajustez selon ce que votre backend renvoie réellement
-  totalUsers: number;
+  totalStudents: number;
+  totalInstructors: number;
   totalCourses: number;
+  pendingCoursesCount: number;
+  totalEnrollments: number;
   totalRevenue: number;
-  pendingCourses: number;
+  totalCertificatesIssued: number;
 }
 
 export interface AdminPaymentDTO {
@@ -72,9 +70,9 @@ export interface AdminPaymentDTO {
 export class AdminService {
   private http = inject(HttpClient);
 
-  // URL de base pour les routes admin
+  // URL de base pour les routes purement admin
   private adminUrl = `${environment.apiUrl}/api/v1/admin`;
-  // URL de base pour les routes publiques/globales
+  // URL de base pour les routes globales
   private publicUrl = `${environment.apiUrl}/api/v1`;
 
   // ==========================================
@@ -83,15 +81,15 @@ export class AdminService {
 
   /**
    * GET /api/v1/admin/courses
-   * Récupère TOUS les cours avec pagination
+   * Récupère TOUS les cours (brouillons, en attente, publiés) avec pagination
    */
-  getAllCourses(page: number = 0, size: number = 20): Observable<PageCourseResponseDTO> {
+  getAllCourses(page: number = 0, size: number = 20): Observable<PageResponseDTO<CourseResponseDTO>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('sort', 'createdAt,DESC');
 
-    return this.http.get<PageCourseResponseDTO>(`${this.adminUrl}/courses`, { params });
+    return this.http.get<PageResponseDTO<CourseResponseDTO>>(`${this.adminUrl}/courses`, { params });
   }
 
   /**
@@ -122,27 +120,36 @@ export class AdminService {
 
   /**
    * GET /api/v1/admin/instructors
-   * Liste tous les instructeurs avec pagination
+   * Liste tous les instructeurs avec pagination et filtres optionnels
    */
-  getAllInstructors(page: number = 0, size: number = 20): Observable<PageResponseDTO<AdminInstructorDTO>> {
-    const params = new HttpParams()
+  getAllInstructors(page: number = 0, size: number = 20, approvalStatus?: string): Observable<PageResponseDTO<AdminInstructorDTO>> {
+    let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('sort', 'createdAt,DESC');
+
+    if (approvalStatus) {
+      params = params.set('approvalStatus', approvalStatus);
+    }
 
     return this.http.get<PageResponseDTO<AdminInstructorDTO>>(`${this.adminUrl}/instructors`, { params });
   }
 
   /**
-   * NOTE : Le Swagger ne mentionne pas d'endpoint spécifique pour approuver/rejeter un instructeur.
-   * Si cet endpoint existe dans votre contrôleur (ex: PATCH /api/v1/admin/users/{id}/status),
-   * vous pouvez décommenter et adapter cette méthode :
+   * PATCH /api/v1/instructors/profile/{profileId}/approve
+   * Approuve la candidature d'un instructeur
    */
-  /*
-  updateInstructorStatus(instructorId: string, status: 'APPROVED' | 'REJECTED'): Observable<string> {
-    return this.http.patch(`${this.adminUrl}/users/${instructorId}/status?status=${status}`, {}, { responseType: 'text' });
+  approveInstructor(profileId: string): Observable<string> {
+    return this.http.patch(`${this.publicUrl}/instructors/profile/${profileId}/approve`, {}, { responseType: 'text' });
   }
-  */
+
+  /**
+   * PATCH /api/v1/instructors/profile/{profileId}/reject
+   * Rejette la candidature d'un instructeur
+   */
+  rejectInstructor(profileId: string): Observable<string> {
+    return this.http.patch(`${this.publicUrl}/instructors/profile/${profileId}/reject`, {}, { responseType: 'text' });
+  }
 
 
   // ==========================================
@@ -151,7 +158,6 @@ export class AdminService {
 
   /**
    * GET /api/v1/categories
-   * Récupère la liste de toutes les catégories (Endpoint public)
    */
   getCategories(): Observable<CategoryDTO[]> {
     return this.http.get<CategoryDTO[]>(`${this.publicUrl}/categories`);
@@ -159,7 +165,6 @@ export class AdminService {
 
   /**
    * POST /api/v1/admin/categories
-   * Créer une nouvelle catégorie
    */
   createCategory(data: CategoryCreateDTO): Observable<string> {
     return this.http.post(`${this.adminUrl}/categories`, data, { responseType: 'text' });
@@ -167,7 +172,6 @@ export class AdminService {
 
   /**
    * PUT /api/v1/admin/categories/{categoryId}
-   * Modifier une catégorie existante
    */
   updateCategory(categoryId: string, data: CategoryCreateDTO): Observable<string> {
     return this.http.put(`${this.adminUrl}/categories/${categoryId}`, data, { responseType: 'text' });
@@ -175,7 +179,6 @@ export class AdminService {
 
   /**
    * DELETE /api/v1/admin/categories/{categoryId}
-   * Supprimer une catégorie
    */
   deleteCategory(categoryId: string): Observable<string> {
     return this.http.delete(`${this.adminUrl}/categories/${categoryId}`, { responseType: 'text' });
@@ -188,7 +191,6 @@ export class AdminService {
 
   /**
    * GET /api/v1/admin/stats
-   * Récupère les KPI globaux
    */
   getDashboardStats(): Observable<DashboardStatsDTO> {
     return this.http.get<DashboardStatsDTO>(`${this.adminUrl}/stats`);
@@ -196,7 +198,6 @@ export class AdminService {
 
   /**
    * GET /api/v1/admin/students
-   * Liste tous les étudiants avec pagination
    */
   getAllStudents(page: number = 0, size: number = 20): Observable<PageResponseDTO<any>> {
     const params = new HttpParams()
@@ -209,13 +210,12 @@ export class AdminService {
 
   /**
    * GET /api/v1/admin/payments
-   * Consulter l'historique global des transactions financières
    */
   getAllPayments(page: number = 0, size: number = 50): Observable<PageResponseDTO<AdminPaymentDTO>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
-      .set('sort', 'paidAt,DESC'); // Tri par date de paiement décroissante
+      .set('sort', 'paidAt,DESC');
 
     return this.http.get<PageResponseDTO<AdminPaymentDTO>>(`${this.adminUrl}/payments`, { params });
   }

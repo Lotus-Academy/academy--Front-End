@@ -15,7 +15,7 @@ export interface LessonDTO {
     duration: number; // en secondes
     freePreview: boolean;
     processingStatus?: string;
-    completed: boolean; // Corrigé (était isCompleted)
+    completed: boolean;
 }
 
 export interface SectionDTO {
@@ -34,6 +34,7 @@ export interface CourseResponseDTO {
     description: string;
     price: number;
     thumbnailUrl: string;
+    trailerUrl: string;
     level: string;
     language: string;
     status: string;

@@ -1,161 +1,165 @@
 <div class="space-y-8 animate-fade-in-up relative">
 
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        @for (stat of stats(); track stat.label) {
+        @for (stat of stats(); track stat.labelKey) {
         <div
-            class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4 transition-all hover:shadow-md">
-            <div class="p-3 rounded-xl" [ngClass]="stat.bg">
-                <lucide-icon [name]="stat.icon" class="w-6 h-6"></lucide-icon>
+            class="bg-white dark:bg-ds-surface p-6 rounded border border-slate-200 dark:border-ds-border shadow-sm flex items-center gap-4 transition-all">
+            <div class="p-3 rounded border" [ngClass]="stat.bg">
+                <lucide-icon [name]="stat.icon" class="w-5 h-5 stroke-[1.5px]"></lucide-icon>
             </div>
             <div>
-                <p class="text-2xl font-bold text-slate-900 dark:text-white">{{ stat.value }}</p>
-                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ stat.label }}</p>
+                <p class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white leading-none">{{ stat.value
+                    }}</p>
+                <p class="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-ds-muted/70 mt-1.5">{{
+                    stat.labelKey | translate }}</p>
             </div>
         </div>
         }
     </div>
 
     <div
-        class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        class="bg-white dark:bg-ds-surface rounded border border-slate-200 dark:border-ds-border shadow-sm overflow-hidden">
 
-        <div class="border-b border-slate-200 dark:border-slate-800 px-2 sm:px-6 overflow-x-auto">
-            <nav class="flex gap-4 sm:gap-6 min-w-max">
+        <div class="border-b border-slate-200 dark:border-ds-border px-2 sm:px-6 overflow-x-auto">
+            <nav class="flex gap-4 sm:gap-8 min-w-max">
                 <button (click)="activeTab.set('overview')"
-                    [ngClass]="activeTab() === 'overview' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'"
-                    class="flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors">
-                    <lucide-icon [name]="icons.LayoutDashboard" class="w-4 h-4"></lucide-icon> Vue d'ensemble
+                    [ngClass]="activeTab() === 'overview' ? 'border-lotus text-lotus' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-ds-muted/70 dark:hover:text-ds-muted'"
+                    class="flex items-center gap-2 py-4 px-1 border-b-2 font-mono text-[11px] uppercase tracking-widest font-bold transition-colors">
+                    <lucide-icon [name]="icons.LayoutDashboard" class="w-4 h-4"></lucide-icon> {{
+                    'ADMIN_DASHBOARD.TABS.OVERVIEW' | translate }}
                 </button>
                 <button (click)="activeTab.set('courses')"
-                    [ngClass]="activeTab() === 'courses' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'"
-                    class="flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors">
-                    <lucide-icon [name]="icons.BookOpen" class="w-4 h-4"></lucide-icon> Validation Cours
+                    [ngClass]="activeTab() === 'courses' ? 'border-lotus text-lotus' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-ds-muted/70 dark:hover:text-ds-muted'"
+                    class="flex items-center gap-2 py-4 px-1 border-b-2 font-mono text-[11px] uppercase tracking-widest font-bold transition-colors">
+                    <lucide-icon [name]="icons.BookOpen" class="w-4 h-4"></lucide-icon> {{
+                    'ADMIN_DASHBOARD.TABS.COURSES' | translate }}
                 </button>
                 <button (click)="activeTab.set('instructors')"
-                    [ngClass]="activeTab() === 'instructors' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'"
-                    class="flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors">
-                    <lucide-icon [name]="icons.UserCheck" class="w-4 h-4"></lucide-icon> Instructeurs
+                    [ngClass]="activeTab() === 'instructors' ? 'border-lotus text-lotus' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-ds-muted/70 dark:hover:text-ds-muted'"
+                    class="flex items-center gap-2 py-4 px-1 border-b-2 font-mono text-[11px] uppercase tracking-widest font-bold transition-colors">
+                    <lucide-icon [name]="icons.UserCheck" class="w-4 h-4"></lucide-icon> {{
+                    'ADMIN_DASHBOARD.TABS.INSTRUCTORS' | translate }}
                 </button>
                 <button (click)="activeTab.set('categories')"
-                    [ngClass]="activeTab() === 'categories' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'"
-                    class="flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors">
-                    <lucide-icon [name]="icons.FolderPlus" class="w-4 h-4"></lucide-icon> Catégories
+                    [ngClass]="activeTab() === 'categories' ? 'border-lotus text-lotus' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-ds-muted/70 dark:hover:text-ds-muted'"
+                    class="flex items-center gap-2 py-4 px-1 border-b-2 font-mono text-[11px] uppercase tracking-widest font-bold transition-colors">
+                    <lucide-icon [name]="icons.FolderPlus" class="w-4 h-4"></lucide-icon> {{
+                    'ADMIN_DASHBOARD.TABS.CATEGORIES' | translate }}
                 </button>
             </nav>
         </div>
 
         <div class="p-6">
             @if (isLoading()) {
-            <div class="flex justify-center py-12">
-                <div class="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+            <div class="flex justify-center py-16">
+                <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin"></lucide-icon>
             </div>
             } @else {
 
             @if (activeTab() === 'overview') {
-            <div class="text-center py-12 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl">
+            <div
+                class="text-center py-16 border border-dashed border-slate-200 dark:border-ds-border rounded bg-slate-50/50 dark:bg-ds-black/30">
                 <lucide-icon [name]="icons.LayoutDashboard"
-                    class="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-4"></lucide-icon>
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Bienvenue sur l'interface
-                    d'administration</h3>
-                <p class="text-slate-500 dark:text-slate-400">Utilisez les onglets ci-dessus pour gérer la plateforme
-                    Lotus Academy.</p>
+                    class="w-10 h-10 text-slate-300 dark:text-ds-muted/30 mx-auto mb-4 stroke-[1.5px]"></lucide-icon>
+                <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">{{
+                    'ADMIN_DASHBOARD.OVERVIEW.TITLE' | translate }}</h3>
+                <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70">{{ 'ADMIN_DASHBOARD.OVERVIEW.DESC' |
+                    translate }}</p>
             </div>
             }
 
             @if (activeTab() === 'courses') {
             <div class="space-y-4">
-
-                <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">Validation des Cours</h2>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <h2 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white">{{
+                        'ADMIN_DASHBOARD.COURSES.TITLE' | translate }}</h2>
                     <div class="relative w-full sm:w-64">
                         <lucide-icon [name]="icons.Search"
-                            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></lucide-icon>
+                            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 stroke-[1.5px]"></lucide-icon>
                         <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
-                            placeholder="Rechercher un cours..."
-                            class="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white transition-colors">
+                            [placeholder]="'ADMIN_DASHBOARD.COURSES.SEARCH' | translate"
+                            class="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors">
                     </div>
                 </div>
 
                 <div
-                    class="divide-y divide-slate-100 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+                    class="border border-slate-200 dark:border-ds-border rounded bg-white dark:bg-ds-black overflow-hidden shadow-sm">
                     @for (course of filteredCourses(); track course.id) {
                     <div
-                        class="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                        class="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-ds-border/50 last:border-0 hover:bg-slate-50 dark:hover:bg-ds-border/30 transition-colors">
 
-                        <div class="flex items-start gap-4 flex-1">
+                        <div class="flex items-center gap-4 flex-1">
                             <div
-                                class="w-16 h-12 rounded bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center shrink-0 overflow-hidden">
+                                class="w-16 h-12 rounded bg-slate-100 dark:bg-ds-surface flex items-center justify-center shrink-0 overflow-hidden border border-slate-200 dark:border-ds-border/50">
                                 @if (course.thumbnailUrl) {
                                 <img [src]="course.thumbnailUrl" class="w-full h-full object-cover">
                                 } @else {
                                 <lucide-icon [name]="icons.BookOpen"
-                                    class="w-6 h-6 text-indigo-600 dark:text-indigo-400"></lucide-icon>
+                                    class="w-5 h-5 text-slate-300 dark:text-ds-muted/50 stroke-[1.5px]"></lucide-icon>
                                 }
                             </div>
                             <div>
-                                <h4 class="font-bold text-slate-900 dark:text-white line-clamp-1">{{ course.title }}
-                                </h4>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                                    Par <span class="font-medium text-slate-700 dark:text-slate-300">{{
-                                        course.instructorName }}</span> • {{ course.categoryName }} • {{
-                                    course.createdAt | date:'dd/MM/yyyy' }}
+                                <h4 class="font-syne font-bold text-sm text-slate-900 dark:text-white line-clamp-1">{{
+                                    course.title }}</h4>
+                                <p
+                                    class="font-mono text-[9px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/50 mt-1.5">
+                                    {{ 'ADMIN_DASHBOARD.COURSES.BY' | translate }} <span
+                                        class="text-slate-700 dark:text-ds-muted font-bold">{{ course.instructorName
+                                        }}</span> • {{ course.categoryName }}
                                 </p>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-
+                        <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end shrink-0">
                             @if (course.status === 'PENDING_REVIEW') {
                             <span
-                                class="px-2.5 py-1 text-xs font-bold rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800">En
-                                attente</span>
+                                class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-yellow-500/10 text-yellow-600 border border-yellow-500/20 dark:text-yellow-500">{{
+                                'ADMIN_DASHBOARD.COURSES.STATUS_PENDING' | translate }}</span>
 
                             <div class="flex items-center gap-2">
-                                <button
-                                    class="p-2 text-slate-400 hover:text-indigo-600 transition-colors bg-white dark:bg-slate-800 rounded shadow-sm border dark:border-slate-700"
-                                    title="Voir les détails">
-                                    <lucide-icon [name]="icons.Eye" class="w-4 h-4"></lucide-icon>
-                                </button>
-
                                 <button [disabled]="isProcessing(course.id)" (click)="approveCourse(course.id)"
-                                    class="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors bg-white dark:bg-slate-800 rounded shadow-sm border dark:border-slate-700 disabled:opacity-50"
+                                    class="p-2 text-green hover:bg-green/10 transition-colors bg-white dark:bg-ds-surface rounded border dark:border-ds-border disabled:opacity-50"
                                     title="Approuver">
                                     @if (isProcessing(course.id)) {
-                                    <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
+                                    <lucide-icon [name]="icons.Loader2"
+                                        class="w-4 h-4 animate-spin stroke-[2px]"></lucide-icon>
                                     } @else {
-                                    <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4"></lucide-icon>
+                                    <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4 stroke-[2px]"></lucide-icon>
                                     }
                                 </button>
-
                                 <button [disabled]="isProcessing(course.id)" (click)="rejectCourse(course.id)"
-                                    class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors bg-white dark:bg-slate-800 rounded shadow-sm border dark:border-slate-700 disabled:opacity-50"
+                                    class="p-2 text-red-500 hover:bg-red-500/10 transition-colors bg-white dark:bg-ds-surface rounded border dark:border-ds-border disabled:opacity-50"
                                     title="Rejeter">
                                     @if (isProcessing(course.id)) {
-                                    <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
+                                    <lucide-icon [name]="icons.Loader2"
+                                        class="w-4 h-4 animate-spin stroke-[2px]"></lucide-icon>
                                     } @else {
-                                    <lucide-icon [name]="icons.XCircle" class="w-4 h-4"></lucide-icon>
+                                    <lucide-icon [name]="icons.XCircle" class="w-4 h-4 stroke-[2px]"></lucide-icon>
                                     }
                                 </button>
                             </div>
-
                             } @else if (course.status === 'APPROVED') {
                             <span
-                                class="px-2.5 py-1 text-xs font-bold rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800 flex items-center gap-1">
-                                <lucide-icon [name]="icons.CheckCircle" class="w-3.5 h-3.5"></lucide-icon> Approuvé
+                                class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-green/10 text-green border border-green/20 flex items-center gap-1">
+                                <lucide-icon [name]="icons.CheckCircle" class="w-3 h-3"></lucide-icon> {{
+                                'ADMIN_DASHBOARD.COURSES.STATUS_APPROVED' | translate }}
                             </span>
                             } @else if (course.status === 'REJECTED') {
                             <span
-                                class="px-2.5 py-1 text-xs font-bold rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800">Rejeté</span>
+                                class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-red-500/10 text-red-500 border border-red-500/20">{{
+                                'ADMIN_DASHBOARD.COURSES.STATUS_REJECTED' | translate }}</span>
                             } @else {
                             <span
-                                class="px-2.5 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">Brouillon</span>
+                                class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-slate-100 text-slate-600 border border-slate-200 dark:bg-ds-border/50 dark:text-ds-muted dark:border-ds-border">{{
+                                'ADMIN_DASHBOARD.COURSES.STATUS_DRAFT' | translate }}</span>
                             }
-
                         </div>
                     </div>
                     }
 
                     @if (filteredCourses().length === 0) {
-                    <div class="p-8 text-center text-slate-500 dark:text-slate-400">Aucun cours trouvé.</div>
+                    <div class="p-8 text-center font-syne text-sm text-slate-500 dark:text-ds-muted/70">{{
+                        'ADMIN_DASHBOARD.COURSES.EMPTY' | translate }}</div>
                     }
                 </div>
             </div>
@@ -163,32 +167,66 @@
 
             @if (activeTab() === 'instructors') {
             <div class="space-y-4">
-                <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Utilisateurs Instructeurs</h2>
+                <h2 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-6">{{
+                    'ADMIN_DASHBOARD.INSTRUCTORS.TITLE' | translate }}</h2>
 
                 <div class="grid gap-4 md:grid-cols-2">
-                    @for (instructor of instructors(); track instructor.id) {
+                    @for (instructor of instructors(); track instructor.profileId) {
                     <div
-                        class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20 flex items-center justify-between">
+                        class="p-5 rounded border border-slate-200 dark:border-ds-border bg-white dark:bg-ds-black flex flex-col justify-between shadow-sm">
 
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold uppercase">
-                                {{ instructor.firstName.charAt(0) }}{{ instructor.lastName.charAt(0) }}
+                        <div
+                            class="flex items-center gap-4 mb-4 border-b border-slate-100 dark:border-ds-border/50 pb-4">
+                            <div class="w-12 h-12 rounded-full border border-lotus p-0.5 shrink-0">
+                                <div
+                                    class="w-full h-full rounded-full bg-slate-100 dark:bg-ds-surface flex items-center justify-center text-lotus font-cormorant font-bold text-xl overflow-hidden">
+                                    @if (instructor.profilePictureUrl) {
+                                    <img [src]="instructor.profilePictureUrl" class="w-full h-full object-cover">
+                                    } @else {
+                                    {{ instructor.firstName.charAt(0) }}{{ instructor.lastName.charAt(0) }}
+                                    }
+                                </div>
                             </div>
                             <div>
-                                <p class="font-bold text-slate-900 dark:text-white text-sm">{{ instructor.firstName }}
-                                    {{ instructor.lastName }}</p>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">{{ instructor.email }}</p>
+                                <p class="font-syne font-bold text-slate-900 dark:text-white text-sm">{{
+                                    instructor.firstName }} {{ instructor.lastName }}</p>
+                                <p
+                                    class="font-mono text-[9px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/70 mt-1">
+                                    {{ instructor.email }}</p>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold px-2.5 py-1 rounded-full"
-                                [ngClass]="instructor.status === 'ACTIVE' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'">
-                                {{ instructor.status }}
+                        <div class="flex items-center justify-between mt-auto">
+                            <span class="text-[9px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded"
+                                [ngClass]="{
+                                    'bg-green/10 text-green border border-green/20': instructor.approvalStatus === 'APPROVED',
+                                    'bg-yellow-500/10 text-yellow-600 border border-yellow-500/20 dark:text-yellow-500': instructor.approvalStatus === 'PENDING',
+                                    'bg-red-500/10 text-red-500 border border-red-500/20': instructor.approvalStatus === 'REJECTED'
+                                }">
+                                {{ instructor.approvalStatus }}
                             </span>
+
+                            @if (instructor.approvalStatus === 'PENDING') {
+                            <div class="flex gap-2">
+                                <button [disabled]="isProcessing(instructor.profileId)"
+                                    (click)="approveInstructor(instructor.profileId)"
+                                    class="px-3 py-1.5 text-[9px] font-mono uppercase tracking-widest font-bold text-green bg-green/5 border border-green/20 hover:bg-green/10 rounded transition-colors disabled:opacity-50">
+                                    {{ 'ADMIN_DASHBOARD.INSTRUCTORS.BTN_APPROVE' | translate }}
+                                </button>
+                                <button [disabled]="isProcessing(instructor.profileId)"
+                                    (click)="rejectInstructor(instructor.profileId)"
+                                    class="px-3 py-1.5 text-[9px] font-mono uppercase tracking-widest font-bold text-red-500 bg-red-500/5 border border-red-500/20 hover:bg-red-500/10 rounded transition-colors disabled:opacity-50">
+                                    {{ 'ADMIN_DASHBOARD.INSTRUCTORS.BTN_REJECT' | translate }}
+                                </button>
+                            </div>
+                            }
                         </div>
                     </div>
+                    }
+
+                    @if (instructors().length === 0) {
+                    <div class="col-span-full p-8 text-center font-syne text-sm text-slate-500 dark:text-ds-muted/70">{{
+                        'ADMIN_DASHBOARD.INSTRUCTORS.EMPTY' | translate }}</div>
                     }
                 </div>
             </div>
@@ -196,29 +234,27 @@
 
             @if (activeTab() === 'categories') {
             <div class="space-y-4">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">Gestion des Catégories</h2>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <h2 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white">{{
+                        'ADMIN_DASHBOARD.CATEGORIES.TITLE' | translate }}</h2>
                     <button (click)="openCategoryModal()"
-                        class="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
-                        <lucide-icon [name]="icons.FolderPlus" class="w-4 h-4"></lucide-icon> Ajouter
+                        class="flex items-center gap-2 px-5 py-2.5 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-[0.12em] font-bold rounded hover:bg-lotus-light transition-colors shadow-sm">
+                        <lucide-icon [name]="icons.FolderPlus" class="w-4 h-4"></lucide-icon> {{
+                        'ADMIN_DASHBOARD.CATEGORIES.BTN_ADD' | translate }}
                     </button>
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @for (category of categories(); track category.id) {
                     <div
-                        class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group h-full bg-white dark:bg-slate-800">
+                        class="p-5 rounded border border-slate-200 dark:border-ds-border flex flex-col justify-between hover:border-lotus/50 transition-colors group h-full bg-white dark:bg-ds-black shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
-                                <p class="font-bold text-slate-900 dark:text-white">{{ category.name }}</p>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">
-                                    {{ category.description || 'Aucune description fournie.' }}
+                                <p class="font-syne font-bold text-slate-900 dark:text-white">{{ category.name }}</p>
+                                <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 mt-2 line-clamp-2">
+                                    {{ category.description || ('ADMIN_DASHBOARD.CATEGORIES.NO_DESC' | translate) }}
                                 </p>
                             </div>
-                            <button
-                                class="p-2 -mt-2 -mr-2 text-slate-400 opacity-0 group-hover:opacity-100 transition-all hover:text-indigo-600">
-                                <lucide-icon [name]="icons.Pencil" class="w-4 h-4"></lucide-icon>
-                            </button>
                         </div>
                     </div>
                     }
@@ -233,66 +269,54 @@
 
 @if (isCategoryModalOpen()) {
 <div
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm transition-opacity">
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm transition-opacity">
     <div
-        class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-fade-in-up border border-slate-200 dark:border-slate-800">
+        class="bg-white dark:bg-ds-surface rounded w-full max-w-md shadow-2xl overflow-hidden animate-fade-in-up border border-slate-200 dark:border-ds-border">
 
-        <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
-            <h3 class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
-                <lucide-icon [name]="icons.FolderPlus"
-                    class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></lucide-icon>
-                Nouvelle Catégorie
+        <div
+            class="flex items-center justify-between p-5 border-b border-slate-200 dark:border-ds-border bg-slate-50 dark:bg-ds-black">
+            <h3 class="font-cormorant text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                <lucide-icon [name]="icons.FolderPlus" class="w-5 h-5 text-lotus"></lucide-icon>
+                {{ 'ADMIN_DASHBOARD.CATEGORIES.MODAL_TITLE' | translate }}
             </h3>
-            <button (click)="closeCategoryModal()"
-                class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+            <button (click)="closeCategoryModal()" class="text-slate-400 hover:text-red-500 transition-colors">
                 <lucide-icon [name]="icons.X" class="w-5 h-5"></lucide-icon>
             </button>
         </div>
 
         <form [formGroup]="categoryForm" (ngSubmit)="submitCategory()">
-            <div class="p-6 space-y-4">
-
+            <div class="p-6 space-y-5">
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nom de la catégorie
-                        *</label>
-                    <input type="text" formControlName="name" placeholder="Ex: Développement Web"
-                        class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white transition-colors"
-                        [ngClass]="{'border-red-500 focus:ring-red-500': categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched}">
-
-                    @if (categoryForm.get('name')?.hasError('required') && categoryForm.get('name')?.touched) {
-                    <p class="text-xs text-red-500 mt-1.5">Ce champ est requis.</p>
-                    }
-                    @if (categoryForm.get('name')?.hasError('minlength') && categoryForm.get('name')?.touched) {
-                    <p class="text-xs text-red-500 mt-1.5">Le nom doit faire au moins 3 caractères.</p>
-                    }
+                    <label
+                        class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">{{
+                        'ADMIN_DASHBOARD.CATEGORIES.FORM_NAME' | translate }}</label>
+                    <input type="text" formControlName="name"
+                        class="w-full px-4 py-3 bg-white dark:bg-ds-black border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors"
+                        [ngClass]="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched ? 'border-red-500' : 'border-slate-300 dark:border-ds-border'">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Description
-                        (Optionnel)</label>
-                    <textarea formControlName="description" rows="3" placeholder="Description courte de la catégorie..."
-                        class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white transition-colors resize-none"></textarea>
-
-                    @if (categoryForm.get('description')?.hasError('maxlength') &&
-                    categoryForm.get('description')?.touched) {
-                    <p class="text-xs text-red-500 mt-1.5">La description ne peut excéder 255 caractères.</p>
-                    }
+                    <label
+                        class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">{{
+                        'ADMIN_DASHBOARD.CATEGORIES.FORM_DESC' | translate }}</label>
+                    <textarea formControlName="description" rows="3"
+                        class="w-full px-4 py-3 bg-white dark:bg-ds-black border border-slate-300 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors resize-none"></textarea>
                 </div>
             </div>
 
             <div
-                class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex justify-end gap-3">
+                class="p-5 border-t border-slate-200 dark:border-ds-border bg-slate-50 dark:bg-ds-black flex justify-end gap-4">
                 <button type="button" (click)="closeCategoryModal()"
-                    class="px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors">
-                    Annuler
+                    class="px-5 py-2.5 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted hover:bg-slate-200 dark:hover:bg-ds-border/50 rounded transition-colors">
+                    {{ 'ADMIN_DASHBOARD.CATEGORIES.BTN_CANCEL' | translate }}
                 </button>
                 <button type="submit" [disabled]="categoryForm.invalid || isSavingCategory()"
-                    class="px-4 py-2 text-sm font-bold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center gap-2">
+                    class="px-6 py-2.5 font-mono text-[11px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded hover:bg-lotus-light disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm">
                     @if (isSavingCategory()) {
                     <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
-                    Création...
+                    {{ 'ADMIN_DASHBOARD.CATEGORIES.BTN_LOADING' | translate }}
                     } @else {
-                    Créer la catégorie
+                    {{ 'ADMIN_DASHBOARD.CATEGORIES.BTN_CREATE' | translate }}
                     }
                 </button>
             </div>

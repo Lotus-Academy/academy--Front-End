@@ -46,7 +46,7 @@ export class AdminAnalyticsComponent implements OnInit {
       },
       {
         title: 'Utilisateurs Actifs',
-        value: data?.totalUsers || 0,
+        value: data?.totalStudents || 0,
         isCurrency: false,
         icon: this.icons.Users,
         color: 'text-blue-600 dark:text-blue-400',

@@ -7,7 +7,7 @@
         <lucide-icon [name]="icons.Loader2" class="w-10 h-10 text-lotus animate-spin"></lucide-icon>
     </div>
     } @else if (course(); as data) {
-    <main class="flex-1">
+    <main class="flex-1 relative">
 
         <section class="bg-ds-black text-white py-12 md:py-20 relative border-b border-ds-border">
             @if (data.thumbnailUrl) {
@@ -25,10 +25,12 @@
                         <span class="text-lotus">{{ data.categoryName }}</span>
                     </div>
 
-                    <h1 class="font-cormorant text-4xl md:text-6xl font-bold leading-[1.1] mb-6 text-white">{{
-                        data.title }}</h1>
-                    <p class="font-syne text-lg text-ds-muted mb-8 leading-relaxed line-clamp-3">{{ data.subtitle ||
-                        data.description }}</p>
+                    <h1 class="font-cormorant text-4xl md:text-6xl font-bold leading-[1.1] mb-6 text-white">
+                        {{ data.title }}
+                    </h1>
+                    <p class="font-syne text-lg text-ds-muted mb-8 leading-relaxed line-clamp-3">
+                        {{ data.subtitle || data.description }}
+                    </p>
 
                     <div class="flex flex-wrap items-center gap-6 font-mono text-[11px] uppercase tracking-wider">
                         <div class="flex items-center gap-3">
@@ -60,8 +62,9 @@
                     <div class="flex-1 lg:max-w-[calc(100%-420px)] space-y-16">
 
                         <div>
-                            <h2 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-6">{{
-                                'COURSE_DETAIL.ABOUT_COURSE' | translate }}</h2>
+                            <h2 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-6">
+                                {{ 'COURSE_DETAIL.ABOUT_COURSE' | translate }}
+                            </h2>
                             <div class="font-syne text-slate-600 dark:text-ds-muted/90 leading-loose space-y-4">
                                 <p>{{ data.description }}</p>
                             </div>
@@ -69,8 +72,9 @@
 
                         <div
                             class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border p-6 sm:p-8 rounded shadow-sm">
-                            <h2 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-6">{{
-                                'COURSE_DETAIL.ABOUT_INSTRUCTOR' | translate }}</h2>
+                            <h2 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-6">
+                                {{ 'COURSE_DETAIL.ABOUT_INSTRUCTOR' | translate }}
+                            </h2>
                             <div class="flex flex-col sm:flex-row gap-6 items-start">
                                 <div class="w-24 h-24 rounded-full border-2 border-lotus p-1 shrink-0">
                                     <div
@@ -88,8 +92,9 @@
                                         class="font-syne text-xl font-bold text-slate-900 dark:text-white hover:text-lotus transition-colors">
                                         {{ data.instructorName }}
                                     </a>
-                                    <p class="font-mono text-[10px] uppercase tracking-widest text-lotus mt-1.5 mb-4">{{
-                                        data.instructorHeadline || 'Expert Formateur' }}</p>
+                                    <p class="font-mono text-[10px] uppercase tracking-widest text-lotus mt-1.5 mb-4">
+                                        {{ data.instructorHeadline || 'Expert Formateur' }}
+                                    </p>
 
                                     <a [routerLink]="['/instructor/profile', data.instructorId]"
                                         class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted hover:text-lotus dark:hover:text-lotus transition-colors">
@@ -102,12 +107,14 @@
 
                         <div>
                             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
-                                <h2 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white">{{
-                                    'COURSE_DETAIL.CURRICULUM_TITLE' | translate }}</h2>
+                                <h2 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white">
+                                    {{ 'COURSE_DETAIL.CURRICULUM_TITLE' | translate }}
+                                </h2>
                                 <div
                                     class="font-mono text-[10px] uppercase tracking-wider font-bold text-slate-500 dark:text-ds-muted/70 pb-1">
-                                    {{ totalSections() }} {{ 'COURSE_DETAIL.SECTIONS' | translate }} • {{ totalLessons()
-                                    }} {{ 'COURSE_DETAIL.LESSONS' | translate }} • {{ formatDuration(totalDuration()) }}
+                                    {{ totalSections() }} {{ 'COURSE_DETAIL.SECTIONS' | translate }} •
+                                    {{ totalLessons() }} {{ 'COURSE_DETAIL.LESSONS' | translate }} •
+                                    {{ formatDuration(totalDuration()) }}
                                 </div>
                             </div>
 
@@ -122,9 +129,9 @@
                                             <lucide-icon
                                                 [name]="isSectionExpanded(section.id) ? icons.ChevronUp : icons.ChevronDown"
                                                 class="w-4 h-4 text-slate-400 group-hover:text-lotus transition-colors"></lucide-icon>
-                                            <span
-                                                class="font-syne font-bold text-slate-900 dark:text-white text-left">{{
-                                                section.title }}</span>
+                                            <span class="font-syne font-bold text-slate-900 dark:text-white text-left">
+                                                {{ section.title }}
+                                            </span>
                                         </div>
                                         <span
                                             class="font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/50 hidden sm:block">
@@ -177,12 +184,14 @@
                         <div
                             class="sticky top-24 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-xl overflow-hidden">
 
-                            <div
+                            <div (click)="openTrailer()"
                                 class="relative aspect-video bg-slate-100 dark:bg-ds-black cursor-pointer group border-b border-slate-200 dark:border-ds-border">
                                 @if (data.thumbnailUrl) {
                                 <img [src]="data.thumbnailUrl"
                                     class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity">
                                 }
+
+                                @if (data.trailerUrl) {
                                 <div
                                     class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors backdrop-blur-[1px]">
                                     <div
@@ -191,6 +200,7 @@
                                             class="w-6 h-6 text-lotus ml-1 stroke-[1.5px]"></lucide-icon>
                                     </div>
                                 </div>
+                                }
                             </div>
 
                             <div class="p-8">
@@ -212,22 +222,28 @@
                                 <div>
                                     <h3
                                         class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-900 dark:text-white mb-4">
-                                        {{ 'COURSE_DETAIL.COURSE_INCLUDES' | translate }}</h3>
+                                        {{ 'COURSE_DETAIL.COURSE_INCLUDES' | translate }}
+                                    </h3>
                                     <ul class="space-y-4">
                                         <li
                                             class="flex items-start gap-3 font-syne text-sm text-slate-600 dark:text-ds-muted">
                                             <lucide-icon [name]="icons.MonitorPlay"
                                                 class="w-4 h-4 text-lotus shrink-0 mt-0.5"></lucide-icon>
-                                            <span><strong class="text-slate-900 dark:text-white">{{
-                                                    formatDuration(totalDuration()) }}</strong> {{
-                                                'COURSE_DETAIL.VIDEO_HOURS' | translate }}</span>
+                                            <span>
+                                                <strong class="text-slate-900 dark:text-white">{{
+                                                    formatDuration(totalDuration()) }}</strong>
+                                                {{ 'COURSE_DETAIL.VIDEO_HOURS' | translate }}
+                                            </span>
                                         </li>
                                         <li
                                             class="flex items-start gap-3 font-syne text-sm text-slate-600 dark:text-ds-muted">
                                             <lucide-icon [name]="icons.BookOpen"
                                                 class="w-4 h-4 text-lotus shrink-0 mt-0.5"></lucide-icon>
-                                            <span><strong class="text-slate-900 dark:text-white">{{ totalLessons()
-                                                    }}</strong> {{ 'COURSE_DETAIL.LESSONS' | translate }}</span>
+                                            <span>
+                                                <strong class="text-slate-900 dark:text-white">{{ totalLessons()
+                                                    }}</strong>
+                                                {{ 'COURSE_DETAIL.LESSONS' | translate }}
+                                            </span>
                                         </li>
                                         <li
                                             class="flex items-start gap-3 font-syne text-sm text-slate-600 dark:text-ds-muted">
@@ -244,6 +260,27 @@
                 </div>
             </div>
         </section>
+
+        @if (isPlayingTrailer() && data.trailerUrl) {
+        <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 sm:p-8 animate-fade-in">
+
+            <button (click)="closeTrailer()"
+                class="absolute top-6 right-6 text-ds-muted hover:text-lotus transition-colors z-50 p-2">
+                <lucide-icon [name]="icons.X" class="w-8 h-8 stroke-[1.5px]"></lucide-icon>
+            </button>
+
+            <div
+                class="w-full max-w-5xl aspect-video bg-black rounded overflow-hidden shadow-2xl relative border border-ds-border/50 animate-fade-in-up">
+                <video [src]="data.trailerUrl" controls autoplay controlsList="nodownload" oncontextmenu="return false;"
+                    class="w-full h-full object-contain outline-none">
+                    Votre navigateur ne supporte pas la balise vidéo.
+                </video>
+            </div>
+
+            <div class="absolute inset-0 z-[-1]" (click)="closeTrailer()"></div>
+        </div>
+        }
+
     </main>
     }
 

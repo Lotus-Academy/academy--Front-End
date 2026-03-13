@@ -35,7 +35,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-                    @for (instructor of filteredInstructors(); track instructor.id) {
+                    @for (instructor of filteredInstructors(); track instructor.userId) {
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                         <td class="px-6 py-4 flex items-center gap-3">
                             <div
@@ -50,12 +50,12 @@
                         </td>
                         <td class="px-6 py-4">
                             <span class="px-2.5 py-1 text-xs font-bold rounded-full"
-                                [ngClass]="instructor.status === 'ACTIVE' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-slate-100 text-slate-700 border border-slate-200'">
-                                {{ instructor.status }}
+                                [ngClass]="instructor.approvalStatus === 'APPROVED' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-slate-100 text-slate-700 border border-slate-200'">
+                                {{ instructor.approvalStatus }}
                             </span>
                         </td>
                         <td class="px-6 py-4 font-medium">
-                            {{ instructor.createdAt | date:'dd MMM yyyy' }}
+                            {{ instructor.registeredAt| date:'dd MMM yyyy' }}
                         </td>
                         <td class="px-6 py-4 text-right flex justify-end gap-2">
                             <button
