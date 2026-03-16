@@ -38,4 +38,28 @@ export class QuizService {
   deleteQuiz(courseId: string): Observable<string> {
     return this.http.delete(`${this.apiUrl}/courses/${courseId}/quiz`, { responseType: 'text' });
   }
+
+  /**
+   * Récupère le quiz pour un étudiant (sans les bonnes réponses)
+   * Endpoint: GET /api/v1/courses/{courseId}/quiz
+   */
+  getQuiz(courseId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/courses/${courseId}/quiz`);
+  }
+
+  /**
+   * Soumet les réponses de l'étudiant pour correction
+   * Endpoint: POST /api/v1/courses/{courseId}/quiz/submit
+   */
+  submitQuiz(courseId: string, payload: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/courses/${courseId}/quiz/submit`, payload);
+  }
+
+  /**
+   * Télécharge le certificat PDF de l'étudiant
+   * Endpoint: GET /api/v1/courses/{courseId}/quiz/certificate
+   */
+  downloadCertificate(courseId: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/courses/${courseId}/quiz/certificate`, { responseType: 'blob' });
+  }
 }

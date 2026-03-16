@@ -22,7 +22,7 @@ export interface SidebarLink {
 export const INSTRUCTOR_SIDEBAR_LINKS: SidebarLink[] = [
     {
         labelKey: 'SIDEBAR.INSTRUCTOR.DASHBOARD',
-        href: '/instructor/dashboard',
+        href: '/dashboard',
         icon: LayoutDashboard,
         requiresApproval: true
     },

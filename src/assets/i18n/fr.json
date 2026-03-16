@@ -460,23 +460,22 @@
     },
     "STUDENT_DASHBOARD": {
         "CONTINUE": {
-            "TITLE": "Continuer à regarder",
-            "VIEW_ALL": "Voir tout",
-            "CURRENT_LESSON": "Leçon actuelle :",
-            "COMPLETED": "complété"
+            "TITLE": "Reprendre la lecture",
+            "VIEW_ALL": "Tout voir",
+            "CURRENT_LESSON": "Leçon en cours :",
+            "COMPLETED": "Terminé"
         },
         "SEARCH": {
-            "PLACEHOLDER": "Rechercher un cours ou un instructeur...",
+            "PLACEHOLDER": "Rechercher dans mes cours...",
             "ALL_CATEGORIES": "Toutes les catégories"
         },
-        "FOLLOWING": {
-            "TITLE": "Instructeurs que vous suivez"
+        "MY_COURSES": {
+            "TITLE": "Mes Cours"
         },
         "DISCOVER": {
-            "TITLE_NEW": "Découvrir de nouveaux cours",
-            "TITLE_SEARCH": "Résultats de recherche",
             "EMPTY_TITLE": "Aucun cours trouvé",
-            "EMPTY_DESC": "Essayez de modifier vos filtres de recherche ou parcourez une autre catégorie."
+            "EMPTY_DESC": "Vous n'êtes inscrit à aucun cours correspondant à votre recherche.",
+            "CATALOG_BTN": "Explorer le catalogue"
         }
     },
     "COURSE_CARD": {
@@ -630,5 +629,36 @@
             "BTN_CREATE": "Créer la catégorie",
             "BTN_LOADING": "Création..."
         }
+    },
+    "PLAYER": {
+        "BACK_DASHBOARD": "Retour au tableau de bord",
+        "LOADING": "Chargement...",
+        "COMPLETED": "Terminé",
+        "MEDIA_UNAVAILABLE": "Média indisponible",
+        "MEDIA_UNAVAILABLE_DESC": "Le fichier vidéo de cette leçon n'a pas encore été traité ou n'existe pas.",
+        "NO_DESC": "Aucune description fournie pour cette leçon.",
+        "BTN_NEXT": "Leçon suivante",
+        "BTN_COMPLETE": "Terminer et continuer",
+        "COURSE_CONTENT": "Contenu du cours",
+        "SECTION": "Section",
+        "QUIZ_TITLE": "Quiz de Validation",
+        "QUIZ_DESC": "Obtenez votre certificat"
+    },
+    "STUDENT_QUIZ": {
+        "TITLE": "Quiz de Validation",
+        "DESC": "Répondez aux questions ci-dessous pour valider vos acquis. Prenez votre temps.",
+        "PASSING_SCORE": "Score minimum requis :",
+        "QUESTION": "Question",
+        "BTN_SUBMIT": "Soumettre mes réponses",
+        "BTN_SUBMITTING": "Correction en cours...",
+        "RESULT_TITLE": "Résultat de l'évaluation",
+        "SCORE": "Votre score",
+        "PASSED": "Félicitations ! Vous avez validé ce cours avec succès.",
+        "FAILED": "Vous n'avez pas atteint le score requis pour obtenir le certificat.",
+        "BTN_RETRY": "Réessayer le quiz",
+        "BTN_CERTIFICATE": "Télécharger mon certificat",
+        "BACK_COURSE": "Retour au lecteur",
+        "ERROR_MISSING": "Veuillez répondre à toutes les questions avant de soumettre.",
+        "ERROR_GENERIC": "Une erreur est survenue lors de la correction."
     }
 }

@@ -13,7 +13,7 @@ import {
 export const STUDENT_SIDEBAR_LINKS = [
     {
         labelKey: 'SIDEBAR.STUDENT.DASHBOARD',
-        href: '/student/dashboard',
+        href: '/dashboard',
         icon: LayoutDashboard,
         requiresApproval: false
     },

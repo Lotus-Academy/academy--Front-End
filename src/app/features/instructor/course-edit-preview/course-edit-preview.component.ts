@@ -13,7 +13,7 @@ import {
   Loader2
 } from 'lucide-angular';
 
-import { CourseService } from '../../../core/services/course-service';
+import { CourseService } from '../../../core/services/course.service';
 import { CourseResponseDTO } from '../../../core/models/course.dto';
 import { CourseCardComponent } from '../../../shared/components/course-card/course-card-component'; // Ajustez le chemin si nécessaire
 

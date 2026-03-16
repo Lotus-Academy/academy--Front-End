@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule, Image as ImageIcon, DollarSign, Save, Loader2, UploadCloud, Film, CheckCircle } from 'lucide-angular';
 
-import { CourseService } from '../../../core/services/course-service'; // Correction du tiret
+import { CourseService } from '../../../core/services/course.service'; // Correction du tiret
 
 @Component({
   selector: 'app-course-pricing',

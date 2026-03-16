@@ -464,20 +464,19 @@
             "TITLE": "Continue watching",
             "VIEW_ALL": "View all",
             "CURRENT_LESSON": "Current lesson:",
-            "COMPLETED": "completed"
+            "COMPLETED": "Completed"
         },
         "SEARCH": {
-            "PLACEHOLDER": "Search a course or an instructor...",
+            "PLACEHOLDER": "Search my courses...",
             "ALL_CATEGORIES": "All categories"
         },
-        "FOLLOWING": {
-            "TITLE": "Instructors you follow"
+        "MY_COURSES": {
+            "TITLE": "My Courses"
         },
         "DISCOVER": {
-            "TITLE_NEW": "Discover new courses",
-            "TITLE_SEARCH": "Search results",
             "EMPTY_TITLE": "No courses found",
-            "EMPTY_DESC": "Try changing your search filters or browse another category."
+            "EMPTY_DESC": "You are not enrolled in any courses matching your search.",
+            "CATALOG_BTN": "Explore catalog"
         }
     },
     "COURSE_CARD": {
@@ -631,5 +630,36 @@
             "BTN_CREATE": "Create category",
             "BTN_LOADING": "Creating..."
         }
+    },
+    "PLAYER": {
+        "BACK_DASHBOARD": "Back to dashboard",
+        "LOADING": "Loading...",
+        "COMPLETED": "Completed",
+        "MEDIA_UNAVAILABLE": "Media unavailable",
+        "MEDIA_UNAVAILABLE_DESC": "The video file for this lesson has not been processed yet or does not exist.",
+        "NO_DESC": "No description provided for this lesson.",
+        "BTN_NEXT": "Next lesson",
+        "BTN_COMPLETE": "Complete and continue",
+        "COURSE_CONTENT": "Course content",
+        "SECTION": "Section",
+        "QUIZ_TITLE": "Validation Quiz",
+        "QUIZ_DESC": "Earn your certificate"
+    },
+    "STUDENT_QUIZ": {
+        "TITLE": "Validation Quiz",
+        "DESC": "Answer the questions below to validate your knowledge. Take your time.",
+        "PASSING_SCORE": "Passing score required:",
+        "QUESTION": "Question",
+        "BTN_SUBMIT": "Submit my answers",
+        "BTN_SUBMITTING": "Grading in progress...",
+        "RESULT_TITLE": "Assessment Result",
+        "SCORE": "Your score",
+        "PASSED": "Congratulations! You have successfully completed this course.",
+        "FAILED": "You did not reach the required score to get the certificate.",
+        "BTN_RETRY": "Retry quiz",
+        "BTN_CERTIFICATE": "Download my certificate",
+        "BACK_COURSE": "Back to player",
+        "ERROR_MISSING": "Please answer all questions before submitting.",
+        "ERROR_GENERIC": "An error occurred during grading."
     }
 }

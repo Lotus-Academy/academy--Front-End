@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule, ArrowLeft, Save, Loader2 } from 'lucide-angular';
 
-import { CourseService } from '../../../core/services/course-service';
+import { CourseService } from '../../../core/services/course.service';
 import { CategoryDTO } from '../../../core/models/course.dto';
 
 

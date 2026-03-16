@@ -73,7 +73,7 @@ export class InstructorOnboardingComponent implements OnInit { // <-- Implément
       next: (profile: InstructorProfileResponseDTO) => {
         // Si le profil est en cours d'examen ou déjà validé, on l'éjecte d'ici.
         if (profile.approvalStatus === 'APPROVED' || profile.approvalStatus === 'PENDING') {
-          this.router.navigate(['/instructor/dashboard']);
+          this.router.navigate(['/dashboard']);
           return;
         }
 
@@ -179,7 +179,7 @@ export class InstructorOnboardingComponent implements OnInit { // <-- Implément
     request$.subscribe({
       next: () => {
         this.isSubmitting.set(false);
-        this.router.navigate(['/instructor/dashboard']);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.isSubmitting.set(false);

@@ -13,7 +13,7 @@ import {
 export const ADMIN_SIDEBAR_LINKS = [
     {
         labelKey: 'SIDEBAR.ADMIN.DASHBOARD',
-        href: '/admin/dashboard',
+        href: '/dashboard',
         icon: LayoutDashboard,
         requiresApproval: false
     },

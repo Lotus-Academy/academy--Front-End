@@ -6,6 +6,9 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './features/home/home-component/home-component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { InstructorRegisterComponent } from './features/auth/instructor-register/instructor-register.component';
+import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
+import { VerifyEmailComponent } from './features/auth/verify-email/verify-email.component';
 
 // ==========================================
 // IMPORTS : COURS PUBLICS
@@ -14,12 +17,16 @@ import { CourseListComponent } from "./features/courses/course-list/course-list-
 import { CourseDetailComponent } from './features/courses/course-detail/course-detail-component';
 
 // ==========================================
-// IMPORTS : DASHBOARD GÉNÉRAL (Étudiant)
+// IMPORTS : ESPACE ÉTUDIANT (NOUVEAU)
 // ==========================================
 import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { ProfileComponent } from './features/user/profile/profile.component';
+// Assurez-vous que les chemins d'importation correspondent à votre arborescence de dossiers
+import { CoursePlayerComponent } from './features/student/course-player/course-player.component';
+import { StudentQuizComponent } from './features/student/student-quiz/student-quiz.component';
 
 // ==========================================
-// IMPORTS : INSTRUCTEUR
+// IMPORTS : ESPACE INSTRUCTEUR
 // ==========================================
 import { InstructorOnboardingComponent } from './features/instructor/onboarding/onboarding.component';
 import { CourseCreateComponent } from './features/instructor/course-create-component/course-create-component';
@@ -39,12 +46,12 @@ import { AdminInstructorsComponent } from './features/admin/admin-instructors/ad
 import { AdminCategoriesComponent } from './features/admin/admin-categories/admin-categories.component';
 import { AdminAnalyticsComponent } from './features/admin/admin-analytics/admin-analytics.component';
 import { AdminPaymentsComponent } from './features/admin/admin-payments/admin-payments.component';
-import { ProfileComponent } from './features/user/profile/profile.component';
-import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
-import { VerifyEmailComponent } from './features/auth/verify-email/verify-email.component';
-import { instructorApprovedGuard } from './core/guards/instructor-approved.guard-guard';
+
+// ==========================================
+// IMPORTS : GUARDS
+// ==========================================
 import { authGuard } from './core/guards/auth.guard-guard';
+import { instructorApprovedGuard } from './core/guards/instructor-approved.guard-guard';
 
 export const routes: Routes = [
     // --- ROUTES PUBLIQUES ---
@@ -58,41 +65,58 @@ export const routes: Routes = [
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'verify-email', component: VerifyEmailComponent },
-    { path: 'user/profile', component: ProfileComponent, canActivate: [authGuard] },
-    { path: 'instructor/profile', component: ProfileComponent, canActivate: [authGuard] },
-    // Inscription des instructeurs
     { path: 'instructor-register', component: InstructorRegisterComponent },
 
-    // --- DASHBOARD GÉNÉRAL ---
+    // --- DASHBOARD ET PROFIL ---
     { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+    { path: 'user/profile', component: ProfileComponent, canActivate: [authGuard] },
+    { path: 'instructor/profile', component: ProfileComponent, canActivate: [authGuard] },
+
+    // --- NOUVEAU : SALLE DE CLASSE (PLAYER & QUIZ ÉTUDIANT) ---
+    {
+        path: 'player/:id',
+        component: CoursePlayerComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'player/:id/quiz',
+        component: StudentQuizComponent,
+        canActivate: [authGuard]
+    },
 
     // --- ROUTES INSTRUCTEUR ---
-    // Nouvelle route pour le formulaire d'intégration (Onboarding)
-    { path: 'instructor/onboarding', component: InstructorOnboardingComponent, canActivate: [authGuard] },
     {
-        path: 'instructor/courses/new', component: CourseCreateComponent,
+        path: 'instructor/onboarding',
+        component: InstructorOnboardingComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'instructor/courses/new',
+        component: CourseCreateComponent,
         canActivate: [authGuard, instructorApprovedGuard]
     },
     {
         path: 'instructor/courses/:id/edit',
         component: CourseEditorShellComponent,
+        canActivate: [authGuard, instructorApprovedGuard],
         children: [
             { path: 'basic', component: CourseEditBasicComponent },
             { path: 'curriculum', component: CourseCurriculumComponent },
             { path: 'pricing', component: CoursePricingComponent },
             { path: 'quiz', component: CourseQuizComponent },
             { path: 'preview', component: CourseEditPreviewComponent },
-            { path: '', redirectTo: 'basic', pathMatch: 'full' } // Redirection par défaut
+            { path: '', redirectTo: 'basic', pathMatch: 'full' }
         ]
     },
 
     // --- ROUTES ADMINISTRATION ---
-    { path: 'dashboard/users', component: AdminUsersComponent },
-    { path: 'dashboard/videos', component: AdminCoursesComponent },
-    { path: 'dashboard/instructors', component: AdminInstructorsComponent },
-    { path: 'dashboard/categories', component: AdminCategoriesComponent },
-    { path: 'dashboard/analytics', component: AdminAnalyticsComponent },
-    { path: 'dashboard/payments', component: AdminPaymentsComponent },
+    // Ajout du authGuard sur l'administration pour verrouiller l'accès
+    { path: 'dashboard/users', component: AdminUsersComponent, canActivate: [authGuard] },
+    { path: 'dashboard/videos', component: AdminCoursesComponent, canActivate: [authGuard] },
+    { path: 'dashboard/instructors', component: AdminInstructorsComponent, canActivate: [authGuard] },
+    { path: 'dashboard/categories', component: AdminCategoriesComponent, canActivate: [authGuard] },
+    { path: 'dashboard/analytics', component: AdminAnalyticsComponent, canActivate: [authGuard] },
+    { path: 'dashboard/payments', component: AdminPaymentsComponent, canActivate: [authGuard] },
 
     // --- FALLBACK (Page 404) ---
     { path: '**', redirectTo: '' }

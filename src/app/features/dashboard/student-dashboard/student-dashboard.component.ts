@@ -4,57 +4,64 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import {
-  LucideAngularModule,
-  Clock,
-  ChevronRight,
-  Search,
-  Filter,
-  Play,
-  Video,
-  Loader2
+  LucideAngularModule, Clock, ChevronRight, Search, Filter, Play, Video, Loader2, BookOpen
 } from 'lucide-angular';
 
-import { CourseService } from '../../../core/services/course-service';
-import { CourseResponseDTO, PageCourseResponseDTO } from '../../../core/models/course.dto';
-import { CourseCardComponent } from '../../../shared/components/course-card/course-card-component'; // Assurez-vous du chemin exact
+import { CourseService } from '../../../core/services/course.service';
+import { EnrollmentService } from '../../../core/services/enrollment.service';
+import { CategoryDTO } from '../../../core/models/course.dto';
 
-// Interfaces temporaires en attendant l'implémentation complète du StudentService
-export interface FollowedInstructorDTO { id: string; instructorId: string; displayName: string; avatarUrl?: string; }
-export interface CategoryDTO { id: string; name: string; }
+// Interface correspondant exactement à la réponse de votre backend Spring Boot
+export interface EnrollmentDTO {
+  id: string;
+  enrolledAt: string;
+  courseId: string;
+  courseTitle: string;
+  courseThumbnail: string;
+  instructorName: string;
+  progress: number; // Ex: 33.33
+  completed: boolean;
+  lastAccessedAt?: string;
+  categoryId?: string; // Optionnel si le backend l'ajoute plus tard
+}
 
 @Component({
   selector: 'app-student-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, CourseCardComponent, TranslateModule],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, TranslateModule],
   templateUrl: './student-dashboard.component.html'
 })
 export class StudentDashboardComponent implements OnInit {
   private courseService = inject(CourseService);
+  private enrollmentService = inject(EnrollmentService);
 
-  readonly icons = { Clock, ChevronRight, Search, Filter, Play, Video, Loader2 };
+  readonly icons = { Clock, ChevronRight, Search, Filter, Play, Video, Loader2, BookOpen };
 
   isLoading = signal<boolean>(true);
 
-  // Données
-  continueWatching = signal<any[]>([]); // Simulation de la reprise de lecture
-  following = signal<FollowedInstructorDTO[]>([]);
   categories = signal<CategoryDTO[]>([]);
-  availableCourses = signal<CourseResponseDTO[]>([]);
+  myEnrollments = signal<EnrollmentDTO[]>([]);
 
-  // Filtres
   searchQuery = signal<string>('');
   selectedCategory = signal<string>('all');
 
-  filteredCourses = computed(() => {
+  filteredEnrollments = computed(() => {
     const query = this.searchQuery().toLowerCase();
     const category = this.selectedCategory();
 
-    return this.availableCourses().filter(course => {
-      const matchesSearch = course.title.toLowerCase().includes(query) ||
-        (course.instructorName && course.instructorName.toLowerCase().includes(query));
-      const matchesCategory = category === 'all' || course.categoryId === category;
+    return this.myEnrollments().filter(enrollment => {
+      const matchesSearch = (enrollment.courseTitle && enrollment.courseTitle.toLowerCase().includes(query)) ||
+        (enrollment.instructorName && enrollment.instructorName.toLowerCase().includes(query));
+
+      // Note: Si le backend ne renvoie pas categoryId, le filtre par catégorie ne s'appliquera pas.
+      const matchesCategory = category === 'all' || enrollment.categoryId === category;
+
       return matchesSearch && matchesCategory;
     });
+  });
+
+  continueWatching = computed(() => {
+    return this.myEnrollments().filter(e => e.progress > 0 && e.progress < 100);
   });
 
   ngOnInit(): void {
@@ -64,60 +71,25 @@ export class StudentDashboardComponent implements OnInit {
   loadDashboardData(): void {
     this.isLoading.set(true);
 
-    // Récupération des catégories via le CourseService corrigé
     this.courseService.getCategories().subscribe(res => this.categories.set(res));
 
-    // Récupération du catalogue paginé
-    this.courseService.getPublishedCourses(0, 20).subscribe({
-      next: (res: PageCourseResponseDTO) => {
-        this.availableCourses.set(res.content);
-        this.generateMockData(res.content); // Génération de fausses données pour la démo
+    this.enrollmentService.getMyEnrollments().subscribe({
+      next: (res: any) => {
+        const enrollmentsArray = Array.isArray(res) ? res : (res.content || []);
+
+        // On arrondit la progression envoyée par Spring Boot (ex: 33.33 devient 33)
+        const mappedEnrollments = enrollmentsArray.map((e: any) => ({
+          ...e,
+          progress: e.progress ? Math.round(e.progress) : 0
+        }));
+
+        this.myEnrollments.set(mappedEnrollments);
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Erreur lors du chargement des cours', err);
+        console.error('Erreur lors du chargement des inscriptions', err);
         this.isLoading.set(false);
       }
     });
-  }
-
-  /**
-   * Temporaire : Génère des fausses données pour la section "Continuer" 
-   * et "Following" en se basant sur le catalogue existant.
-   */
-  private generateMockData(courses: CourseResponseDTO[]) {
-    if (courses.length > 0) {
-      // Mock Continuer à regarder
-      this.continueWatching.set([
-        {
-          courseId: courses[0].id,
-          courseTitle: courses[0].title,
-          courseThumbnail: courses[0].thumbnailUrl,
-          lastWatchedLessonTitle: 'Introduction aux concepts de base',
-          courseProgressPercentage: 35,
-          lastWatchedTimestamp: 124 // 2:04
-        }
-      ]);
-
-      // Mock Instructeurs suivis
-      const uniqueInstructors = Array.from(new Set(courses.map(c => c.instructorId)))
-        .map(id => {
-          const course = courses.find(c => c.instructorId === id);
-          return {
-            id: id,
-            instructorId: id,
-            displayName: course?.instructorName || 'Instructeur',
-            avatarUrl: course?.instructorPictureUrl
-          };
-        }).slice(0, 5); // Limiter à 5
-
-      this.following.set(uniqueInstructors);
-    }
-  }
-
-  formatTime(seconds: number): string {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, '0')}`;
   }
 }

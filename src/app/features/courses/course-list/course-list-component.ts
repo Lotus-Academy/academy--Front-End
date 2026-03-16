@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule, Search, Filter, X, Loader2 } from 'lucide-angular';
 
 import { CourseCardComponent } from '../../../shared/components/course-card/course-card-component';
-import { CourseService } from '../../../core/services/course-service';
+import { CourseService } from '../../../core/services/course.service';
 import { CourseResponseDTO, PageCourseResponseDTO, CategoryDTO } from '../../../core/models/course.dto';
 import { NavbarComponent } from '../../layouts/navbar-component/navbar-component';
 import { FooterComponent } from '../../layouts/footer-component/footer-component';

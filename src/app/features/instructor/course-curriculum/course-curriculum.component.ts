@@ -4,11 +4,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
-  LucideAngularModule, Plus, GripVertical, FileBox, Edit2, Trash2, CheckCircle, UploadCloud, Loader2, X
+  LucideAngularModule, Plus, GripVertical, FileBox, Edit2, Trash2, CheckCircle, UploadCloud, Loader2, X, FileText, PlayCircle
 } from 'lucide-angular';
 
-import { CourseService } from '../../../core/services/course-service';
-import { CourseResponseDTO } from '../../../core/models/course.dto';
+import { CourseService } from '../../../core/services/course.service';
+import { CourseResponseDTO, LessonDTO } from '../../../core/models/course.dto';
 
 @Component({
   selector: 'app-course-curriculum',
@@ -23,7 +23,7 @@ export class CourseCurriculumComponent implements OnInit {
   private fb = inject(FormBuilder);
   private translate = inject(TranslateService);
 
-  readonly icons = { Plus, GripVertical, FileBox, Edit2, Trash2, CheckCircle, UploadCloud, Loader2, X };
+  readonly icons = { Plus, GripVertical, FileBox, Edit2, Trash2, CheckCircle, UploadCloud, Loader2, X, FileText, PlayCircle };
 
   courseId = signal<string>('');
   course = signal<CourseResponseDTO | null>(null);
@@ -34,11 +34,11 @@ export class CourseCurriculumComponent implements OnInit {
   isAddingSection = signal<boolean>(false);
   activeLessonFormSectionId = signal<string | null>(null);
 
-  // NOUVEAU : État des modifications (Inline Editing)
+  // État des modifications (Inline Editing)
   editSectionId = signal<string | null>(null);
   editLessonId = signal<string | null>(null);
 
-  // NOUVEAU : État des Uploads en cours (permet d'avoir plusieurs uploads simultanés)
+  // État des Uploads en cours
   uploadingMedia = signal<Set<string>>(new Set());
 
   // Formulaires
@@ -67,12 +67,10 @@ export class CourseCurriculumComponent implements OnInit {
     this.fetchCourseSilent(id, () => this.isLoading.set(false));
   }
 
-  // Recharge silencieuse pour éviter que toute la page clignote
   private fetchCourseSilent(id: string, callback?: () => void): void {
     this.courseService.getCourseById(id).subscribe({
       next: (data) => {
         if (!data.sections) data.sections = [];
-        // Tri des sections et des leçons par orderIndex si nécessaire
         data.sections.sort((a: any, b: any) => a.orderIndex - b.orderIndex);
         data.sections.forEach((s: any) => s.lessons?.sort((a: any, b: any) => a.orderIndex - b.orderIndex));
         this.course.set(data);
@@ -113,7 +111,7 @@ export class CourseCurriculumComponent implements OnInit {
   // --- GESTION DES LEÇONS ---
 
   toggleAddLesson(sectionId: string): void {
-    this.editLessonId.set(null); // Ferme l'édition si on ouvre l'ajout
+    this.editLessonId.set(null);
     if (this.activeLessonFormSectionId() === sectionId) {
       this.activeLessonFormSectionId.set(null);
     } else {
@@ -124,7 +122,12 @@ export class CourseCurriculumComponent implements OnInit {
 
   onSaveLesson(sectionId: string): void {
     if (this.lessonForm.invalid) return;
-    this.courseService.createLesson(sectionId, this.lessonForm.value).subscribe({
+
+    // Par défaut, lors de la création manuelle d'une leçon sans fichier, 
+    // on lui attribue le type VIDEO.
+    const payload = { ...this.lessonForm.value, type: 'VIDEO' };
+
+    this.courseService.createLesson(sectionId, payload).subscribe({
       next: () => {
         this.fetchCourseSilent(this.courseId());
         this.activeLessonFormSectionId.set(null);
@@ -132,9 +135,8 @@ export class CourseCurriculumComponent implements OnInit {
     });
   }
 
-  // NOUVEAU : Édition d'une leçon existante
   startEditLesson(lesson: any): void {
-    this.activeLessonFormSectionId.set(null); // Ferme l'ajout
+    this.activeLessonFormSectionId.set(null);
     this.editLessonId.set(lesson.id);
     this.lessonForm.patchValue({
       title: lesson.title,
@@ -147,9 +149,17 @@ export class CourseCurriculumComponent implements OnInit {
     this.editLessonId.set(null);
   }
 
-  onUpdateLesson(sectionId: string, lessonId: string): void {
+  onUpdateLesson(sectionId: string, lesson: LessonDTO): void {
     if (this.lessonForm.invalid) return;
-    this.courseService.updateLesson(sectionId, lessonId, this.lessonForm.value).subscribe({
+
+    // On conserve le type existant de la leçon lors d'une modification de texte
+    const payload = {
+      ...this.lessonForm.value,
+      type: lesson.type || 'VIDEO',
+      orderIndex: lesson.orderIndex
+    };
+
+    this.courseService.updateLesson(sectionId, lesson.id, payload).subscribe({
       next: () => {
         this.fetchCourseSilent(this.courseId());
         this.editLessonId.set(null);
@@ -165,54 +175,80 @@ export class CourseCurriculumComponent implements OnInit {
     }
   }
 
-  // --- GESTION DES MÉDIAS (AVEC LOADER) ---
+  // --- GESTION DES MÉDIAS AVEC DÉTECTION DU TYPE ---
 
   isMediaUploading(lessonId: string): boolean {
     return this.uploadingMedia().has(lessonId);
   }
 
-  onFileSelected(event: any, sectionId: string, lessonId: string): void {
+  onFileSelected(event: any, sectionId: string, lesson: LessonDTO): void {
     const file: File = event.target.files[0];
 
-    if (file) {
-      const isValidFormat = file.type === 'video/mp4' || file.type === 'application/pdf';
-      if (!isValidFormat) {
-        alert(this.translate.instant('COURSE_EDITOR.CURRICULUM.ERR_FORMAT'));
-        event.target.value = '';
-        return;
-      }
+    if (!file) return;
 
-      // 1. Activer le loader spécifique à cette leçon
-      this.uploadingMedia.update(set => {
-        const newSet = new Set(set);
-        newSet.add(lessonId);
-        return newSet;
-      });
+    // 1. Validation du format
+    const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+    const isVideo = file.type.startsWith('video/');
 
-      // 2. Lancer l'upload
-      this.courseService.uploadLessonMedia(sectionId, lessonId, file).subscribe({
-        next: () => {
-          // 3. Succès : recharger les données et couper le loader
-          this.fetchCourseSilent(this.courseId(), () => {
+    if (!isPDF && !isVideo) {
+      alert(this.translate.instant('COURSE_EDITOR.CURRICULUM.ERR_FORMAT'));
+      event.target.value = '';
+      return;
+    }
+
+    // 2. Détection du type
+    const detectedType = isPDF ? 'PDF' : 'VIDEO';
+
+    // 3. Activer le loader
+    this.uploadingMedia.update(set => {
+      const newSet = new Set(set);
+      newSet.add(lesson.id);
+      return newSet;
+    });
+
+    // 4. Mettre à jour les métadonnées de la leçon (PUT) pour enregistrer le type
+    const updatePayload = {
+      title: lesson.title,
+      description: lesson.description || '',
+      duration: lesson.duration || 0,
+      freePreview: lesson.freePreview || false,
+      orderIndex: lesson.orderIndex,
+      type: detectedType
+    };
+
+    this.courseService.updateLesson(sectionId, lesson.id, updatePayload).subscribe({
+      next: () => {
+        // 5. Procéder à l'upload physique du fichier (POST)
+        this.courseService.uploadLessonMedia(sectionId, lesson.id, file).subscribe({
+          next: () => {
+            this.fetchCourseSilent(this.courseId(), () => {
+              this.uploadingMedia.update(set => {
+                const newSet = new Set(set);
+                newSet.delete(lesson.id);
+                return newSet;
+              });
+            });
+          },
+          error: (err) => {
+            console.error('Erreur upload', err);
+            alert('Échec du téléchargement du fichier.');
             this.uploadingMedia.update(set => {
               const newSet = new Set(set);
-              newSet.delete(lessonId);
+              newSet.delete(lesson.id);
               return newSet;
             });
-          });
-        },
-        error: (err) => {
-          console.error('Erreur upload', err);
-          alert('Échec du téléchargement. Fichier trop volumineux ou erreur réseau.');
-          // Couper le loader en cas d'erreur
-          this.uploadingMedia.update(set => {
-            const newSet = new Set(set);
-            newSet.delete(lessonId);
-            return newSet;
-          });
-        }
-      });
-    }
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Erreur mise à jour type leçon', err);
+        this.uploadingMedia.update(set => {
+          const newSet = new Set(set);
+          newSet.delete(lesson.id);
+          return newSet;
+        });
+      }
+    });
   }
 
   // --- SOUMISSION DU COURS ---
@@ -222,7 +258,7 @@ export class CourseCurriculumComponent implements OnInit {
     this.courseService.submitForReview(this.courseId()).subscribe({
       next: () => {
         this.isSubmittingReview.set(false);
-        this.router.navigate(['/instructor/dashboard']);
+        this.router.navigate(['/dashboard']);
       },
       error: () => this.isSubmittingReview.set(false)
     });

@@ -55,7 +55,7 @@
                 @for (lesson of section.lessons; track lesson.id; let lesIndex = $index) {
 
                 @if (editLessonId() === lesson.id) {
-                <form [formGroup]="lessonForm" (ngSubmit)="onUpdateLesson(section.id, lesson.id)"
+                <form [formGroup]="lessonForm" (ngSubmit)="onUpdateLesson(section.id, lesson)"
                     class="p-4 border border-lotus/50 bg-lotus/5 rounded">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
@@ -78,19 +78,16 @@
                             <input type="checkbox" formControlName="freePreview" [id]="'edit-preview-' + lesson.id"
                                 class="rounded border-slate-300 text-lotus focus:ring-lotus dark:bg-ds-black dark:border-ds-border w-4 h-4 accent-lotus">
                             <label [for]="'edit-preview-' + lesson.id"
-                                class="font-syne text-sm text-slate-700 dark:text-ds-muted/70">
-                                {{ 'COURSE_EDITOR.CURRICULUM.LESSON_FREE_LABEL' | translate }}
-                            </label>
+                                class="font-syne text-sm text-slate-700 dark:text-ds-muted/70">{{
+                                'COURSE_EDITOR.CURRICULUM.LESSON_FREE_LABEL' | translate }}</label>
                         </div>
                         <div class="flex gap-2">
                             <button type="button" (click)="cancelEditLesson()"
-                                class="px-4 py-2 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/70 hover:bg-slate-100 dark:hover:bg-ds-border/50 rounded transition-colors">
-                                {{ 'COURSE_EDITOR.CURRICULUM.BTN_CANCEL' | translate }}
-                            </button>
+                                class="px-4 py-2 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/70 hover:bg-slate-100 dark:hover:bg-ds-border/50 rounded transition-colors">{{
+                                'COURSE_EDITOR.CURRICULUM.BTN_CANCEL' | translate }}</button>
                             <button type="submit" [disabled]="lessonForm.invalid"
-                                class="px-5 py-2 font-mono text-[10px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded hover:bg-lotus-light disabled:opacity-50 transition-colors">
-                                {{ 'COURSE_EDITOR.CURRICULUM.BTN_SAVE' | translate }}
-                            </button>
+                                class="px-5 py-2 font-mono text-[10px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded hover:bg-lotus-light disabled:opacity-50 transition-colors">{{
+                                'COURSE_EDITOR.CURRICULUM.BTN_SAVE' | translate }}</button>
                         </div>
                     </div>
                 </form>
@@ -99,8 +96,14 @@
                     class="flex flex-col md:flex-row md:items-center justify-between p-3 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded group/lesson gap-4 transition-colors hover:border-lotus/30">
 
                     <div class="flex items-center gap-3">
-                        <lucide-icon [name]="icons.FileBox"
+                        @if (lesson.type === 'PDF') {
+                        <lucide-icon [name]="icons.FileText"
                             class="w-5 h-5 text-slate-400 dark:text-ds-muted/50 stroke-[1.5px]"></lucide-icon>
+                        } @else {
+                        <lucide-icon [name]="icons.PlayCircle"
+                            class="w-5 h-5 text-slate-400 dark:text-ds-muted/50 stroke-[1.5px]"></lucide-icon>
+                        }
+
                         <div>
                             <p class="font-syne font-bold text-slate-900 dark:text-white text-sm">
                                 {{ 'COURSE_EDITOR.CURRICULUM.LESSON' | translate }} {{ lesIndex + 1 }}: {{ lesson.title
@@ -145,8 +148,7 @@
                                 class="cursor-pointer px-4 py-1.5 bg-slate-100 dark:bg-ds-black text-slate-700 dark:text-ds-muted/80 border border-slate-200 dark:border-ds-border font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-lotus hover:text-ds-black hover:border-lotus transition-all flex items-center gap-2">
                                 <lucide-icon [name]="icons.UploadCloud" class="w-3.5 h-3.5"></lucide-icon>
                                 {{ 'COURSE_EDITOR.CURRICULUM.BTN_UPLOAD' | translate }}
-                                <input type="file" class="hidden"
-                                    (change)="onFileSelected($event, section.id, lesson.id)"
+                                <input type="file" class="hidden" (change)="onFileSelected($event, section.id, lesson)"
                                     accept="video/mp4,application/pdf">
                             </label>
                             } @else {
@@ -160,7 +162,7 @@
                                     [title]="'COURSE_EDITOR.CURRICULUM.REPLACE_MEDIA' | translate">
                                     <lucide-icon [name]="icons.UploadCloud" class="w-4 h-4"></lucide-icon>
                                     <input type="file" class="hidden"
-                                        (change)="onFileSelected($event, section.id, lesson.id)"
+                                        (change)="onFileSelected($event, section.id, lesson)"
                                         accept="video/mp4,application/pdf">
                                 </label>
                             </div>
@@ -193,19 +195,16 @@
                             <input type="checkbox" formControlName="freePreview" [id]="'add-preview-' + section.id"
                                 class="rounded border-slate-300 text-lotus focus:ring-lotus dark:bg-ds-black dark:border-ds-border w-4 h-4 accent-lotus">
                             <label [for]="'add-preview-' + section.id"
-                                class="font-syne text-sm text-slate-700 dark:text-ds-muted/70">
-                                {{ 'COURSE_EDITOR.CURRICULUM.LESSON_FREE_LABEL' | translate }}
-                            </label>
+                                class="font-syne text-sm text-slate-700 dark:text-ds-muted/70">{{
+                                'COURSE_EDITOR.CURRICULUM.LESSON_FREE_LABEL' | translate }}</label>
                         </div>
                         <div class="flex gap-2">
                             <button type="button" (click)="toggleAddLesson(section.id)"
-                                class="px-4 py-2 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/70 hover:bg-slate-100 dark:hover:bg-ds-border/50 rounded transition-colors">
-                                {{ 'COURSE_EDITOR.CURRICULUM.BTN_CANCEL' | translate }}
-                            </button>
+                                class="px-4 py-2 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/70 hover:bg-slate-100 dark:hover:bg-ds-border/50 rounded transition-colors">{{
+                                'COURSE_EDITOR.CURRICULUM.BTN_CANCEL' | translate }}</button>
                             <button type="submit" [disabled]="lessonForm.invalid"
-                                class="px-5 py-2 font-mono text-[10px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded hover:bg-lotus-light disabled:opacity-50 transition-colors">
-                                {{ 'COURSE_EDITOR.CURRICULUM.BTN_ADD_LESSON' | translate }}
-                            </button>
+                                class="px-5 py-2 font-mono text-[10px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded hover:bg-lotus-light disabled:opacity-50 transition-colors">{{
+                                'COURSE_EDITOR.CURRICULUM.BTN_ADD_LESSON' | translate }}</button>
                         </div>
                     </div>
                 </form>
@@ -231,13 +230,11 @@
             </div>
             <div class="flex justify-end gap-3">
                 <button type="button" (click)="toggleAddSection()"
-                    class="px-5 py-2.5 font-mono text-[11px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted hover:bg-slate-200 dark:hover:bg-ds-border/50 rounded transition-colors">
-                    {{ 'COURSE_EDITOR.CURRICULUM.BTN_CANCEL' | translate }}
-                </button>
+                    class="px-5 py-2.5 font-mono text-[11px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted hover:bg-slate-200 dark:hover:bg-ds-border/50 rounded transition-colors">{{
+                    'COURSE_EDITOR.CURRICULUM.BTN_CANCEL' | translate }}</button>
                 <button type="submit" [disabled]="sectionForm.invalid"
-                    class="px-5 py-2.5 font-mono text-[11px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded hover:bg-lotus-light disabled:opacity-50 transition-colors">
-                    {{ 'COURSE_EDITOR.CURRICULUM.BTN_ADD_SECTION' | translate }}
-                </button>
+                    class="px-5 py-2.5 font-mono text-[11px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded hover:bg-lotus-light disabled:opacity-50 transition-colors">{{
+                    'COURSE_EDITOR.CURRICULUM.BTN_ADD_SECTION' | translate }}</button>
             </div>
         </form>
         } @else {

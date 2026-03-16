@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule, Save, Loader2, AlertCircle, CheckCircle, AlertTriangle } from 'lucide-angular';
 
-import { CourseService } from '../../../core/services/course-service';
+import { CourseService } from '../../../core/services/course.service';
 import { CategoryDTO, CourseResponseDTO } from '../../../core/models/course.dto';
 
 @Component({

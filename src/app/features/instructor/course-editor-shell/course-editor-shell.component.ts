@@ -12,7 +12,7 @@ import {
   ArrowLeft
 } from 'lucide-angular';
 
-import { CourseService } from '../../../core/services/course-service';
+import { CourseService } from '../../../core/services/course.service';
 import { CourseResponseDTO } from '../../../core/models/course.dto';
 
 @Component({

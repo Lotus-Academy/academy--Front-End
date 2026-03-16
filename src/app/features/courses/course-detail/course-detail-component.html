@@ -214,9 +214,19 @@
                                     </div>
                                 </div>
 
-                                <button
-                                    class="w-full py-4 mb-8 bg-lotus text-ds-black font-mono text-[12px] uppercase tracking-[0.15em] font-bold rounded hover:bg-lotus-light transition-all shadow-sm">
+                                <button (click)="handleEnrollAction()" [disabled]="isProcessingPayment()"
+                                    class="w-full py-4 mb-8 bg-lotus text-ds-black font-mono text-[12px] uppercase tracking-[0.15em] font-bold rounded hover:bg-lotus-light disabled:opacity-70 transition-all shadow-sm flex justify-center items-center gap-2">
+
+                                    @if (isProcessingPayment()) {
+                                    <lucide-icon [name]="icons.Loader2" class="w-5 h-5 animate-spin"></lucide-icon>
+                                    Redirection...
+                                    } @else if (isAlreadyEnrolled()) {
+                                    <lucide-icon [name]="icons.PlayCircle" class="w-5 h-5"></lucide-icon>
+                                    Reprendre le cours
+                                    } @else {
                                     {{ 'COURSE_DETAIL.ENROLL_NOW' | translate }}
+                                    }
+
                                 </button>
 
                                 <div>

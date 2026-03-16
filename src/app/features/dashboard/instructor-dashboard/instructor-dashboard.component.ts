@@ -17,7 +17,7 @@ import {
 } from 'lucide-angular';
 
 import { CourseResponseDTO } from '../../../core/models/course.dto';
-import { CourseService } from '../../../core/services/course-service';
+import { CourseService } from '../../../core/services/course.service';
 import { InstructorProfileService } from '../../../core/services/instructor-profile.service'; // <-- AJOUT DU SERVICE
 
 @Component({
