@@ -1,18 +1,18 @@
 import { Component, Input, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   LucideAngularModule, Menu, X, LogOut, Bell, Globe, Sun, Moon, ChevronDown,
-  CheckCircle, AlertTriangle, Info, AlertCircle, FileEdit, CheckCheck
+  CheckCircle, AlertTriangle, Info, AlertCircle, FileEdit, CheckCheck, Gift, Share2
 } from 'lucide-angular';
 
 import { AuthService } from '../../../core/services/auth.service';
-import { ThemeService } from '../../../core/services/theme-service';
+import { UserService } from '../../../core/services/user.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { AppNotification, NotificationService } from '../../../core/services/notification.service';
 import { LanguageService } from '../../../core/services/language.service';
-import { TranslateModule } from '@ngx-translate/core';
 
-// Interface mise à jour pour supporter les badges (ex: "BIENTÔT") et les séparateurs
 export interface NavLink {
   labelKey: string;
   href: string;
@@ -20,6 +20,7 @@ export interface NavLink {
   requiresApproval: boolean;
   dividerBefore?: boolean;
   badgeKey?: string;
+  isDisabled?: boolean;
 }
 
 @Component({
@@ -38,6 +39,7 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
   @Input() profileStatus?: 'LOADING' | 'MISSING' | 'PENDING' | 'APPROVED' | 'REJECTED';
 
   private authService = inject(AuthService);
+  private userService = inject(UserService); // <-- AJOUT
   public themeService = inject(ThemeService);
   private router = inject(Router);
   private notificationService = inject(NotificationService);
@@ -45,7 +47,7 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
 
   readonly icons = {
     Menu, X, LogOut, Bell, Globe, Sun, Moon, ChevronDown,
-    CheckCircle, AlertTriangle, Info, AlertCircle, FileEdit, CheckCheck
+    CheckCircle, AlertTriangle, Info, AlertCircle, FileEdit, CheckCheck, Gift, Share2
   };
 
   isSidebarOpen = signal<boolean>(false);
@@ -57,7 +59,20 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
 
   isLanguageMenuOpen = signal<boolean>(false);
 
+  // Signaux pour le système de parrainage
+  referralCode = signal<string | null>(null);
+  copySuccess = signal<boolean>(false);
+
   ngOnInit(): void {
+    // Chargement du code de parrainage
+    this.userService.getMyProfile().subscribe({
+      next: (userData) => {
+        if (userData.referralCode) {
+          this.referralCode.set(userData.referralCode);
+        }
+      }
+    });
+
     this.notificationService.getNotifications().subscribe({
       next: (data) => this.notifications.set(data),
       error: (err) => console.error('Erreur lors du chargement des notifications', err)
@@ -72,6 +87,22 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
     this.notificationService.disconnectStream();
   }
 
+  // --- MÉTHODE DE PARRAINAGE ---
+  copyReferralLink(): void {
+    const code = this.referralCode();
+    if (!code) return;
+
+    const referralLink = `${window.location.origin}/login?ref=${code}`;
+
+    navigator.clipboard.writeText(referralLink).then(() => {
+      this.copySuccess.set(true);
+      setTimeout(() => {
+        this.copySuccess.set(false);
+      }, 3000);
+    });
+  }
+
+  // --- GESTION DES MENUS ---
   toggleSidebar(): void {
     this.isSidebarOpen.update(v => !v);
   }
@@ -81,6 +112,7 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
   }
 
   toggleNotifications(): void {
+    this.isLanguageMenuOpen.set(false);
     this.isNotificationsOpen.update(v => !v);
   }
 
@@ -89,6 +121,7 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
   }
 
   toggleLanguageMenu(): void {
+    this.isNotificationsOpen.set(false);
     this.isLanguageMenuOpen.update(v => !v);
   }
 

@@ -9,7 +9,11 @@
         "LOGOUT": "Sign Out",
         "ADMIN_BADGE": "Administration",
         "ADMIN_ROLE": "Super Admin",
-        "STUDENT_BADGE": "Student Portal"
+        "STUDENT_BADGE": "Student Portal",
+        "REFERRAL": {
+            "BTN": "Invite New Members",
+            "COPIED": "Link copied!"
+        }
     },
     "MENU": {
         "DASHBOARD": "Dashboard",
@@ -313,25 +317,34 @@
         },
         "TABS": {
             "MY_COURSES": "My Courses",
-            "STUDENTS_PROGRESS": "Student Progress"
-        },
-        "COURSES": {
-            "TITLE": "Course Management",
-            "NEW_COURSE": "Create a course",
-            "EMPTY_TITLE": "No courses created",
-            "EMPTY_DESC": "Start by creating your first course to share it with your students.",
-            "MODIFIED_ON": "Modified on",
-            "BTN_EDIT": "Edit"
-        },
-        "STUDENTS": {
-            "TITLE": "Progress Overview",
-            "EMPTY_DESC": "Student progress tracking will be displayed here."
+            "STUDENTS_PROGRESS": "Students Progress"
         },
         "STATUS": {
             "APPROVED": "Approved",
             "REJECTED": "Rejected",
-            "PENDING": "Under review",
+            "PENDING": "In Review",
             "DRAFT": "Draft"
+        },
+        "COURSES": {
+            "TITLE": "My Courses",
+            "NEW_COURSE": "New Course",
+            "LOCKED_CREATION_TITLE": "Your profile must be approved to create a course.",
+            "EMPTY_TITLE": "No courses found",
+            "EMPTY_DESC": "You haven't created any courses yet. Start sharing your expertise today.",
+            "MODIFIED_ON": "Modified on",
+            "LOCKED_EDIT_TITLE": "This course is published and can no longer be edited.",
+            "BTN_EDIT": "Edit"
+        },
+        "STUDENTS": {
+            "TITLE": "Students Progress",
+            "SELECT_COURSE": "Select a course",
+            "OPTION_PLACEHOLDER": "Choose a course...",
+            "TABLE_STUDENT": "Student",
+            "TABLE_PROGRESS": "Progress",
+            "TABLE_ENROLLED": "Enrolled on",
+            "TABLE_LAST_ACCESS": "Last access",
+            "EMPTY_COURSE_DESC": "No students are enrolled in this course yet.",
+            "EMPTY_DESC": "Select a course from the dropdown above to view your students' progress."
         }
     },
     "COURSE_EDITOR": {
@@ -661,5 +674,64 @@
         "BACK_COURSE": "Back to player",
         "ERROR_MISSING": "Please answer all questions before submitting.",
         "ERROR_GENERIC": "An error occurred during grading."
+    },
+    "INSTRUCTOR_COURSES": {
+        "TITLE": "Course Management",
+        "DESC": "View, filter, and manage your entire catalog.",
+        "BTN_NEW": "New Course",
+        "FILTERS": {
+            "SEARCH": "Search by title...",
+            "ALL_STATUS": "All statuses",
+            "ALL_CATEGORIES": "All categories"
+        },
+        "STATS": {
+            "STUDENTS": "Enrolled students",
+            "RATING": "Average rating"
+        },
+        "EMPTY": {
+            "TITLE": "No courses found",
+            "DESC": "Your search criteria do not match any courses in your catalog."
+        }
+    },
+    "INSTRUCTOR_STUDENTS": {
+        "TITLE": "Student Tracking",
+        "DESC": "Analyze the progress and engagement of your learners.",
+        "SELECT_COURSE": "Choose a course...",
+        "SEARCH_PLACEHOLDER": "Search by name or email...",
+        "EMPTY_SELECT": {
+            "TITLE": "Select a course",
+            "DESC": "Please choose a course from the dropdown menu to view your students."
+        },
+        "EMPTY_DATA": {
+            "TITLE": "No results",
+            "DESC": "No students match this search or this course has no enrollments yet."
+        },
+        "TABLE": {
+            "STUDENT": "Student",
+            "PROGRESS": "Progress",
+            "ENROLLED": "Enrolled on",
+            "LAST_ACCESS": "Last access"
+        }
+    },
+    "INSTRUCTOR_EARNINGS": {
+        "TITLE": "Earnings & Payouts",
+        "DESC": "Check your balance and the history of payments made by Lotus Academy.",
+        "BALANCE": {
+            "TOTAL_EARNED": "Lifetime Earnings",
+            "TOTAL_PAID": "Total Paid Out",
+            "PENDING": "Pending Balance",
+            "PENDING_DESC": "To be paid out in the next cycle."
+        },
+        "PAYOUTS_TITLE": "Payout History",
+        "TABLE": {
+            "DATE": "Payout Date",
+            "AMOUNT": "Amount",
+            "METHOD": "Payment Method",
+            "NOTES": "Notes / Reference"
+        },
+        "EMPTY": {
+            "TITLE": "No payouts yet",
+            "DESC": "You haven't received any payments yet. Your earnings will appear here once the first payout is processed."
+        }
     }
 }

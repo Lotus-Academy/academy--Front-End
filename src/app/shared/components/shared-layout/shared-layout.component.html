@@ -6,65 +6,75 @@
     }
 
     <aside [ngClass]="isSidebarOpen() ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-        class="fixed inset-y-0 left-0 z-40 w-64 transform border-r border-slate-200 dark:border-ds-border bg-white dark:bg-ds-surface transition-transform duration-300 ease-in-out lg:static lg:h-screen lg:sticky lg:top-0">
+        class="fixed inset-y-0 left-0 z-40 w-64 transform border-r border-slate-200 dark:border-ds-border bg-white dark:bg-ds-surface transition-transform duration-300 ease-in-out lg:static lg:h-screen lg:sticky lg:top-0 flex flex-col">
 
-        <div class="flex h-full flex-col">
-            <div class="h-16 items-center gap-3 border-b border-slate-200 dark:border-ds-border px-6 flex shrink-0">
-                <a routerLink="/" class="flex items-center gap-3">
-                    <div class="flex h-8 w-8 items-center justify-center rounded bg-lotus/10 border border-lotus/20">
-                        <span class="text-base font-cormorant font-bold text-lotus">L</span>
-                    </div>
-                    <span class="font-cormorant font-bold text-xl text-slate-900 dark:text-white tracking-wide">Lotus
-                        Academy</span>
-                </a>
-            </div>
-
-            <div class="px-6 py-5 shrink-0">
-                <div class="inline-flex items-center rounded px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.15em] border"
-                    [ngClass]="badgeClasses">
-                    {{ badgeText | translate }}
+        <div class="h-16 items-center gap-3 border-b border-slate-200 dark:border-ds-border px-6 flex shrink-0">
+            <a routerLink="/" class="flex items-center gap-3">
+                <div class="flex h-8 w-8 items-center justify-center rounded bg-lotus/10 border border-lotus/20">
+                    <span class="text-base font-cormorant font-bold text-lotus">L</span>
                 </div>
+                <span class="font-cormorant font-bold text-xl text-slate-900 dark:text-white tracking-wide">Lotus
+                    Academy</span>
+            </a>
+        </div>
+
+        <div class="px-6 py-5 shrink-0">
+            <div class="inline-flex items-center rounded px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.15em] border"
+                [ngClass]="badgeClasses">
+                {{ badgeText | translate }}
             </div>
+        </div>
 
-            <nav class="flex-1 space-y-1 px-4 overflow-y-auto hide-scrollbar">
-                @for (link of navLinks; track link.href) {
+        <nav class="flex-1 space-y-1 px-4 overflow-y-auto hide-scrollbar">
+            @for (link of navLinks; track link.href) {
 
-                @if (link.dividerBefore) {
-                <div class="my-4 border-t border-slate-100 dark:border-ds-border mx-2"></div>
+            @if (link.dividerBefore) {
+            <div class="my-4 border-t border-slate-100 dark:border-ds-border mx-2"></div>
+            }
+
+            @if (link.isDisabled || (link.requiresApproval && profileStatus && profileStatus !== 'APPROVED')) {
+            <div class="flex items-center gap-3 rounded px-4 py-3 text-sm font-syne text-slate-400 dark:text-ds-muted/40 cursor-not-allowed opacity-60"
+                [title]="'BANNERS.LOCKED_FEATURE' | translate">
+                <lucide-icon [name]="link.icon" class="h-5 w-5 stroke-[1.5px]"></lucide-icon>
+                {{ link.labelKey | translate }}
+                <lucide-icon [name]="icons.AlertCircle" class="h-3.5 w-3.5 ml-auto"></lucide-icon>
+            </div>
+            } @else {
+            <a [routerLink]="link.href" routerLinkActive="bg-lotus/10 text-lotus dark:bg-lotus/10 dark:text-lotus"
+                [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()"
+                class="flex items-center gap-3 rounded px-4 py-3 text-sm font-syne transition-all text-slate-600 dark:text-ds-muted/70 hover:bg-slate-50 dark:hover:bg-ds-border/30 hover:text-slate-900 dark:hover:text-white group">
+                <lucide-icon [name]="link.icon" class="h-5 w-5 stroke-[1.5px] group-[.active]:text-lotus"></lucide-icon>
+                {{ link.labelKey | translate }}
+
+                @if (link.badgeKey) {
+                <span
+                    class="ml-auto bg-green/10 text-green font-mono text-[9px] uppercase tracking-widest px-2 py-0.5 rounded border border-green/20">
+                    {{ link.badgeKey | translate }}
+                </span>
                 }
+            </a>
+            }
+            }
+        </nav>
 
-                @if (link.requiresApproval && profileStatus && profileStatus !== 'APPROVED') {
-                <div class="flex items-center gap-3 rounded px-4 py-3 text-sm font-syne text-slate-400 dark:text-ds-muted/40 cursor-not-allowed opacity-60"
-                    [title]="'BANNERS.LOCKED_FEATURE' | translate">
-                    <lucide-icon [name]="link.icon" class="h-5 w-5 stroke-[1.5px]"></lucide-icon>
-                    {{ link.labelKey | translate }}
-                    <lucide-icon [name]="icons.AlertCircle" class="h-3.5 w-3.5 ml-auto"></lucide-icon>
-                </div>
+        <div class="border-t border-slate-200 dark:border-ds-border p-4 shrink-0 flex flex-col gap-2">
+
+            <button (click)="copyReferralLink()" [disabled]="!referralCode()"
+                class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded font-mono text-[10px] uppercase tracking-widest font-bold transition-colors border shadow-sm"
+                [ngClass]="copySuccess() ? 'bg-green/10 text-green border-green/20' : 'bg-lotus/10 text-lotus border-lotus/20 hover:bg-lotus hover:text-ds-black disabled:opacity-50'">
+                @if (copySuccess()) {
+                <lucide-icon [name]="icons.CheckCircle" class="h-4 w-4"></lucide-icon>
+                {{ 'LAYOUT.REFERRAL.COPIED' | translate }}
                 } @else {
-                <a [routerLink]="link.href" routerLinkActive="bg-lotus/10 text-lotus dark:bg-lotus/10 dark:text-lotus"
-                    [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()"
-                    class="flex items-center gap-3 rounded px-4 py-3 text-sm font-syne transition-all text-slate-600 dark:text-ds-muted/70 hover:bg-slate-50 dark:hover:bg-ds-border/30 hover:text-slate-900 dark:hover:text-white group">
-                    <lucide-icon [name]="link.icon"
-                        class="h-5 w-5 stroke-[1.5px] group-[.active]:text-lotus"></lucide-icon>
-                    {{ link.labelKey | translate }}
-
-                    @if (link.badgeKey) {
-                    <span
-                        class="ml-auto bg-green/10 text-green font-mono text-[9px] uppercase tracking-widest px-2 py-0.5 rounded border border-green/20">
-                        {{ link.badgeKey | translate }}
-                    </span>
-                    }
-                </a>
+                <lucide-icon [name]="icons.Gift" class="h-4 w-4"></lucide-icon>
+                {{ 'LAYOUT.REFERRAL.BTN' | translate }}
                 }
-                }
-            </nav>
+            </button>
 
-            <div class="border-t border-slate-200 dark:border-ds-border p-4 shrink-0">
-                <button (click)="handleSignOut()"
-                    class="w-full flex items-center gap-2 justify-center px-4 py-3 rounded font-mono text-[11px] uppercase tracking-[0.12em] font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
-                    <lucide-icon [name]="icons.LogOut" class="h-4 w-4"></lucide-icon> {{ 'LAYOUT.LOGOUT' | translate }}
-                </button>
-            </div>
+            <button (click)="handleSignOut()"
+                class="w-full flex items-center gap-2 justify-center px-4 py-3 rounded font-mono text-[11px] uppercase tracking-[0.12em] font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+                <lucide-icon [name]="icons.LogOut" class="h-4 w-4"></lucide-icon> {{ 'LAYOUT.LOGOUT' | translate }}
+            </button>
         </div>
     </aside>
 
@@ -79,20 +89,23 @@
                     <lucide-icon [name]="icons.Menu" class="h-6 w-6"></lucide-icon>
                 </button>
                 <h1
-                    class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white hidden sm:block tracking-tight">
-                    {{ title | translate }}</h1>
+                    class="font-cormorant text-xl sm:text-2xl font-bold text-slate-900 dark:text-white truncate max-w-[200px] sm:max-w-md tracking-tight">
+                    {{ title | translate }}
+                </h1>
             </div>
 
-            <div class="flex items-center gap-2 sm:gap-4">
+            <div class="flex items-center gap-1 sm:gap-4 relative">
 
                 <div class="relative">
                     <button (click)="toggleLanguageMenu()"
-                        class="hidden sm:flex items-center gap-1.5 p-2 font-mono text-[11px] uppercase tracking-widest text-slate-600 dark:text-ds-muted/70 hover:text-lotus dark:hover:text-lotus rounded transition-colors cursor-pointer"
+                        class="flex items-center gap-1.5 p-2 font-mono text-[11px] uppercase tracking-widest text-slate-600 dark:text-ds-muted/70 hover:text-lotus dark:hover:text-lotus rounded transition-colors cursor-pointer"
                         [ngClass]="isLanguageMenuOpen() ? 'bg-slate-100 dark:bg-ds-border/50' : ''">
-                        <span class="text-lg leading-none">{{ languageService.getCurrentLanguage() === 'fr' ? '🇫🇷' :
-                            '🇬🇧' }}</span>
-                        <span>{{ languageService.getCurrentLanguage() }}</span>
-                        <lucide-icon [name]="icons.ChevronDown" class="w-3.5 h-3.5 opacity-70 transition-transform"
+                        <lucide-icon [name]="icons.Globe" class="w-5 h-5 sm:hidden"></lucide-icon>
+                        <span class="text-lg leading-none hidden sm:block">{{ languageService.getCurrentLanguage() ===
+                            'fr' ? '🇫🇷' : '🇬🇧' }}</span>
+                        <span class="hidden sm:block">{{ languageService.getCurrentLanguage() }}</span>
+                        <lucide-icon [name]="icons.ChevronDown"
+                            class="w-3.5 h-3.5 opacity-70 transition-transform hidden sm:block"
                             [ngClass]="isLanguageMenuOpen() ? 'rotate-180' : ''"></lucide-icon>
                     </button>
 
@@ -123,7 +136,7 @@
                 </div>
 
                 <button (click)="themeService.toggleTheme()"
-                    class="p-2 text-slate-600 dark:text-ds-muted/70 hover:text-lotus dark:hover:text-lotus rounded transition-colors">
+                    class="p-2 text-slate-600 dark:text-ds-muted/70 hover:text-lotus dark:hover:text-lotus rounded transition-colors hidden sm:block">
                     @if (themeService.darkMode()) { <lucide-icon [name]="icons.Sun" class="w-4 h-4"></lucide-icon> }
                     @else { <lucide-icon [name]="icons.Moon" class="w-4 h-4"></lucide-icon> }
                 </button>
@@ -142,7 +155,7 @@
                     @if (isNotificationsOpen()) {
                     <div class="fixed inset-0 z-40 cursor-default" (click)="closeNotifications()"></div>
                     <div
-                        class="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-ds-surface rounded shadow-xl border border-slate-200 dark:border-ds-border z-50 overflow-hidden origin-top-right animate-fade-in-up">
+                        class="absolute right-0 mt-2 w-[90vw] sm:w-96 max-w-sm bg-white dark:bg-ds-surface rounded shadow-xl border border-slate-200 dark:border-ds-border z-50 overflow-hidden origin-top-right animate-fade-in-up">
 
                         <div
                             class="p-4 border-b border-slate-200 dark:border-ds-border flex justify-between items-center bg-slate-50/50 dark:bg-ds-border/30">
@@ -211,9 +224,11 @@
                     class="flex items-center gap-3 p-1 sm:p-1.5 sm:pr-3 rounded hover:bg-slate-100 dark:hover:bg-ds-border/50 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-ds-border cursor-pointer">
                     <div
                         class="h-8 w-8 rounded-full bg-lotus/10 flex items-center justify-center text-lotus font-cormorant font-bold border border-lotus/30 shadow-sm shrink-0 overflow-hidden">
-                        @if (user()?.profilePictureUrl) { <img [src]="user()?.profilePictureUrl"
-                            class="w-full h-full object-cover"> }
-                        @else { {{ user()?.firstName?.charAt(0) || 'U' }} }
+                        @if (user()?.profilePictureUrl) {
+                        <img [src]="user()?.profilePictureUrl" class="w-full h-full object-cover">
+                        } @else {
+                        {{ user()?.firstName?.charAt(0) || 'U' }}
+                        }
                     </div>
                     <div class="hidden sm:block text-left">
                         <p class="font-syne text-sm font-bold text-slate-900 dark:text-white leading-tight">{{
@@ -226,7 +241,7 @@
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-ds-black">
+        <main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-ds-black relative">
 
             @if (profileStatus && profileStatus !== 'LOADING' && profileStatus !== 'APPROVED') {
             <div

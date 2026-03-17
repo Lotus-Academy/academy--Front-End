@@ -36,6 +36,10 @@ import { CourseCurriculumComponent } from './features/instructor/course-curricul
 import { CoursePricingComponent } from './features/instructor/course-pricing/course-pricing.component';
 import { CourseQuizComponent } from './features/instructor/course-quiz/course-quiz.component';
 import { CourseEditPreviewComponent } from './features/instructor/course-edit-preview/course-edit-preview.component';
+import { InstructorCoursesComponent } from './features/instructor/instructor-courses/instructor-courses.component';
+import { InstructorStudentsComponent } from './features/instructor/instructor-students/instructor-students.component';
+import { InstructorEarningsComponent } from './features/instructor/instructor-earnings/instructor-earnings.component';
+
 
 // ==========================================
 // IMPORTS : ADMINISTRATION
@@ -91,6 +95,21 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'instructor/courses',
+        component: InstructorCoursesComponent,
+        canActivate: [authGuard, instructorApprovedGuard]
+    },
+    {
+        path: 'instructor/students',
+        component: InstructorStudentsComponent,
+        canActivate: [authGuard, instructorApprovedGuard]
+    },
+    {
+        path: 'instructor/earnings',
+        component: InstructorEarningsComponent,
+        canActivate: [authGuard, instructorApprovedGuard]
+    },
+    {
         path: 'instructor/courses/new',
         component: CourseCreateComponent,
         canActivate: [authGuard, instructorApprovedGuard]
@@ -108,6 +127,7 @@ export const routes: Routes = [
             { path: '', redirectTo: 'basic', pathMatch: 'full' }
         ]
     },
+
 
     // --- ROUTES ADMINISTRATION ---
     // Ajout du authGuard sur l'administration pour verrouiller l'accès

@@ -1,0 +1,129 @@
+<app-instructor-layout title="{{ 'LAYOUT.INSTRUCTOR_SPACE' | translate }}">
+    <div class="space-y-8 animate-fade-in-up font-syne pb-12">
+
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+                <h1 class="font-cormorant text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-2">
+                    {{ 'INSTRUCTOR_STUDENTS.TITLE' | translate }}
+                </h1>
+                <p class="font-syne text-slate-500 dark:text-ds-muted/70">
+                    {{ 'INSTRUCTOR_STUDENTS.DESC' | translate }}
+                </p>
+            </div>
+        </div>
+
+        <div
+            class="bg-white dark:bg-ds-surface p-4 rounded border border-slate-200 dark:border-ds-border shadow-sm flex flex-col md:flex-row gap-4">
+
+            <div class="relative w-full md:w-1/3 shrink-0">
+                <lucide-icon [name]="icons.BookOpen"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 stroke-[1.5px]"></lucide-icon>
+                <select [ngModel]="selectedCourseId()" (ngModelChange)="onCourseSelect($event)"
+                    class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border/50 rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors appearance-none">
+                    <option value="">{{ 'INSTRUCTOR_STUDENTS.SELECT_COURSE' | translate }}</option>
+                    @for (course of approvedCourses(); track course.id) {
+                    <option [value]="course.id">{{ course.title }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="relative flex-1">
+                <lucide-icon [name]="icons.Search"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 stroke-[1.5px]"></lucide-icon>
+                <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
+                    [disabled]="!selectedCourseId()"
+                    [placeholder]="'INSTRUCTOR_STUDENTS.SEARCH_PLACEHOLDER' | translate"
+                    class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border/50 rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors disabled:opacity-50">
+            </div>
+        </div>
+
+        @if (isLoadingCourses() || isLoadingStudents()) {
+        <div class="flex justify-center py-20">
+            <lucide-icon [name]="icons.Loader2" class="w-10 h-10 text-lotus animate-spin stroke-[2px]"></lucide-icon>
+        </div>
+        } @else if (!selectedCourseId()) {
+        <div
+            class="text-center py-24 border border-dashed border-slate-200 dark:border-ds-border rounded bg-slate-50/50 dark:bg-ds-black/30">
+            <lucide-icon [name]="icons.Users"
+                class="mx-auto h-12 w-12 text-slate-300 dark:text-ds-muted/30 mb-4 stroke-[1px]"></lucide-icon>
+            <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">{{
+                'INSTRUCTOR_STUDENTS.EMPTY_SELECT.TITLE' | translate }}</h3>
+            <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 max-w-md mx-auto">{{
+                'INSTRUCTOR_STUDENTS.EMPTY_SELECT.DESC' | translate }}</p>
+        </div>
+        } @else if (filteredStudents().length === 0) {
+        <div
+            class="text-center py-24 border border-dashed border-slate-200 dark:border-ds-border rounded bg-slate-50/50 dark:bg-ds-black/30">
+            <lucide-icon [name]="icons.Search"
+                class="mx-auto h-12 w-12 text-slate-300 dark:text-ds-muted/30 mb-4 stroke-[1px]"></lucide-icon>
+            <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">{{
+                'INSTRUCTOR_STUDENTS.EMPTY_DATA.TITLE' | translate }}</h3>
+            <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 max-w-md mx-auto">{{
+                'INSTRUCTOR_STUDENTS.EMPTY_DATA.DESC' | translate }}</p>
+        </div>
+        } @else {
+        <div
+            class="bg-white dark:bg-ds-surface rounded border border-slate-200 dark:border-ds-border shadow-sm overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+                <thead class="bg-slate-50 dark:bg-ds-black/50 border-b border-slate-200 dark:border-ds-border">
+                    <tr>
+                        <th
+                            class="py-5 px-6 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/80">
+                            {{ 'INSTRUCTOR_STUDENTS.TABLE.STUDENT' | translate }}</th>
+                        <th
+                            class="py-5 px-6 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/80">
+                            {{ 'INSTRUCTOR_STUDENTS.TABLE.PROGRESS' | translate }}</th>
+                        <th
+                            class="py-5 px-6 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/80">
+                            {{ 'INSTRUCTOR_STUDENTS.TABLE.ENROLLED' | translate }}</th>
+                        <th
+                            class="py-5 px-6 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/80">
+                            {{ 'INSTRUCTOR_STUDENTS.TABLE.LAST_ACCESS' | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (student of filteredStudents(); track student.enrollmentId) {
+                    <tr
+                        class="border-b border-slate-100 dark:border-ds-border last:border-0 hover:bg-slate-50 dark:hover:bg-ds-border/30 transition-colors group">
+                        <td class="py-4 px-6">
+                            <p class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{ student.studentName
+                                }}</p>
+                            <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 mt-1">{{
+                                student.studentEmail }}</p>
+                        </td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-3 w-48">
+                                <div class="flex-1 h-1.5 bg-slate-200 dark:bg-ds-black rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full transition-all duration-1000"
+                                        [ngClass]="student.isCompleted ? 'bg-green' : 'bg-lotus'"
+                                        [style.width.%]="student.progress"></div>
+                                </div>
+                                <span class="font-mono text-[10px] font-bold w-8 text-right"
+                                    [ngClass]="student.isCompleted ? 'text-green' : 'text-slate-700 dark:text-ds-muted'">
+                                    {{ student.progress }}%
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6 font-syne text-sm text-slate-700 dark:text-ds-muted">
+                            {{ student.enrolledAt | date:'dd/MM/yyyy' }}
+                        </td>
+                        <td class="py-4 px-6 font-syne text-sm text-slate-700 dark:text-ds-muted">
+                            @if (student.lastAccessedAt) {
+                            <div class="flex items-center gap-2">
+                                <lucide-icon [name]="icons.Clock"
+                                    class="w-3.5 h-3.5 text-slate-400 dark:text-ds-muted/60"></lucide-icon>
+                                {{ student.lastAccessedAt | date:'dd/MM/yyyy HH:mm' }}
+                            </div>
+                            } @else {
+                            <span class="text-slate-400 dark:text-ds-muted/50">-</span>
+                            }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+
+    </div>
+</app-instructor-layout>

@@ -1,0 +1,151 @@
+<app-instructor-layout title="{{ 'LAYOUT.INSTRUCTOR_SPACE' | translate }}">
+    <div class="space-y-8 animate-fade-in-up font-syne pb-12">
+
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+                <h1 class="font-cormorant text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-2">
+                    {{ 'INSTRUCTOR_EARNINGS.TITLE' | translate }}
+                </h1>
+                <p class="font-syne text-slate-500 dark:text-ds-muted/70">
+                    {{ 'INSTRUCTOR_EARNINGS.DESC' | translate }}
+                </p>
+            </div>
+        </div>
+
+        @if (isLoading()) {
+        <div class="flex justify-center items-center py-20">
+            <lucide-icon [name]="icons.Loader2" class="w-10 h-10 text-lotus animate-spin stroke-[2px]"></lucide-icon>
+        </div>
+        } @else {
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div
+                class="bg-white dark:bg-ds-surface p-6 rounded-lg border border-slate-200 dark:border-ds-border shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-ds-black flex items-center justify-center">
+                        <lucide-icon [name]="icons.DollarSign"
+                            class="w-5 h-5 text-slate-500 dark:text-ds-muted stroke-[2px]"></lucide-icon>
+                    </div>
+                    <h3
+                        class="font-mono text-[11px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/80">
+                        {{ 'INSTRUCTOR_EARNINGS.BALANCE.TOTAL_EARNED' | translate }}
+                    </h3>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <p class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white">
+                        {{ balance()?.currency }} {{ balance()?.totalEarned | number:'1.2-2' }}
+                    </p>
+                </div>
+            </div>
+
+            <div
+                class="bg-white dark:bg-ds-surface p-6 rounded-lg border border-slate-200 dark:border-ds-border shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-10 h-10 rounded-full bg-green/10 flex items-center justify-center border border-green/20">
+                        <lucide-icon [name]="icons.CheckCircle" class="w-5 h-5 text-green stroke-[2px]"></lucide-icon>
+                    </div>
+                    <h3
+                        class="font-mono text-[11px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/80">
+                        {{ 'INSTRUCTOR_EARNINGS.BALANCE.TOTAL_PAID' | translate }}
+                    </h3>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <p class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white">
+                        {{ balance()?.currency }} {{ balance()?.totalPaid | number:'1.2-2' }}
+                    </p>
+                </div>
+            </div>
+
+            <div
+                class="bg-white dark:bg-ds-surface p-6 rounded-lg border border-lotus/50 shadow-sm relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-lotus/10 rounded-full blur-xl"></div>
+                <div class="flex items-center gap-3 mb-4 relative z-10">
+                    <div
+                        class="w-10 h-10 rounded-full bg-lotus/10 flex items-center justify-center border border-lotus/30">
+                        <lucide-icon [name]="icons.Wallet" class="w-5 h-5 text-lotus stroke-[2px]"></lucide-icon>
+                    </div>
+                    <h3 class="font-mono text-[11px] uppercase tracking-widest font-bold text-lotus">
+                        {{ 'INSTRUCTOR_EARNINGS.BALANCE.PENDING' | translate }}
+                    </h3>
+                </div>
+                <div class="flex flex-col gap-1 relative z-10">
+                    <p class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white">
+                        {{ balance()?.currency }} {{ balance()?.pendingBalance | number:'1.2-2' }}
+                    </p>
+                    <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70">
+                        {{ 'INSTRUCTOR_EARNINGS.BALANCE.PENDING_DESC' | translate }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <div class="flex items-center gap-3 mb-6">
+                <lucide-icon [name]="icons.FileText" class="w-5 h-5 text-lotus stroke-[1.5px]"></lucide-icon>
+                <h2 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white">{{
+                    'INSTRUCTOR_EARNINGS.PAYOUTS_TITLE' | translate }}</h2>
+            </div>
+
+            @if (payouts().length > 0) {
+            <div
+                class="bg-white dark:bg-ds-surface rounded-lg border border-slate-200 dark:border-ds-border shadow-sm overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[700px]">
+                    <thead class="bg-slate-50 dark:bg-ds-black/50 border-b border-slate-200 dark:border-ds-border">
+                        <tr>
+                            <th
+                                class="py-4 px-6 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/80">
+                                {{ 'INSTRUCTOR_EARNINGS.TABLE.DATE' | translate }}</th>
+                            <th
+                                class="py-4 px-6 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/80">
+                                {{ 'INSTRUCTOR_EARNINGS.TABLE.AMOUNT' | translate }}</th>
+                            <th
+                                class="py-4 px-6 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/80">
+                                {{ 'INSTRUCTOR_EARNINGS.TABLE.METHOD' | translate }}</th>
+                            <th
+                                class="py-4 px-6 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted/80">
+                                {{ 'INSTRUCTOR_EARNINGS.TABLE.NOTES' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (payout of payouts(); track payout.id) {
+                        <tr
+                            class="border-b border-slate-100 dark:border-ds-border last:border-0 hover:bg-slate-50 dark:hover:bg-ds-border/30 transition-colors">
+                            <td class="py-4 px-6 font-syne font-bold text-sm text-slate-900 dark:text-white">
+                                {{ payout.paidAt | date:'dd MMM yyyy' }}
+                            </td>
+                            <td class="py-4 px-6 font-mono text-sm font-bold text-green">
+                                + {{ payout.currency }} {{ payout.amount | number:'1.2-2' }}
+                            </td>
+                            <td class="py-4 px-6">
+                                <span
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-100 dark:bg-ds-black border border-slate-200 dark:border-ds-border font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-ds-muted">
+                                    {{ payout.paymentMethod }}
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 font-syne text-xs text-slate-500 dark:text-ds-muted/80 max-w-[200px] truncate"
+                                [title]="payout.notes">
+                                {{ payout.notes || '-' }}
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            } @else {
+            <div
+                class="text-center py-20 border border-dashed border-slate-200 dark:border-ds-border rounded-lg bg-slate-50/50 dark:bg-ds-black/30">
+                <lucide-icon [name]="icons.Wallet"
+                    class="mx-auto h-12 w-12 text-slate-300 dark:text-ds-muted/30 mb-4 stroke-[1px]"></lucide-icon>
+                <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">{{
+                    'INSTRUCTOR_EARNINGS.EMPTY.TITLE' | translate }}</h3>
+                <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 max-w-md mx-auto">{{
+                    'INSTRUCTOR_EARNINGS.EMPTY.DESC' | translate }}</p>
+            </div>
+            }
+        </div>
+
+        }
+    </div>
+</app-instructor-layout>

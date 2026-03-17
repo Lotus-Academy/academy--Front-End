@@ -9,7 +9,11 @@
         "ADMIN_BADGE": "Administration",
         "ADMIN_ROLE": "Super Admin",
         "STUDENT_BADGE": "Espace Étudiant",
-        "STUDENT_ROLE": "Apprenant"
+        "STUDENT_ROLE": "Apprenant",
+        "REFERRAL": {
+            "BTN": "Inviter des Nouveaux Membres",
+            "COPIED": "Lien copié !"
+        }
     },
     "MENU": {
         "DASHBOARD": "Vue d'ensemble",
@@ -305,32 +309,41 @@
     },
     "INSTRUCTOR_DASHBOARD": {
         "STATS": {
-            "TOTAL_COURSES": "Cours Totaux",
+            "TOTAL_COURSES": "Total des cours",
             "APPROVED": "Approuvés",
             "PENDING": "En attente",
             "STUDENTS": "Étudiants"
         },
         "TABS": {
             "MY_COURSES": "Mes Cours",
-            "STUDENTS_PROGRESS": "Progression Étudiants"
-        },
-        "COURSES": {
-            "TITLE": "Gestion de mes cours",
-            "NEW_COURSE": "Créer un cours",
-            "EMPTY_TITLE": "Aucun cours créé",
-            "EMPTY_DESC": "Commencez par créer votre premier cours pour le partager avec les étudiants.",
-            "MODIFIED_ON": "Modifié le",
-            "BTN_EDIT": "Modifier"
-        },
-        "STUDENTS": {
-            "TITLE": "Aperçu de la progression",
-            "EMPTY_DESC": "Le tableau de progression des étudiants sera affiché ici."
+            "STUDENTS_PROGRESS": "Progression des Étudiants"
         },
         "STATUS": {
             "APPROVED": "Approuvé",
             "REJECTED": "Rejeté",
             "PENDING": "En révision",
             "DRAFT": "Brouillon"
+        },
+        "COURSES": {
+            "TITLE": "Mes Cours",
+            "NEW_COURSE": "Nouveau Cours",
+            "LOCKED_CREATION_TITLE": "Votre profil doit être approuvé pour pouvoir créer un cours.",
+            "EMPTY_TITLE": "Aucun cours",
+            "EMPTY_DESC": "Vous n'avez pas encore créé de cours. Commencez à partager votre expertise dès aujourd'hui.",
+            "MODIFIED_ON": "Modifié le",
+            "LOCKED_EDIT_TITLE": "Ce cours est en ligne et ne peut plus être modifié.",
+            "BTN_EDIT": "Modifier"
+        },
+        "STUDENTS": {
+            "TITLE": "Progression des Étudiants",
+            "SELECT_COURSE": "Sélectionner un cours",
+            "OPTION_PLACEHOLDER": "Choisir un cours...",
+            "TABLE_STUDENT": "Étudiant",
+            "TABLE_PROGRESS": "Progression",
+            "TABLE_ENROLLED": "Inscrit le",
+            "TABLE_LAST_ACCESS": "Dernier accès",
+            "EMPTY_COURSE_DESC": "Aucun étudiant n'est encore inscrit à ce cours.",
+            "EMPTY_DESC": "Sélectionnez un cours dans le menu ci-dessus pour voir la progression de vos étudiants."
         }
     },
     "COURSE_EDITOR": {
@@ -660,5 +673,64 @@
         "BACK_COURSE": "Retour au lecteur",
         "ERROR_MISSING": "Veuillez répondre à toutes les questions avant de soumettre.",
         "ERROR_GENERIC": "Une erreur est survenue lors de la correction."
+    },
+    "INSTRUCTOR_COURSES": {
+        "TITLE": "Gestion des cours",
+        "DESC": "Consultez, filtrez et gérez l'intégralité de votre catalogue.",
+        "BTN_NEW": "Nouveau Cours",
+        "FILTERS": {
+            "SEARCH": "Rechercher par titre...",
+            "ALL_STATUS": "Tous les statuts",
+            "ALL_CATEGORIES": "Toutes les catégories"
+        },
+        "STATS": {
+            "STUDENTS": "Étudiants inscrits",
+            "RATING": "Note moyenne"
+        },
+        "EMPTY": {
+            "TITLE": "Aucun cours trouvé",
+            "DESC": "Vos critères de recherche ne correspondent à aucun cours de votre catalogue."
+        }
+    },
+    "INSTRUCTOR_STUDENTS": {
+        "TITLE": "Suivi des Étudiants",
+        "DESC": "Analysez la progression et l'engagement de vos apprenants.",
+        "SELECT_COURSE": "Choisir un cours...",
+        "SEARCH_PLACEHOLDER": "Rechercher par nom ou email...",
+        "EMPTY_SELECT": {
+            "TITLE": "Sélectionnez un cours",
+            "DESC": "Veuillez choisir un cours dans le menu déroulant pour afficher la liste de vos étudiants."
+        },
+        "EMPTY_DATA": {
+            "TITLE": "Aucun résultat",
+            "DESC": "Aucun étudiant ne correspond à cette recherche ou ce cours n'a pas encore d'inscrits."
+        },
+        "TABLE": {
+            "STUDENT": "Étudiant",
+            "PROGRESS": "Progression",
+            "ENROLLED": "Inscrit le",
+            "LAST_ACCESS": "Dernier accès"
+        }
+    },
+    "INSTRUCTOR_EARNINGS": {
+        "TITLE": "Revenus et Versements",
+        "DESC": "Consultez votre solde et l'historique des paiements effectués par Lotus Academy.",
+        "BALANCE": {
+            "TOTAL_EARNED": "Total Généré (À vie)",
+            "TOTAL_PAID": "Déjà Versé",
+            "PENDING": "Solde en Attente",
+            "PENDING_DESC": "Sera versé lors du prochain cycle."
+        },
+        "PAYOUTS_TITLE": "Historique des versements",
+        "TABLE": {
+            "DATE": "Date du versement",
+            "AMOUNT": "Montant",
+            "METHOD": "Méthode de paiement",
+            "NOTES": "Notes / Référence"
+        },
+        "EMPTY": {
+            "TITLE": "Aucun versement",
+            "DESC": "Vous n'avez pas encore reçu de paiement. Vos revenus s'afficheront ici une fois le premier versement effectué."
+        }
     }
 }

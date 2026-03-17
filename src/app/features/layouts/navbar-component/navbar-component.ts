@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 // Ajout de ChevronDown et CheckCircle pour le menu de langue
 import { LucideAngularModule, Menu, X, Search, Globe, Moon, Sun, ChevronDown, CheckCircle } from 'lucide-angular';
-import { ThemeService } from '../../../core/services/theme-service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { LanguageService } from '../../../core/services/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 

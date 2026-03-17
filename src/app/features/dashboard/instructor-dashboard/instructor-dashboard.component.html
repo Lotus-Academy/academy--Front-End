@@ -1,4 +1,4 @@
-<div class="space-y-8 animate-fade-in-up">
+<div class="space-y-8 animate-fade-in-up font-syne">
 
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         @for (stat of stats(); track stat.labelKey) {
@@ -8,9 +8,11 @@
                 <lucide-icon [name]="stat.icon" class="w-5 h-5 stroke-[1.5px]"></lucide-icon>
             </div>
             <div>
-                <p class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white leading-none">{{ stat.value
+                <p class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white leading-none">{{
+                    stat.value
                     }}</p>
-                <p class="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-ds-muted/70 mt-1.5">{{
+                <p class="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-ds-muted/70 mt-1.5">
+                    {{
                     stat.labelKey | translate }}</p>
             </div>
         </div>
@@ -50,7 +52,7 @@
                     {{ 'INSTRUCTOR_DASHBOARD.COURSES.NEW_COURSE' | translate }}
                 </a>
                 } @else {
-                <button disabled [title]="'BANNERS.LOCKED_FEATURE' | translate"
+                <button disabled [title]="'INSTRUCTOR_DASHBOARD.COURSES.LOCKED_CREATION_TITLE' | translate"
                     class="flex items-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-ds-border/50 text-slate-400 dark:text-ds-muted/40 font-mono text-[11px] uppercase tracking-[0.12em] rounded cursor-not-allowed transition-colors shadow-sm border border-transparent dark:border-ds-border/30">
                     <lucide-icon [name]="icons.Lock" class="w-4 h-4"></lucide-icon>
                     {{ 'INSTRUCTOR_DASHBOARD.COURSES.NEW_COURSE' | translate }}
@@ -101,7 +103,8 @@
                                     class="bg-slate-100 dark:bg-ds-border/50 px-1.5 py-0.5 rounded text-slate-700 dark:text-ds-muted">{{
                                     course.categoryName }}</span>
                                 <span>•</span>
-                                <span>{{ 'INSTRUCTOR_DASHBOARD.COURSES.MODIFIED_ON' | translate }} {{ course.updatedAt |
+                                <span>{{ 'INSTRUCTOR_DASHBOARD.COURSES.MODIFIED_ON' | translate }} {{
+                                    course.updatedAt |
                                     date:'dd/MM/yyyy' }}</span>
                             </div>
                         </div>
@@ -116,10 +119,17 @@
                             {{ getStatusConfig(course.status).labelKey | translate }}
                         </span>
 
+                        @if (course.status === 'APPROVED') {
+                        <button disabled [title]="'INSTRUCTOR_DASHBOARD.COURSES.LOCKED_EDIT_TITLE' | translate"
+                            class="px-4 py-2 text-[10px] font-mono uppercase tracking-[0.1em] font-bold text-slate-400 bg-slate-50 border border-transparent dark:text-ds-muted/40 dark:bg-ds-black/50 dark:border-transparent cursor-not-allowed rounded shadow-none">
+                            {{ 'INSTRUCTOR_DASHBOARD.COURSES.BTN_EDIT' | translate }}
+                        </button>
+                        } @else {
                         <a [routerLink]="['/instructor/courses', course.id,'edit', 'curriculum']"
                             class="px-4 py-2 text-[10px] font-mono uppercase tracking-[0.1em] font-bold text-slate-700 bg-slate-100 border border-slate-200 hover:bg-white hover:border-slate-300 dark:text-ds-muted dark:bg-ds-black dark:border-ds-border dark:hover:bg-ds-border/50 rounded transition-all">
                             {{ 'INSTRUCTOR_DASHBOARD.COURSES.BTN_EDIT' | translate }}
                         </a>
+                        }
                     </div>
                 </div>
                 }
@@ -135,11 +145,101 @@
                 <h2 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white">{{
                     'INSTRUCTOR_DASHBOARD.STUDENTS.TITLE' | translate }}</h2>
             </div>
+
+            <div class="mb-8">
+                <label
+                    class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">
+                    {{ 'INSTRUCTOR_DASHBOARD.STUDENTS.SELECT_COURSE' | translate }}
+                </label>
+                <div class="relative w-full sm:w-1/2 md:w-1/3">
+                    <select [ngModel]="selectedCourseId()" (ngModelChange)="onCourseSelect($event)"
+                        class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors appearance-none">
+                        <option value="">{{ 'INSTRUCTOR_DASHBOARD.STUDENTS.OPTION_PLACEHOLDER' | translate }}
+                        </option>
+                        @for (course of myCourses(); track course.id) {
+                        @if (course.status === 'APPROVED') {
+                        <option [value]="course.id">{{ course.title }}</option>
+                        }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            @if (isLoadingStudents()) {
+            <div class="flex justify-center py-12">
+                <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin"></lucide-icon>
+            </div>
+            } @else if (selectedCourseId() && courseStudents().length > 0) {
+            <div class="overflow-x-auto rounded border border-slate-200 dark:border-ds-border">
+                <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead class="bg-slate-50 dark:bg-ds-black/50">
+                        <tr class="border-b border-slate-200 dark:border-ds-border">
+                            <th
+                                class="py-4 px-4 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-ds-muted/70">
+                                {{ 'INSTRUCTOR_DASHBOARD.STUDENTS.TABLE_STUDENT' | translate }}</th>
+                            <th
+                                class="py-4 px-4 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-ds-muted/70">
+                                {{ 'INSTRUCTOR_DASHBOARD.STUDENTS.TABLE_PROGRESS' | translate }}</th>
+                            <th
+                                class="py-4 px-4 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-ds-muted/70">
+                                {{ 'INSTRUCTOR_DASHBOARD.STUDENTS.TABLE_ENROLLED' | translate }}</th>
+                            <th
+                                class="py-4 px-4 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-ds-muted/70">
+                                {{ 'INSTRUCTOR_DASHBOARD.STUDENTS.TABLE_LAST_ACCESS' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (student of courseStudents(); track student.enrollmentId) {
+                        <tr
+                            class="border-b border-slate-100 dark:border-ds-border hover:bg-slate-50 dark:hover:bg-ds-border/30 transition-colors">
+                            <td class="py-4 px-4">
+                                <p class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{
+                                    student.studentName }}</p>
+                                <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 mt-0.5">{{
+                                    student.studentEmail }}</p>
+                            </td>
+                            <td class="py-4 px-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-24 h-1.5 bg-slate-200 dark:bg-ds-black rounded-full overflow-hidden">
+                                        <div class="h-full rounded-full transition-all duration-1000"
+                                            [ngClass]="student.isCompleted ? 'bg-green' : 'bg-lotus'"
+                                            [style.width.%]="student.progress"></div>
+                                    </div>
+                                    <span class="font-mono text-[10px] font-bold"
+                                        [ngClass]="student.isCompleted ? 'text-green' : 'text-slate-700 dark:text-ds-muted'">
+                                        {{ student.progress }}%
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 font-syne text-sm text-slate-700 dark:text-ds-muted">
+                                {{ student.enrolledAt | date:'dd/MM/yyyy' }}
+                            </td>
+                            <td class="py-4 px-4 font-syne text-sm text-slate-700 dark:text-ds-muted">
+                                {{ student.lastAccessedAt ? (student.lastAccessedAt | date:'dd/MM/yyyy HH:mm') : '-'
+                                }}
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            } @else if (selectedCourseId()) {
             <div
                 class="text-center py-20 border border-dashed border-slate-200 dark:border-ds-border rounded bg-slate-50/50 dark:bg-ds-black/30">
+                <lucide-icon [name]="icons.Search"
+                    class="mx-auto h-10 w-10 text-slate-300 dark:text-ds-muted/30 mb-4 stroke-[1.5px]"></lucide-icon>
+                <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70">{{
+                    'INSTRUCTOR_DASHBOARD.STUDENTS.EMPTY_COURSE_DESC' | translate }}</p>
+            </div>
+            } @else {
+            <div
+                class="text-center py-20 border border-dashed border-slate-200 dark:border-ds-border rounded bg-slate-50/50 dark:bg-ds-black/30">
+                <lucide-icon [name]="icons.Users"
+                    class="mx-auto h-12 w-12 text-slate-300 dark:text-ds-muted/30 mb-4 stroke-[1px]"></lucide-icon>
                 <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70">{{
                     'INSTRUCTOR_DASHBOARD.STUDENTS.EMPTY_DESC' | translate }}</p>
             </div>
+            }
         </div>
         }
 

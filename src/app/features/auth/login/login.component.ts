@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal, untracked, computed } from '@angular/core';
+import { Component, effect, inject, signal, untracked, computed, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
@@ -13,7 +13,7 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../../core/servic
   imports: [ReactiveFormsModule, RouterLink, TranslateModule, LucideAngularModule],
   templateUrl: './login.component.html'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -55,6 +55,27 @@ export class LoginComponent {
         this.updateValidators(loginMode);
         this.errorMessage.set('');
       });
+    });
+  }
+
+  // --- NOUVEAU : Capture du code de parrainage au chargement ---
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const refCode = params['ref'];
+
+      if (refCode) {
+        // 1. Pré-remplir le champ de parrainage avec le code de l'URL
+        this.authForm.patchValue({ referredByCode: refCode });
+
+        // 2. Basculer automatiquement sur le mode inscription si ce n'est pas le cas
+        if (params['mode'] !== 'signup') {
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { mode: 'signup' },
+            queryParamsHandling: 'merge', // Conserve le paramètre ?ref=
+          });
+        }
+      }
     });
   }
 
@@ -136,7 +157,9 @@ export class LoginComponent {
       lastName: formValues.lastName,
       email: formValues.email,
       password: formValues.password,
-      role: 'STUDENT'
+      role: 'STUDENT',
+      // Assurez-vous que le service envoie bien ce champ au backend
+      referredByCode: formValues.referredByCode
     };
 
     this.authService.register(request).subscribe({

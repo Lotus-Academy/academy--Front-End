@@ -107,5 +107,13 @@ export class CourseService {
     return this.http.patch(`${this.apiUrl}/courses/${courseId}/submit-review`, {}, { responseType: 'text' });
   }
 
+  /**
+   * Récupérer la progression des étudiants pour un cours spécifique
+   */
+  getCourseStudents(courseId: string, page: number = 0, size: number = 20): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/instructors/courses/${courseId}/students`, {
+      params: { page: page.toString(), size: size.toString() }
+    });
+  }
 
 }

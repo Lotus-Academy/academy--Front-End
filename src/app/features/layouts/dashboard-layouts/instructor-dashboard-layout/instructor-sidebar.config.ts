@@ -17,6 +17,7 @@ export interface SidebarLink {
     requiresApproval: boolean;
     dividerBefore?: boolean;
     badgeKey?: string; //Pour afficher "BETA" ou "SOON"
+    isDisabled?: boolean;
 }
 
 export const INSTRUCTOR_SIDEBAR_LINKS: SidebarLink[] = [
@@ -39,11 +40,12 @@ export const INSTRUCTOR_SIDEBAR_LINKS: SidebarLink[] = [
         requiresApproval: true
     },
     {
-        labelKey: 'SIDEBAR.INSTRUCTOR.LIVE_SESSIONS', // Le fameux ajout pour le Live
+        labelKey: 'SIDEBAR.INSTRUCTOR.LIVE_SESSIONS',
         href: '/instructor/live',
         icon: Radio,
         requiresApproval: true,
-        badgeKey: 'SIDEBAR.BADGES.SOON' // Badge Bientôt !
+        badgeKey: 'SIDEBAR.BADGES.SOON',
+        isDisabled: true
     },
     {
         labelKey: 'SIDEBAR.INSTRUCTOR.STUDENTS',
@@ -61,7 +63,9 @@ export const INSTRUCTOR_SIDEBAR_LINKS: SidebarLink[] = [
         labelKey: 'SIDEBAR.INSTRUCTOR.MENTORING',
         href: '/instructor/mentoring',
         icon: MessageSquare,
-        requiresApproval: true
+        requiresApproval: true,
+        badgeKey: 'SIDEBAR.BADGES.BETA',
+        isDisabled: true
     },
     {
         labelKey: 'SIDEBAR.INSTRUCTOR.PROFILE',
@@ -69,11 +73,12 @@ export const INSTRUCTOR_SIDEBAR_LINKS: SidebarLink[] = [
         icon: UserCircle,
         requiresApproval: false,
         dividerBefore: true
-    },
-    {
-        labelKey: 'SIDEBAR.INSTRUCTOR.SETTINGS',
-        href: '/instructor/settings',
-        icon: Settings,
-        requiresApproval: false
     }
+    //,
+    //{
+    //    labelKey: 'SIDEBAR.INSTRUCTOR.SETTINGS',
+    //    href: '/instructor/settings',
+    //    icon: Settings,
+    //    requiresApproval: false
+    //}
 ];

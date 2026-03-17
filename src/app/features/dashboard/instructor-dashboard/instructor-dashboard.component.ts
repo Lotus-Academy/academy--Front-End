@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // Nécessaire pour ngModel
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -13,33 +14,38 @@ import {
   XCircle,
   BarChart3,
   Loader2,
-  Lock
+  Lock,
+  Search
 } from 'lucide-angular';
 
 import { CourseResponseDTO } from '../../../core/models/course.dto';
 import { CourseService } from '../../../core/services/course.service';
-import { InstructorProfileService } from '../../../core/services/instructor-profile.service'; // <-- AJOUT DU SERVICE
+import { InstructorProfileService } from '../../../core/services/instructor-profile.service';
+import { InstructorLayoutComponent } from "../../layouts/dashboard-layouts/instructor-dashboard-layout/instructor-dashboard-layout.component";
 
 @Component({
   selector: 'app-instructor-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, TranslateModule],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, TranslateModule, InstructorLayoutComponent],
   templateUrl: './instructor-dashboard.component.html'
 })
 export class InstructorDashboardComponent implements OnInit {
   private courseService = inject(CourseService);
-  private instructorProfileService = inject(InstructorProfileService); // Injection du service
+  private instructorProfileService = inject(InstructorProfileService);
 
-  readonly icons = { Video, Users, Eye, Clock, Plus, CheckCircle, XCircle, BarChart3, Loader2, Lock };
+  readonly icons = { Video, Users, Eye, Clock, Plus, CheckCircle, XCircle, BarChart3, Loader2, Lock, Search };
 
   activeTab = signal<'courses' | 'students'>('courses');
 
   myCourses = signal<CourseResponseDTO[]>([]);
   isLoading = signal<boolean>(true);
 
-  // GESTION DU STATUT DU PROFIL
-  profileStatus = signal<'LOADING' | 'MISSING' | 'PENDING' | 'APPROVED' | 'REJECTED'>('LOADING');
+  // État de la progression des étudiants
+  selectedCourseId = signal<string>('');
+  courseStudents = signal<any[]>([]);
+  isLoadingStudents = signal<boolean>(false);
 
+  profileStatus = signal<'LOADING' | 'MISSING' | 'PENDING' | 'APPROVED' | 'REJECTED'>('LOADING');
   canCreateCourse = computed(() => this.profileStatus() === 'APPROVED');
 
   stats = signal([
@@ -54,7 +60,6 @@ export class InstructorDashboardComponent implements OnInit {
     this.fetchInstructorCourses();
   }
 
-  // NOUVELLE MÉTHODE : Récupérer le statut de l'instructeur
   fetchProfileStatus() {
     this.instructorProfileService.getMyProfile().subscribe({
       next: (profile) => this.profileStatus.set(profile.approvalStatus),
@@ -68,8 +73,22 @@ export class InstructorDashboardComponent implements OnInit {
     this.isLoading.set(true);
     this.courseService.getInstructorCourses().subscribe({
       next: (courses) => {
-        this.myCourses.set(courses);
-        this.updateStats(courses);
+        // Logique de tri personnalisé
+        const SORT_PRIORITY: Record<string, number> = {
+          'REJECTED': 1,
+          'DRAFT': 2,
+          'PENDING_REVIEW': 3,
+          'APPROVED': 4
+        };
+
+        const sortedCourses = courses.sort((a, b) => {
+          const priorityA = SORT_PRIORITY[a.status] || 99;
+          const priorityB = SORT_PRIORITY[b.status] || 99;
+          return priorityA - priorityB;
+        });
+
+        this.myCourses.set(sortedCourses);
+        this.updateStats(sortedCourses);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -101,5 +120,36 @@ export class InstructorDashboardComponent implements OnInit {
       default:
         return { labelKey: 'INSTRUCTOR_DASHBOARD.STATUS.DRAFT', icon: this.icons.Clock, bg: 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-ds-border/50 dark:text-ds-muted dark:border-ds-border' };
     }
+  }
+
+  // --- GESTION DE LA PROGRESSION DES ÉTUDIANTS ---
+
+  onCourseSelect(courseId: string) {
+    this.selectedCourseId.set(courseId);
+    if (courseId) {
+      this.fetchCourseStudents(courseId);
+    } else {
+      this.courseStudents.set([]);
+    }
+  }
+
+  fetchCourseStudents(courseId: string) {
+    this.isLoadingStudents.set(true);
+    this.courseService.getCourseStudents(courseId).subscribe({
+      next: (res) => {
+        const content = res.content || [];
+        // Arrondir la progression pour un affichage propre
+        const formattedStudents = content.map((student: any) => ({
+          ...student,
+          progress: student.progress ? Math.round(student.progress) : 0
+        }));
+        this.courseStudents.set(formattedStudents);
+        this.isLoadingStudents.set(false);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des étudiants', err);
+        this.isLoadingStudents.set(false);
+      }
+    });
   }
 }

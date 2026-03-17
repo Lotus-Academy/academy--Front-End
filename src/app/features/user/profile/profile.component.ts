@@ -5,7 +5,7 @@ import { LucideAngularModule, User, Shield, Camera, AlertTriangle, Save, CheckCi
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 
-import { UserService } from '../../../core/services/user-service';
+import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({

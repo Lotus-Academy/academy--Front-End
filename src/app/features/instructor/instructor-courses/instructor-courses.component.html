@@ -1,0 +1,158 @@
+<app-instructor-layout title="{{ 'LAYOUT.INSTRUCTOR_SPACE' | translate }}">
+    <div class="space-y-8 animate-fade-in-up font-syne pb-12">
+
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+                <h1 class="font-cormorant text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-2">
+                    {{ 'INSTRUCTOR_COURSES.TITLE' | translate }}
+                </h1>
+                <p class="font-syne text-slate-500 dark:text-ds-muted/70">
+                    {{ 'INSTRUCTOR_COURSES.DESC' | translate }} ({{ filteredCourses().length }})
+                </p>
+            </div>
+
+            @if (canCreateCourse()) {
+            <a routerLink="/instructor/courses/new"
+                class="flex items-center justify-center gap-2 px-6 py-3.5 bg-lotus hover:bg-lotus-light text-ds-black font-mono text-[11px] uppercase tracking-[0.12em] font-bold rounded transition-all shadow-sm">
+                <lucide-icon [name]="icons.Plus" class="w-4 h-4"></lucide-icon>
+                {{ 'INSTRUCTOR_COURSES.BTN_NEW' | translate }}
+            </a>
+            } @else {
+            <button disabled [title]="'INSTRUCTOR_DASHBOARD.COURSES.LOCKED_CREATION_TITLE' | translate"
+                class="flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-100 dark:bg-ds-border/50 text-slate-400 dark:text-ds-muted/40 font-mono text-[11px] uppercase tracking-[0.12em] font-bold rounded cursor-not-allowed transition-colors shadow-none border border-transparent dark:border-ds-border/30">
+                <lucide-icon [name]="icons.Lock" class="w-4 h-4"></lucide-icon>
+                {{ 'INSTRUCTOR_COURSES.BTN_NEW' | translate }}
+            </button>
+            }
+        </div>
+
+        <div
+            class="bg-white dark:bg-ds-surface p-4 rounded border border-slate-200 dark:border-ds-border shadow-sm flex flex-col md:flex-row gap-4">
+
+            <div class="relative flex-1">
+                <lucide-icon [name]="icons.Search"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 stroke-[1.5px]"></lucide-icon>
+                <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
+                    [placeholder]="'INSTRUCTOR_COURSES.FILTERS.SEARCH' | translate"
+                    class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border/50 rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors">
+            </div>
+
+            <div class="relative w-full md:w-48 shrink-0">
+                <lucide-icon [name]="icons.Filter"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 stroke-[1.5px]"></lucide-icon>
+                <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)"
+                    class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border/50 rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors appearance-none">
+                    <option value="all">{{ 'INSTRUCTOR_COURSES.FILTERS.ALL_STATUS' | translate }}</option>
+                    <option value="APPROVED">{{ 'INSTRUCTOR_DASHBOARD.STATUS.APPROVED' | translate }}</option>
+                    <option value="PENDING_REVIEW">{{ 'INSTRUCTOR_DASHBOARD.STATUS.PENDING' | translate }}</option>
+                    <option value="DRAFT">{{ 'INSTRUCTOR_DASHBOARD.STATUS.DRAFT' | translate }}</option>
+                    <option value="REJECTED">{{ 'INSTRUCTOR_DASHBOARD.STATUS.REJECTED' | translate }}</option>
+                </select>
+            </div>
+
+            <div class="relative w-full md:w-64 shrink-0">
+                <lucide-icon [name]="icons.Filter"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 stroke-[1.5px]"></lucide-icon>
+                <select [ngModel]="selectedCategory()" (ngModelChange)="selectedCategory.set($event)"
+                    class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border/50 rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors appearance-none">
+                    <option value="all">{{ 'INSTRUCTOR_COURSES.FILTERS.ALL_CATEGORIES' | translate }}</option>
+                    @for (cat of categories(); track cat.id) {
+                    <option [value]="cat.id">{{ cat.name }}</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        @if (isLoading()) {
+        <div class="flex justify-center py-20">
+            <lucide-icon [name]="icons.Loader2" class="w-10 h-10 text-lotus animate-spin stroke-[2px]"></lucide-icon>
+        </div>
+        } @else if (filteredCourses().length > 0) {
+
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            @for (course of filteredCourses(); track course.id) {
+
+            <div
+                class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded overflow-hidden shadow-sm hover:border-lotus/50 transition-colors flex flex-col h-full group">
+
+                <div
+                    class="relative aspect-video bg-slate-100 dark:bg-ds-black overflow-hidden border-b border-slate-200 dark:border-ds-border shrink-0">
+                    @if (course.thumbnailUrl) {
+                    <img [src]="course.thumbnailUrl"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    } @else {
+                    <div class="w-full h-full flex items-center justify-center">
+                        <lucide-icon [name]="icons.Video"
+                            class="w-10 h-10 text-slate-300 dark:text-ds-muted/30 stroke-[1px]"></lucide-icon>
+                    </div>
+                    }
+
+                    <div class="absolute top-2 right-2">
+                        <span
+                            class="px-2 py-1 text-[9px] font-mono uppercase tracking-widest rounded border flex items-center gap-1 bg-white/90 dark:bg-ds-black/90 backdrop-blur-sm"
+                            [ngClass]="getStatusConfig(course.status).bg">
+                            {{ getStatusConfig(course.status).labelKey | translate }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="p-5 flex flex-col flex-1">
+
+                    <div class="mb-auto">
+                        <span class="text-[10px] font-mono uppercase tracking-widest font-bold text-lotus mb-2 block">
+                            {{ course.categoryName }}
+                        </span>
+                        <h3
+                            class="font-syne font-bold text-slate-900 dark:text-white text-lg line-clamp-2 mb-2 leading-tight group-hover:text-lotus transition-colors">
+                            {{ course.title }}
+                        </h3>
+                    </div>
+
+                    <div
+                        class="flex items-center justify-between py-4 mt-4 border-t border-slate-100 dark:border-ds-border">
+                        <div class="flex items-center gap-1.5 text-slate-600 dark:text-ds-muted"
+                            [title]="'INSTRUCTOR_COURSES.STATS.STUDENTS' | translate">
+                            <lucide-icon [name]="icons.Users" class="w-4 h-4"></lucide-icon>
+                            <span class="font-syne text-sm font-bold">{{ course.studentsCount || 0 }}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-yellow-500"
+                            [title]="'INSTRUCTOR_COURSES.STATS.RATING' | translate">
+                            <lucide-icon [name]="icons.Star" class="w-4 h-4 fill-yellow-500"></lucide-icon>
+                            <span class="font-syne text-sm font-bold">{{ course.averageRating ? (course.averageRating |
+                                number:'1.1-1') : 'N/A' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 dark:border-ds-border">
+                        @if (course.status === 'APPROVED') {
+                        <button disabled
+                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-[10px] font-mono uppercase tracking-[0.1em] font-bold text-slate-400 bg-slate-50 dark:text-ds-muted/40 dark:bg-ds-black/50 cursor-not-allowed rounded transition-all">
+                            <lucide-icon [name]="icons.Lock" class="w-3.5 h-3.5"></lucide-icon>
+                            {{ 'INSTRUCTOR_DASHBOARD.COURSES.LOCKED_EDIT_TITLE' | translate }}
+                        </button>
+                        } @else {
+                        <a [routerLink]="['/instructor/courses', course.id, 'edit', 'curriculum']"
+                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-[10px] font-mono uppercase tracking-[0.1em] font-bold text-slate-700 bg-slate-100 border border-slate-200 hover:bg-white hover:border-slate-300 dark:text-ds-muted dark:bg-ds-black dark:border-ds-border dark:hover:bg-ds-border/50 rounded transition-all">
+                            <lucide-icon [name]="icons.Edit2" class="w-3.5 h-3.5"></lucide-icon>
+                            {{ 'INSTRUCTOR_DASHBOARD.COURSES.BTN_EDIT' | translate }}
+                        </a>
+                        }
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else {
+        <div
+            class="bg-white dark:bg-ds-surface rounded border border-dashed border-slate-300 dark:border-ds-border py-24 text-center">
+            <lucide-icon [name]="icons.Video"
+                class="mx-auto h-12 w-12 text-slate-300 dark:text-ds-muted/30 mb-4 stroke-[1.5px]"></lucide-icon>
+            <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">{{
+                'INSTRUCTOR_COURSES.EMPTY.TITLE' | translate }}</h3>
+            <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 max-w-md mx-auto">{{
+                'INSTRUCTOR_COURSES.EMPTY.DESC' | translate }}</p>
+        </div>
+        }
+
+    </div>
+</app-instructor-layout>
