@@ -111,7 +111,8 @@
         "TEACH": "Enseigner",
         "FAQ": "FAQ",
         "LOGIN": "Connexion",
-        "SIGNUP": "S'inscrire"
+        "SIGNUP": "Inscription",
+        "DASHBOARD": "Tableau de Bord"
     },
     "FOOTER": {
         "DESC": "Apprenez auprès d'instructeurs experts avec du contenu vidéo de qualité professionnelle et des stratégies de trading concrètes.",
@@ -513,7 +514,9 @@
         "VIDEO_HOURS": "de vidéo",
         "CERTIFICATE": "Certificat de réussite",
         "ABOUT_INSTRUCTOR": "À propos de l'instructeur",
-        "VIEW_PROFILE": "Voir le profil"
+        "VIEW_PROFILE": "Voir le profil",
+        "ACCESS_COURSE": "Accéder au cours",
+        "RESUME_COURSE": "Reprendre le cours"
     },
     "COURSE_LIST": {
         "TITLE": "Explorer les Cours",
@@ -732,5 +735,19 @@
             "TITLE": "Aucun versement",
             "DESC": "Vous n'avez pas encore reçu de paiement. Vos revenus s'afficheront ici une fois le premier versement effectué."
         }
+    },
+    "STUDENT_HOME": {
+        "WELCOME": "Heureux de vous revoir",
+        "SUBTITLE": "Qu'allons-nous apprendre aujourd'hui ?",
+        "CONTINUE_WATCHING": "Reprendre la lecture",
+        "MY_LEARNING": "Mon apprentissage",
+        "COMPLETED": "Terminé",
+        "TOP_CATEGORIES": "Explorer les catégories",
+        "TRENDING": "Tendances du moment",
+        "TOP_RATED": "Les mieux notés",
+        "VIEW_ALL": "Tout afficher",
+        "NEW_RELEASES": "Nouveautés",
+        "NEW_BADGE": "Nouveau",
+        "FREE": "Gratuit"
     }
 }

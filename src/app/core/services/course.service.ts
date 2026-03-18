@@ -116,4 +116,33 @@ export class CourseService {
     });
   }
 
+
+  /**
+   * Récupère les 8 cours les mieux notés
+   */
+  getTopRatedCourses(): Observable<CourseResponseDTO[]> {
+    return this.http.get<CourseResponseDTO[]>(`${this.apiUrl}/courses/top-rated`);
+  }
+
+  /**
+   * Récupère les 8 dernières nouveautés
+   */
+  getNewestCourses(): Observable<CourseResponseDTO[]> {
+    return this.http.get<CourseResponseDTO[]>(`${this.apiUrl}/courses/newest`);
+  }
+
+  /**
+   * Récupère les catégories les plus populaires
+   */
+  getPopularCategories(): Observable<CategoryDTO[]> {
+    return this.http.get<CategoryDTO[]>(`${environment.apiUrl}/api/v1/categories/popular`);
+  }
+
+  /**
+   * Récupère les 8 cours les plus populaires (Trending)
+   */
+  getTrendingCourses(): Observable<CourseResponseDTO[]> {
+    return this.http.get<CourseResponseDTO[]>(`${this.apiUrl}/courses/trending`);
+  }
+
 }

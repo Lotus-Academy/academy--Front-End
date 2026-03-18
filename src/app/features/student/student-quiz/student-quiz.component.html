@@ -25,6 +25,17 @@
             </div>
             } @else if (quiz()) {
 
+            @if (isAdmin()) {
+            <div
+                class="mb-8 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded flex items-center gap-4 text-yellow-500 animate-fade-in">
+                <lucide-icon [name]="icons.ShieldAlert" class="w-6 h-6 shrink-0 stroke-[2px]"></lucide-icon>
+                <p class="font-syne text-sm font-bold leading-relaxed">
+                    Mode Administrateur : Vous consultez ce quiz en mode lecture seule. La soumission des réponses et la
+                    génération de certificat sont désactivées pour votre rôle.
+                </p>
+            </div>
+            }
+
             @if (quizResult(); as result) {
             <div class="bg-ds-surface border border-ds-border p-8 sm:p-12 rounded-lg text-center animate-fade-in-up">
 
@@ -63,7 +74,7 @@
                         {{ 'STUDENT_QUIZ.BACK_COURSE' | translate }}
                     </a>
 
-                    @if (result.passed) {
+                    @if (result.passed && !isAdmin()) {
                     <button (click)="downloadCertificate()" [disabled]="isDownloading()"
                         class="px-8 py-3.5 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded hover:bg-lotus-light disabled:opacity-50 transition-all flex items-center gap-2">
                         @if (isDownloading()) {
@@ -73,7 +84,7 @@
                         }
                         {{ 'STUDENT_QUIZ.BTN_CERTIFICATE' | translate }}
                     </button>
-                    } @else {
+                    } @else if (!result.passed && !isAdmin()) {
                     <button (click)="retryQuiz()"
                         class="px-8 py-3.5 border-2 border-lotus text-lotus font-mono text-[11px] uppercase tracking-widest font-bold rounded hover:bg-lotus/10 transition-colors">
                         {{ 'STUDENT_QUIZ.BTN_RETRY' | translate }}
@@ -107,7 +118,6 @@
                 @for (question of quiz()?.questions; track question.id; let qIndex = $index) {
                 <div class="bg-ds-surface border border-ds-border rounded p-6 sm:p-8 animate-fade-in-up"
                     [style.animation-delay]="(qIndex * 50) + 'ms'">
-
                     <h3 class="font-mono text-[10px] uppercase tracking-widest font-bold text-lotus mb-3">
                         {{ 'STUDENT_QUIZ.QUESTION' | translate }} {{ qIndex + 1 }}
                     </h3>
@@ -117,9 +127,13 @@
 
                     <div class="space-y-3">
                         @for (option of question.options; track option.id) {
-                        <button (click)="selectOption(question.id, option.id)"
+                        <button (click)="selectOption(question.id, option.id)" [disabled]="isAdmin()"
                             class="w-full flex items-center gap-4 p-4 rounded border transition-all text-left group"
-                            [ngClass]="isOptionSelected(question.id, option.id) ? 'bg-lotus/10 border-lotus' : 'bg-ds-black border-ds-border hover:border-ds-muted/50'">
+                            [ngClass]="[
+                                isOptionSelected(question.id, option.id) ? 'bg-lotus/10 border-lotus' : 'bg-ds-black border-ds-border',
+                                !isAdmin() && !isOptionSelected(question.id, option.id) ? 'hover:border-ds-muted/50' : '',
+                                isAdmin() ? 'cursor-not-allowed' : 'cursor-pointer'
+                            ]">
 
                             <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors"
                                 [ngClass]="isOptionSelected(question.id, option.id) ? 'border-lotus' : 'border-ds-muted/50 group-hover:border-ds-muted'">
@@ -140,8 +154,9 @@
             </div>
 
             <div class="mt-12 flex justify-end animate-fade-in-up" style="animation-delay: 500ms;">
-                <button (click)="submitAnswers()" [disabled]="isSubmitting()"
-                    class="px-8 py-4 bg-lotus text-ds-black font-mono text-[12px] uppercase tracking-widest font-bold rounded hover:bg-lotus-light disabled:opacity-50 transition-all flex items-center gap-3 shadow-sm">
+                <button (click)="submitAnswers()" [disabled]="isSubmitting() || isAdmin()"
+                    class="px-8 py-4 bg-lotus text-ds-black font-mono text-[12px] uppercase tracking-widest font-bold rounded disabled:opacity-50 transition-all flex items-center gap-3 shadow-sm"
+                    [ngClass]="isAdmin() ? 'cursor-not-allowed' : 'hover:bg-lotus-light'">
                     @if (isSubmitting()) {
                     <lucide-icon [name]="icons.Loader2" class="w-5 h-5 animate-spin"></lucide-icon>
                     {{ 'STUDENT_QUIZ.BTN_SUBMITTING' | translate }}

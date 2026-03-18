@@ -21,12 +21,11 @@ import {
 import { CourseResponseDTO } from '../../../core/models/course.dto';
 import { CourseService } from '../../../core/services/course.service';
 import { InstructorProfileService } from '../../../core/services/instructor-profile.service';
-import { InstructorLayoutComponent } from "../../layouts/dashboard-layouts/instructor-dashboard-layout/instructor-dashboard-layout.component";
 
 @Component({
   selector: 'app-instructor-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, TranslateModule, InstructorLayoutComponent],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, TranslateModule],
   templateUrl: './instructor-dashboard.component.html'
 })
 export class InstructorDashboardComponent implements OnInit {

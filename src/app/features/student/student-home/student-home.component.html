@@ -1,0 +1,294 @@
+<app-home-layout>
+    <div
+        class="min-h-screen bg-slate-50 dark:bg-ds-black text-slate-900 dark:text-white font-syne pb-20 transition-colors duration-300">
+
+        @if (isLoading()) {
+        <div class="flex items-center justify-center h-[60vh]">
+            <lucide-icon [name]="icons.Loader2" class="w-12 h-12 text-lotus animate-spin stroke-[2px]"></lucide-icon>
+        </div>
+        } @else {
+
+        <section
+            class="bg-white dark:bg-ds-surface border-b border-slate-200 dark:border-ds-border pt-12 pb-8 mb-10 transition-colors">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+                <h1 class="font-cormorant text-4xl md:text-5xl font-bold mb-2 animate-fade-in-up">
+                    {{ 'STUDENT_HOME.WELCOME' | translate }}, {{ currentUser()?.firstName }} !
+                </h1>
+                <p class="text-slate-600 dark:text-ds-muted/80 text-lg animate-fade-in-up"
+                    style="animation-delay: 100ms;">
+                    {{ 'STUDENT_HOME.SUBTITLE' | translate }}
+                </p>
+            </div>
+        </section>
+
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl space-y-16">
+
+            @if (continueWatching().length > 0) {
+            <section class="animate-fade-in-up" style="animation-delay: 200ms;">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <lucide-icon [name]="icons.PlayCircle" class="w-6 h-6 text-lotus stroke-[2px]"></lucide-icon>
+                        <h2 class="font-cormorant text-3xl font-bold">{{ 'STUDENT_HOME.CONTINUE_WATCHING' | translate }}
+                        </h2>
+                    </div>
+                    <a routerLink="/dashboard"
+                        class="font-mono text-[10px] uppercase tracking-widest font-bold text-lotus hover:text-lotus-light transition-colors flex items-center gap-1">
+                        {{ 'STUDENT_HOME.MY_LEARNING' | translate }}
+                        <lucide-icon [name]="icons.ChevronRight" class="w-4 h-4"></lucide-icon>
+                    </a>
+                </div>
+
+                <div class="flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory hide-scrollbar">
+                    @for (enrollment of continueWatching(); track enrollment.id) {
+                    <a [routerLink]="['/player', enrollment.courseId]"
+                        class="snap-start shrink-0 w-[280px] sm:w-[340px] group block">
+                        <div
+                            class="bg-white dark:bg-ds-surface rounded-lg border border-slate-200 dark:border-ds-border overflow-hidden shadow-sm hover:border-lotus/50 hover:shadow-md transition-all h-full flex flex-col">
+                            <div
+                                class="relative aspect-video bg-slate-100 dark:bg-ds-black overflow-hidden border-b border-slate-200 dark:border-ds-border">
+                                @if (enrollment.courseThumbnail) {
+                                <img [src]="enrollment.courseThumbnail"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                }
+                                <div
+                                    class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                                    <div
+                                        class="w-12 h-12 bg-white/90 dark:bg-ds-surface/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all shadow-lg">
+                                        <lucide-icon [name]="icons.Play"
+                                            class="w-5 h-5 text-lotus ml-1 stroke-[1.5px]"></lucide-icon>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-5 flex flex-col flex-1">
+                                <h3
+                                    class="font-syne font-bold text-slate-900 dark:text-white line-clamp-2 mb-1 group-hover:text-lotus transition-colors text-sm">
+                                    {{ enrollment.courseTitle }}
+                                </h3>
+                                <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 mb-4">
+                                    {{ enrollment.instructorName }}
+                                </p>
+
+                                <div class="mt-auto">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span
+                                            class="font-mono text-[9px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                            {{ enrollment.progress }}% {{ 'STUDENT_HOME.COMPLETED' | translate }}
+                                        </span>
+                                    </div>
+                                    <div
+                                        class="w-full bg-slate-100 dark:bg-ds-black h-1.5 rounded-full overflow-hidden border border-slate-200 dark:border-ds-border/50">
+                                        <div class="bg-lotus h-full rounded-full transition-all duration-1000"
+                                            [style.width.%]="enrollment.progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    }
+                </div>
+            </section>
+            }
+
+            @if (categories().length > 0) {
+            <section class="animate-fade-in-up" style="animation-delay: 300ms;">
+                <div class="flex items-center gap-3 mb-6">
+                    <lucide-icon [name]="icons.Compass"
+                        class="w-6 h-6 text-slate-400 dark:text-ds-muted stroke-[2px]"></lucide-icon>
+                    <h2 class="font-cormorant text-3xl font-bold">{{ 'STUDENT_HOME.TOP_CATEGORIES' | translate }}</h2>
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                    @for (category of categories(); track category.id) {
+                    <a [routerLink]="['/courses']" [queryParams]="{categoryId: category.id}"
+                        class="px-5 py-3 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-full font-mono text-[11px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted hover:border-lotus hover:text-lotus dark:hover:border-lotus dark:hover:text-lotus transition-colors shadow-sm hover:shadow">
+                        {{ category.name }}
+                    </a>
+                    }
+                </div>
+            </section>
+            }
+
+            @if (trendingCourses().length > 0) {
+            <section class="animate-fade-in-up" style="animation-delay: 350ms;">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <lucide-icon [name]="icons.Flame" class="w-6 h-6 text-red-500 stroke-[2px]"></lucide-icon>
+                        <h2 class="font-cormorant text-3xl font-bold">{{ 'STUDENT_HOME.TRENDING' | translate }}</h2>
+                    </div>
+                    <a routerLink="/courses"
+                        class="font-mono text-[10px] uppercase tracking-widest font-bold text-lotus hover:text-lotus-light transition-colors flex items-center gap-1">
+                        {{ 'STUDENT_HOME.VIEW_ALL' | translate }}
+                        <lucide-icon [name]="icons.ChevronRight" class="w-4 h-4"></lucide-icon>
+                    </a>
+                </div>
+
+                <div class="flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory hide-scrollbar">
+                    @for (course of trendingCourses(); track course.id) {
+                    <a [routerLink]="['/courses', course.id]"
+                        class="snap-start shrink-0 w-[260px] sm:w-[300px] group block">
+                        <div
+                            class="bg-white dark:bg-ds-surface rounded-lg border border-slate-200 dark:border-ds-border overflow-hidden shadow-sm hover:border-lotus/50 hover:shadow-md transition-all h-full flex flex-col">
+                            <div
+                                class="relative aspect-video bg-slate-100 dark:bg-ds-black overflow-hidden border-b border-slate-200 dark:border-ds-border">
+                                @if (course.thumbnailUrl) {
+                                <img [src]="course.thumbnailUrl"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                }
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <h3
+                                    class="font-syne font-bold text-slate-900 dark:text-white line-clamp-2 mb-2 group-hover:text-lotus transition-colors text-sm leading-tight">
+                                    {{ course.title }}
+                                </h3>
+                                <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 mb-4">
+                                    {{ course.instructorName }}
+                                </p>
+                                <div
+                                    class="mt-auto pt-4 border-t border-slate-100 dark:border-ds-border flex items-center justify-between">
+                                    <div class="flex items-center gap-1.5 text-slate-500 dark:text-ds-muted">
+                                        <lucide-icon [name]="icons.Users" class="w-3.5 h-3.5"></lucide-icon>
+                                        <span class="font-mono text-[10px]">{{ course.studentsCount || 0 }}</span>
+                                    </div>
+                                    <span class="font-mono text-sm font-bold text-slate-900 dark:text-white">
+                                        {{ course.price === 0 ? ('STUDENT_HOME.FREE' | translate) : (course.price |
+                                        currency:'USD':'symbol':'1.2-2') }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    }
+                </div>
+            </section>
+            }
+
+            @if (topRatedCourses().length > 0) {
+            <section class="animate-fade-in-up" style="animation-delay: 400ms;">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <lucide-icon [name]="icons.Star"
+                            class="w-6 h-6 text-yellow-500 fill-yellow-500 stroke-[2px]"></lucide-icon>
+                        <h2 class="font-cormorant text-3xl font-bold">{{ 'STUDENT_HOME.TOP_RATED' | translate }}</h2>
+                    </div>
+                    <a routerLink="/courses"
+                        class="font-mono text-[10px] uppercase tracking-widest font-bold text-lotus hover:text-lotus-light transition-colors flex items-center gap-1">
+                        {{ 'STUDENT_HOME.VIEW_ALL' | translate }}
+                        <lucide-icon [name]="icons.ChevronRight" class="w-4 h-4"></lucide-icon>
+                    </a>
+                </div>
+
+                <div class="flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory hide-scrollbar">
+                    @for (course of topRatedCourses(); track course.id) {
+                    <a [routerLink]="['/courses', course.id]"
+                        class="snap-start shrink-0 w-[260px] sm:w-[300px] group block">
+                        <div
+                            class="bg-white dark:bg-ds-surface rounded-lg border border-slate-200 dark:border-ds-border overflow-hidden shadow-sm hover:border-lotus/50 hover:shadow-md transition-all h-full flex flex-col">
+                            <div
+                                class="relative aspect-video bg-slate-100 dark:bg-ds-black overflow-hidden border-b border-slate-200 dark:border-ds-border">
+                                @if (course.thumbnailUrl) {
+                                <img [src]="course.thumbnailUrl"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                }
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <h3
+                                    class="font-syne font-bold text-slate-900 dark:text-white line-clamp-2 mb-2 group-hover:text-lotus transition-colors text-sm leading-tight">
+                                    {{ course.title }}
+                                </h3>
+                                <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 mb-4">
+                                    {{ course.instructorName }}
+                                </p>
+                                <div
+                                    class="mt-auto pt-4 border-t border-slate-100 dark:border-ds-border flex items-center justify-between">
+                                    <div class="flex items-center gap-1.5 text-yellow-500">
+                                        <span class="font-mono text-[11px] font-bold">{{ course.averageRating || '0.0'
+                                            }}</span>
+                                        <lucide-icon [name]="icons.Star" class="w-3 h-3 fill-yellow-500"></lucide-icon>
+                                    </div>
+                                    <span class="font-mono text-sm font-bold text-slate-900 dark:text-white">
+                                        {{ course.price === 0 ? ('STUDENT_HOME.FREE' | translate) : (course.price |
+                                        currency:'USD':'symbol':'1.2-2') }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    }
+                </div>
+            </section>
+            }
+
+            @if (newCourses().length > 0) {
+            <section class="animate-fade-in-up" style="animation-delay: 500ms;">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <lucide-icon [name]="icons.TrendingUp" class="w-6 h-6 text-green stroke-[2px]"></lucide-icon>
+                        <h2 class="font-cormorant text-3xl font-bold">{{ 'STUDENT_HOME.NEW_RELEASES' | translate }}</h2>
+                    </div>
+                    <a routerLink="/courses"
+                        class="font-mono text-[10px] uppercase tracking-widest font-bold text-lotus hover:text-lotus-light transition-colors flex items-center gap-1">
+                        {{ 'STUDENT_HOME.VIEW_ALL' | translate }}
+                        <lucide-icon [name]="icons.ChevronRight" class="w-4 h-4"></lucide-icon>
+                    </a>
+                </div>
+
+                <div class="flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory hide-scrollbar">
+                    @for (course of newCourses(); track course.id) {
+                    <a [routerLink]="['/courses', course.id]"
+                        class="snap-start shrink-0 w-[260px] sm:w-[300px] group block">
+                        <div
+                            class="bg-white dark:bg-ds-surface rounded-lg border border-slate-200 dark:border-ds-border overflow-hidden shadow-sm hover:border-lotus/50 hover:shadow-md transition-all h-full flex flex-col">
+                            <div
+                                class="relative aspect-video bg-slate-100 dark:bg-ds-black overflow-hidden border-b border-slate-200 dark:border-ds-border">
+                                @if (course.thumbnailUrl) {
+                                <img [src]="course.thumbnailUrl"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                }
+                                <div
+                                    class="absolute top-3 left-3 bg-green/90 backdrop-blur-sm text-white font-mono text-[9px] uppercase tracking-widest font-bold px-2 py-1 rounded border border-green/20">
+                                    {{ 'STUDENT_HOME.NEW_BADGE' | translate }}
+                                </div>
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <h3
+                                    class="font-syne font-bold text-slate-900 dark:text-white line-clamp-2 mb-2 group-hover:text-lotus transition-colors text-sm leading-tight">
+                                    {{ course.title }}
+                                </h3>
+                                <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 mb-4">
+                                    {{ course.instructorName }}
+                                </p>
+                                <div
+                                    class="mt-auto pt-4 border-t border-slate-100 dark:border-ds-border flex items-center justify-between">
+                                    <div class="flex items-center gap-1.5 text-slate-500 dark:text-ds-muted">
+                                        <lucide-icon [name]="icons.Users" class="w-3.5 h-3.5"></lucide-icon>
+                                        <span class="font-mono text-[10px]">{{ course.studentsCount || 0 }}</span>
+                                    </div>
+                                    <span class="font-mono text-sm font-bold text-slate-900 dark:text-white">
+                                        {{ course.price === 0 ? ('STUDENT_HOME.FREE' | translate) : (course.price |
+                                        currency:'USD':'symbol':'1.2-2') }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    }
+                </div>
+            </section>
+            }
+
+        </div>
+        }
+    </div>
+
+    <style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</app-home-layout>

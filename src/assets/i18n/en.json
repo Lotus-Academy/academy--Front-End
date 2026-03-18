@@ -111,7 +111,8 @@
         "TEACH": "Teach",
         "FAQ": "FAQ",
         "LOGIN": "Login",
-        "SIGNUP": "Sign up"
+        "SIGNUP": "Sign Up",
+        "DASHBOARD": "Dashboard"
     },
     "FOOTER": {
         "DESC": "Learn from expert instructors with professional-grade video content and real-world trading strategies.",
@@ -514,7 +515,9 @@
         "VIDEO_HOURS": "of video",
         "CERTIFICATE": "Certificate of completion",
         "ABOUT_INSTRUCTOR": "About the instructor",
-        "VIEW_PROFILE": "View profile"
+        "VIEW_PROFILE": "View profile",
+        "ACCESS_COURSE": "Access Course",
+        "RESUME_COURSE": "Resume Course"
     },
     "COURSE_LIST": {
         "TITLE": "Explore Courses",
@@ -733,5 +736,18 @@
             "TITLE": "No payouts yet",
             "DESC": "You haven't received any payments yet. Your earnings will appear here once the first payout is processed."
         }
+    },
+    "STUDENT_HOME": {
+        "WELCOME": "Welcome back",
+        "SUBTITLE": "What are we learning today?",
+        "CONTINUE_WATCHING": "Continue watching",
+        "MY_LEARNING": "My learning",
+        "COMPLETED": "Completed",
+        "TOP_CATEGORIES": "Explore categories",
+        "TOP_RATED": "Top rated",
+        "VIEW_ALL": "View all",
+        "NEW_RELEASES": "New releases",
+        "NEW_BADGE": "New",
+        "FREE": "Free"
     }
 }

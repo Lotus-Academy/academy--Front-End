@@ -40,7 +40,7 @@
                                 <img [src]="data.instructorPictureUrl" class="w-full h-full object-cover">
                                 } @else {
                                 <span class="font-cormorant font-bold text-lotus text-sm">{{
-                                    data.instructorName?.charAt(0) || 'I' }}</span>
+                                    data.instructorName.charAt(0) || 'I' }}</span>
                                 }
                             </div>
                             <span class="text-white">{{ 'COURSE_DETAIL.BY' | translate }} <span class="text-lotus">{{
@@ -83,7 +83,7 @@
                                         <img [src]="data.instructorPictureUrl" class="w-full h-full object-cover">
                                         } @else {
                                         <span class="font-cormorant text-3xl text-lotus font-bold">{{
-                                            data.instructorName?.charAt(0) || 'I' }}</span>
+                                            data.instructorName.charAt(0) || 'I' }}</span>
                                         }
                                     </div>
                                 </div>
@@ -142,15 +142,16 @@
                                     @if (isSectionExpanded(section.id)) {
                                     <div class="p-2 bg-white dark:bg-ds-surface">
                                         @for (lesson of section.lessons; track lesson.id) {
-                                        <div
-                                            class="flex items-center justify-between p-3 border-b border-slate-100 dark:border-ds-border/50 last:border-0 group hover:bg-slate-50 dark:hover:bg-ds-black/20 transition-colors rounded">
+
+                                        <button (click)="handleLessonClick(lesson)"
+                                            class="w-full flex items-center justify-between p-3 border-b border-slate-100 dark:border-ds-border/50 last:border-0 group hover:bg-slate-50 dark:hover:bg-ds-black/20 transition-colors rounded text-left">
                                             <div class="flex items-center gap-3">
-                                                @if (lesson.freePreview) {
+                                                @if (lesson.freePreview || hasFullAccess()) {
                                                 <lucide-icon [name]="icons.PlayCircle"
                                                     class="w-4 h-4 text-lotus stroke-[1.5px]"></lucide-icon>
-                                                <a href="#"
-                                                    class="font-syne text-sm font-bold text-lotus hover:underline">{{
-                                                    lesson.title }}</a>
+                                                <span
+                                                    class="font-syne text-sm font-bold text-lotus group-hover:underline">{{
+                                                    lesson.title }}</span>
                                                 } @else {
                                                 <lucide-icon [name]="icons.Lock"
                                                     class="w-3.5 h-3.5 text-slate-400 dark:text-ds-muted/50"></lucide-icon>
@@ -159,7 +160,7 @@
                                                 }
                                             </div>
                                             <div class="flex items-center gap-4 shrink-0">
-                                                @if (lesson.freePreview) {
+                                                @if (lesson.freePreview && !hasFullAccess()) {
                                                 <span
                                                     class="font-mono text-[9px] uppercase tracking-widest font-bold text-lotus bg-lotus/10 px-2 py-1 rounded hidden sm:block">
                                                     {{ 'COURSE_DETAIL.FREE_PREVIEW' | translate }}
@@ -170,7 +171,7 @@
                                                     {{ formatDuration(lesson.duration) }}
                                                 </span>
                                             </div>
-                                        </div>
+                                        </button>
                                         }
                                     </div>
                                     }
@@ -220,11 +221,11 @@
                                     @if (isProcessingPayment()) {
                                     <lucide-icon [name]="icons.Loader2" class="w-5 h-5 animate-spin"></lucide-icon>
                                     Redirection...
-                                    } @else if (isAlreadyEnrolled()) {
+                                    } @else if (hasFullAccess()) {
                                     <lucide-icon [name]="icons.PlayCircle" class="w-5 h-5"></lucide-icon>
-                                    Reprendre le cours
+                                    {{ actionButtonLabel() | translate }}
                                     } @else {
-                                    {{ 'COURSE_DETAIL.ENROLL_NOW' | translate }}
+                                    {{ actionButtonLabel() | translate }}
                                     }
 
                                 </button>

@@ -16,14 +16,13 @@ import {
   BookOpen,
   Star
 } from 'lucide-angular';
-import { NavbarComponent } from "../../layouts/navbar-component/navbar-component";
-import { FooterComponent } from "../../layouts/footer-component/footer-component";
+import { HomeLayoutComponent } from '../../layouts/home-layout/home-layout.component';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, NavbarComponent, FooterComponent, TranslateModule],
+  imports: [CommonModule, RouterLink, LucideAngularModule, HomeLayoutComponent, TranslateModule],
   templateUrl: './home-component.html',
   styleUrls: ['./home-component.css']
 })

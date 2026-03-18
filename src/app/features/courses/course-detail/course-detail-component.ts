@@ -17,12 +17,12 @@ import {
   Unlock,
   User,
   Loader2,
-  X // <-- AJOUT DE L'ICÔNE X
+  X
 } from 'lucide-angular';
 
-import { NavbarComponent } from '../../layouts/navbar-component/navbar-component';
+import { NavbarComponent } from '../../layouts/navbar-component/navbar.component';
 import { FooterComponent } from '../../layouts/footer-component/footer-component';
-import { CourseService } from '../../../core/services/course.service'; // Correction de l'import (tiret vers point)
+import { CourseService } from '../../../core/services/course.service';
 import { CourseResponseDTO } from '../../../core/models/course.dto';
 import { PaymentService } from '../../../core/services/payment.service';
 import { EnrollmentService } from '../../../core/services/enrollment.service';
@@ -50,23 +50,50 @@ export class CourseDetailComponent implements OnInit {
   private enrollmentService = inject(EnrollmentService);
   private authService = inject(AuthService);
 
-  //for the payment
-  isProcessingPayment = signal<boolean>(false);
-  isAlreadyEnrolled = signal<boolean>(false);
-  isAuthenticated = signal<boolean>(false);
-
   readonly icons = {
     PlayCircle, Clock, BookOpen, CheckCircle, Lock,
-    ChevronDown, ChevronUp, Award, Globe, MonitorPlay, Unlock, User, Loader2, X // <-- AJOUT ICI
+    ChevronDown, ChevronUp, Award, Globe, MonitorPlay, Unlock, User, Loader2, X
   };
 
   course = signal<CourseResponseDTO | null>(null);
   isLoading = signal<boolean>(true);
-
-
-
-  // NOUVEAU : État pour gérer la modale de la vidéo
   isPlayingTrailer = signal<boolean>(false);
+
+  // États d'authentification et d'accès
+  isProcessingPayment = signal<boolean>(false);
+  isAuthenticated = signal<boolean>(false);
+  isAlreadyEnrolled = signal<boolean>(false);
+  currentUser = computed(() => this.authService.getUser());
+
+  // Vérifie si l'utilisateur possède un accès total (Admin, Propriétaire ou Inscrit)
+  hasFullAccess = computed(() => {
+    const user = this.currentUser();
+    const courseData = this.course();
+    if (!user || !courseData) return false;
+
+    if (user.role === 'ADMIN') return true;
+    if (user.role === 'INSTRUCTOR' && courseData.instructorId === user.userId) return true;
+
+    return this.isAlreadyEnrolled();
+  });
+
+  // Détermine dynamiquement le texte du bouton d'action principal
+  actionButtonLabel = computed(() => {
+    if (this.isProcessingPayment()) return 'Redirection...';
+
+    const user = this.currentUser();
+    const courseData = this.course();
+
+    if (user?.role === 'ADMIN' || (user?.role === 'INSTRUCTOR' && courseData?.instructorId === user.userId)) {
+      return 'COURSE_DETAIL.ACCESS_COURSE'; // Clé à ajouter : "Accéder au cours"
+    }
+
+    if (this.isAlreadyEnrolled()) {
+      return 'COURSE_DETAIL.RESUME_COURSE'; // Clé à ajouter : "Reprendre le cours"
+    }
+
+    return 'COURSE_DETAIL.ENROLL_NOW'; // "S'inscrire maintenant"
+  });
 
   totalSections = computed(() => this.course()?.sections?.length || 0);
 
@@ -86,69 +113,12 @@ export class CourseDetailComponent implements OnInit {
   expandedSections = signal<Set<string>>(new Set());
 
   ngOnInit(): void {
-    // 1. Vérification de la connexion
     this.isAuthenticated.set(this.authService.isAuthenticated());
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.loadCourseDetails(id);
-
-      // 2. Si l'utilisateur est connecté, on vérifie s'il possède déjà ce cours
-      if (this.isAuthenticated()) {
-        this.checkEnrollmentStatus(id);
-      }
     }
-  }
-
-  private checkEnrollmentStatus(courseId: string): void {
-    this.enrollmentService.getMyEnrollments().subscribe({
-      next: (enrollments) => {
-        // On cherche si l'ID du cours actuel est dans la liste des achats
-        // Ajustez "e.course.id" ou "e.courseId" selon le DTO exact renvoyé par /enrollments/me
-        const enrolled = enrollments.some(e => e.courseId === courseId || (e.course && e.course.id === courseId));
-        this.isAlreadyEnrolled.set(enrolled);
-      },
-      error: (err) => console.error("Erreur vérification inscription", err)
-    });
-  }
-
-  // Gère le clic sur le bouton d'inscription/accès
-  handleEnrollAction(): void {
-    const courseData = this.course();
-    if (!courseData) return;
-
-    // Cas 1 : L'utilisateur n'est pas connecté
-    if (!this.isAuthenticated()) {
-      // On l'envoie vers le login, et on dit au login de revenir sur ce cours après
-      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
-      return;
-    }
-
-    // Cas 2 : L'utilisateur est connecté ET possède déjà le cours
-    if (this.isAlreadyEnrolled()) {
-      // On l'envoie vers la salle de classe (Lecteur vidéo) que nous allons construire ensuite
-      this.router.navigate(['/player', courseData.id]);
-      return;
-    }
-
-    // Cas 3 : Utilisateur connecté mais pas encore inscrit -> Go au paiement !
-    this.isProcessingPayment.set(true);
-
-    this.paymentService.createCheckoutSession(courseData.id).subscribe({
-      next: (response: any) => {
-        // On récupère le lien exact dans l'objet JSON renvoyé par Spring Boot
-        // (Généralement, la clé s'appelle "url" ou "checkoutUrl", j'ai mis les deux pour être sûr)
-        const stripeCheckoutUrl = response.url || response.checkoutUrl || response;
-
-        // Redirection vers le domaine sécurisé de Stripe
-        window.location.href = stripeCheckoutUrl;
-      },
-      error: (err) => {
-        console.error("Erreur de création de session Stripe", err);
-        alert("Impossible de procéder au paiement. Veuillez réessayer plus tard.");
-        this.isProcessingPayment.set(false);
-      }
-    });
   }
 
   loadCourseDetails(id: string): void {
@@ -160,13 +130,98 @@ export class CourseDetailComponent implements OnInit {
         if (data.sections && data.sections.length > 0) {
           this.toggleSection(data.sections[0].id);
         }
-        this.isLoading.set(false);
+
+        // On vérifie l'inscription uniquement si l'utilisateur est connecté et n'est ni Admin ni le Propriétaire
+        const user = this.currentUser();
+        if (this.isAuthenticated() && user?.role !== 'ADMIN' && !(user?.role === 'INSTRUCTOR' && data.instructorId === user.userId)) {
+          this.checkEnrollmentStatus(id);
+        } else {
+          this.isLoading.set(false);
+        }
       },
       error: (error) => {
         console.error('Erreur lors de la récupération du cours :', error);
         this.isLoading.set(false);
       }
     });
+  }
+
+  private checkEnrollmentStatus(courseId: string): void {
+    this.enrollmentService.getMyEnrollments().subscribe({
+      next: (enrollments: any[]) => {
+        const enrolled = enrollments.some(e => e.courseId === courseId || (e.course && e.course.id === courseId));
+        this.isAlreadyEnrolled.set(enrolled);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error("Erreur vérification inscription", err);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  handleEnrollAction(): void {
+    const courseData = this.course();
+    if (!courseData) return;
+
+    // 1. Redirection vers le login si non connecté
+    if (!this.isAuthenticated()) {
+      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
+
+    const user = this.currentUser();
+
+    // 2. L'administrateur a un accès absolu
+    if (user?.role === 'ADMIN') {
+      this.router.navigate(['/player', courseData.id]);
+      return;
+    }
+
+    // 3. Gestion stricte pour l'instructeur
+    if (user?.role === 'INSTRUCTOR') {
+      if (courseData.instructorId === user.userId) {
+        this.router.navigate(['/player', courseData.id]);
+      } else {
+        alert("En tant qu'instructeur, vous ne pouvez pas vous inscrire aux cours d'autres formateurs.");
+      }
+      return;
+    }
+
+    // 4. L'étudiant possède déjà le cours
+    if (this.isAlreadyEnrolled()) {
+      this.router.navigate(['/player', courseData.id]);
+      return;
+    }
+
+    // 5. Étudiant non inscrit -> Redirection vers le paiement
+    this.isProcessingPayment.set(true);
+
+    this.paymentService.createCheckoutSession(courseData.id).subscribe({
+      next: (response: any) => {
+        const stripeCheckoutUrl = response.url || response.checkoutUrl || response;
+        window.location.href = stripeCheckoutUrl;
+      },
+      error: (err) => {
+        console.error("Erreur de création de session Stripe", err);
+        alert("Impossible de procéder au paiement. Veuillez réessayer plus tard.");
+        this.isProcessingPayment.set(false);
+      }
+    });
+  }
+
+  handleLessonClick(lesson: any): void {
+    const courseData = this.course();
+    if (!courseData) return;
+
+    // Si la leçon est en aperçu gratuit OU si l'utilisateur a un accès total, on ouvre le lecteur
+    if (lesson.freePreview || this.hasFullAccess()) {
+      this.router.navigate(['/player', courseData.id]);
+    } else {
+      // Si la leçon est bloquée, on redirige vers la logique d'inscription
+      // Cela fera défiler la page vers le bouton d'achat ou déclenchera l'alerte/redirection appropriée
+      this.handleEnrollAction();
+    }
   }
 
   formatDuration(seconds: number): string {
@@ -193,18 +248,15 @@ export class CourseDetailComponent implements OnInit {
     return this.expandedSections().has(sectionId);
   }
 
-  // NOUVEAU : Méthodes pour ouvrir/fermer le trailer
   openTrailer(): void {
     if (this.course()?.trailerUrl) {
       this.isPlayingTrailer.set(true);
-      // Optionnel : Bloquer le scroll du body quand la modale est ouverte
       document.body.style.overflow = 'hidden';
     }
   }
 
   closeTrailer(): void {
     this.isPlayingTrailer.set(false);
-    // Rétablir le scroll
     document.body.style.overflow = 'auto';
   }
 }

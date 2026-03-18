@@ -1,14 +1,15 @@
 import { Component, OnInit, inject, signal, computed, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'; // <-- NOUVEAU
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import {
-  LucideAngularModule, ChevronLeft, ChevronDown, ChevronUp, CheckCircle, Circle, PlayCircle, Trophy, Loader2, Lock, FileText // <-- AJOUT DE FileText
+  LucideAngularModule, ChevronLeft, ChevronDown, ChevronUp, CheckCircle, Circle, PlayCircle, Trophy, Loader2, Lock, FileText
 } from 'lucide-angular';
 
 import { CourseService } from '../../../core/services/course.service';
 import { EnrollmentService } from '../../../core/services/enrollment.service';
+import { AuthService } from '../../../core/services/auth.service'; // <-- AJOUT
 import { CourseResponseDTO, SectionDTO, LessonDTO } from '../../../core/models/course.dto';
 
 @Component({
@@ -22,7 +23,8 @@ export class CoursePlayerComponent implements OnInit {
   private router = inject(Router);
   private courseService = inject(CourseService);
   private enrollmentService = inject(EnrollmentService);
-  private sanitizer = inject(DomSanitizer); // <-- INJECTION DU SANITIZER
+  private sanitizer = inject(DomSanitizer);
+  private authService = inject(AuthService);
 
   readonly icons = { ChevronLeft, ChevronDown, ChevronUp, CheckCircle, Circle, PlayCircle, Trophy, Loader2, Lock, FileText };
 
@@ -35,10 +37,26 @@ export class CoursePlayerComponent implements OnInit {
   currentLesson = signal<LessonDTO | null>(null);
   expandedSections = signal<Set<string>>(new Set());
 
-  // NOUVEAU : Calcul dynamique de l'URL sécurisée pour le PDF
+  // --- NOUVELLES VARIABLES D'ACCÈS ---
+  currentUser = computed(() => this.authService.getUser());
+  isEnrolled = signal<boolean>(false);
+  isLessonLocked = signal<boolean>(false);
+
+  // Vérifie si l'utilisateur a un accès total (Admin, Instructeur propriétaire, ou Étudiant inscrit)
+  hasFullAccess = computed(() => {
+    const user = this.currentUser();
+    const courseData = this.course();
+    if (!user || !courseData) return false;
+
+    if (user.role === 'ADMIN') return true;
+    if (user.role === 'INSTRUCTOR' && courseData.instructorId === user.userId) return true;
+
+    return this.isEnrolled();
+  });
+
   safeMediaUrl = computed<SafeResourceUrl | null>(() => {
     const lesson = this.currentLesson();
-    if (lesson && lesson.mediaUrl && lesson.type === 'PDF') {
+    if (lesson && lesson.mediaUrl && lesson.type === 'PDF' && !this.isLessonLocked()) {
       return this.sanitizer.bypassSecurityTrustResourceUrl(lesson.mediaUrl);
     }
     return null;
@@ -78,13 +96,7 @@ export class CoursePlayerComponent implements OnInit {
     this.courseService.getCourseById(id).subscribe({
       next: (data: CourseResponseDTO) => {
         this.course.set(data);
-
-        if (data.sections && data.sections.length > 0) {
-          const allSectionIds = data.sections.map(s => s.id);
-          this.expandedSections.set(new Set(allSectionIds));
-          this.findAndSetNextUncompletedLesson(data.sections);
-        }
-        this.isLoading.set(false);
+        this.checkEnrollmentStatus(id, data);
       },
       error: (err) => {
         console.error('Erreur lors de la récupération du cours', err);
@@ -94,7 +106,51 @@ export class CoursePlayerComponent implements OnInit {
     });
   }
 
+  // --- NOUVELLE MÉTHODE : Vérification des droits d'accès ---
+  private checkEnrollmentStatus(courseId: string, courseData: CourseResponseDTO): void {
+    const user = this.currentUser();
+
+    // Si l'utilisateur est Admin ou le Propriétaire, on passe directement au rendu
+    if (user?.role === 'ADMIN' || (user?.role === 'INSTRUCTOR' && courseData.instructorId === user?.userId)) {
+      this.isEnrolled.set(true);
+      this.initializePlayer(courseData.sections);
+      return;
+    }
+
+    // Sinon, on vérifie s'il est formellement inscrit
+    this.enrollmentService.getMyEnrollments().subscribe({
+      next: (enrollments: any) => {
+        const enrollmentsArray = Array.isArray(enrollments) ? enrollments : (enrollments.content || []);
+        // Vérifie si l'ID du cours est présent dans les inscriptions
+        const isUserEnrolled = enrollmentsArray.some((e: any) => e.courseId === courseId || e.course?.id === courseId);
+        this.isEnrolled.set(isUserEnrolled);
+        this.initializePlayer(courseData.sections);
+      },
+      error: () => {
+        this.isEnrolled.set(false);
+        this.initializePlayer(courseData.sections);
+      }
+    });
+  }
+
+  private initializePlayer(sections: SectionDTO[]): void {
+    if (sections && sections.length > 0) {
+      const allSectionIds = sections.map(s => s.id);
+      this.expandedSections.set(new Set(allSectionIds));
+      this.findAndSetNextUncompletedLesson(sections);
+    }
+    this.isLoading.set(false);
+  }
+
   private findAndSetNextUncompletedLesson(sections: SectionDTO[]): void {
+    // Si l'utilisateur n'est pas inscrit, on affiche la première leçon (Aperçu ou Verrou)
+    if (!this.hasFullAccess()) {
+      if (sections[0] && sections[0].lessons && sections[0].lessons.length > 0) {
+        this.selectLesson(sections[0].lessons[0]);
+      }
+      return;
+    }
+
     for (const section of sections) {
       if (section.lessons) {
         for (const lesson of section.lessons) {
@@ -110,8 +166,16 @@ export class CoursePlayerComponent implements OnInit {
     }
   }
 
+  // --- MODIFICATION : Logique de verrouillage ---
   selectLesson(lesson: LessonDTO): void {
     this.currentLesson.set(lesson);
+
+    // Verrouille la leçon si l'utilisateur n'a pas un accès complet ET que la leçon n'est pas gratuite
+    if (!this.hasFullAccess() && !lesson.freePreview) {
+      this.isLessonLocked.set(true);
+    } else {
+      this.isLessonLocked.set(false);
+    }
   }
 
   toggleSection(sectionId: string): void {
@@ -129,6 +193,8 @@ export class CoursePlayerComponent implements OnInit {
   }
 
   markLessonAsCompleteAndContinue(): void {
+    if (!this.hasFullAccess()) return; // Empêche un non-inscrit de valider une leçon
+
     const lesson = this.currentLesson();
     if (!lesson || lesson.completed) {
       this.goToNextLesson();
@@ -175,7 +241,7 @@ export class CoursePlayerComponent implements OnInit {
       }
     }
 
-    if (this.progressPercentage() === 100) {
+    if (this.progressPercentage() === 100 && this.hasFullAccess()) {
       this.router.navigate(['/player', this.courseId(), 'quiz']);
     }
   }

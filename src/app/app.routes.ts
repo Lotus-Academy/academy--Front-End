@@ -15,14 +15,14 @@ import { VerifyEmailComponent } from './features/auth/verify-email/verify-email.
 // ==========================================
 import { CourseListComponent } from "./features/courses/course-list/course-list-component";
 import { CourseDetailComponent } from './features/courses/course-detail/course-detail-component';
+import { StudentHomeComponent } from './features/student/student-home/student-home.component';
 
 // ==========================================
-// IMPORTS : ESPACE ÉTUDIANT (NOUVEAU)
+// IMPORTS : ESPACE ÉTUDIANT
 // ==========================================
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { ProfileComponent } from './features/user/profile/profile.component';
-// Assurez-vous que les chemins d'importation correspondent à votre arborescence de dossiers
-import { CoursePlayerComponent } from './features/student/course-player/course-player.component';
+import { CoursePlayerComponent } from './features/courses/course-player/course-player.component';
 import { StudentQuizComponent } from './features/student/student-quiz/student-quiz.component';
 
 // ==========================================
@@ -62,6 +62,8 @@ export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'courses', component: CourseListComponent },
     { path: 'courses/:id', component: CourseDetailComponent },
+    { path: 'student/home', component: StudentHomeComponent },
+
 
     // --- ROUTES D'AUTHENTIFICATION ---
     { path: 'login', component: LoginComponent },
