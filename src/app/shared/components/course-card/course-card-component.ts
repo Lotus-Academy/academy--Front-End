@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { LucideAngularModule, Star, Clock, Users } from 'lucide-angular';
+import { LucideAngularModule, Star, Clock, Users, BookOpen } from 'lucide-angular';
 import { CourseResponseDTO } from '../../../core/models/course.dto';
 
 @Component({
@@ -15,7 +15,7 @@ export class CourseCardComponent {
   @Input({ required: true }) course!: CourseResponseDTO;
   @Input() index: number = 0;
 
-  readonly icons = { Star, Clock, Users };
+  readonly icons = { Star, Clock, Users, BookOpen };
 
   getLevelClasses(level: string): string {
     const base = 'px-2.5 py-1 rounded font-mono text-[9px] uppercase tracking-widest font-bold border backdrop-blur-sm ';

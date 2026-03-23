@@ -8,6 +8,11 @@
                 @if (course.thumbnailUrl) {
                 <img [src]="course.thumbnailUrl" [alt]="course.title"
                     class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-95 group-hover:opacity-100" />
+                } @else {
+                <div class="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-ds-black/50">
+                    <lucide-icon [name]="icons.BookOpen"
+                        class="w-10 h-10 text-slate-300 dark:text-ds-muted/20 stroke-[1px]"></lucide-icon>
+                </div>
                 }
 
                 <div class="absolute top-3 left-3 z-10">
@@ -17,20 +22,20 @@
                 </div>
             </div>
 
-            <div class="p-5 flex flex-col flex-1">
+            <div class="p-4 sm:p-5 flex flex-col flex-1">
 
-                <p class="font-mono text-[9px] uppercase tracking-widest font-bold text-lotus mb-2.5">
+                <p class="font-mono text-[9px] uppercase tracking-widest font-bold text-lotus mb-2">
                     {{ course.categoryName }}
                 </p>
 
                 <h3
-                    class="font-cormorant text-xl font-bold text-slate-900 dark:text-white line-clamp-2 mb-4 group-hover:text-lotus transition-colors leading-tight">
+                    class="font-cormorant text-lg sm:text-xl font-bold text-slate-900 dark:text-white line-clamp-2 mb-3 group-hover:text-lotus transition-colors leading-tight">
                     {{ course.title }}
                 </h3>
 
-                <div class="flex items-center gap-3 mb-5">
+                <div class="flex items-center gap-3 mb-4">
                     <div
-                        class="w-9 h-9 rounded-full overflow-hidden border border-slate-200 dark:border-ds-border shrink-0 bg-slate-100 dark:bg-ds-black flex items-center justify-center shadow-sm">
+                        class="w-8 h-8 rounded-full overflow-hidden border border-slate-200 dark:border-ds-border shrink-0 bg-slate-100 dark:bg-ds-black flex items-center justify-center shadow-sm">
                         @if (course.instructorPictureUrl) {
                         <img [src]="course.instructorPictureUrl" class="w-full h-full object-cover">
                         } @else {
@@ -49,11 +54,14 @@
                 </div>
 
                 <div
-                    class="flex items-center gap-4 mt-auto mb-5 font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/70">
+                    class="flex items-center gap-4 mt-auto mb-4 font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/70">
                     <div class="flex items-center gap-1.5">
-                        <lucide-icon [name]="icons.Star" class="h-3.5 w-3.5 fill-lotus text-lotus"></lucide-icon>
-                        <span class="font-bold text-slate-900 dark:text-white">{{ course.averageRating || '0.0'
-                            }}</span>
+                        <lucide-icon [name]="icons.Star"
+                            class="h-3.5 w-3.5 text-yellow-400 fill-yellow-400 drop-shadow-[0_0_4px_rgba(250,204,21,0.6)] transition-all">
+                        </lucide-icon>
+                        <span class="font-bold text-slate-900 dark:text-white">
+                            {{ course.averageRating ? (course.averageRating | number:'1.1-1') : '0.0' }}
+                        </span>
                         <span class="text-[9px] opacity-70">({{ course.reviewCount || 0 }})</span>
                     </div>
                     <div class="flex items-center gap-1.5">
@@ -66,7 +74,8 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between border-t border-slate-100 dark:border-ds-border pt-4">
+                <div
+                    class="flex items-center justify-between border-t border-slate-100 dark:border-ds-border pt-3 mt-1">
                     <span class="font-mono text-lg font-bold text-slate-900 dark:text-white">
                         @if (course.price === 0) {
                         {{ 'COURSE_CARD.FREE' | translate }}

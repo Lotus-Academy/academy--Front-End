@@ -98,7 +98,7 @@
                 <lucide-icon [name]="icons.Loader2" class="w-10 h-10 text-lotus animate-spin"></lucide-icon>
             </div>
             } @else if (filteredCourses().length > 0) {
-            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @for (course of filteredCourses(); track course.id; let i = $index) {
                 <app-course-card [course]="course" [index]="i"></app-course-card>
                 }
