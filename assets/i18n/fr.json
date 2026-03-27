@@ -1,0 +1,753 @@
+{
+    "LAYOUT": {
+        "ADMIN_SPACE": "Espace Administrateur",
+        "INSTRUCTOR_SPACE": "Espace Instructeur",
+        "STUDENT_SPACE": "Espace Étudiant",
+        "INSTRUCTOR_ROLE": "Instructeur",
+        "INSTRUCTOR_BADGE": "Espace Formateur",
+        "LOGOUT": "Déconnexion",
+        "ADMIN_BADGE": "Administration",
+        "ADMIN_ROLE": "Super Admin",
+        "STUDENT_BADGE": "Espace Étudiant",
+        "STUDENT_ROLE": "Apprenant",
+        "REFERRAL": {
+            "BTN": "Inviter des Nouveaux Membres",
+            "COPIED": "Lien copié !"
+        }
+    },
+    "MENU": {
+        "DASHBOARD": "Vue d'ensemble",
+        "COURSES": "Cours",
+        "COURSE_CATALOG": "Catalogue",
+        "CREATE_COURSE": "Créer un cours",
+        "ANALYTICS": "Analytiques",
+        "SETTINGS": "Paramètres",
+        "USERS": "Utilisateurs",
+        "INSTRUCTORS": "Instructeurs",
+        "CATEGORIES": "Catégories",
+        "PAYMENTS": "Paiements",
+        "STUDENT_TRACKING": "Suivi des étudiants",
+        "FAVORITES": "Mes Favoris"
+    },
+    "NOTIFICATIONS": {
+        "TITLE": "Notifications",
+        "NEW": "nouvelle(s)",
+        "EMPTY": "Aucune notification",
+        "MARK_ALL_READ": "Tout marquer comme lu"
+    },
+    "BANNERS": {
+        "LOCKED_FEATURE": "Votre profil doit être approuvé pour utiliser cette fonctionnalité.",
+        "MISSING_TITLE": "Bienvenue sur Lotus Academy !",
+        "MISSING_DESC": "Pour pouvoir publier des cours et accéder aux statistiques, vous devez d'abord compléter votre profil professionnel.",
+        "MISSING_BTN": "Compléter mon profil",
+        "PENDING_TITLE": "Candidature en cours de traitement",
+        "PENDING_DESC": "Votre profil a bien été soumis. Notre équipe l'examine actuellement.",
+        "REJECTED_TITLE": "Candidature nécessitant des corrections",
+        "REJECTED_DESC": "Votre profil n'a pas pu être validé en l'état.",
+        "REJECTED_BTN": "Modifier mon profil",
+        "EMPTY_TITLE": "Votre profil est vide",
+        "EMPTY_DESC": "Avant de pouvoir créer votre premier cours, nous avons besoin d'en savoir un peu plus sur vous et votre expertise.",
+        "EMPTY_BTN": "Démarrer l'intégration"
+    },
+    "HOME": {
+        "HERO": {
+            "BADGE": "Nouveaux cours ajoutés chaque semaine",
+            "TITLE_1": "Apprenez des meilleurs.",
+            "TITLE_2": "Évoluez avec Lotus Academy.",
+            "SUBTITLE": "Rejoignez des milliers d'apprenants et découvrez de nouvelles compétences grâce à des instructeurs experts dans notre communauté d'apprentissage dynamique.",
+            "BTN_BROWSE": "Parcourir les cours",
+            "BTN_START": "Commencer gratuitement"
+        },
+        "STATS": {
+            "STUDENTS": "Étudiants",
+            "COURSES": "Cours",
+            "RATING": "Note Moyenne"
+        },
+        "TOPICS": {
+            "TITLE": "Sujets Tendances",
+            "SUBTITLE": "Explorez les domaines d'études les plus populaires",
+            "COURSES": "cours",
+            "ITEMS": {
+                "ALGO": "Trading Algorithmique",
+                "QUANT": "Finance Quantitative",
+                "ML": "Machine Learning",
+                "RISK": "Gestion des Risques",
+                "PSYCHO": "Psychologie du Trading"
+            }
+        },
+        "TESTIMONIALS": {
+            "TITLE": "Ce Que Disent Nos Étudiants",
+            "SUBTITLE": "Rejoignez des milliers de traders à succès"
+        },
+        "FAQ": {
+            "TITLE": "Questions Fréquemment Posées",
+            "SUBTITLE": "Trouvez des réponses aux questions courantes sur Lotus Academy",
+            "Q1": "Comment commencer avec Lotus Academy ?",
+            "A1": "Créez simplement un compte gratuit, parcourez notre catalogue de cours et inscrivez-vous à tout cours qui vous intéresse.",
+            "Q2": "Des certificats sont-ils fournis à la fin du cours ?",
+            "A2": "Oui, vous recevrez un certificat de fin d'études vérifié avec un code QR unique pour chaque cours terminé."
+        },
+        "COURSES": {
+            "TITLE": "Cours à la Une",
+            "SUBTITLE": "Des cours triés sur le volet pour accélérer votre parcours de trading",
+            "VIEW_ALL": "Voir tous les cours",
+            "FREE": "Gratuit",
+            "DETAILS": "Détails"
+        },
+        "WHY": {
+            "TITLE": "Pourquoi Apprendre Avec Lotus Academy ?",
+            "SUBTITLE": "Rejoignez des milliers de traders à succès qui ont commencé leur parcours ici",
+            "REASON1_TITLE": "Expertise de l'Industrie",
+            "REASON1_DESC": "Apprenez de professionnels avec des décennies d'expérience dans les meilleurs fonds spéculatifs et banques d'investissement.",
+            "REASON2_TITLE": "Exemples de Données Réelles",
+            "REASON2_DESC": "Pratiquez avec des données de marché réelles et construisez des stratégies qui fonctionnent dans des environnements de trading réels.",
+            "REASON3_TITLE": "Programme Structuré",
+            "REASON3_DESC": "Suivez un parcours d'apprentissage soigneusement conçu, des principes fondamentaux aux stratégies de trading avancées."
+        }
+    },
+    "NAVBAR": {
+        "HOME": "Accueil",
+        "COURSES": "Cours",
+        "TEACH": "Enseigner",
+        "FAQ": "FAQ",
+        "LOGIN": "Connexion",
+        "SIGNUP": "Inscription",
+        "DASHBOARD": "Tableau de Bord"
+    },
+    "FOOTER": {
+        "DESC": "Apprenez auprès d'instructeurs experts avec du contenu vidéo de qualité professionnelle et des stratégies de trading concrètes.",
+        "COMPANY": {
+            "TITLE": "Entreprise",
+            "ABOUT": "À propos",
+            "CAREERS": "Carrières",
+            "PRESS": "Presse"
+        },
+        "RESOURCES": {
+            "TITLE": "Ressources",
+            "BLOG": "Blog",
+            "HELP": "Centre d'aide",
+            "FAQ": "FAQ"
+        },
+        "LEGAL": {
+            "TITLE": "Légal",
+            "TERMS": "Conditions",
+            "PRIVACY": "Confidentialité",
+            "COOKIES": "Cookies"
+        },
+        "COPYRIGHT": "Tous droits réservés."
+    },
+    "INSTRUCTOR_REGISTER": {
+        "BACK_HOME": "Retour à l'accueil",
+        "VERIFY_TITLE": "Vérifiez votre boîte mail",
+        "VERIFY_TXT_1": "Nous avons envoyé un lien de vérification à",
+        "VERIFY_TXT_2": ". Veuillez cliquer sur ce lien pour activer votre compte instructeur.",
+        "BTN_GO_LOGIN": "Aller à la connexion",
+        "BADGE": "Espace Formateur",
+        "TITLE": "Devenez Instructeur",
+        "SUBTITLE": "Partagez votre expertise et monétisez votre savoir auprès de milliers d'étudiants.",
+        "FIRST_NAME": "Prénom",
+        "LAST_NAME": "Nom",
+        "EMAIL": "Email professionnel",
+        "PASSWORD": "Mot de passe",
+        "BTN_SUBMIT": "Créer mon compte instructeur",
+        "LOADING": "Création en cours...",
+        "ALREADY_HAVE_ACCOUNT": "Déjà un compte ?",
+        "LINK_LOGIN": "Connectez-vous",
+        "WANT_TO_LEARN": "Vous cherchez plutôt à apprendre ?",
+        "LINK_STUDENT": "Créer un compte étudiant",
+        "BANNER_TITLE": "Inspirez la prochaine génération",
+        "BANNER_DESC": "Rejoignez une communauté d'experts. Créez des cours impactants, développez votre audience et générez des revenus grâce à votre savoir-faire.",
+        "ERRORS": {
+            "REQUIRED_MIN_2": "Requis (min 2 caractères).",
+            "REQUIRED": "Requis.",
+            "VALID_EMAIL": "Email valide requis."
+        }
+    },
+    "PROFILE": {
+        "TITLE": "Paramètres du Profil",
+        "SUBTITLE": "Gérez vos informations personnelles et vos paramètres de sécurité.",
+        "TAB_GENERAL": "Informations Générales",
+        "TAB_SECURITY": "Sécurité & Accès",
+        "PHOTO_TITLE": "Photo de profil",
+        "PHOTO_DESC": "Formats acceptés : JPEG, PNG. Max 5MB.",
+        "BTN_CHANGE_PHOTO": "Changer l'image",
+        "FIRST_NAME": "Prénom *",
+        "LAST_NAME": "Nom *",
+        "HEADLINE": "Titre / Profession",
+        "BIO": "Biographie",
+        "BTN_SAVE": "Enregistrer les modifications",
+        "SAVING": "Enregistrement...",
+        "PASSWORD_TITLE": "Modifier le mot de passe",
+        "OLD_PASSWORD": "Mot de passe actuel *",
+        "NEW_PASSWORD": "Nouveau mot de passe *",
+        "BTN_UPDATE_PASSWORD": "Mettre à jour le mot de passe",
+        "DELETE_TITLE": "Zone de Danger",
+        "DELETE_DESC": "La suppression de votre compte est irréversible. Toutes vos données, y compris vos cours et certificats, seront définitivement perdues.",
+        "BTN_DELETE": "Supprimer définitivement mon compte",
+        "SUCCESS_PROFILE": "Profil mis à jour avec succès.",
+        "SUCCESS_PASSWORD": "Mot de passe modifié avec succès.",
+        "ERROR_GENERIC": "Une erreur s'est produite. Veuillez réessayer."
+    },
+    "LOGIN": {
+        "BACK_HOME": "Retour à l'accueil",
+        "TITLE_LOGIN": "Bon retour",
+        "TITLE_REGISTER": "Créez votre compte",
+        "SUBTITLE_LOGIN": "Connectez-vous pour accéder à vos cours",
+        "SUBTITLE_REGISTER": "Commencez votre voyage pour maîtriser de nouvelles compétences",
+        "BTN_GOOGLE": "Continuer avec Google",
+        "OR_EMAIL": "Ou par e-mail",
+        "FIRST_NAME": "Prénom",
+        "LAST_NAME": "Nom",
+        "EMAIL": "Email",
+        "PASSWORD": "Mot de passe",
+        "FORGOT_PASSWORD": "Mot de passe oublié ?",
+        "BTN_SUBMIT_LOGIN": "Se connecter",
+        "BTN_SUBMIT_REGISTER": "Créer un compte",
+        "LOADING": "En cours...",
+        "NO_ACCOUNT": "Vous n'avez pas de compte ?",
+        "HAVE_ACCOUNT": "Déjà un compte ?",
+        "LINK_SIGNUP": "S'inscrire",
+        "LINK_SIGNIN": "Se connecter",
+        "EXPERT_PROMPT": "Vous êtes un expert dans votre domaine ?",
+        "LINK_INSTRUCTOR": "Devenir Formateur sur Lotus Academy",
+        "BANNER_TITLE": "Commencez votre apprentissage aujourd'hui",
+        "BANNER_DESC": "Rejoignez des milliers d'apprenants qui découvrent de nouvelles compétences et font avancer leur carrière à l'intersection de la finance et de la technologie.",
+        "ERRORS": {
+            "REQUIRED_MIN_2": "Requis (min 2 car.)",
+            "REQUIRED": "Requis",
+            "VALID_EMAIL": "Email valide requis",
+            "MIN_8_CHARS": "Min 8 caractères requis",
+            "INVALID_CREDENTIALS": "Email ou mot de passe incorrect.",
+            "GENERIC": "Une erreur est survenue lors de l'inscription."
+        },
+        "UNVERIFIED_TITLE": "Vérification requise",
+        "UNVERIFIED_DESC": "Votre compte n'est pas encore activé. Veuillez cliquer sur le lien de vérification que nous vous avons envoyé par e-mail pour pouvoir vous connecter.",
+        "REGISTER_SUCCESS_TITLE": "Vérifiez votre boîte mail",
+        "REGISTER_SUCCESS_DESC": "Votre compte a été créé avec succès. Un lien de confirmation a été envoyé à votre adresse e-mail. Veuillez cliquer sur ce lien pour activer votre compte.",
+        "REGISTER_SUCCESS_NOTE": "Si vous ne trouvez pas l'e-mail, pensez à vérifier vos courriers indésirables (spams).",
+        "BTN_BACK_TO_LOGIN": "Retourner à la connexion",
+        "REFERRAL_CODE": "Code de parrainage (Optionnel)",
+        "REFERRAL_PLACEHOLDER": "Ex: MARTIN-A1B2C3"
+    },
+    "FORGOT_PASSWORD": {
+        "TITLE": "Mot de passe oublié",
+        "SUBTITLE": "Entrez votre adresse e-mail pour recevoir un lien de réinitialisation.",
+        "EMAIL": "Adresse e-mail",
+        "BTN_SUBMIT": "Envoyer le lien",
+        "BACK_TO_LOGIN": "Retour à la connexion",
+        "SUCCESS_TITLE": "Vérifiez votre boîte de réception",
+        "SUCCESS_DESC": "Nous avons envoyé un lien de réinitialisation à",
+        "SUCCESS_DESC_2": "Si vous ne le trouvez pas, vérifiez vos courriers indésirables.",
+        "LOADING": "Envoi en cours...",
+        "ERRORS": {
+            "VALID_EMAIL": "Email valide requis"
+        }
+    },
+    "RESET_PASSWORD": {
+        "TITLE": "Nouveau mot de passe",
+        "SUBTITLE": "Veuillez saisir votre nouveau mot de passe sécurisé.",
+        "NEW_PASSWORD": "Nouveau mot de passe",
+        "CONFIRM_PASSWORD": "Confirmer le mot de passe",
+        "BTN_SUBMIT": "Réinitialiser le mot de passe",
+        "SUCCESS_TITLE": "Mot de passe mis à jour",
+        "SUCCESS_DESC": "Votre mot de passe a été modifié avec succès. Vous pouvez maintenant vous connecter avec vos nouveaux identifiants.",
+        "BTN_GO_LOGIN": "Se connecter",
+        "LOADING": "Mise à jour...",
+        "ERRORS": {
+            "MIN_8_CHARS": "Min 8 caractères requis",
+            "PASSWORD_MISMATCH": "Les mots de passe ne correspondent pas",
+            "MISSING_TOKEN": "Lien de réinitialisation invalide ou expiré."
+        }
+    },
+    "VERIFY_EMAIL": {
+        "LOADING_TITLE": "Vérification en cours",
+        "LOADING_DESC": "Veuillez patienter pendant que nous validons votre adresse e-mail...",
+        "SUCCESS_TITLE": "Email vérifié !",
+        "SUCCESS_DESC": "Votre compte Lotus Academy est désormais actif. Vous pouvez vous connecter pour accéder à votre espace.",
+        "ERROR_TITLE": "Échec de la vérification",
+        "ERROR_DESC": "Le lien de vérification est invalide ou a expiré. Vous pouvez demander un nouveau lien ou réinitialiser votre mot de passe.",
+        "BTN_LOGIN": "Se connecter",
+        "BTN_FORGOT": "Mot de passe oublié"
+    },
+    "SIDEBAR": {
+        "INSTRUCTOR": {
+            "DASHBOARD": "Tableau de bord",
+            "MY_COURSES": "Mes cours",
+            "CREATE_COURSE": "Créer un cours",
+            "LIVE_SESSIONS": "Sessions en direct",
+            "STUDENTS": "Suivi des étudiants",
+            "EARNINGS": "Revenus",
+            "MENTORING": "Q&A et Mentorat",
+            "PROFILE": "Profil Instructeur",
+            "SETTINGS": "Paramètres"
+        },
+        "BADGES": {
+            "SOON": "Bientôt",
+            "ACTION": "Action requise"
+        },
+        "ADMIN": {
+            "DASHBOARD": "Vue d'ensemble",
+            "INSTRUCTORS": "Formateurs & Validations",
+            "USERS": "Étudiants",
+            "COURSES": "Modération des cours",
+            "CATEGORIES": "Catégories & Tags",
+            "FINANCE": "Finance & Coupons",
+            "REVIEWS": "Avis & Modération",
+            "ANALYTICS": "Analytiques Globales",
+            "SETTINGS": "Paramètres Plateforme"
+        },
+        "STUDENT": {
+            "DASHBOARD": "Tableau de bord",
+            "MY_LEARNING": "Mon apprentissage",
+            "CATALOG": "Catalogue des cours",
+            "FAVORITES": "Mes favoris",
+            "LIVE_CLASSES": "Classes en direct",
+            "QNA": "Questions & Mentorat",
+            "CERTIFICATES": "Mes Certificats",
+            "PURCHASES": "Historique d'achats",
+            "SETTINGS": "Paramètres du profil"
+        }
+    },
+    "INSTRUCTOR_DASHBOARD": {
+        "STATS": {
+            "TOTAL_COURSES": "Total des cours",
+            "APPROVED": "Approuvés",
+            "PENDING": "En attente",
+            "STUDENTS": "Étudiants"
+        },
+        "TABS": {
+            "MY_COURSES": "Mes Cours",
+            "STUDENTS_PROGRESS": "Progression des Étudiants"
+        },
+        "STATUS": {
+            "APPROVED": "Approuvé",
+            "REJECTED": "Rejeté",
+            "PENDING": "En révision",
+            "DRAFT": "Brouillon"
+        },
+        "COURSES": {
+            "TITLE": "Mes Cours",
+            "NEW_COURSE": "Nouveau Cours",
+            "LOCKED_CREATION_TITLE": "Votre profil doit être approuvé pour pouvoir créer un cours.",
+            "EMPTY_TITLE": "Aucun cours",
+            "EMPTY_DESC": "Vous n'avez pas encore créé de cours. Commencez à partager votre expertise dès aujourd'hui.",
+            "MODIFIED_ON": "Modifié le",
+            "LOCKED_EDIT_TITLE": "Ce cours est en ligne et ne peut plus être modifié.",
+            "BTN_EDIT": "Modifier"
+        },
+        "STUDENTS": {
+            "TITLE": "Progression des Étudiants",
+            "SELECT_COURSE": "Sélectionner un cours",
+            "OPTION_PLACEHOLDER": "Choisir un cours...",
+            "TABLE_STUDENT": "Étudiant",
+            "TABLE_PROGRESS": "Progression",
+            "TABLE_ENROLLED": "Inscrit le",
+            "TABLE_LAST_ACCESS": "Dernier accès",
+            "EMPTY_COURSE_DESC": "Aucun étudiant n'est encore inscrit à ce cours.",
+            "EMPTY_DESC": "Sélectionnez un cours dans le menu ci-dessus pour voir la progression de vos étudiants."
+        }
+    },
+    "COURSE_EDITOR": {
+        "SHELL": {
+            "BACK_TO_DASHBOARD": "Retour au tableau de bord",
+            "EDIT_COURSE": "Édition du cours",
+            "STATUS_PENDING": "En validation",
+            "STATUS_DRAFT": "Brouillon",
+            "BTN_PREVIEW": "Aperçu",
+            "NAV_BASIC": "Informations de base",
+            "NAV_CURRICULUM": "Programme (Médias)",
+            "NAV_PRICING": "Tarification & Affiche",
+            "NAV_QUIZ": "Examen (Quiz)",
+            "NAV_PUBLISH": "Soumettre le cours"
+        },
+        "CREATE": {
+            "TITLE": "Initier un nouveau cours",
+            "DESC": "Définissez les bases. Vous pourrez ajouter les vidéos et l'examen à l'étape suivante.",
+            "FORM_TITLE": "Titre du cours *",
+            "FORM_TITLE_PLACEHOLDER": "Ex: Maîtriser l'Analyse Technique",
+            "ERR_TITLE": "Le titre est requis (minimum 5 caractères).",
+            "FORM_SUBTITLE": "Sous-titre (Accroche) *",
+            "FORM_SUBTITLE_PLACEHOLDER": "Apprenez à trader de A à Z...",
+            "FORM_CATEGORY": "Catégorie *",
+            "CAT_PLACEHOLDER": "Choisir une catégorie",
+            "FORM_LEVEL": "Niveau *",
+            "LEVEL_BEGINNER": "Débutant",
+            "LEVEL_INTERMEDIATE": "Intermédiaire",
+            "LEVEL_ADVANCED": "Avancé",
+            "LEVEL_ALL": "Tous niveaux",
+            "FORM_PRICE": "Prix de base (USD) *",
+            "PRICE_NOTE": "La conversion dynamique s'appliquera pour les étudiants internationaux.",
+            "FORM_LANG": "Langue *",
+            "LANG_FR": "Français",
+            "LANG_EN": "Anglais",
+            "LANG_AR": "Arabe",
+            "FORM_DESC": "Description détaillée",
+            "DESC_PLACEHOLDER": "Décrivez les objectifs de votre cours...",
+            "BTN_CANCEL": "Annuler",
+            "BTN_LOADING": "Création...",
+            "BTN_SUBMIT": "Sauvegarder et Continuer"
+        },
+        "BASIC": {
+            "TITLE": "Informations de base",
+            "DESC": "Modifiez les métadonnées de votre cours.",
+            "TITLE_NOTE": "Le titre de votre cours apparaîtra sur la page de destination et dans les résultats de recherche.",
+            "BTN_SUBMIT": "Enregistrer",
+            "BTN_LOADING": "Enregistrement...",
+            "SAVED_SUCCESS": "Enregistré avec succès !",
+            "ERROR_SAVE": "Erreur lors de la sauvegarde."
+        },
+        "PRICING": {
+            "PAGE_TITLE": "Médias & Prix",
+            "PAGE_DESC": "Configurez l'image de couverture, la vidéo de présentation et le tarif de votre cours.",
+            "THUMBNAIL_TITLE": "Image de couverture",
+            "THUMBNAIL_HINT": "Format recommandé : 1920x1080 (16:9)",
+            "TRAILER_TITLE": "Vidéo de présentation (Trailer)",
+            "TRAILER_HINT": "Format mp4 uniquement. Max 100MB.",
+            "LOADING": "Chargement...",
+            "BTN_UPLOAD_THUMBNAIL": "Uploader l'image",
+            "BTN_UPLOAD_TRAILER": "Uploader la vidéo",
+            "BTN_REPLACE_TRAILER": "Remplacer la vidéo",
+            "PRICE_TITLE": "Tarif du cours",
+            "PRICE_HINT": "Mettez \"0\" pour rendre le cours entièrement gratuit. Les étudiants y auront accès immédiatement sans carte bancaire.",
+            "BTN_SAVE": "Enregistrer",
+            "SAVING": "Enregistrement...",
+            "SAVED_SUCCESS": "Enregistré !"
+        },
+        "CURRICULUM": {
+            "TITLE": "Programme du cours",
+            "DESC": "Structurez votre cours en sections et leçons (Vidéos MP4 ou documents PDF).",
+            "BTN_SUBMIT": "Soumettre pour validation",
+            "SECTION": "Section",
+            "LESSON": "Leçon",
+            "SEC": "sec",
+            "FREE_PREVIEW": "Aperçu gratuit",
+            "BTN_UPLOAD": "Uploader (MP4/PDF)",
+            "MEDIA_READY": "Média prêt",
+            "LESSON_TITLE": "Titre de la leçon",
+            "LESSON_DURATION": "Durée (secondes)",
+            "LESSON_FREE_LABEL": "Rendre cette leçon accessible gratuitement (Aperçu)",
+            "BTN_CANCEL": "Annuler",
+            "BTN_ADD_LESSON": "Ajouter la leçon",
+            "LINK_ADD_LESSON": "Ajouter une leçon",
+            "SECTION_TITLE_LABEL": "Titre de la nouvelle section",
+            "SECTION_TITLE_PLACEHOLDER": "Ex: Introduction aux marchés financiers",
+            "BTN_ADD_SECTION": "Créer la section",
+            "LINK_ADD_SECTION": "Ajouter une nouvelle section",
+            "ERR_FORMAT": "Format non supporté. Veuillez uploader uniquement un fichier .MP4 ou .PDF",
+            "BTN_EDIT": "Modifier",
+            "BTN_DELETE": "Supprimer",
+            "BTN_SAVE": "Enregistrer",
+            "UPLOADING": "Envoi du fichier...",
+            "UPLOAD_SUCCESS": "Média prêt",
+            "REPLACE_MEDIA": "Remplacer le média"
+        },
+        "PREVIEW": {
+            "TITLE": "Aperçu du cours",
+            "DESC": "Vérifiez l'apparence de votre cours avant de le soumettre.",
+            "BTN_VIEW_PUBLIC": "Voir la page publique",
+            "CARD_TITLE": "Aperçu dans le catalogue",
+            "CARD_DESC": "C'est ainsi que les étudiants verront votre cours lors de leurs recherches.",
+            "LANDING_TITLE": "Aperçu de la page de vente",
+            "LANDING_DESC": "La section principale qui doit convaincre l'étudiant de s'inscrire.",
+            "VIDEO_DURATION": "de vidéo",
+            "FREE": "Gratuit",
+            "BTN_ENROLL": "S'inscrire",
+            "LESSONS": "leçons",
+            "CERTIFICATE": "Certificat de réussite"
+        },
+        "QUIZ": {
+            "TITLE": "Quiz final de validation",
+            "DESC": "Évaluez les connaissances de vos étudiants. Ils devront obtenir le score minimum pour recevoir leur certificat.",
+            "FORM_TITLE": "Titre du Quiz *",
+            "FORM_SCORE": "Score minimum requis (%) *",
+            "QUESTION": "Question",
+            "QUESTION_PLACEHOLDER": "Saisissez votre question ici...",
+            "OPTION_PLACEHOLDER": "Saisissez une réponse possible...",
+            "MARK_CORRECT": "Marquer comme bonne réponse",
+            "BTN_ADD_OPTION": "Ajouter une option",
+            "BTN_NEW_QUESTION": "Ajouter une question",
+            "BTN_SAVE": "Enregistrer le quiz",
+            "BTN_SAVING": "Enregistrement...",
+            "ALERT_SUCCESS": "Quiz enregistré !",
+            "ALERT_ERROR": "Erreur lors de la sauvegarde."
+        }
+    },
+    "STUDENT_DASHBOARD": {
+        "CONTINUE": {
+            "TITLE": "Reprendre la lecture",
+            "VIEW_ALL": "Tout voir",
+            "CURRENT_LESSON": "Leçon en cours :",
+            "COMPLETED": "Terminé"
+        },
+        "SEARCH": {
+            "PLACEHOLDER": "Rechercher dans mes cours...",
+            "ALL_CATEGORIES": "Toutes les catégories"
+        },
+        "MY_COURSES": {
+            "TITLE": "Mes Cours"
+        },
+        "DISCOVER": {
+            "EMPTY_TITLE": "Aucun cours trouvé",
+            "EMPTY_DESC": "Vous n'êtes inscrit à aucun cours correspondant à votre recherche.",
+            "CATALOG_BTN": "Explorer le catalogue"
+        }
+    },
+    "COURSE_CARD": {
+        "LEVEL_BEGINNER": "Débutant",
+        "LEVEL_INTERMEDIATE": "Intermédiaire",
+        "LEVEL_ADVANCED": "Avancé",
+        "LEVEL_ALL_LEVELS": "Tous niveaux",
+        "FREE": "Gratuit",
+        "VIEW_COURSE": "Voir le cours →"
+    },
+    "COURSE_DETAIL": {
+        "CATALOG_LINK": "Catalogue",
+        "BY": "Par",
+        "ABOUT_COURSE": "À propos de ce cours",
+        "CURRICULUM_TITLE": "Programme du cours",
+        "SECTIONS": "sections",
+        "LESSONS": "leçons",
+        "FREE_PREVIEW": "Aperçu gratuit",
+        "ENROLL_NOW": "S'inscrire maintenant",
+        "FREE": "Gratuit",
+        "COURSE_INCLUDES": "Ce cours comprend :",
+        "VIDEO_HOURS": "de vidéo",
+        "CERTIFICATE": "Certificat de réussite",
+        "ABOUT_INSTRUCTOR": "À propos de l'instructeur",
+        "VIEW_PROFILE": "Voir le profil",
+        "ACCESS_COURSE": "Accéder au cours",
+        "RESUME_COURSE": "Reprendre le cours"
+    },
+    "COURSE_LIST": {
+        "TITLE": "Explorer les Cours",
+        "SUBTITLE": "Découvrez plus de {{count}} cours pour faire avancer votre carrière.",
+        "SEARCH_PLACEHOLDER": "Rechercher des cours ou des instructeurs...",
+        "FILTERS_LABEL": "Filtres :",
+        "CLEAR_FILTERS": "Effacer",
+        "SHOWING_RESULTS": "Affichage de {{filtered}} sur {{total}} cours",
+        "EMPTY_TITLE": "Aucun cours trouvé",
+        "EMPTY_DESC": "Essayez de modifier vos filtres ou votre terme de recherche.",
+        "BTN_RESET": "Réinitialiser les filtres",
+        "FILTERS": {
+            "ALL": "Tous",
+            "BEGINNER": "Débutant",
+            "INTERMEDIATE": "Intermédiaire",
+            "ADVANCED": "Avancé",
+            "FREE": "Gratuit",
+            "PAID": "Payant"
+        }
+    },
+    "ONBOARDING": {
+        "TITLE": "Devenez Instructeur",
+        "SUBTITLE": "Complétez votre profil professionnel pour commencer à enseigner sur Lotus Academy.",
+        "STEPS": {
+            "PUBLIC_PROFILE": "Profil Public",
+            "EXPERTISE": "Expertise",
+            "ONLINE_PRESENCE": "Présence",
+            "LEGAL_FINANCE": "Légal & Finance",
+            "VALIDATION": "Validation"
+        },
+        "STEP1": {
+            "HEADLINE_LABEL": "Titre professionnel *",
+            "HEADLINE_PLACEHOLDER": "Ex: Expert Quant Finance & Python",
+            "HEADLINE_ERR": "Titre obligatoire (max 100 caractères).",
+            "BIO_LABEL": "Biographie *",
+            "BIO_PLACEHOLDER": "Parlez-nous de votre parcours, de vos diplômes et de votre expérience...",
+            "BIO_ERR": "Minimum 50 caractères requis."
+        },
+        "STEP2": {
+            "EXPERTISE_LABEL": "Domaines d'expertise *",
+            "EXPERTISE_PLACEHOLDER": "Ex: Quant Finance, Python, C++",
+            "EXPERTISE_HINT": "Séparez les domaines par des virgules.",
+            "YEARS_LABEL": "Années d'expérience *",
+            "LANGUAGES_LABEL": "Langues d'enseignement *",
+            "LANGUAGES_PLACEHOLDER": "Ex: Français, Anglais"
+        },
+        "STEP3": {
+            "LINKEDIN_LABEL": "Profil LinkedIn *",
+            "LINKEDIN_PLACEHOLDER": "https://linkedin.com/in/votrenom",
+            "LINKEDIN_ERR": "Lien LinkedIn valide requis.",
+            "WEBSITE_LABEL": "Site Web (Optionnel)",
+            "WEBSITE_PLACEHOLDER": "https://votresite.com",
+            "GITHUB_LABEL": "Profil GitHub (Optionnel)",
+            "GITHUB_PLACEHOLDER": "https://github.com/votrenom"
+        },
+        "STEP4": {
+            "LEGAL_NAME_LABEL": "Nom Légal Complet *",
+            "LEGAL_NAME_PLACEHOLDER": "Identique à votre pièce d'identité officielle",
+            "PHONE_LABEL": "Téléphone *",
+            "PHONE_PLACEHOLDER": "+33612345678",
+            "ADDRESS_LABEL": "Adresse de Facturation *",
+            "TAX_LABEL": "Numéro fiscal / SIRET (Optionnel)"
+        },
+        "STEP5": {
+            "MENTORING_TITLE": "Disponible pour le mentorat",
+            "MENTORING_DESC": "Cochez si vous acceptez que les étudiants vous sollicitent pour des sessions privées d'accompagnement.",
+            "TERMS_TITLE": "Conditions Générales *",
+            "TERMS_DESC": "J'accepte les conditions générales des instructeurs de Lotus Academy et je certifie sur l'honneur que les informations fournies sont exactes.",
+            "TERMS_ERR": "L'acceptation est obligatoire pour soumettre votre dossier."
+        },
+        "NAV": {
+            "PREV": "Précédent",
+            "NEXT": "Suivant",
+            "SUBMIT": "Soumettre le dossier",
+            "SUBMITTING": "Soumission en cours...",
+            "UPDATE": "Mettre à jour le dossier",
+            "UPDATING": "Mise à jour..."
+        },
+        "ERRORS": {
+            "GENERIC": "Une erreur est survenue lors de l'envoi du dossier."
+        },
+        "REJECTED_BANNER_TITLE": "Candidature nécessitant des modifications",
+        "REJECTED_BANNER_DESC": "Votre précédent dossier a été examiné par notre équipe. Veuillez corriger ou compléter les informations ci-dessous et soumettre à nouveau votre profil."
+    },
+    "ADMIN_DASHBOARD": {
+        "STATS": {
+            "USERS": "Utilisateurs Totaux",
+            "PENDING_INSTRUCTORS": "Candidatures Instructeurs",
+            "PENDING_COURSES": "Cours en attente",
+            "APPROVED_COURSES": "Cours Approuvés"
+        },
+        "TABS": {
+            "OVERVIEW": "Vue d'ensemble",
+            "COURSES": "Validation Cours",
+            "INSTRUCTORS": "Instructeurs",
+            "CATEGORIES": "Catégories"
+        },
+        "OVERVIEW": {
+            "TITLE": "Bienvenue sur l'interface d'administration",
+            "DESC": "Utilisez les onglets ci-dessus pour gérer la plateforme Lotus Academy."
+        },
+        "COURSES": {
+            "TITLE": "Validation des Cours",
+            "SEARCH": "Rechercher un cours...",
+            "BY": "Par",
+            "STATUS_PENDING": "En attente",
+            "STATUS_APPROVED": "Approuvé",
+            "STATUS_REJECTED": "Rejeté",
+            "STATUS_DRAFT": "Brouillon",
+            "EMPTY": "Aucun cours trouvé."
+        },
+        "INSTRUCTORS": {
+            "TITLE": "Candidatures Instructeurs",
+            "BTN_APPROVE": "Approuver",
+            "BTN_REJECT": "Rejeter",
+            "EMPTY": "Aucun instructeur trouvé."
+        },
+        "CATEGORIES": {
+            "TITLE": "Gestion des Catégories",
+            "BTN_ADD": "Ajouter",
+            "NO_DESC": "Aucune description fournie.",
+            "MODAL_TITLE": "Nouvelle Catégorie",
+            "FORM_NAME": "Nom de la catégorie *",
+            "FORM_DESC": "Description (Optionnel)",
+            "BTN_CANCEL": "Annuler",
+            "BTN_CREATE": "Créer la catégorie",
+            "BTN_LOADING": "Création..."
+        }
+    },
+    "PLAYER": {
+        "BACK_DASHBOARD": "Retour au tableau de bord",
+        "LOADING": "Chargement...",
+        "COMPLETED": "Terminé",
+        "MEDIA_UNAVAILABLE": "Média indisponible",
+        "MEDIA_UNAVAILABLE_DESC": "Le fichier vidéo de cette leçon n'a pas encore été traité ou n'existe pas.",
+        "NO_DESC": "Aucune description fournie pour cette leçon.",
+        "BTN_NEXT": "Leçon suivante",
+        "BTN_COMPLETE": "Terminer et continuer",
+        "COURSE_CONTENT": "Contenu du cours",
+        "SECTION": "Section",
+        "QUIZ_TITLE": "Quiz de Validation",
+        "QUIZ_DESC": "Obtenez votre certificat"
+    },
+    "STUDENT_QUIZ": {
+        "TITLE": "Quiz de Validation",
+        "DESC": "Répondez aux questions ci-dessous pour valider vos acquis. Prenez votre temps.",
+        "PASSING_SCORE": "Score minimum requis :",
+        "QUESTION": "Question",
+        "BTN_SUBMIT": "Soumettre mes réponses",
+        "BTN_SUBMITTING": "Correction en cours...",
+        "RESULT_TITLE": "Résultat de l'évaluation",
+        "SCORE": "Votre score",
+        "PASSED": "Félicitations ! Vous avez validé ce cours avec succès.",
+        "FAILED": "Vous n'avez pas atteint le score requis pour obtenir le certificat.",
+        "BTN_RETRY": "Réessayer le quiz",
+        "BTN_CERTIFICATE": "Télécharger mon certificat",
+        "BACK_COURSE": "Retour au lecteur",
+        "ERROR_MISSING": "Veuillez répondre à toutes les questions avant de soumettre.",
+        "ERROR_GENERIC": "Une erreur est survenue lors de la correction."
+    },
+    "INSTRUCTOR_COURSES": {
+        "TITLE": "Gestion des cours",
+        "DESC": "Consultez, filtrez et gérez l'intégralité de votre catalogue.",
+        "BTN_NEW": "Nouveau Cours",
+        "FILTERS": {
+            "SEARCH": "Rechercher par titre...",
+            "ALL_STATUS": "Tous les statuts",
+            "ALL_CATEGORIES": "Toutes les catégories"
+        },
+        "STATS": {
+            "STUDENTS": "Étudiants inscrits",
+            "RATING": "Note moyenne"
+        },
+        "EMPTY": {
+            "TITLE": "Aucun cours trouvé",
+            "DESC": "Vos critères de recherche ne correspondent à aucun cours de votre catalogue."
+        }
+    },
+    "INSTRUCTOR_STUDENTS": {
+        "TITLE": "Suivi des Étudiants",
+        "DESC": "Analysez la progression et l'engagement de vos apprenants.",
+        "SELECT_COURSE": "Choisir un cours...",
+        "SEARCH_PLACEHOLDER": "Rechercher par nom ou email...",
+        "EMPTY_SELECT": {
+            "TITLE": "Sélectionnez un cours",
+            "DESC": "Veuillez choisir un cours dans le menu déroulant pour afficher la liste de vos étudiants."
+        },
+        "EMPTY_DATA": {
+            "TITLE": "Aucun résultat",
+            "DESC": "Aucun étudiant ne correspond à cette recherche ou ce cours n'a pas encore d'inscrits."
+        },
+        "TABLE": {
+            "STUDENT": "Étudiant",
+            "PROGRESS": "Progression",
+            "ENROLLED": "Inscrit le",
+            "LAST_ACCESS": "Dernier accès"
+        }
+    },
+    "INSTRUCTOR_EARNINGS": {
+        "TITLE": "Revenus et Versements",
+        "DESC": "Consultez votre solde et l'historique des paiements effectués par Lotus Academy.",
+        "BALANCE": {
+            "TOTAL_EARNED": "Total Généré (À vie)",
+            "TOTAL_PAID": "Déjà Versé",
+            "PENDING": "Solde en Attente",
+            "PENDING_DESC": "Sera versé lors du prochain cycle."
+        },
+        "PAYOUTS_TITLE": "Historique des versements",
+        "TABLE": {
+            "DATE": "Date du versement",
+            "AMOUNT": "Montant",
+            "METHOD": "Méthode de paiement",
+            "NOTES": "Notes / Référence"
+        },
+        "EMPTY": {
+            "TITLE": "Aucun versement",
+            "DESC": "Vous n'avez pas encore reçu de paiement. Vos revenus s'afficheront ici une fois le premier versement effectué."
+        }
+    },
+    "STUDENT_HOME": {
+        "WELCOME": "Heureux de vous revoir",
+        "SUBTITLE": "Qu'allons-nous apprendre aujourd'hui ?",
+        "CONTINUE_WATCHING": "Reprendre la lecture",
+        "MY_LEARNING": "Mon apprentissage",
+        "COMPLETED": "Terminé",
+        "TOP_CATEGORIES": "Explorer les catégories",
+        "TRENDING": "Tendances du moment",
+        "TOP_RATED": "Les mieux notés",
+        "VIEW_ALL": "Tout afficher",
+        "NEW_RELEASES": "Nouveautés",
+        "NEW_BADGE": "Nouveau",
+        "FREE": "Gratuit"
+    }
+}
