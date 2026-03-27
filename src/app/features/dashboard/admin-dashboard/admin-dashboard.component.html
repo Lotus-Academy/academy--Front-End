@@ -87,7 +87,6 @@
                     @for (course of filteredCourses(); track course.id) {
                     <div
                         class="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-ds-border/50 last:border-0 hover:bg-slate-50 dark:hover:bg-ds-border/30 transition-colors">
-
                         <div class="flex items-center gap-4 flex-1">
                             <div
                                 class="w-16 h-12 rounded bg-slate-100 dark:bg-ds-surface flex items-center justify-center shrink-0 overflow-hidden border border-slate-200 dark:border-ds-border/50">
@@ -113,29 +112,25 @@
                         <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end shrink-0">
                             @if (course.status === 'PENDING_REVIEW') {
                             <span
-                                class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-yellow-500/10 text-yellow-600 border border-yellow-500/20 dark:text-yellow-500">{{
-                                'ADMIN_DASHBOARD.COURSES.STATUS_PENDING' | translate }}</span>
-
+                                class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-yellow-500/10 text-yellow-600 border border-yellow-500/20 dark:text-yellow-500">
+                                {{ 'ADMIN_DASHBOARD.COURSES.STATUS_PENDING' | translate }}
+                            </span>
                             <div class="flex items-center gap-2">
                                 <button [disabled]="isProcessing(course.id)" (click)="approveCourse(course.id)"
                                     class="p-2 text-green hover:bg-green/10 transition-colors bg-white dark:bg-ds-surface rounded border dark:border-ds-border disabled:opacity-50"
                                     title="Approuver">
-                                    @if (isProcessing(course.id)) {
-                                    <lucide-icon [name]="icons.Loader2"
-                                        class="w-4 h-4 animate-spin stroke-[2px]"></lucide-icon>
-                                    } @else {
-                                    <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4 stroke-[2px]"></lucide-icon>
-                                    }
+                                    @if (isProcessing(course.id)) { <lucide-icon [name]="icons.Loader2"
+                                        class="w-4 h-4 animate-spin stroke-[2px]"></lucide-icon> }
+                                    @else { <lucide-icon [name]="icons.CheckCircle"
+                                        class="w-4 h-4 stroke-[2px]"></lucide-icon> }
                                 </button>
                                 <button [disabled]="isProcessing(course.id)" (click)="rejectCourse(course.id)"
                                     class="p-2 text-red-500 hover:bg-red-500/10 transition-colors bg-white dark:bg-ds-surface rounded border dark:border-ds-border disabled:opacity-50"
                                     title="Rejeter">
-                                    @if (isProcessing(course.id)) {
-                                    <lucide-icon [name]="icons.Loader2"
-                                        class="w-4 h-4 animate-spin stroke-[2px]"></lucide-icon>
-                                    } @else {
-                                    <lucide-icon [name]="icons.XCircle" class="w-4 h-4 stroke-[2px]"></lucide-icon>
-                                    }
+                                    @if (isProcessing(course.id)) { <lucide-icon [name]="icons.Loader2"
+                                        class="w-4 h-4 animate-spin stroke-[2px]"></lucide-icon> }
+                                    @else { <lucide-icon [name]="icons.XCircle"
+                                        class="w-4 h-4 stroke-[2px]"></lucide-icon> }
                                 </button>
                             </div>
                             } @else if (course.status === 'APPROVED') {
@@ -146,17 +141,18 @@
                             </span>
                             } @else if (course.status === 'REJECTED') {
                             <span
-                                class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-red-500/10 text-red-500 border border-red-500/20">{{
-                                'ADMIN_DASHBOARD.COURSES.STATUS_REJECTED' | translate }}</span>
+                                class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-red-500/10 text-red-500 border border-red-500/20">
+                                {{ 'ADMIN_DASHBOARD.COURSES.STATUS_REJECTED' | translate }}
+                            </span>
                             } @else {
                             <span
-                                class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-slate-100 text-slate-600 border border-slate-200 dark:bg-ds-border/50 dark:text-ds-muted dark:border-ds-border">{{
-                                'ADMIN_DASHBOARD.COURSES.STATUS_DRAFT' | translate }}</span>
+                                class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-slate-100 text-slate-600 border border-slate-200 dark:bg-ds-border/50 dark:text-ds-muted dark:border-ds-border">
+                                {{ 'ADMIN_DASHBOARD.COURSES.STATUS_DRAFT' | translate }}
+                            </span>
                             }
                         </div>
                     </div>
                     }
-
                     @if (filteredCourses().length === 0) {
                     <div class="p-8 text-center font-syne text-sm text-slate-500 dark:text-ds-muted/70">{{
                         'ADMIN_DASHBOARD.COURSES.EMPTY' | translate }}</div>
@@ -174,7 +170,6 @@
                     @for (instructor of instructors(); track instructor.profileId) {
                     <div
                         class="p-5 rounded border border-slate-200 dark:border-ds-border bg-white dark:bg-ds-black flex flex-col justify-between shadow-sm">
-
                         <div
                             class="flex items-center gap-4 mb-4 border-b border-slate-100 dark:border-ds-border/50 pb-4">
                             <div class="w-12 h-12 rounded-full border border-lotus p-0.5 shrink-0">
@@ -247,8 +242,21 @@
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @for (category of categories(); track category.id) {
                     <div
-                        class="p-5 rounded border border-slate-200 dark:border-ds-border flex flex-col justify-between hover:border-lotus/50 transition-colors group h-full bg-white dark:bg-ds-black shadow-sm">
-                        <div class="flex items-start justify-between">
+                        class="rounded border border-slate-200 dark:border-ds-border flex flex-col justify-between hover:border-lotus/50 transition-colors group h-full bg-white dark:bg-ds-black shadow-sm overflow-hidden">
+
+                        <div
+                            class="h-32 bg-slate-100 dark:bg-ds-surface border-b border-slate-200 dark:border-ds-border relative">
+                            @if (category.iconUrl) {
+                            <img [src]="category.iconUrl" class="w-full h-full object-cover">
+                            } @else {
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <lucide-icon [name]="icons.ImageIcon"
+                                    class="w-8 h-8 text-slate-300 dark:text-ds-muted/30"></lucide-icon>
+                            </div>
+                            }
+                        </div>
+
+                        <div class="p-5 flex items-start justify-between">
                             <div>
                                 <p class="font-syne font-bold text-slate-900 dark:text-white">{{ category.name }}</p>
                                 <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 mt-2 line-clamp-2">
@@ -286,6 +294,31 @@
 
         <form [formGroup]="categoryForm" (ngSubmit)="submitCategory()">
             <div class="p-6 space-y-5">
+
+                <div>
+                    <label
+                        class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">Image
+                        de la catégorie</label>
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-20 h-20 rounded border border-dashed border-slate-300 dark:border-ds-border bg-slate-50 dark:bg-ds-black flex items-center justify-center overflow-hidden shrink-0">
+                            @if (iconPreview()) {
+                            <img [src]="iconPreview()" class="w-full h-full object-cover">
+                            } @else {
+                            <lucide-icon [name]="icons.ImageIcon" class="w-6 h-6 text-slate-400"></lucide-icon>
+                            }
+                        </div>
+                        <div class="flex-1">
+                            <input type="file" id="iconFile" accept="image/*" class="hidden"
+                                (change)="onIconSelected($event)">
+                            <label for="iconFile"
+                                class="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-ds-border rounded font-syne text-sm font-bold text-slate-700 dark:text-ds-muted hover:bg-slate-50 dark:hover:bg-ds-black cursor-pointer transition-colors">
+                                <lucide-icon [name]="icons.Upload" class="w-4 h-4"></lucide-icon> Choisir une image
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <div>
                     <label
                         class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">{{

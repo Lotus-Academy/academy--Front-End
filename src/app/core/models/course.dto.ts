@@ -2,6 +2,7 @@ export interface CategoryDTO {
     id: string;
     name: string;
     description?: string;
+    iconUrl?: string;
 }
 
 export interface LessonDTO {
@@ -12,7 +13,7 @@ export interface LessonDTO {
     orderIndex: number;
     type: string;
     mediaUrl: string;
-    duration: number; // en secondes
+    duration: number;
     freePreview: boolean;
     processingStatus?: string;
     completed: boolean;

@@ -37,11 +37,13 @@ export interface CategoryDTO {
   id: string;
   name: string;
   description?: string;
+  iconUrl?: string; // NOUVEAU: Récupéré depuis le backend
 }
 
 export interface CategoryCreateDTO {
   name: string;
   description?: string;
+  // Ne contient PAS iconUrl, c'est envoyé en FormData
 }
 
 export interface DashboardStatsDTO {
@@ -165,16 +167,21 @@ export class AdminService {
 
   /**
    * POST /api/v1/admin/categories
+   * @param formData Contient "data" (JSON de CategoryCreateDTO) et "icon" (le fichier)
    */
-  createCategory(data: CategoryCreateDTO): Observable<string> {
-    return this.http.post(`${this.adminUrl}/categories`, data, { responseType: 'text' });
+  createCategory(formData: FormData): Observable<CategoryDTO> {
+    // Selon Swagger, retourne un CategoryDTO (ou "CourseCategory")
+    return this.http.post<CategoryDTO>(`${this.adminUrl}/categories`, formData);
   }
 
   /**
    * PUT /api/v1/admin/categories/{categoryId}
+   * @param categoryId L'ID de la catégorie
+   * @param formData Contient "data" (JSON de CategoryCreateDTO) et "icon" (le fichier)
    */
-  updateCategory(categoryId: string, data: CategoryCreateDTO): Observable<string> {
-    return this.http.put(`${this.adminUrl}/categories/${categoryId}`, data, { responseType: 'text' });
+  updateCategory(categoryId: string, formData: FormData): Observable<CategoryDTO> {
+    // Selon Swagger, retourne un CategoryDTO
+    return this.http.put<CategoryDTO>(`${this.adminUrl}/categories/${categoryId}`, formData);
   }
 
   /**

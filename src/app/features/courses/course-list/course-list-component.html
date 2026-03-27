@@ -32,21 +32,27 @@
                     </div>
 
                     <div class="flex flex-wrap gap-2 border-r border-slate-200 dark:border-ds-border pr-4">
+
                         <button (click)="selectedCategory.set('All')"
-                            class="px-4 py-2 font-mono text-[10px] uppercase tracking-widest font-bold rounded border transition-colors"
+                            class="flex items-center gap-2 px-4 py-2 font-mono text-[10px] uppercase tracking-widest font-bold rounded border transition-colors"
                             [ngClass]="selectedCategory() === 'All' 
                         ? 'bg-lotus border-lotus text-ds-black shadow-sm' 
                         : 'bg-white dark:bg-ds-surface border-slate-200 dark:border-ds-border text-slate-600 dark:text-ds-muted hover:border-lotus/50'">
-                            {{ 'COURSE_LIST.FILTERS.ALL' | translate }}
+                            <span>{{ 'COURSE_LIST.FILTERS.ALL' | translate }}</span>
                         </button>
 
                         @for (cat of categories(); track cat.id) {
                         <button (click)="selectedCategory.set(cat.id)"
-                            class="px-4 py-2 font-mono text-[10px] uppercase tracking-widest font-bold rounded border transition-colors"
+                            class="flex items-center gap-2 px-4 py-2 font-mono text-[10px] uppercase tracking-widest font-bold rounded border transition-colors"
                             [ngClass]="selectedCategory() === cat.id 
                         ? 'bg-lotus border-lotus text-ds-black shadow-sm' 
                         : 'bg-white dark:bg-ds-surface border-slate-200 dark:border-ds-border text-slate-600 dark:text-ds-muted hover:border-lotus/50'">
-                            {{ cat.name }}
+
+                            @if (cat.iconUrl) {
+                            <img [src]="cat.iconUrl" alt="" class="w-3.5 h-3.5 object-contain shrink-0">
+                            }
+
+                            <span>{{ cat.name }}</span>
                         </button>
                         }
                     </div>
