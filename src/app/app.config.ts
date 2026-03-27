@@ -14,7 +14,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateLoader {
       // Génération d'un horodatage unique en millisecondes
       const cacheBuster = Date.now();
       // Concaténation de l'horodatage à l'URL du fichier JSON
-      return http.get<any>(`/assets/i18n/${lang}.json?v=${cacheBuster}`);
+      return http.get<any>(`./assets/i18n/${lang}.json?v=${cacheBuster}`);
     }
   };
 }
