@@ -1,74 +1,261 @@
 <app-admin-layout title="Liste des Instructeurs">
 
-    <div
-        class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden animate-fade-in-up">
+    <div class="space-y-6 animate-fade-in-up relative p-6">
+
+        <div class="flex flex-col gap-6 border-b border-slate-200 dark:border-ds-border pb-6">
+            <div>
+                <h1 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white">
+                    {{ 'ADMIN_INSTRUCTORS.TITLE' | translate }}
+                </h1>
+                <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 mt-1">
+                    {{ 'ADMIN_INSTRUCTORS.SUBTITLE' | translate }}
+                </p>
+            </div>
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+
+                <div class="relative w-full sm:w-96">
+                    <lucide-icon [name]="icons.Search"
+                        class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 stroke-[1.5px]"></lucide-icon>
+                    <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
+                        [placeholder]="'ADMIN_INSTRUCTORS.SEARCH_PLACEHOLDER' | translate"
+                        class="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors shadow-sm">
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <lucide-icon [name]="icons.Filter" class="w-4 h-4 text-slate-400 hidden sm:block"></lucide-icon>
+                    <div class="flex flex-wrap gap-2">
+                        @for (status of statuses; track status) {
+                        <button (click)="selectedStatus.set(status)"
+                            class="px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest font-bold rounded border transition-colors"
+                            [ngClass]="selectedStatus() === status 
+                                ? 'bg-slate-800 border-slate-800 text-white dark:bg-slate-200 dark:border-slate-200 dark:text-ds-black shadow-sm' 
+                                : 'bg-white dark:bg-ds-surface border-slate-200 dark:border-ds-border text-slate-600 dark:text-ds-muted hover:border-slate-300 dark:hover:border-ds-muted/50'">
+                            {{ 'ADMIN_INSTRUCTORS.STATUS_' + status | translate }}
+                        </button>
+                        }
+                    </div>
+                </div>
+
+                @if (searchQuery() !== '' || selectedStatus() !== 'ALL') {
+                <button (click)="clearFilters()"
+                    class="text-slate-400 hover:text-red-500 transition-colors p-2 sm:ml-auto">
+                    <lucide-icon [name]="icons.X" class="w-5 h-5"></lucide-icon>
+                </button>
+                }
+            </div>
+        </div>
 
         <div
-            class="p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row justify-between gap-4 items-center bg-slate-50/50 dark:bg-slate-800/20">
-            <div class="relative w-full sm:w-96">
-                <lucide-icon [name]="icons.Search"
-                    class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></lucide-icon>
-                <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
-                    placeholder="Rechercher un instructeur..."
-                    class="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white transition-colors shadow-sm">
+            class="bg-white dark:bg-ds-surface rounded border border-slate-200 dark:border-ds-border shadow-sm overflow-hidden">
+
+            @if (isLoading()) {
+            <div class="flex justify-center items-center py-20">
+                <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin stroke-[2px]"></lucide-icon>
             </div>
-            <div
-                class="text-sm font-bold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-800 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
-                Total : {{ filteredInstructors().length }} instructeurs
+            } @else {
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-ds-black/50 border-b border-slate-200 dark:border-ds-border">
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_INSTRUCTORS.TABLE_INSTRUCTOR' | translate }}</th>
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_INSTRUCTORS.TABLE_CONTACT' | translate }}</th>
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_INSTRUCTORS.TABLE_REGISTERED' | translate }}</th>
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_INSTRUCTORS.TABLE_STATUS' | translate }}</th>
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70 text-right">
+                                {{ 'ADMIN_INSTRUCTORS.TABLE_ACTIONS' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-ds-border/50">
+                        @for (instructor of filteredInstructors(); track instructor.profileId) {
+                        <tr class="hover:bg-slate-50 dark:hover:bg-ds-border/20 transition-colors">
+
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-10 h-10 rounded-full border border-slate-200 dark:border-ds-border bg-slate-100 dark:bg-ds-black flex items-center justify-center shrink-0 overflow-hidden text-lotus font-cormorant font-bold text-lg">
+                                        @if (instructor.profilePictureUrl) {
+                                        <img [src]="instructor.profilePictureUrl" class="w-full h-full object-cover">
+                                        } @else {
+                                        {{ instructor.firstName.charAt(0) }}{{ instructor.lastName.charAt(0) }}
+                                        }
+                                    </div>
+                                    <p class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{
+                                        instructor.firstName }} {{ instructor.lastName }}</p>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2 text-slate-500 dark:text-ds-muted/70">
+                                    <lucide-icon [name]="icons.Mail" class="w-3.5 h-3.5"></lucide-icon>
+                                    <span class="font-syne text-xs">{{ instructor.email }}</span>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2 text-slate-500 dark:text-ds-muted/70">
+                                    <lucide-icon [name]="icons.Calendar" class="w-3.5 h-3.5"></lucide-icon>
+                                    <span class="font-mono text-[10px] uppercase tracking-wider">{{
+                                        instructor.registeredAt | date:'mediumDate' }}</span>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                @if (instructor.approvalStatus === 'PENDING') {
+                                <span
+                                    class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-yellow-500/10 text-yellow-600 border border-yellow-500/20 dark:text-yellow-500">
+                                    {{ 'ADMIN_INSTRUCTORS.STATUS_PENDING' | translate }}
+                                </span>
+                                } @else if (instructor.approvalStatus === 'APPROVED') {
+                                <span
+                                    class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-green/10 text-green border border-green/20">
+                                    {{ 'ADMIN_INSTRUCTORS.STATUS_APPROVED' | translate }}
+                                </span>
+                                } @else if (instructor.approvalStatus === 'REJECTED') {
+                                <span
+                                    class="px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded bg-red-500/10 text-red-500 border border-red-500/20">
+                                    {{ 'ADMIN_INSTRUCTORS.STATUS_REJECTED' | translate }}
+                                </span>
+                                }
+                            </td>
+
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex items-center justify-end gap-2">
+
+                                    <a [routerLink]="['/admin/instructors', instructor.userId]"
+                                        class="p-2 text-slate-400 hover:text-lotus hover:bg-lotus/10 rounded transition-colors dark:text-ds-muted/70 dark:hover:text-lotus"
+                                        [title]="'ADMIN_INSTRUCTORS.BTN_VIEW_PROFILE' | translate">
+                                        <lucide-icon [name]="icons.Eye" class="w-4 h-4"></lucide-icon>
+                                    </a>
+
+                                    @if (instructor.approvalStatus === 'PENDING') {
+                                    <button (click)="openApproveModal(instructor)"
+                                        class="p-2 text-green hover:bg-green/10 rounded transition-colors"
+                                        [title]="'ADMIN_INSTRUCTORS.BTN_APPROVE' | translate">
+                                        <lucide-icon [name]="icons.CheckCircle"
+                                            class="w-4 h-4 stroke-[2px]"></lucide-icon>
+                                    </button>
+                                    <button (click)="openRejectModal(instructor)"
+                                        class="p-2 text-red-500 hover:bg-red-500/10 rounded transition-colors"
+                                        [title]="'ADMIN_INSTRUCTORS.BTN_REJECT' | translate">
+                                        <lucide-icon [name]="icons.XCircle" class="w-4 h-4 stroke-[2px]"></lucide-icon>
+                                    </button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                        }
+
+                        @if (filteredInstructors().length === 0) {
+                        <tr>
+                            <td colspan="5"
+                                class="px-6 py-12 text-center font-syne text-sm text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_INSTRUCTORS.EMPTY' | translate }}
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
+            }
         </div>
 
-        @if (isLoading()) {
-        <div class="flex justify-center py-20">
-            <div class="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-        </div>
-        } @else {
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
-                <thead
-                    class="bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-800">
-                    <tr>
-                        <th scope="col" class="px-6 py-4">Instructeur</th>
-                        <th scope="col" class="px-6 py-4">Statut</th>
-                        <th scope="col" class="px-6 py-4">Date d'inscription</th>
-                        <th scope="col" class="px-6 py-4 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-                    @for (instructor of filteredInstructors(); track instructor.userId) {
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                        <td class="px-6 py-4 flex items-center gap-3">
-                            <div
-                                class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold border border-indigo-200 dark:border-indigo-800 shrink-0 uppercase">
-                                {{ instructor.firstName.charAt(0) }}{{ instructor.lastName.charAt(0) }}
-                            </div>
-                            <div>
-                                <div class="font-bold text-slate-900 dark:text-white">{{ instructor.firstName }} {{
-                                    instructor.lastName }}</div>
-                                <div class="text-xs">{{ instructor.email }}</div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-2.5 py-1 text-xs font-bold rounded-full"
-                                [ngClass]="instructor.approvalStatus === 'APPROVED' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-slate-100 text-slate-700 border border-slate-200'">
-                                {{ instructor.approvalStatus }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 font-medium">
-                            {{ instructor.registeredAt| date:'dd MMM yyyy' }}
-                        </td>
-                        <td class="px-6 py-4 text-right flex justify-end gap-2">
-                            <button
-                                class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
-                                title="Suspendre l'instructeur">
-                                <lucide-icon [name]="icons.ShieldAlert" class="w-4 h-4"></lucide-icon>
-                            </button>
-                        </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        }
     </div>
+
+    @if (isApproveModalOpen()) {
+    <div
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm transition-opacity">
+        <div
+            class="bg-white dark:bg-ds-surface rounded w-full max-w-sm shadow-2xl overflow-hidden animate-fade-in-up border border-slate-200 dark:border-ds-border p-6 text-center">
+
+            <div
+                class="w-16 h-16 bg-green/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-green/20">
+                <lucide-icon [name]="icons.CheckCircle" class="w-8 h-8 text-green stroke-[1.5px]"></lucide-icon>
+            </div>
+
+            <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                {{ 'ADMIN_INSTRUCTORS.APPROVE_TITLE' | translate }}
+            </h3>
+
+            <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 mb-6">
+                {{ 'ADMIN_INSTRUCTORS.APPROVE_CONFIRM' | translate }} <br>
+                <strong class="text-slate-900 dark:text-white mt-2 block">{{ selectedInstructor()?.firstName }} {{
+                    selectedInstructor()?.lastName }}</strong>
+            </p>
+
+            @if (actionError()) {
+            <div
+                class="mb-6 p-3 rounded bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 font-syne text-xs text-left">
+                {{ actionError() | translate }}
+            </div>
+            }
+
+            <div class="flex justify-center gap-4">
+                <button type="button" (click)="closeModals()" [disabled]="isProcessing()"
+                    class="px-5 py-2.5 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted hover:bg-slate-100 dark:hover:bg-ds-border/50 rounded transition-colors disabled:opacity-50">
+                    {{ 'ADMIN_INSTRUCTORS.BTN_CANCEL' | translate }}
+                </button>
+                <button type="button" (click)="confirmApprove()" [disabled]="isProcessing()"
+                    class="px-6 py-2.5 font-mono text-[11px] uppercase tracking-widest font-bold bg-green text-white rounded hover:bg-green/80 transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50">
+                    @if (isProcessing()) { <lucide-icon [name]="icons.Loader2"
+                        class="w-4 h-4 animate-spin"></lucide-icon> }
+                    {{ 'ADMIN_INSTRUCTORS.BTN_CONFIRM_APPROVE' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+
+    @if (isRejectModalOpen()) {
+    <div
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm transition-opacity">
+        <div
+            class="bg-white dark:bg-ds-surface rounded w-full max-w-sm shadow-2xl overflow-hidden animate-fade-in-up border border-slate-200 dark:border-ds-border p-6 text-center">
+
+            <div
+                class="w-16 h-16 bg-red-50 dark:bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-100 dark:border-red-500/20">
+                <lucide-icon [name]="icons.AlertTriangle" class="w-8 h-8 text-red-500 stroke-[1.5px]"></lucide-icon>
+            </div>
+
+            <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                {{ 'ADMIN_INSTRUCTORS.REJECT_TITLE' | translate }}
+            </h3>
+
+            <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 mb-6">
+                {{ 'ADMIN_INSTRUCTORS.REJECT_CONFIRM' | translate }} <br>
+                <strong class="text-slate-900 dark:text-white mt-2 block">{{ selectedInstructor()?.firstName }} {{
+                    selectedInstructor()?.lastName }}</strong>
+            </p>
+
+            @if (actionError()) {
+            <div
+                class="mb-6 p-3 rounded bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 font-syne text-xs text-left">
+                {{ actionError() | translate }}
+            </div>
+            }
+
+            <div class="flex justify-center gap-4">
+                <button type="button" (click)="closeModals()" [disabled]="isProcessing()"
+                    class="px-5 py-2.5 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted hover:bg-slate-100 dark:hover:bg-ds-border/50 rounded transition-colors disabled:opacity-50">
+                    {{ 'ADMIN_INSTRUCTORS.BTN_CANCEL' | translate }}
+                </button>
+                <button type="button" (click)="confirmReject()" [disabled]="isProcessing()"
+                    class="px-6 py-2.5 font-mono text-[11px] uppercase tracking-widest font-bold bg-red-500 text-white rounded hover:bg-red-600 transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50">
+                    @if (isProcessing()) { <lucide-icon [name]="icons.Loader2"
+                        class="w-4 h-4 animate-spin"></lucide-icon> }
+                    {{ 'ADMIN_INSTRUCTORS.BTN_CONFIRM_REJECT' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+    }
 </app-admin-layout>

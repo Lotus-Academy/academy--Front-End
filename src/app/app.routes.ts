@@ -56,6 +56,8 @@ import { AdminPaymentsComponent } from './features/admin/admin-payments/admin-pa
 // ==========================================
 import { authGuard } from './core/guards/auth.guard-guard';
 import { instructorApprovedGuard } from './core/guards/instructor-approved.guard-guard';
+import { AdminInstructorProfileComponent } from './features/admin/admin-instructor-profil/admin-instructor-profile.component';
+import { AdminStudentProfileComponent } from './features/admin/admin-student-profile/admin-student-profile.component';
 
 export const routes: Routes = [
     // --- ROUTES PUBLIQUES ---
@@ -139,7 +141,15 @@ export const routes: Routes = [
     { path: 'dashboard/categories', component: AdminCategoriesComponent, canActivate: [authGuard] },
     { path: 'dashboard/analytics', component: AdminAnalyticsComponent, canActivate: [authGuard] },
     { path: 'dashboard/payments', component: AdminPaymentsComponent, canActivate: [authGuard] },
-
+    { path: 'admin/categories', component: AdminCategoriesComponent, canActivate: [authGuard] },
+    { path: 'admin/courses', component: AdminCoursesComponent, canActivate: [authGuard] },
+    { path: 'admin/instructors', component: AdminInstructorsComponent, canActivate: [authGuard] },
+    {
+        path: 'admin/instructors/:id',
+        component: AdminInstructorProfileComponent
+    },
+    { path: 'admin/users', component: AdminUsersComponent, canActivate: [authGuard] },
+    { path: 'admin/users/:id', component: AdminStudentProfileComponent, canActivate: [authGuard] },
     // --- FALLBACK (Page 404) ---
     { path: '**', redirectTo: '' }
 ];

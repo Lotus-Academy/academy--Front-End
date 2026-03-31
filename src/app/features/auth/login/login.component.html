@@ -70,11 +70,28 @@
             <div class="mb-6 p-5 bg-lotus/5 border border-lotus/30 rounded animate-fade-in-up">
                 <div class="flex items-start gap-3">
                     <lucide-icon [name]="icons.Info" class="w-5 h-5 text-lotus shrink-0 mt-0.5"></lucide-icon>
-                    <div>
+                    <div class="flex-1">
                         <h4 class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{
                             'LOGIN.UNVERIFIED_TITLE' | translate }}</h4>
                         <p class="font-syne text-sm mt-1 text-slate-600 dark:text-ds-muted/70">{{
                             'LOGIN.UNVERIFIED_DESC' | translate }}</p>
+
+                        <div class="mt-4">
+                            <button type="button" (click)="resendVerificationEmail()" [disabled]="isResending()"
+                                class="inline-flex items-center gap-2 px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded hover:bg-lotus-light transition-colors shadow-sm disabled:opacity-50">
+                                @if (isResending()) {
+                                <lucide-icon [name]="icons.Loader2" class="w-3.5 h-3.5 animate-spin"></lucide-icon>
+                                } @else {
+                                <lucide-icon [name]="icons.Mail" class="w-3.5 h-3.5"></lucide-icon>
+                                }
+                                {{ 'LOGIN.BTN_RESEND_EMAIL' | translate }}
+                            </button>
+                        </div>
+
+                        @if (resendSuccessMessage()) {
+                        <p class="font-syne text-xs font-bold text-green mt-3">{{ resendSuccessMessage() | translate }}
+                        </p>
+                        }
                     </div>
                 </div>
             </div>
@@ -274,5 +291,4 @@
             </div>
         </div>
     </div>
-
 </div>

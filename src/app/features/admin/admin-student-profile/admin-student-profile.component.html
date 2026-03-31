@@ -1,0 +1,239 @@
+<div class="space-y-6 animate-fade-in-up relative p-6 max-w-6xl mx-auto">
+
+    <button (click)="goBack()"
+        class="flex items-center gap-2 text-slate-500 dark:text-ds-muted/70 hover:text-lotus dark:hover:text-lotus transition-colors font-mono text-[10px] uppercase tracking-widest font-bold">
+        <lucide-icon [name]="icons.ArrowLeft" class="w-4 h-4"></lucide-icon>
+        {{ 'ADMIN_STUDENT_PROFILE.BTN_BACK' | translate }}
+    </button>
+
+    @if (isLoading()) {
+    <div class="flex flex-col items-center justify-center py-32">
+        <lucide-icon [name]="icons.Loader2" class="w-10 h-10 text-lotus animate-spin stroke-[1.5px]"></lucide-icon>
+        <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 mt-4">{{ 'ADMIN_STUDENT_PROFILE.LOADING' |
+            translate }}</p>
+    </div>
+    } @else if (error()) {
+    <div
+        class="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded p-6 text-center text-red-600 dark:text-red-400">
+        <p class="font-syne font-bold">{{ error() | translate }}</p>
+    </div>
+    } @else if (user()) {
+
+    <div
+        class="bg-white dark:bg-ds-surface rounded border border-slate-200 dark:border-ds-border shadow-sm p-6 sm:p-8 flex flex-col md:flex-row items-start justify-between gap-6">
+
+        <div class="flex items-center gap-6">
+            <div
+                class="w-20 h-20 rounded-full border-4 border-slate-50 dark:border-ds-black bg-slate-100 dark:bg-ds-black flex items-center justify-center overflow-hidden shrink-0 shadow-sm text-lotus font-cormorant font-bold text-2xl">
+                @if (user()?.profile?.profilePictureUrl) {
+                <img [src]="user()?.profile?.profilePictureUrl" class="w-full h-full object-cover">
+                } @else {
+                {{ user()?.profile?.firstName?.charAt(0) }}{{ user()?.profile?.lastName?.charAt(0) }}
+                }
+            </div>
+            <div>
+                <h1 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white leading-tight">
+                    {{ user()?.profile?.firstName }} {{ user()?.profile?.lastName }}
+                </h1>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-2">
+                    <div class="flex items-center gap-1.5 text-slate-500 dark:text-ds-muted/70">
+                        <lucide-icon [name]="icons.Mail" class="w-3.5 h-3.5"></lucide-icon>
+                        <span class="font-syne text-sm">{{ user()?.profile?.email }}</span>
+                    </div>
+                    <div class="hidden sm:block w-1 h-1 rounded-full bg-slate-300 dark:bg-ds-border"></div>
+                    <div class="flex items-center gap-1.5 text-slate-500 dark:text-ds-muted/70">
+                        <lucide-icon [name]="icons.Calendar" class="w-3.5 h-3.5"></lucide-icon>
+                        <span class="font-syne text-sm">{{ 'ADMIN_STUDENT_PROFILE.MEMBER_SINCE' | translate }}: {{
+                            user()?.profile?.createdAt | date:'mediumDate' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest font-bold rounded border"
+            [ngClass]="getStatusConfig(user()?.profile?.status).class">
+            <lucide-icon [name]="getStatusConfig(user()?.profile?.status).icon" class="w-3.5 h-3.5"></lucide-icon>
+            {{ getStatusConfig(user()?.profile?.status).labelKey | translate }}
+        </div>
+    </div>
+
+    <div
+        class="bg-white dark:bg-ds-surface rounded border border-slate-200 dark:border-ds-border shadow-sm overflow-hidden mt-6">
+        <div class="border-b border-slate-200 dark:border-ds-border px-2 sm:px-6 overflow-x-auto">
+            <nav class="flex gap-4 sm:gap-8 min-w-max">
+                <button (click)="activeTab.set('enrollments')"
+                    [ngClass]="activeTab() === 'enrollments' ? 'border-lotus text-lotus' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-ds-muted/70 dark:hover:text-ds-muted'"
+                    class="flex items-center gap-2 py-4 px-1 border-b-2 font-mono text-[11px] uppercase tracking-widest font-bold transition-colors">
+                    <lucide-icon [name]="icons.BookOpen" class="w-4 h-4"></lucide-icon>
+                    {{ 'ADMIN_STUDENT_PROFILE.TABS.ENROLLMENTS' | translate }} ({{ enrollments().length }})
+                </button>
+                <button (click)="activeTab.set('payments')"
+                    [ngClass]="activeTab() === 'payments' ? 'border-lotus text-lotus' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-ds-muted/70 dark:hover:text-ds-muted'"
+                    class="flex items-center gap-2 py-4 px-1 border-b-2 font-mono text-[11px] uppercase tracking-widest font-bold transition-colors">
+                    <lucide-icon [name]="icons.CreditCard" class="w-4 h-4"></lucide-icon>
+                    {{ 'ADMIN_STUDENT_PROFILE.TABS.PAYMENTS' | translate }} ({{ payments().length }})
+                </button>
+                <button (click)="activeTab.set('certificates')"
+                    [ngClass]="activeTab() === 'certificates' ? 'border-lotus text-lotus' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-ds-muted/70 dark:hover:text-ds-muted'"
+                    class="flex items-center gap-2 py-4 px-1 border-b-2 font-mono text-[11px] uppercase tracking-widest font-bold transition-colors">
+                    <lucide-icon [name]="icons.Award" class="w-4 h-4"></lucide-icon>
+                    {{ 'ADMIN_STUDENT_PROFILE.TABS.CERTIFICATES' | translate }} ({{ certificates().length }})
+                </button>
+            </nav>
+        </div>
+
+        <div class="p-0">
+            @if (activeTab() === 'enrollments') {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-ds-black/50 border-b border-slate-200 dark:border-ds-border">
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.TABLE_COURSE' | translate }}</th>
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.TABLE_ENROLLED_AT' | translate }}</th>
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.TABLE_PROGRESS' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-ds-border/50">
+                        @for (enrollment of enrollments(); track enrollment.id) {
+                        <tr class="hover:bg-slate-50 dark:hover:bg-ds-border/20 transition-colors">
+                            <td class="px-6 py-4">
+                                <p class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{
+                                    enrollment.courseTitle }}</p>
+                                <p class="font-syne text-xs text-slate-500 dark:text-ds-muted/70 mt-0.5">{{
+                                    enrollment.instructorName }}</p>
+                            </td>
+                            <td
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-wider text-slate-600 dark:text-ds-muted">
+                                {{ enrollment.enrolledAt | date:'shortDate' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-full bg-slate-200 dark:bg-ds-border rounded-full h-1.5 max-w-[100px]">
+                                        <div class="bg-lotus h-1.5 rounded-full" [style.width.%]="enrollment.progress">
+                                        </div>
+                                    </div>
+                                    <span class="font-mono text-[10px] font-bold text-slate-700 dark:text-ds-muted">{{
+                                        enrollment.progress | number:'1.0-0' }}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        }
+                        @if (enrollments().length === 0) {
+                        <tr>
+                            <td colspan="3"
+                                class="px-6 py-12 text-center font-syne text-sm text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.EMPTY_ENROLLMENTS' | translate }}
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            }
+
+            @if (activeTab() === 'payments') {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-ds-black/50 border-b border-slate-200 dark:border-ds-border">
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.TABLE_DATE' | translate }}</th>
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.TABLE_COURSE' | translate }}</th>
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.TABLE_AMOUNT' | translate }}</th>
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.TABLE_STATUS' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-ds-border/50">
+                        @for (payment of payments(); track payment.date) {
+                        <tr class="hover:bg-slate-50 dark:hover:bg-ds-border/20 transition-colors">
+                            <td
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-wider text-slate-600 dark:text-ds-muted">
+                                {{ payment.date | date:'short' }}
+                            </td>
+                            <td class="px-6 py-4 font-syne font-bold text-sm text-slate-900 dark:text-white">
+                                {{ payment.courseTitle }}
+                            </td>
+                            <td class="px-6 py-4 font-mono text-sm text-slate-900 dark:text-white font-bold">
+                                {{ payment.amount | number:'1.2-2' }} {{ payment.currency }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 font-mono text-[9px] uppercase tracking-widest font-bold rounded"
+                                    [ngClass]="payment.status === 'succeeded' ? 'bg-green/10 text-green border border-green/20' : 'bg-slate-100 text-slate-600 border border-slate-200'">
+                                    {{ payment.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        }
+                        @if (payments().length === 0) {
+                        <tr>
+                            <td colspan="4"
+                                class="px-6 py-12 text-center font-syne text-sm text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.EMPTY_PAYMENTS' | translate }}
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            }
+
+            @if (activeTab() === 'certificates') {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-ds-black/50 border-b border-slate-200 dark:border-ds-border">
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.TABLE_COURSE' | translate }}</th>
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.TABLE_DATE' | translate }}</th>
+                            <th
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.TABLE_SERIAL' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-ds-border/50">
+                        @for (cert of certificates(); track cert.id) {
+                        <tr class="hover:bg-slate-50 dark:hover:bg-ds-border/20 transition-colors">
+                            <td class="px-6 py-4 font-syne font-bold text-sm text-slate-900 dark:text-white">
+                                {{ cert.courseTitle }}
+                            </td>
+                            <td
+                                class="px-6 py-4 font-mono text-[10px] uppercase tracking-wider text-slate-600 dark:text-ds-muted">
+                                {{ cert.issuedAt | date:'mediumDate' }}
+                            </td>
+                            <td class="px-6 py-4 font-mono text-xs text-slate-500 dark:text-ds-muted">
+                                {{ cert.serialNumber }}
+                            </td>
+                        </tr>
+                        }
+                        @if (certificates().length === 0) {
+                        <tr>
+                            <td colspan="3"
+                                class="px-6 py-12 text-center font-syne text-sm text-slate-500 dark:text-ds-muted/70">
+                                {{ 'ADMIN_STUDENT_PROFILE.EMPTY_CERTIFICATES' | translate }}
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            }
+        </div>
+    </div>
+    }
+</div>

@@ -1,35 +1,70 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, Search, BookOpen, Eye, CheckCircle, XCircle, Loader2 } from 'lucide-angular';
+import { TranslateModule } from '@ngx-translate/core';
+import {
+  LucideAngularModule,
+  BookOpen,
+  Search,
+  CheckCircle,
+  XCircle,
+  Eye,
+  Loader2,
+  AlertTriangle,
+  Filter,
+  X
+} from 'lucide-angular';
 
-import { AdminLayoutComponent } from '../../layouts/dashboard-layouts/admin-dashboard-layout/admin-dashboard-layout.component'; // Ajustez le chemin
 import { AdminService } from '../../../core/services/admin.service';
 import { CourseResponseDTO } from '../../../core/models/course.dto';
+import { AdminLayoutComponent } from "../../layouts/dashboard-layouts/admin-dashboard-layout/admin-dashboard-layout.component";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-courses',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, AdminLayoutComponent],
+  imports: [CommonModule, FormsModule, LucideAngularModule, TranslateModule, AdminLayoutComponent, RouterLink],
   templateUrl: './admin-courses.component.html'
 })
 export class AdminCoursesComponent implements OnInit {
   private adminService = inject(AdminService);
 
-  readonly icons = { Search, BookOpen, Eye, CheckCircle, XCircle, Loader2 };
+  readonly icons = { BookOpen, Search, CheckCircle, XCircle, Eye, Loader2, AlertTriangle, Filter, X };
 
+  // Global State
   isLoading = signal<boolean>(true);
-  processingActionIds = signal<Set<string>>(new Set());
-  courses = signal<CourseResponseDTO[]>([]);
-  searchQuery = signal<string>('');
+  allCourses = signal<CourseResponseDTO[]>([]);
 
+  // Filters State
+  searchQuery = signal<string>('');
+  selectedStatus = signal<string>('ALL');
+
+  // Allowed statuses based on the API
+  readonly statuses = ['ALL', 'PENDING_REVIEW', 'APPROVED', 'REJECTED', 'DRAFT'];
+
+  // Computed value for filtered results
   filteredCourses = computed(() => {
-    const query = this.searchQuery().toLowerCase();
-    return this.courses().filter(c =>
-      c.title.toLowerCase().includes(query) ||
-      (c.instructorName && c.instructorName.toLowerCase().includes(query))
-    );
+    const query = this.searchQuery().toLowerCase().trim();
+    const status = this.selectedStatus();
+
+    return this.allCourses().filter(course => {
+      const matchesSearch =
+        course.title.toLowerCase().includes(query) ||
+        (course.instructorName && course.instructorName.toLowerCase().includes(query)) ||
+        (course.categoryName && course.categoryName.toLowerCase().includes(query));
+
+      const matchesStatus = status === 'ALL' || course.status === status;
+
+      return matchesSearch && matchesStatus;
+    });
   });
+
+  // Modal State
+  selectedCourse = signal<CourseResponseDTO | null>(null);
+  isApproveModalOpen = signal<boolean>(false);
+  isRejectModalOpen = signal<boolean>(false);
+  isProcessing = signal<boolean>(false);
+  actionError = signal<string | null>(null);
 
   ngOnInit(): void {
     this.loadCourses();
@@ -37,49 +72,89 @@ export class AdminCoursesComponent implements OnInit {
 
   loadCourses(): void {
     this.isLoading.set(true);
-    this.adminService.getAllCourses(0, 50).subscribe({
-      next: (res) => {
-        this.courses.set(res.content);
+    // Fetching a large page for admin overview
+    this.adminService.getAllCourses(0, 200).subscribe({
+      next: (response) => {
+        this.allCourses.set(response.content);
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error(err);
+        console.error('Error loading courses:', err);
         this.isLoading.set(false);
       }
     });
   }
 
-  isProcessing(id: string): boolean {
-    return this.processingActionIds().has(id);
+  clearFilters(): void {
+    this.searchQuery.set('');
+    this.selectedStatus.set('ALL');
   }
 
-  setProcessing(id: string, isProcessing: boolean): void {
-    this.processingActionIds.update(set => {
-      const newSet = new Set(set);
-      isProcessing ? newSet.add(id) : newSet.delete(id);
-      return newSet;
-    });
+  // --- APPROVAL WORKFLOW ---
+
+  openApproveModal(course: CourseResponseDTO): void {
+    this.selectedCourse.set(course);
+    this.actionError.set(null);
+    this.isApproveModalOpen.set(true);
   }
 
-  approveCourse(courseId: string): void {
-    this.setProcessing(courseId, true);
-    this.adminService.approveCourse(courseId).subscribe({
+  confirmApprove(): void {
+    const course = this.selectedCourse();
+    if (!course) return;
+
+    this.isProcessing.set(true);
+    this.actionError.set(null);
+
+    this.adminService.approveCourse(course.id).subscribe({
       next: () => {
-        this.courses.update(courses => courses.map(c => c.id === courseId ? { ...c, status: 'APPROVED' } : c));
-        this.setProcessing(courseId, false);
+        this.allCourses.update(courses =>
+          courses.map(c => c.id === course.id ? { ...c, status: 'APPROVED' } : c)
+        );
+        this.isProcessing.set(false);
+        this.closeModals();
       },
-      error: () => this.setProcessing(courseId, false)
+      error: (err) => {
+        console.error('Error approving course:', err);
+        this.actionError.set('ADMIN_COURSES.ERROR_APPROVE');
+        this.isProcessing.set(false);
+      }
     });
   }
 
-  rejectCourse(courseId: string): void {
-    this.setProcessing(courseId, true);
-    this.adminService.rejectCourse(courseId).subscribe({
+  // --- REJECTION WORKFLOW ---
+
+  openRejectModal(course: CourseResponseDTO): void {
+    this.selectedCourse.set(course);
+    this.actionError.set(null);
+    this.isRejectModalOpen.set(true);
+  }
+
+  confirmReject(): void {
+    const course = this.selectedCourse();
+    if (!course) return;
+
+    this.isProcessing.set(true);
+    this.actionError.set(null);
+
+    this.adminService.rejectCourse(course.id).subscribe({
       next: () => {
-        this.courses.update(courses => courses.map(c => c.id === courseId ? { ...c, status: 'REJECTED' } : c));
-        this.setProcessing(courseId, false);
+        this.allCourses.update(courses =>
+          courses.map(c => c.id === course.id ? { ...c, status: 'REJECTED' } : c)
+        );
+        this.isProcessing.set(false);
+        this.closeModals();
       },
-      error: () => this.setProcessing(courseId, false)
+      error: (err) => {
+        console.error('Error rejecting course:', err);
+        this.actionError.set('ADMIN_COURSES.ERROR_REJECT');
+        this.isProcessing.set(false);
+      }
     });
+  }
+
+  closeModals(): void {
+    this.isApproveModalOpen.set(false);
+    this.isRejectModalOpen.set(false);
+    this.selectedCourse.set(null);
   }
 }

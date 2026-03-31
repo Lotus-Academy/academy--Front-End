@@ -1,110 +1,208 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LucideAngularModule, FolderPlus, Pencil, Trash2, X, Loader2, CheckCircle } from 'lucide-angular';
+import { TranslateModule } from '@ngx-translate/core';
+import { forkJoin } from 'rxjs';
+import {
+  LucideAngularModule,
+  FolderPlus,
+  Pencil,
+  Trash2,
+  Image as ImageIcon,
+  Upload,
+  X,
+  Loader2,
+  AlertTriangle,
+  BookOpen
+} from 'lucide-angular';
 
-import { AdminLayoutComponent } from '../../layouts/dashboard-layouts/admin-dashboard-layout/admin-dashboard-layout.component'; // Ajustez le chemin
-import { AdminService, CategoryDTO } from '../../../core/services/admin.service';
+import { AdminService } from '../../../core/services/admin.service';
+import { CategoryDTO, CourseResponseDTO } from '../../../core/models/course.dto';
+import { AdminLayoutComponent } from "../../layouts/dashboard-layouts/admin-dashboard-layout/admin-dashboard-layout.component";
 
 @Component({
   selector: 'app-admin-categories',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, AdminLayoutComponent],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule, AdminLayoutComponent],
   templateUrl: './admin-categories.component.html'
 })
 export class AdminCategoriesComponent implements OnInit {
   private adminService = inject(AdminService);
   private fb = inject(FormBuilder);
 
-  readonly icons = { FolderPlus, Pencil, Trash2, X, Loader2, CheckCircle };
+  readonly icons = { FolderPlus, Pencil, Trash2, ImageIcon, Upload, X, Loader2, AlertTriangle, BookOpen };
 
+  // État global
   isLoading = signal<boolean>(true);
   categories = signal<CategoryDTO[]>([]);
+  courses = signal<CourseResponseDTO[]>([]);
 
-  // Gestion de la modale (Création & Modification)
+  // Calcul dynamique du nombre de cours par catégorie
+  categoryStats = computed(() => {
+    const stats = new Map<string, number>();
+    this.categories().forEach(cat => stats.set(cat.id, 0));
+
+    this.courses().forEach(course => {
+      if (course.categoryId && stats.has(course.categoryId)) {
+        stats.set(course.categoryId, stats.get(course.categoryId)! + 1);
+      }
+    });
+    return stats;
+  });
+
+  // Gestion de la modale de formulaire (Création / Modification)
   isModalOpen = signal<boolean>(false);
   isSaving = signal<boolean>(false);
-  editingCategoryId = signal<string | null>(null);
+  editMode = signal<boolean>(false);
+  selectedCategoryId = signal<string | null>(null);
+
+  // Gestion de l'image
+  selectedIconFile = signal<File | null>(null);
+  iconPreview = signal<string | null>(null);
 
   categoryForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     description: ['', [Validators.maxLength(255)]]
   });
 
+  // Gestion de la modale de suppression
+  isDeleteModalOpen = signal<boolean>(false);
+  categoryToDelete = signal<CategoryDTO | null>(null);
+  isDeleting = signal<boolean>(false);
+  deleteError = signal<string | null>(null);
+
   ngOnInit(): void {
-    this.loadCategories();
+    this.loadData();
   }
 
-  loadCategories(): void {
+  loadData(): void {
     this.isLoading.set(true);
-    this.adminService.getCategories().subscribe({
-      next: (cats) => {
-        this.categories.set(cats);
+
+    forkJoin({
+      categoriesRes: this.adminService.getCategories(),
+      // On charge un grand nombre de cours pour calculer les statistiques
+      coursesRes: this.adminService.getAllCourses(0, 1000)
+    }).subscribe({
+      next: (results) => {
+        this.categories.set(results.categoriesRes);
+        this.courses.set(results.coursesRes.content);
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Erreur de chargement des catégories', err);
+        console.error('Error loading categories data', err);
         this.isLoading.set(false);
       }
     });
   }
 
-  // --- LOGIQUE DE LA MODALE ---
+  // --- GESTION DU FORMULAIRE (ADD / EDIT) ---
 
-  openModal(category?: CategoryDTO): void {
-    if (category) {
-      // Mode Édition
-      this.editingCategoryId.set(category.id);
-      this.categoryForm.patchValue({
-        name: category.name,
-        description: category.description || ''
-      });
-    } else {
-      // Mode Création
-      this.editingCategoryId.set(null);
-      this.categoryForm.reset();
-    }
+  openCreateModal(): void {
+    this.editMode.set(false);
+    this.selectedCategoryId.set(null);
+    this.categoryForm.reset();
+    this.selectedIconFile.set(null);
+    this.iconPreview.set(null);
+    this.isModalOpen.set(true);
+  }
+
+  openEditModal(category: CategoryDTO): void {
+    this.editMode.set(true);
+    this.selectedCategoryId.set(category.id);
+
+    this.categoryForm.patchValue({
+      name: category.name,
+      description: category.description
+    });
+
+    this.selectedIconFile.set(null);
+    this.iconPreview.set(category.iconUrl || null);
+
     this.isModalOpen.set(true);
   }
 
   closeModal(): void {
     this.isModalOpen.set(false);
-    this.editingCategoryId.set(null);
   }
 
-  submitCategory(): void {
-    if (this.categoryForm.invalid) {
-      this.categoryForm.markAllAsTouched();
-      return;
+  onIconSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.selectedIconFile.set(file);
+
+      const reader = new FileReader();
+      reader.onload = () => this.iconPreview.set(reader.result as string);
+      reader.readAsDataURL(file);
     }
+  }
+
+  onSubmit(): void {
+    if (this.categoryForm.invalid) return;
 
     this.isSaving.set(true);
-    const data = this.categoryForm.value;
-    const categoryId = this.editingCategoryId();
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(this.categoryForm.value));
 
-    const request$ = categoryId
-      ? this.adminService.updateCategory(categoryId, data)
-      : this.adminService.createCategory(data);
+    const iconFile = this.selectedIconFile();
+    if (iconFile) {
+      formData.append('icon', iconFile);
+    }
 
-    request$.subscribe({
-      next: () => {
-        this.isSaving.set(false);
-        this.closeModal();
-        this.loadCategories(); // Rafraîchissement de la liste
-      },
-      error: (err) => {
-        console.error('Erreur lors de la sauvegarde de la catégorie', err);
-        this.isSaving.set(false);
-      }
-    });
-  }
-
-  deleteCategory(id: string, name: string): void {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer la catégorie "${name}" ?`)) {
-      this.adminService.deleteCategory(id).subscribe({
-        next: () => this.loadCategories(),
-        error: (err) => console.error('Erreur lors de la suppression', err)
+    if (this.editMode() && this.selectedCategoryId()) {
+      this.adminService.updateCategory(this.selectedCategoryId()!, formData).subscribe({
+        next: () => this.handleSuccess(),
+        error: () => this.isSaving.set(false)
+      });
+    } else {
+      this.adminService.createCategory(formData).subscribe({
+        next: () => this.handleSuccess(),
+        error: () => this.isSaving.set(false)
       });
     }
+  }
+
+  private handleSuccess(): void {
+    this.isSaving.set(false);
+    this.closeModal();
+    this.loadData(); // Recharger pour mettre à jour la liste
+  }
+
+  // --- GESTION DE LA SUPPRESSION ---
+
+  openDeleteModal(category: CategoryDTO): void {
+    this.categoryToDelete.set(category);
+    this.deleteError.set(null);
+    this.isDeleteModalOpen.set(true);
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalOpen.set(false);
+    this.categoryToDelete.set(null);
+  }
+
+  confirmDelete(): void {
+    const category = this.categoryToDelete();
+    if (!category) return;
+
+    this.isDeleting.set(true);
+    this.deleteError.set(null);
+
+    this.adminService.deleteCategory(category.id).subscribe({
+      next: () => {
+        this.isDeleting.set(false);
+        this.closeDeleteModal();
+        this.loadData();
+      },
+      error: (err) => {
+        this.isDeleting.set(false);
+        // Gestion spécifique de l'erreur 409 si des cours y sont rattachés
+        if (err.status === 409) {
+          this.deleteError.set('ADMIN_CATEGORIES.DELETE_CONFLICT');
+        } else {
+          this.deleteError.set('ADMIN_CATEGORIES.DELETE_ERROR');
+        }
+      }
+    });
   }
 }

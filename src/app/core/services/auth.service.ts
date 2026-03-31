@@ -111,6 +111,14 @@ export class AuthService {
   }
 
   /**
+   * Renvoyer l'email de vérification (POST /api/v1/auth/resend-verification)
+   */
+  resendVerificationEmail(email: string): Observable<string> {
+    const params = new HttpParams().set('email', email);
+    return this.http.post(`${this.baseUrl}/resend-verification`, null, { params, responseType: 'text' });
+  }
+
+  /**
    * Rafraîchir le jeton d'accès (Access Token) à partir du Refresh Token
    * Utilise bypassHttp pour éviter une boucle infinie avec l'intercepteur 401
    */

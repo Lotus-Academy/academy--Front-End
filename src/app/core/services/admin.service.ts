@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { CourseResponseDTO } from '../models/course.dto';
 
 // ==========================================
-// DTOs (Strictement alignés sur le Swagger)
+// DTOs
 // ==========================================
 
 export interface PageResponseDTO<T> {
@@ -21,6 +21,74 @@ export interface PageResponseDTO<T> {
   numberOfElements: number;
 }
 
+export interface UserDTO {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  status: 'ACTIVE' | 'PAUSED' | 'BANNED' | 'PENDING_VERIFICATION';
+  headline?: string;
+  bio?: string;
+  profilePictureUrl?: string;
+  emailVerified: boolean;
+  createdAt: string;
+  referralCode?: string;
+}
+
+// 1. Les informations de base de l'utilisateur
+export interface BaseProfileDTO {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  status: 'ACTIVE' | 'PAUSED' | 'BANNED' | 'PENDING_VERIFICATION';
+  headline?: string;
+  bio?: string;
+  profilePictureUrl?: string;
+  socialLinks?: string;
+  emailVerified: boolean;
+  createdAt: string;
+  referralCode?: string;
+}
+
+// 2. Les informations spécifiques si l'utilisateur est un instructeur
+export interface InstructorProfileDetailsDTO {
+  profileId: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  headline?: string;
+  bio?: string;
+  profilePictureUrl?: string;
+  expertiseDomains?: string[];
+  yearsOfExperience?: number;
+  teachingLanguages?: string[];
+  linkedinUrl?: string;
+  websiteUrl?: string;
+  githubUrl?: string;
+  legalName?: string;
+  phoneNumber?: string;
+  billingAddress?: string;
+  taxId?: string;
+  availableForMentoring?: boolean;
+  approvalStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
+  totalReferrals?: number;
+  revenueShareRate?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// 3. Le Wrapper global renvoyé par GET /api/v1/admin/users/{userId}
+export interface AdminUserDetailsDTO {
+  profile: BaseProfileDTO;
+  instructorProfile?: InstructorProfileDetailsDTO; // Optionnel car un étudiant n'en a pas
+  createdCourses: any[];
+  enrollments: any[];
+  payments: any[];
+}
 export interface AdminInstructorDTO {
   userId: string;
   profileId: string;
@@ -65,6 +133,41 @@ export interface AdminPaymentDTO {
   status: string;
   receiptUrl?: string;
   studentEmail?: string;
+}
+
+export interface EnrollmentDTO {
+  id: string;
+  courseId: string;
+  courseTitle: string;
+  courseThumbnail?: string;
+  instructorName: string;
+  studentName: string;
+  studentEmail: string;
+  progress: number;
+  enrolledAt: string;
+  lastAccessedAt?: string;
+  categoryId: string;
+  totalLessons: number;
+  completedLessons: number;
+  completed: boolean;
+}
+
+export interface PaymentHistoryDTO {
+  courseTitle: string;
+  amount: number;
+  currency: string;
+  date: string;
+  status: string;
+  receiptUrl?: string;
+  appliedCouponCode?: string;
+}
+
+export interface CertificateDTO {
+  id: string;
+  courseId: string;
+  courseTitle: string;
+  serialNumber: string;
+  issuedAt: string;
 }
 
 
@@ -203,16 +306,22 @@ export class AdminService {
     return this.http.get<DashboardStatsDTO>(`${this.adminUrl}/stats`);
   }
 
+
   /**
    * GET /api/v1/admin/students
+   * Liste les étudiants avec recherche côté serveur
    */
-  getAllStudents(page: number = 0, size: number = 20): Observable<PageResponseDTO<any>> {
-    const params = new HttpParams()
+  getAllStudents(page: number = 0, size: number = 50, search: string = ''): Observable<PageResponseDTO<UserDTO>> {
+    let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('sort', 'createdAt,DESC');
 
-    return this.http.get<PageResponseDTO<any>>(`${this.adminUrl}/students`, { params });
+    if (search && search.trim() !== '') {
+      params = params.set('search', search.trim());
+    }
+
+    return this.http.get<PageResponseDTO<UserDTO>>(`${this.adminUrl}/students`, { params });
   }
 
   /**
@@ -225,5 +334,25 @@ export class AdminService {
       .set('sort', 'paidAt,DESC');
 
     return this.http.get<PageResponseDTO<AdminPaymentDTO>>(`${this.adminUrl}/payments`, { params });
+  }
+
+  // GET /api/v1/admin/user/{userId}
+  getUserDetails(userId: string): Observable<AdminUserDetailsDTO> {
+    return this.http.get<AdminUserDetailsDTO>(`${this.adminUrl}/users/${userId}`);
+  }
+
+  getStudentEnrollments(studentId: string, page: number = 0, size: number = 20): Observable<PageResponseDTO<EnrollmentDTO>> {
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString()).set('sort', 'enrolledAt,DESC');
+    return this.http.get<PageResponseDTO<EnrollmentDTO>>(`${this.adminUrl}/reports/students/${studentId}/enrollments`, { params });
+  }
+
+  getStudentPayments(studentId: string, page: number = 0, size: number = 20): Observable<PageResponseDTO<PaymentHistoryDTO>> {
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString()).set('sort', 'date,DESC');
+    return this.http.get<PageResponseDTO<PaymentHistoryDTO>>(`${this.adminUrl}/reports/students/${studentId}/payments`, { params });
+  }
+
+  getStudentCertificates(studentId: string, page: number = 0, size: number = 20): Observable<PageResponseDTO<CertificateDTO>> {
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString()).set('sort', 'issuedAt,DESC');
+    return this.http.get<PageResponseDTO<CertificateDTO>>(`${this.adminUrl}/reports/students/${studentId}/certificates`, { params });
   }
 }

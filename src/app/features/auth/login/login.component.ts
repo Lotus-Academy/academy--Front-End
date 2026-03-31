@@ -192,4 +192,29 @@ export class LoginComponent implements OnInit {
     });
     this.authForm.reset();
   }
+
+  isResending = signal<boolean>(false);
+  resendSuccessMessage = signal<string | null>(null);
+
+  // Méthode pour renvoyer l'email
+  resendVerificationEmail(): void {
+    const email = this.authForm.get('email')?.value;
+    if (!email) return;
+
+    this.isResending.set(true);
+    this.resendSuccessMessage.set(null);
+
+    // Adaptez "authService.resendVerificationEmail" selon le nom de la méthode dans votre service
+    this.authService.resendVerificationEmail(email).subscribe({
+      next: () => {
+        this.isResending.set(false);
+        this.resendSuccessMessage.set('LOGIN.RESEND_SUCCESS');
+      },
+      error: (err) => {
+        this.isResending.set(false);
+        // Vous pouvez définir l'erreur globale ici si l'envoi échoue
+        this.errorMessage.set('LOGIN.ERRORS.RESEND_FAILED');
+      }
+    });
+  }
 }
