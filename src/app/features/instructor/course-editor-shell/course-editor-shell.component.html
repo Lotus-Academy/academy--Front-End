@@ -4,7 +4,7 @@
         class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-ds-surface p-6 rounded border border-slate-200 dark:border-ds-border shadow-sm">
 
         <div class="flex items-center gap-4">
-            <a routerLink="/dashboard"
+            <a routerLink="/instructor/courses"
                 class="p-2.5 text-slate-500 hover:bg-slate-100 hover:text-lotus dark:text-ds-muted/70 dark:hover:bg-ds-border/50 dark:hover:text-lotus rounded transition-colors"
                 [title]="'COURSE_EDITOR.SHELL.BACK_TO_DASHBOARD' | translate">
                 <lucide-icon [name]="icons.ArrowLeft" class="w-5 h-5 stroke-[1.5px]"></lucide-icon>
@@ -77,13 +77,16 @@
 
                 <div class="h-px bg-slate-200 dark:bg-ds-border my-2 mx-4"></div>
 
-                <a [routerLink]="['/instructor/courses', courseId(), 'edit', 'publish']"
-                    routerLinkActive="bg-green/10 text-green dark:bg-green/5 dark:text-green border-green/30"
-                    class="flex items-center gap-3 px-4 py-3.5 rounded font-syne text-sm font-bold text-slate-600 dark:text-ds-muted/70 hover:bg-slate-50 dark:hover:bg-ds-border/30 transition-colors border border-transparent mt-1 group">
-                    <lucide-icon [name]="icons.CheckSquare"
-                        class="w-4 h-4 stroke-[1.5px] group-[.active]:stroke-[2px]"></lucide-icon>
+                <button (click)="submitForReview()" [disabled]="isSubmitting() || courseStatus() === 'PENDING_REVIEW'"
+                    class="w-full flex items-center gap-3 px-4 py-3.5 rounded font-syne text-sm font-bold text-slate-600 dark:text-ds-muted/70 hover:bg-green/10 hover:text-green dark:hover:bg-green/10 dark:hover:text-green transition-colors border border-transparent mt-1 disabled:opacity-50 disabled:cursor-not-allowed text-left">
+
+                    @if (isSubmitting()) {
+                    <lucide-icon [name]="icons.Loader2" class="w-4 h-4 stroke-[1.5px] animate-spin"></lucide-icon>
+                    } @else {
+                    <lucide-icon [name]="icons.CheckSquare" class="w-4 h-4 stroke-[1.5px]"></lucide-icon>
+                    }
                     {{ 'COURSE_EDITOR.SHELL.NAV_PUBLISH' | translate }}
-                </a>
+                </button>
 
             </nav>
         </aside>
