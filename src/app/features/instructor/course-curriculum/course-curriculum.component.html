@@ -3,7 +3,7 @@
 
     @if (isLoading()) {
     <div class="flex justify-center items-center py-20">
-        <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin"></lucide-icon>
+        <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin stroke-[2px]"></lucide-icon>
     </div>
     } @else if (course(); as data) {
 
@@ -57,7 +57,8 @@
                 @if (editLessonId() === lesson.id) {
                 <form [formGroup]="lessonForm" (ngSubmit)="onUpdateLesson(section.id, lesson)"
                     class="p-4 border border-lotus/50 bg-lotus/5 rounded">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div>
                             <label
                                 class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-1.5">{{
@@ -72,7 +73,38 @@
                             <input type="number" formControlName="duration" min="0"
                                 class="w-full px-3 py-2 border border-slate-300 dark:border-ds-border rounded font-syne text-sm bg-white dark:bg-ds-black text-slate-900 dark:text-white focus:ring-1 focus:ring-lotus focus:outline-none transition-colors">
                         </div>
+                        <div>
+                            <label
+                                class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-1.5">
+                                Order Index
+                            </label>
+                            <input type="number" formControlName="orderIndex" min="0"
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-ds-border rounded font-syne text-sm bg-white dark:bg-ds-black text-slate-900 dark:text-white focus:ring-1 focus:ring-lotus focus:outline-none transition-colors">
+                        </div>
                     </div>
+
+                    <div
+                        class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 mt-4 border-t border-slate-200 dark:border-ds-border/50 pt-4">
+                        <div>
+                            <label
+                                class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-1.5">
+                                Lesson Description (Markdown, Math $$)
+                            </label>
+                            <textarea formControlName="description" rows="4"
+                                placeholder="What will students learn in this lesson?\n\n```python\nprint('Hello')\n```"
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-ds-border rounded font-mono text-sm bg-white dark:bg-ds-black text-slate-900 dark:text-white focus:ring-1 focus:ring-lotus focus:outline-none transition-colors resize-y shadow-inner"></textarea>
+                        </div>
+                        <div>
+                            <label
+                                class="font-mono text-[10px] uppercase tracking-widest font-bold text-green flex items-center gap-2 mb-1.5">
+                                <lucide-icon [name]="icons.Eye" class="w-3.5 h-3.5"></lucide-icon> Live Preview
+                            </label>
+                            <div class="w-full h-full min-h-[100px] p-3 bg-white dark:bg-ds-black border border-dashed border-slate-300 dark:border-ds-border/70 rounded prose prose-sm dark:prose-invert max-w-none shadow-sm overflow-x-auto"
+                                [appLivePreview]="lessonForm.get('description')?.value">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <input type="checkbox" formControlName="freePreview" [id]="'edit-preview-' + lesson.id"
@@ -106,6 +138,7 @@
 
                         <div>
                             <p class="font-syne font-bold text-slate-900 dark:text-white text-sm">
+                                <span class="text-slate-400 text-xs mr-1">[#{{ lesson.orderIndex }}]</span>
                                 {{ 'COURSE_EDITOR.CURRICULUM.LESSON' | translate }} {{ lesIndex + 1 }}: {{ lesson.title
                                 }}
                             </p>
@@ -171,10 +204,13 @@
                     </div>
                 </div>
                 }
-                } @if (activeLessonFormSectionId() === section.id) {
+                }
+
+                @if (activeLessonFormSectionId() === section.id) {
                 <form [formGroup]="lessonForm" (ngSubmit)="onSaveLesson(section.id)"
                     class="mt-4 p-4 border border-lotus/30 bg-lotus/5 rounded">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div>
                             <label
                                 class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-1.5">{{
@@ -189,7 +225,38 @@
                             <input type="number" formControlName="duration" min="0"
                                 class="w-full px-3 py-2 border border-slate-300 dark:border-ds-border rounded font-syne text-sm bg-white dark:bg-ds-black text-slate-900 dark:text-white focus:ring-1 focus:ring-lotus focus:outline-none transition-colors">
                         </div>
+                        <div>
+                            <label
+                                class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-1.5">
+                                Order Index
+                            </label>
+                            <input type="number" formControlName="orderIndex" min="0"
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-ds-border rounded font-syne text-sm bg-white dark:bg-ds-black text-slate-900 dark:text-white focus:ring-1 focus:ring-lotus focus:outline-none transition-colors">
+                        </div>
                     </div>
+
+                    <div
+                        class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 mt-4 border-t border-slate-200 dark:border-ds-border/50 pt-4">
+                        <div>
+                            <label
+                                class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-1.5">
+                                Lesson Description (Markdown, Math $$)
+                            </label>
+                            <textarea formControlName="description" rows="4"
+                                placeholder="What will students learn in this lesson?\n\n```python\nprint('Hello')\n```"
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-ds-border rounded font-mono text-sm bg-white dark:bg-ds-black text-slate-900 dark:text-white focus:ring-1 focus:ring-lotus focus:outline-none transition-colors resize-y shadow-inner"></textarea>
+                        </div>
+                        <div>
+                            <label
+                                class="font-mono text-[10px] uppercase tracking-widest font-bold text-green flex items-center gap-2 mb-1.5">
+                                <lucide-icon [name]="icons.Eye" class="w-3.5 h-3.5"></lucide-icon> Live Preview
+                            </label>
+                            <div class="w-full h-full min-h-[100px] p-3 bg-white dark:bg-ds-black border border-dashed border-slate-300 dark:border-ds-border/70 rounded prose prose-sm dark:prose-invert max-w-none shadow-sm overflow-x-auto"
+                                [appLivePreview]="lessonForm.get('description')?.value">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <input type="checkbox" formControlName="freePreview" [id]="'add-preview-' + section.id"

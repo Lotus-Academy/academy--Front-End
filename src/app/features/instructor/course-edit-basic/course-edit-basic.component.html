@@ -30,7 +30,7 @@
                 {{ 'COURSE_EDITOR.CREATE.FORM_TITLE' | translate }}
             </label>
             <input type="text" formControlName="title"
-                class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border rounded focus:ring-1 focus:ring-lotus focus:border-lotus focus:outline-none dark:text-white transition-colors font-syne text-sm"
+                class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border rounded focus:ring-1 focus:ring-lotus focus:border-lotus focus:outline-none dark:text-white transition-colors font-syne text-sm shadow-inner"
                 [ngClass]="isFieldInvalid('title') ? 'border-red-500' : 'border-slate-300 dark:border-ds-border'">
             <p class="font-syne text-[11px] text-slate-500 dark:text-ds-muted/50 mt-2 flex items-center gap-1.5">
                 <lucide-icon [name]="icons.AlertCircle" class="w-3.5 h-3.5 text-lotus"></lucide-icon>
@@ -44,7 +44,7 @@
                 {{ 'COURSE_EDITOR.CREATE.FORM_SUBTITLE' | translate }}
             </label>
             <input type="text" formControlName="subtitle"
-                class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border rounded focus:ring-1 focus:ring-lotus focus:border-lotus focus:outline-none dark:text-white transition-colors font-syne text-sm"
+                class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border rounded focus:ring-1 focus:ring-lotus focus:border-lotus focus:outline-none dark:text-white transition-colors font-syne text-sm shadow-inner"
                 [ngClass]="isFieldInvalid('subtitle') ? 'border-red-500' : 'border-slate-300 dark:border-ds-border'">
         </div>
 
@@ -85,20 +85,38 @@
                 </label>
                 <select formControlName="language"
                     class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-300 dark:border-ds-border rounded focus:ring-1 focus:ring-lotus focus:border-lotus focus:outline-none dark:text-white transition-colors font-syne text-sm appearance-none cursor-pointer">
-                    <option value="Français">{{ 'COURSE_EDITOR.CREATE.LANG_FR' | translate }}</option>
-                    <option value="Anglais">{{ 'COURSE_EDITOR.CREATE.LANG_EN' | translate }}</option>
-                    <option value="Arabe">{{ 'COURSE_EDITOR.CREATE.LANG_AR' | translate }}</option>
+                    <option value="English">English</option>
+                    <option value="French">French</option>
+                    <option value="Arabic">Arabic</option>
                 </select>
             </div>
         </div>
 
-        <div>
-            <label
-                class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">
-                {{ 'COURSE_EDITOR.CREATE.FORM_DESC' | translate }}
-            </label>
-            <textarea formControlName="description" rows="8"
-                class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-300 dark:border-ds-border rounded focus:ring-1 focus:ring-lotus focus:border-lotus focus:outline-none dark:text-white font-syne text-sm resize-y transition-colors"></textarea>
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-ds-border">
+            <h3 class="font-cormorant text-xl font-bold text-slate-900 dark:text-white mb-6">Course Description
+                (Markdown Supported)</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="flex flex-col h-full">
+                    <label
+                        class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70 mb-2">
+                        Edit Mode
+                    </label>
+                    <textarea formControlName="description" rows="15"
+                        placeholder="Describe your course here...\n\nYou can use Markdown:\n### Titles\n**Bold** text\n- Bullet points\n\nOr formulas: $$E=mc^2$$"
+                        class="w-full flex-1 px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-300 dark:border-ds-border rounded focus:ring-1 focus:ring-lotus focus:border-lotus focus:outline-none dark:text-white font-mono text-sm resize-y transition-colors shadow-inner"></textarea>
+                </div>
+
+                <div class="flex flex-col h-full">
+                    <label
+                        class="font-mono text-[10px] uppercase tracking-widest font-bold text-green flex items-center gap-2 mb-2">
+                        <lucide-icon [name]="icons.Eye" class="w-3.5 h-3.5"></lucide-icon> Live Preview
+                    </label>
+                    <div class="w-full flex-1 min-h-[300px] p-6 bg-white dark:bg-ds-surface border border-dashed border-slate-300 dark:border-ds-border/70 rounded prose prose-sm dark:prose-invert max-w-none shadow-sm overflow-x-auto overflow-y-auto"
+                        [appLivePreview]="basicForm.get('description')?.value">
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="pt-6 border-t border-slate-200 dark:border-ds-border flex items-center justify-end gap-4">

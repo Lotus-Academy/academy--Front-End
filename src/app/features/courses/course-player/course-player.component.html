@@ -59,15 +59,16 @@
                             class="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6">
                             <lucide-icon [name]="icons.Lock" class="w-8 h-8 text-white"></lucide-icon>
                         </div>
-                        <h3 class="font-cormorant text-3xl font-bold text-white mb-3">Ce contenu est réservé aux
-                            inscrits</h3>
-                        <p class="font-syne text-ds-muted max-w-md mb-8">Inscrivez-vous à ce cours pour débloquer cette
-                            leçon et accéder à l'intégralité du programme.</p>
+                        <h3 class="font-cormorant text-3xl font-bold text-white mb-3">This content is restricted to
+                            enrolled students</h3>
+                        <p class="font-syne text-ds-muted max-w-md mb-8">Enroll in this course to unlock this lesson and
+                            access the full curriculum.</p>
                         <a [routerLink]="['/courses', courseId()]"
                             class="px-8 py-3.5 bg-lotus hover:bg-lotus-light text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded transition-colors shadow-lg">
-                            S'inscrire maintenant
+                            Enroll Now
                         </a>
                     </div>
+
                     } @else if (currentLesson()?.mediaUrl) {
                     @if (currentLesson()?.type === 'PDF') {
                     <iframe [src]="safeMediaUrl()" class="w-full h-full border-none shadow-2xl"></iframe>
@@ -76,6 +77,7 @@
                         oncontextmenu="return false;"
                         class="w-full h-full object-contain outline-none shadow-2xl"></video>
                     }
+
                     } @else {
                     <div
                         class="absolute inset-0 flex flex-col items-center justify-center bg-ds-surface border border-ds-border m-4 sm:m-8 rounded text-center p-4">
@@ -92,19 +94,23 @@
 
             <div class="max-w-5xl mx-auto w-full p-4 sm:p-6 lg:p-10 lg:pb-24 shrink-0">
                 <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-6 mb-8">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-3 mb-3">
-                            <h2 class="font-cormorant text-2xl sm:text-3xl font-bold text-white">{{
-                                currentLesson()?.title }}</h2>
+
+                    <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center gap-3 mb-4">
+                            <h2 class="font-cormorant text-2xl sm:text-3xl font-bold text-white leading-tight">
+                                {{ currentLesson()?.title }}
+                            </h2>
                             @if (!hasFullAccess() && currentLesson()?.freePreview) {
                             <span
-                                class="bg-green/10 text-green border border-green/20 font-mono text-[9px] uppercase tracking-widest px-2 py-0.5 rounded">Aperçu
-                                Gratuit</span>
+                                class="bg-green/10 text-green border border-green/20 font-mono text-[9px] uppercase tracking-widest px-2 py-0.5 rounded shrink-0">
+                                Free Preview
+                            </span>
                             }
                         </div>
-                        <p class="font-syne text-sm sm:text-base text-ds-muted leading-relaxed">
-                            {{ currentLesson()?.description || ('PLAYER.NO_DESC' | translate) }}
-                        </p>
+
+                        <div class="font-syne text-sm sm:text-base text-ds-muted leading-relaxed prose prose-sm prose-invert max-w-none break-words"
+                            [appLivePreview]="currentLesson()?.description || ('PLAYER.NO_DESC' | translate)">
+                        </div>
                     </div>
 
                     @if (hasFullAccess()) {
@@ -173,7 +179,8 @@
                                 </span>
                                 <div class="flex items-center gap-2 mt-1.5">
                                     @if (!hasFullAccess() && lesson.freePreview) {
-                                    <span class="font-mono text-[8px] uppercase tracking-wider text-green">Aperçu</span>
+                                    <span
+                                        class="font-mono text-[8px] uppercase tracking-wider text-green">Preview</span>
                                     }
                                     @if (lesson.type === 'PDF') {
                                     <lucide-icon [name]="icons.FileText" class="w-3 h-3 text-ds-muted/70"></lucide-icon>

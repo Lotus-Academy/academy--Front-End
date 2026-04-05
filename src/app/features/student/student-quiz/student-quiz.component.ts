@@ -7,10 +7,14 @@ import { LucideAngularModule, ChevronLeft, CheckCircle, XCircle, Award, Loader2,
 import { QuizService } from '../../../core/services/quiz.service';
 import { AuthService } from '../../../core/services/auth.service';
 
+// IMPORT THE DIRECTIVE
+import { LivePreviewDirective } from '../../../shared/directives/live-preview.directive';
+
 @Component({
   selector: 'app-student-quiz',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, TranslateModule],
+  // ADD THE DIRECTIVE TO IMPORTS
+  imports: [CommonModule, RouterLink, LucideAngularModule, TranslateModule, LivePreviewDirective],
   templateUrl: './student-quiz.component.html'
 })
 export class StudentQuizComponent implements OnInit {
@@ -33,7 +37,7 @@ export class StudentQuizComponent implements OnInit {
   quizResult = signal<{ score: number; passed: boolean } | null>(null);
   isDownloading = signal<boolean>(false);
 
-  // Rôles et autorisations
+  // Roles and permissions
   currentUser = computed(() => this.authService.getUser());
   isAdmin = computed(() => this.currentUser()?.role === 'ADMIN');
 
@@ -53,7 +57,7 @@ export class StudentQuizComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Erreur lors du chargement du quiz', err);
+        console.error('Error loading quiz', err); // TRANSLATED
         this.isLoading.set(false);
         this.router.navigate(['/player', id]);
       }
@@ -75,7 +79,7 @@ export class StudentQuizComponent implements OnInit {
   }
 
   submitAnswers(): void {
-    if (this.isAdmin()) return; // Sécurité supplémentaire côté client
+    if (this.isAdmin()) return; // Extra client-side security
 
     const currentQuiz = this.quiz();
     if (!currentQuiz) return;
@@ -126,7 +130,7 @@ export class StudentQuizComponent implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `Certificat_${this.courseId()}.pdf`;
+        a.download = `Certificate_${this.courseId()}.pdf`; // TRANSLATED
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -134,7 +138,7 @@ export class StudentQuizComponent implements OnInit {
         this.isDownloading.set(false);
       },
       error: (err) => {
-        console.error('Erreur téléchargement certificat', err);
+        console.error('Error downloading certificate', err); // TRANSLATED
         this.isDownloading.set(false);
       }
     });

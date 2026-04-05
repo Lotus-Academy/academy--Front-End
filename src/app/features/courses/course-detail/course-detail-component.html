@@ -28,8 +28,9 @@
                     <h1 class="font-cormorant text-4xl md:text-6xl font-bold leading-[1.1] mb-6 text-white">
                         {{ data.title }}
                     </h1>
+
                     <p class="font-syne text-lg text-ds-muted mb-8 leading-relaxed line-clamp-3">
-                        {{ data.subtitle || data.description }}
+                        {{ data.subtitle }}
                     </p>
 
                     <div class="flex flex-wrap items-center gap-6 font-mono text-[11px] uppercase tracking-wider">
@@ -65,9 +66,28 @@
                             <h2 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-6">
                                 {{ 'COURSE_DETAIL.ABOUT_COURSE' | translate }}
                             </h2>
-                            <div class="font-syne text-slate-600 dark:text-ds-muted/90 leading-loose space-y-4">
-                                <p>{{ data.description }}</p>
+
+                            <div class="relative">
+                                <div class="font-syne leading-loose space-y-4 text-slate-700 dark:text-ds-muted/90 prose prose-slate dark:prose-invert max-w-none transition-all duration-500 ease-in-out"
+                                    [ngClass]="(!isDescriptionExpanded() && data.description && data.description.length > 500) ? 'max-h-[300px] overflow-hidden' : ''"
+                                    [appLivePreview]="data.description">
+                                </div>
+
+                                @if (!isDescriptionExpanded() && data.description && data.description.length > 500) {
+                                <div
+                                    class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-slate-50 dark:from-ds-black to-transparent pointer-events-none">
+                                </div>
+                                }
                             </div>
+
+                            @if (data.description && data.description.length > 500) {
+                            <button (click)="toggleDescription()"
+                                class="mt-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest font-bold text-lotus hover:text-lotus-light transition-colors">
+                                <span>{{ isDescriptionExpanded() ? 'Show Less' : 'Read More' }}</span>
+                                <lucide-icon [name]="isDescriptionExpanded() ? icons.ChevronUp : icons.ChevronDown"
+                                    class="w-4 h-4 stroke-[2px]"></lucide-icon>
+                            </button>
+                            }
                         </div>
 
                         <div
@@ -93,7 +113,7 @@
                                         {{ data.instructorName }}
                                     </a>
                                     <p class="font-mono text-[10px] uppercase tracking-widest text-lotus mt-1.5 mb-4">
-                                        {{ data.instructorHeadline || 'Expert Formateur' }}
+                                        {{ data.instructorHeadline || 'Expert Instructor' }}
                                     </p>
 
                                     <a [routerLink]="['/instructor/profile', data.instructorId]"
@@ -145,6 +165,7 @@
 
                                         <button (click)="handleLessonClick(lesson)"
                                             class="w-full flex items-center justify-between p-3 border-b border-slate-100 dark:border-ds-border/50 last:border-0 group hover:bg-slate-50 dark:hover:bg-ds-black/20 transition-colors rounded text-left">
+
                                             <div class="flex items-center gap-3">
                                                 @if (lesson.freePreview || hasFullAccess()) {
                                                 <lucide-icon [name]="icons.PlayCircle"
@@ -159,6 +180,7 @@
                                                     lesson.title }}</span>
                                                 }
                                             </div>
+
                                             <div class="flex items-center gap-4 shrink-0">
                                                 @if (lesson.freePreview && !hasFullAccess()) {
                                                 <span
@@ -172,6 +194,13 @@
                                                 </span>
                                             </div>
                                         </button>
+
+                                        @if (lesson.description) {
+                                        <div class="pl-10 pr-4 pb-4 pt-1 text-sm font-syne text-slate-600 dark:text-ds-muted/80 bg-white dark:bg-ds-surface border-b border-slate-100 dark:border-ds-border/50 prose prose-sm dark:prose-invert max-w-none"
+                                            [appLivePreview]="lesson.description">
+                                        </div>
+                                        }
+
                                         }
                                     </div>
                                     }
@@ -220,7 +249,7 @@
 
                                     @if (isProcessingPayment()) {
                                     <lucide-icon [name]="icons.Loader2" class="w-5 h-5 animate-spin"></lucide-icon>
-                                    Redirection...
+                                    {{ actionButtonLabel() | translate }}
                                     } @else if (hasFullAccess()) {
                                     <lucide-icon [name]="icons.PlayCircle" class="w-5 h-5"></lucide-icon>
                                     {{ actionButtonLabel() | translate }}
@@ -284,7 +313,7 @@
                 class="w-full max-w-5xl aspect-video bg-black rounded overflow-hidden shadow-2xl relative border border-ds-border/50 animate-fade-in-up">
                 <video [src]="data.trailerUrl" controls autoplay controlsList="nodownload" oncontextmenu="return false;"
                     class="w-full h-full object-contain outline-none">
-                    Votre navigateur ne supporte pas la balise vidéo.
+                    Your browser does not support the video tag.
                 </video>
             </div>
 

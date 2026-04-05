@@ -47,65 +47,92 @@
             </div>
         </div>
 
-        <div class="space-y-6">
+        <div class="space-y-10">
             @for (question of questions(); track $index; let qIndex = $index) {
             <div
-                class="border border-slate-200 dark:border-ds-border rounded p-6 bg-white dark:bg-ds-black shadow-sm relative group hover:border-lotus/30 transition-colors">
+                class="border border-slate-200 dark:border-ds-border rounded-lg p-6 bg-slate-50/50 dark:bg-ds-black/50 shadow-sm relative group hover:border-lotus/40 transition-colors">
 
                 <button (click)="removeQuestion(qIndex)"
-                    class="absolute top-5 right-5 text-slate-400 hover:text-red-500 dark:text-ds-muted/50 dark:hover:text-red-500 transition-colors p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-500/10">
+                    class="absolute top-4 right-4 text-slate-400 hover:text-red-500 dark:text-ds-muted/50 dark:hover:text-red-500 transition-colors p-2 rounded hover:bg-red-50 dark:hover:bg-red-500/10 z-10 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border shadow-sm">
                     <lucide-icon [name]="icons.Trash2" class="w-4 h-4"></lucide-icon>
                 </button>
 
                 <h4
-                    class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70 mb-3">
+                    class="font-mono text-[11px] uppercase tracking-[0.15em] font-bold text-lotus mb-4 flex items-center gap-2">
                     {{ 'COURSE_EDITOR.QUIZ.QUESTION' | translate }} {{ qIndex + 1 }}
                 </h4>
 
-                <input type="text" [(ngModel)]="question.text"
-                    [placeholder]="'COURSE_EDITOR.QUIZ.QUESTION_PLACEHOLDER' | translate"
-                    class="w-full px-4 py-3 mb-6 bg-slate-50 dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded focus:ring-1 focus:ring-lotus focus:outline-none font-syne text-sm dark:text-white transition-colors shadow-inner">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70 mb-2">
+                            Edit Mode (Code, Markdown, Math $$)
+                        </label>
+                        <textarea [(ngModel)]="question.text" rows="5"
+                            placeholder="Ex: Observe the function $$f(x) = x^2$$ or this code: \n```python\nprint('hello')\n```"
+                            class="w-full px-4 py-3 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded focus:ring-1 focus:ring-lotus focus:outline-none font-mono text-sm dark:text-white transition-colors shadow-inner resize-y"></textarea>
+                    </div>
+                    <div>
+                        <label
+                            class="font-mono text-[10px] uppercase tracking-widest font-bold text-green flex items-center gap-2 mb-2">
+                            <lucide-icon [name]="icons.Eye" class="w-3.5 h-3.5"></lucide-icon> Live Preview
+                        </label>
+                        <div class="w-full h-full min-h-[120px] p-4 bg-white dark:bg-ds-surface border border-dashed border-slate-300 dark:border-ds-border/70 rounded prose prose-sm dark:prose-invert max-w-none shadow-sm overflow-x-auto"
+                            [appLivePreview]="question.text">
+                        </div>
+                    </div>
+                </div>
 
-                <div class="space-y-3 pl-2 md:pl-6 border-l-2 border-slate-100 dark:border-ds-border ml-2">
+                <div class="space-y-4 pl-2 md:pl-6 border-l-[3px] border-slate-200 dark:border-ds-border/50 ml-2">
+                    <h5
+                        class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70 mb-3">
+                        Answer Options
+                    </h5>
+
                     @for (option of question.options; track $index; let oIndex = $index) {
-                    <div class="flex items-center gap-3">
-
+                    <div class="flex items-start gap-3">
                         <button (click)="setCorrectOption(qIndex, oIndex)"
-                            [ngClass]="option.isCorrect ? 'text-green bg-green/10 border-green/30' : 'text-slate-300 dark:text-ds-muted/30 bg-slate-50 dark:bg-ds-surface border-slate-200 dark:border-ds-border hover:border-slate-400 dark:hover:border-ds-muted'"
-                            class="w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors"
+                            [ngClass]="option.isCorrect ? 'text-green bg-green/10 border-green/30' : 'text-slate-300 dark:text-ds-muted/30 bg-white dark:bg-ds-surface border-slate-200 dark:border-ds-border hover:border-slate-400 dark:hover:border-ds-muted'"
+                            class="w-6 h-6 mt-3 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors"
                             [title]="'COURSE_EDITOR.QUIZ.MARK_CORRECT' | translate">
                             @if (option.isCorrect) {
                             <div class="w-2 h-2 bg-green rounded-full shadow-[0_0_5px_rgba(0,255,0,0.5)]"></div>
                             }
                         </button>
 
-                        <input type="text" [(ngModel)]="option.text"
-                            [placeholder]="'COURSE_EDITOR.QUIZ.OPTION_PLACEHOLDER' | translate"
-                            [ngClass]="option.isCorrect ? 'border-green/50 bg-green/5 dark:bg-green/5 dark:text-white' : 'border-slate-200 dark:border-ds-border bg-slate-50 dark:bg-ds-surface dark:text-white'"
-                            class="flex-1 px-4 py-2.5 border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none transition-colors shadow-sm">
+                        <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <textarea [(ngModel)]="option.text" rows="2"
+                                placeholder="Option (Supports math $x=2$ and code)"
+                                [ngClass]="option.isCorrect ? 'border-green/50 bg-green/5 dark:bg-green/5 dark:text-white' : 'border-slate-200 dark:border-ds-border bg-white dark:bg-ds-surface dark:text-white'"
+                                class="w-full px-4 py-2.5 border rounded font-mono text-sm focus:ring-1 focus:ring-lotus focus:outline-none transition-colors shadow-sm resize-y"></textarea>
+
+                            <div class="w-full p-3 bg-white dark:bg-ds-surface border border-slate-100 dark:border-ds-border rounded text-sm overflow-x-auto min-h-[60px] flex items-center"
+                                [appLivePreview]="option.text">
+                            </div>
+                        </div>
 
                         <button (click)="removeOption(qIndex, oIndex)"
-                            class="p-2 text-slate-400 dark:text-ds-muted/50 hover:text-red-500 dark:hover:text-red-500 transition-colors"
+                            class="p-2 mt-2 text-slate-400 dark:text-ds-muted/50 hover:text-red-500 dark:hover:text-red-500 transition-colors"
                             [disabled]="question.options.length <= 2"
                             [ngClass]="{'opacity-30 cursor-not-allowed': question.options.length <= 2}">
-                            <lucide-icon [name]="icons.Trash2" class="w-4 h-4 stroke-[1.5px]"></lucide-icon>
+                            <lucide-icon [name]="icons.Trash2" class="w-5 h-5 stroke-[1.5px]"></lucide-icon>
                         </button>
                     </div>
                     }
-                </div>
 
-                <button (click)="addOption(qIndex)"
-                    class="mt-5 ml-4 md:ml-8 font-mono text-[10px] uppercase tracking-widest font-bold text-lotus flex items-center gap-1.5 hover:text-lotus-light transition-colors">
-                    <lucide-icon [name]="icons.Plus" class="w-3 h-3 stroke-[2px]"></lucide-icon>
-                    {{ 'COURSE_EDITOR.QUIZ.BTN_ADD_OPTION' | translate }}
-                </button>
+                    <button (click)="addOption(qIndex)"
+                        class="mt-4 font-mono text-[10px] uppercase tracking-widest font-bold text-lotus flex items-center gap-1.5 hover:text-lotus-light transition-colors">
+                        <lucide-icon [name]="icons.Plus" class="w-3 h-3 stroke-[2px]"></lucide-icon>
+                        {{ 'COURSE_EDITOR.QUIZ.BTN_ADD_OPTION' | translate }}
+                    </button>
+                </div>
             </div>
             }
         </div>
 
         <button (click)="addQuestion()"
-            class="w-full py-5 border border-dashed border-slate-300 dark:border-ds-border rounded text-slate-600 dark:text-ds-muted/70 font-mono text-[11px] uppercase tracking-[0.1em] font-bold hover:border-lotus hover:text-lotus dark:hover:border-lotus dark:hover:text-lotus transition-colors flex justify-center items-center gap-2 bg-slate-50/50 dark:bg-ds-black/30">
-            <lucide-icon [name]="icons.Plus" class="w-4 h-4"></lucide-icon>
+            class="w-full py-6 border-2 border-dashed border-slate-300 dark:border-ds-border rounded-lg text-slate-600 dark:text-ds-muted/70 font-mono text-[11px] uppercase tracking-[0.1em] font-bold hover:border-lotus hover:text-lotus dark:hover:border-lotus dark:hover:text-lotus transition-colors flex justify-center items-center gap-2 bg-slate-50/50 dark:bg-ds-black/30">
+            <lucide-icon [name]="icons.Plus" class="w-5 h-5"></lucide-icon>
             {{ 'COURSE_EDITOR.QUIZ.BTN_NEW_QUESTION' | translate }}
         </button>
 

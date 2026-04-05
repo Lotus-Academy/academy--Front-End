@@ -9,13 +9,17 @@ import {
 
 import { CourseService } from '../../../core/services/course.service';
 import { EnrollmentService } from '../../../core/services/enrollment.service';
-import { AuthService } from '../../../core/services/auth.service'; // <-- AJOUT
+import { AuthService } from '../../../core/services/auth.service';
 import { CourseResponseDTO, SectionDTO, LessonDTO } from '../../../core/models/course.dto';
+
+// IMPORT THE DIRECTIVE
+import { LivePreviewDirective } from '../../../shared/directives/live-preview.directive';
 
 @Component({
   selector: 'app-course-player',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, TranslateModule],
+  // ADD DIRECTIVE TO IMPORTS
+  imports: [CommonModule, RouterLink, LucideAngularModule, TranslateModule, LivePreviewDirective],
   templateUrl: './course-player.component.html'
 })
 export class CoursePlayerComponent implements OnInit {
@@ -37,12 +41,11 @@ export class CoursePlayerComponent implements OnInit {
   currentLesson = signal<LessonDTO | null>(null);
   expandedSections = signal<Set<string>>(new Set());
 
-  // --- NOUVELLES VARIABLES D'ACCÈS ---
   currentUser = computed(() => this.authService.getUser());
   isEnrolled = signal<boolean>(false);
   isLessonLocked = signal<boolean>(false);
 
-  // Vérifie si l'utilisateur a un accès total (Admin, Instructeur propriétaire, ou Étudiant inscrit)
+  // Check if user has full access (Admin, Owner Instructor, or Enrolled Student)
   hasFullAccess = computed(() => {
     const user = this.currentUser();
     const courseData = this.course();
@@ -99,29 +102,27 @@ export class CoursePlayerComponent implements OnInit {
         this.checkEnrollmentStatus(id, data);
       },
       error: (err) => {
-        console.error('Erreur lors de la récupération du cours', err);
+        console.error('Error fetching course', err);
         this.isLoading.set(false);
         this.router.navigate(['/dashboard']);
       }
     });
   }
 
-  // --- NOUVELLE MÉTHODE : Vérification des droits d'accès ---
   private checkEnrollmentStatus(courseId: string, courseData: CourseResponseDTO): void {
     const user = this.currentUser();
 
-    // Si l'utilisateur est Admin ou le Propriétaire, on passe directement au rendu
+    // If Admin or Owner, grant direct access
     if (user?.role === 'ADMIN' || (user?.role === 'INSTRUCTOR' && courseData.instructorId === user?.userId)) {
       this.isEnrolled.set(true);
       this.initializePlayer(courseData.sections);
       return;
     }
 
-    // Sinon, on vérifie s'il est formellement inscrit
+    // Otherwise, check formal enrollment
     this.enrollmentService.getMyEnrollments().subscribe({
       next: (enrollments: any) => {
         const enrollmentsArray = Array.isArray(enrollments) ? enrollments : (enrollments.content || []);
-        // Vérifie si l'ID du cours est présent dans les inscriptions
         const isUserEnrolled = enrollmentsArray.some((e: any) => e.courseId === courseId || e.course?.id === courseId);
         this.isEnrolled.set(isUserEnrolled);
         this.initializePlayer(courseData.sections);
@@ -143,7 +144,7 @@ export class CoursePlayerComponent implements OnInit {
   }
 
   private findAndSetNextUncompletedLesson(sections: SectionDTO[]): void {
-    // Si l'utilisateur n'est pas inscrit, on affiche la première leçon (Aperçu ou Verrou)
+    // If not enrolled, show the first lesson (Preview or Lock screen)
     if (!this.hasFullAccess()) {
       if (sections[0] && sections[0].lessons && sections[0].lessons.length > 0) {
         this.selectLesson(sections[0].lessons[0]);
@@ -166,11 +167,10 @@ export class CoursePlayerComponent implements OnInit {
     }
   }
 
-  // --- MODIFICATION : Logique de verrouillage ---
   selectLesson(lesson: LessonDTO): void {
     this.currentLesson.set(lesson);
 
-    // Verrouille la leçon si l'utilisateur n'a pas un accès complet ET que la leçon n'est pas gratuite
+    // Lock lesson if user doesn't have full access AND lesson is not free
     if (!this.hasFullAccess() && !lesson.freePreview) {
       this.isLessonLocked.set(true);
     } else {
@@ -193,7 +193,7 @@ export class CoursePlayerComponent implements OnInit {
   }
 
   markLessonAsCompleteAndContinue(): void {
-    if (!this.hasFullAccess()) return; // Empêche un non-inscrit de valider une leçon
+    if (!this.hasFullAccess()) return; // Prevent non-enrolled users from completing
 
     const lesson = this.currentLesson();
     if (!lesson || lesson.completed) {
@@ -215,7 +215,7 @@ export class CoursePlayerComponent implements OnInit {
         }
         this.goToNextLesson();
       },
-      error: (err) => console.error("Erreur lors de la complétion de la leçon", err)
+      error: (err) => console.error("Error completing lesson", err)
     });
   }
 

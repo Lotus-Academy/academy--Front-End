@@ -4,16 +4,17 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
-  LucideAngularModule, Plus, GripVertical, FileBox, Edit2, Trash2, CheckCircle, UploadCloud, Loader2, X, FileText, PlayCircle
+  LucideAngularModule, Plus, GripVertical, FileBox, Edit2, Trash2, CheckCircle, UploadCloud, Loader2, X, FileText, PlayCircle, Eye
 } from 'lucide-angular';
 
 import { CourseService } from '../../../core/services/course.service';
 import { CourseResponseDTO, LessonDTO } from '../../../core/models/course.dto';
+import { LivePreviewDirective } from '../../../shared/directives/live-preview.directive';
 
 @Component({
   selector: 'app-course-curriculum',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule, LivePreviewDirective],
   templateUrl: './course-curriculum.component.html'
 })
 export class CourseCurriculumComponent implements OnInit {
@@ -23,25 +24,25 @@ export class CourseCurriculumComponent implements OnInit {
   private fb = inject(FormBuilder);
   private translate = inject(TranslateService);
 
-  readonly icons = { Plus, GripVertical, FileBox, Edit2, Trash2, CheckCircle, UploadCloud, Loader2, X, FileText, PlayCircle };
+  readonly icons = { Plus, GripVertical, FileBox, Edit2, Trash2, CheckCircle, UploadCloud, Loader2, X, FileText, PlayCircle, Eye };
 
   courseId = signal<string>('');
   course = signal<CourseResponseDTO | null>(null);
   isLoading = signal<boolean>(true);
   isSubmittingReview = signal<boolean>(false);
 
-  // État des ajouts
+  // Addition states
   isAddingSection = signal<boolean>(false);
   activeLessonFormSectionId = signal<string | null>(null);
 
-  // État des modifications (Inline Editing)
+  // Inline Editing states
   editSectionId = signal<string | null>(null);
   editLessonId = signal<string | null>(null);
 
-  // État des Uploads en cours
+  // Upload states
   uploadingMedia = signal<Set<string>>(new Set());
 
-  // Formulaires
+  // Forms
   sectionForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(3)]]
   });
@@ -49,7 +50,9 @@ export class CourseCurriculumComponent implements OnInit {
   lessonForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(3)]],
     duration: [0, [Validators.required, Validators.min(0)]],
-    freePreview: [false]
+    orderIndex: [0, [Validators.required, Validators.min(0)]], // ADDED ORDER INDEX
+    freePreview: [false],
+    description: ['']
   });
 
   ngOnInit(): void {
@@ -77,13 +80,13 @@ export class CourseCurriculumComponent implements OnInit {
         if (callback) callback();
       },
       error: (err) => {
-        console.error('Erreur de rafraîchissement', err);
+        console.error('Refresh error', err);
         if (callback) callback();
       }
     });
   }
 
-  // --- GESTION DES SECTIONS ---
+  // --- SECTION MANAGEMENT ---
 
   toggleAddSection(): void {
     this.isAddingSection.set(!this.isAddingSection());
@@ -101,21 +104,22 @@ export class CourseCurriculumComponent implements OnInit {
   }
 
   deleteSection(sectionId: string): void {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette section et toutes ses leçons ?")) {
+    if (confirm("Are you sure you want to delete this section and all its lessons?")) {
       this.courseService.deleteSection(this.courseId(), sectionId).subscribe({
         next: () => this.fetchCourseSilent(this.courseId())
       });
     }
   }
 
-  // --- GESTION DES LEÇONS ---
+  // --- LESSON MANAGEMENT ---
 
   toggleAddLesson(sectionId: string): void {
     this.editLessonId.set(null);
     if (this.activeLessonFormSectionId() === sectionId) {
       this.activeLessonFormSectionId.set(null);
     } else {
-      this.lessonForm.reset({ duration: 0, freePreview: false });
+      // RESET WITH ORDER INDEX
+      this.lessonForm.reset({ duration: 0, orderIndex: 0, freePreview: false, description: '' });
       this.activeLessonFormSectionId.set(sectionId);
     }
   }
@@ -123,8 +127,7 @@ export class CourseCurriculumComponent implements OnInit {
   onSaveLesson(sectionId: string): void {
     if (this.lessonForm.invalid) return;
 
-    // Par défaut, lors de la création manuelle d'une leçon sans fichier, 
-    // on lui attribue le type VIDEO.
+    // Default to VIDEO when creating a manual lesson without a file
     const payload = { ...this.lessonForm.value, type: 'VIDEO' };
 
     this.courseService.createLesson(sectionId, payload).subscribe({
@@ -138,10 +141,14 @@ export class CourseCurriculumComponent implements OnInit {
   startEditLesson(lesson: any): void {
     this.activeLessonFormSectionId.set(null);
     this.editLessonId.set(lesson.id);
+
+    // PATCH VALUE WITH ORDER INDEX
     this.lessonForm.patchValue({
       title: lesson.title,
       duration: lesson.duration,
-      freePreview: lesson.freePreview
+      orderIndex: lesson.orderIndex || 0,
+      freePreview: lesson.freePreview,
+      description: lesson.description || ''
     });
   }
 
@@ -152,11 +159,10 @@ export class CourseCurriculumComponent implements OnInit {
   onUpdateLesson(sectionId: string, lesson: LessonDTO): void {
     if (this.lessonForm.invalid) return;
 
-    // On conserve le type existant de la leçon lors d'une modification de texte
+    // The form now dictates the orderIndex, so we don't hardcode it from the old object
     const payload = {
       ...this.lessonForm.value,
-      type: lesson.type || 'VIDEO',
-      orderIndex: lesson.orderIndex
+      type: lesson.type || 'VIDEO'
     };
 
     this.courseService.updateLesson(sectionId, lesson.id, payload).subscribe({
@@ -168,14 +174,14 @@ export class CourseCurriculumComponent implements OnInit {
   }
 
   deleteLesson(sectionId: string, lessonId: string): void {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette leçon ?")) {
+    if (confirm("Are you sure you want to delete this lesson?")) {
       this.courseService.deleteLesson(sectionId, lessonId).subscribe({
         next: () => this.fetchCourseSilent(this.courseId())
       });
     }
   }
 
-  // --- GESTION DES MÉDIAS AVEC DÉTECTION DU TYPE ---
+  // --- MEDIA MANAGEMENT ---
 
   isMediaUploading(lessonId: string): boolean {
     return this.uploadingMedia().has(lessonId);
@@ -186,7 +192,6 @@ export class CourseCurriculumComponent implements OnInit {
 
     if (!file) return;
 
-    // 1. Validation du format
     const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
     const isVideo = file.type.startsWith('video/');
 
@@ -196,29 +201,25 @@ export class CourseCurriculumComponent implements OnInit {
       return;
     }
 
-    // 2. Détection du type
     const detectedType = isPDF ? 'PDF' : 'VIDEO';
 
-    // 3. Activer le loader
     this.uploadingMedia.update(set => {
       const newSet = new Set(set);
       newSet.add(lesson.id);
       return newSet;
     });
 
-    // 4. Mettre à jour les métadonnées de la leçon (PUT) pour enregistrer le type
     const updatePayload = {
       title: lesson.title,
       description: lesson.description || '',
       duration: lesson.duration || 0,
       freePreview: lesson.freePreview || false,
-      orderIndex: lesson.orderIndex,
+      orderIndex: lesson.orderIndex, // Kept intact for the media update
       type: detectedType
     };
 
     this.courseService.updateLesson(sectionId, lesson.id, updatePayload).subscribe({
       next: () => {
-        // 5. Procéder à l'upload physique du fichier (POST)
         this.courseService.uploadLessonMedia(sectionId, lesson.id, file).subscribe({
           next: () => {
             this.fetchCourseSilent(this.courseId(), () => {
@@ -230,8 +231,8 @@ export class CourseCurriculumComponent implements OnInit {
             });
           },
           error: (err) => {
-            console.error('Erreur upload', err);
-            alert('Échec du téléchargement du fichier.');
+            console.error('Upload error', err);
+            alert('File upload failed.');
             this.uploadingMedia.update(set => {
               const newSet = new Set(set);
               newSet.delete(lesson.id);
@@ -241,7 +242,7 @@ export class CourseCurriculumComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error('Erreur mise à jour type leçon', err);
+        console.error('Lesson type update error', err);
         this.uploadingMedia.update(set => {
           const newSet = new Set(set);
           newSet.delete(lesson.id);
@@ -250,8 +251,6 @@ export class CourseCurriculumComponent implements OnInit {
       }
     });
   }
-
-  // --- SOUMISSION DU COURS ---
 
   submitForReview(): void {
     this.isSubmittingReview.set(true);

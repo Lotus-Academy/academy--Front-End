@@ -3,15 +3,18 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LucideAngularModule, Save, Loader2, AlertCircle, CheckCircle, AlertTriangle } from 'lucide-angular';
+import { LucideAngularModule, Save, Loader2, AlertCircle, CheckCircle, AlertTriangle, Eye } from 'lucide-angular';
 
 import { CourseService } from '../../../core/services/course.service';
 import { CategoryDTO, CourseResponseDTO } from '../../../core/models/course.dto';
 
+// Import de la directive
+import { LivePreviewDirective } from '../../../shared/directives/live-preview.directive';
+
 @Component({
   selector: 'app-course-edit-basic',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule, LivePreviewDirective],
   templateUrl: './course-edit-basic.component.html'
 })
 export class CourseEditBasicComponent implements OnInit {
@@ -20,7 +23,7 @@ export class CourseEditBasicComponent implements OnInit {
   private fb = inject(FormBuilder);
   private translate = inject(TranslateService);
 
-  readonly icons = { Save, Loader2, AlertCircle, CheckCircle, AlertTriangle };
+  readonly icons = { Save, Loader2, AlertCircle, CheckCircle, AlertTriangle, Eye };
 
   courseId = signal<string>('');
   originalCourse = signal<CourseResponseDTO | null>(null);
@@ -38,7 +41,7 @@ export class CourseEditBasicComponent implements OnInit {
     subtitle: ['', [Validators.required]],
     categoryId: ['', [Validators.required]],
     level: ['BEGINNER', [Validators.required]],
-    language: ['Français', [Validators.required]],
+    language: ['English', [Validators.required]],
     description: ['']
   });
 
@@ -58,8 +61,8 @@ export class CourseEditBasicComponent implements OnInit {
     this.courseService.getCategories().subscribe({
       next: (cats) => this.categories.set(cats),
       error: (err) => {
-        console.error('Erreur de chargement des catégories', err);
-        this.errorMessage.set('Erreur lors du chargement des catégories.');
+        console.error('Error loading categories', err);
+        this.errorMessage.set('Error loading categories.');
       }
     });
   }
@@ -75,15 +78,15 @@ export class CourseEditBasicComponent implements OnInit {
           subtitle: course.subtitle,
           categoryId: course.categoryId,
           level: course.level || 'BEGINNER',
-          language: course.language || 'Français',
+          language: course.language || 'English',
           description: course.description
         });
 
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Erreur lors du chargement des informations de base', err);
-        this.errorMessage.set('Impossible de charger le cours.');
+        console.error('Error loading basic information', err);
+        this.errorMessage.set('Unable to load the course.');
         this.isLoading.set(false);
       }
     });
@@ -115,11 +118,10 @@ export class CourseEditBasicComponent implements OnInit {
         this.isSaving.set(false);
         this.saveSuccessMessage.set(true);
 
-        // Disparition du message de succès après 3 secondes
         setTimeout(() => this.saveSuccessMessage.set(false), 3000);
       },
       error: (err) => {
-        console.error('Erreur lors de la mise à jour', err);
+        console.error('Update error', err);
         this.isSaving.set(false);
         this.errorMessage.set(this.translate.instant('COURSE_EDITOR.BASIC.ERROR_SAVE'));
       }

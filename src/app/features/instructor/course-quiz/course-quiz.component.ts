@@ -3,15 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LucideAngularModule, Plus, Trash2, CheckCircle, Save, Loader2, AlertTriangle } from 'lucide-angular';
+import { LucideAngularModule, Plus, Trash2, CheckCircle, Save, Loader2, AlertTriangle, Eye } from 'lucide-angular';
 
 import { QuizService } from '../../../core/services/quiz.service';
 import { QuizRequestDto, QuestionDto, OptionDto } from '../../../core/models/quiz.dto';
+import { LivePreviewDirective } from '../../../shared/directives/live-preview.directive';
 
 @Component({
   selector: 'app-course-quiz',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, TranslateModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule, TranslateModule, LivePreviewDirective],
   templateUrl: './course-quiz.component.html'
 })
 export class CourseQuizComponent implements OnInit {
@@ -19,7 +20,7 @@ export class CourseQuizComponent implements OnInit {
   private quizService = inject(QuizService);
   private translate = inject(TranslateService);
 
-  readonly icons = { Plus, Trash2, CheckCircle, Save, Loader2, AlertTriangle };
+  readonly icons = { Plus, Trash2, CheckCircle, Save, Loader2, AlertTriangle, Eye };
 
   courseId = signal<string>('');
   isSaving = signal<boolean>(false);
@@ -30,7 +31,8 @@ export class CourseQuizComponent implements OnInit {
   saveSuccessMessage = signal<boolean>(false);
   errorMessage = signal<string>('');
 
-  quizTitle = signal<string>('Quiz final de validation');
+  // Translated default title
+  quizTitle = signal<string>('Final Validation Quiz');
   passingScore = signal<number>(70);
   courseQuizes = signal<QuizRequestDto | null>(null);
   questions = signal<QuestionDto[]>([]);
@@ -50,7 +52,6 @@ export class CourseQuizComponent implements OnInit {
     this.quizService.getCourseQuiz(courseId).subscribe({
       next: (data: QuizRequestDto) => {
         this.courseQuizes.set(data);
-
         this.isEditMode.set(true);
 
         if (data && data.questions && data.questions.length > 0) {
@@ -72,7 +73,8 @@ export class CourseQuizComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.warn('Aucun quiz existant. Passage en mode création.');
+        // Translated console log
+        console.warn('No existing quiz found. Switching to creation mode.');
         this.isEditMode.set(false);
         this.questions.set([]);
         this.addQuestion();
@@ -124,7 +126,8 @@ export class CourseQuizComponent implements OnInit {
     if (!this.courseId()) return;
 
     if (this.questions().length === 0 || !this.questions()[0].text.trim()) {
-      this.errorMessage.set('Veuillez ajouter au moins une question valide.');
+      // Translated error message
+      this.errorMessage.set('Please add at least one valid question.');
       setTimeout(() => this.errorMessage.set(''), 3000);
       return;
     }
@@ -139,7 +142,6 @@ export class CourseQuizComponent implements OnInit {
       courseId: this.courseId(),
       questions: this.questions()
     };
-
 
     const request$ = this.isEditMode()
       ? this.quizService.updateQuiz(this.courseId(), payload)

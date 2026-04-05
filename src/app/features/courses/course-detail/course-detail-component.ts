@@ -28,6 +28,9 @@ import { PaymentService } from '../../../core/services/payment.service';
 import { EnrollmentService } from '../../../core/services/enrollment.service';
 import { AuthService } from '../../../core/services/auth.service';
 
+// IMPORT THE DIRECTIVE FOR RENDERED DESCRIPTION
+import { LivePreviewDirective } from '../../../shared/directives/live-preview.directive';
+
 @Component({
   selector: 'app-course-detail',
   standalone: true,
@@ -38,7 +41,8 @@ import { AuthService } from '../../../core/services/auth.service';
     NavbarComponent,
     FooterComponent,
     CurrencyPipe,
-    TranslateModule
+    TranslateModule,
+    LivePreviewDirective // ADDED TO IMPORTS
   ],
   templateUrl: './course-detail-component.html'
 })
@@ -59,13 +63,13 @@ export class CourseDetailComponent implements OnInit {
   isLoading = signal<boolean>(true);
   isPlayingTrailer = signal<boolean>(false);
 
-  // États d'authentification et d'accès
+  // Auth & Access States
   isProcessingPayment = signal<boolean>(false);
   isAuthenticated = signal<boolean>(false);
   isAlreadyEnrolled = signal<boolean>(false);
   currentUser = computed(() => this.authService.getUser());
 
-  // Vérifie si l'utilisateur possède un accès total (Admin, Propriétaire ou Inscrit)
+  // Verify if the user has full access (Admin, Owner, or Enrolled)
   hasFullAccess = computed(() => {
     const user = this.currentUser();
     const courseData = this.course();
@@ -77,22 +81,22 @@ export class CourseDetailComponent implements OnInit {
     return this.isAlreadyEnrolled();
   });
 
-  // Détermine dynamiquement le texte du bouton d'action principal
+  // Dynamically determine the main action button text
   actionButtonLabel = computed(() => {
-    if (this.isProcessingPayment()) return 'Redirection...';
+    if (this.isProcessingPayment()) return 'Redirecting...';
 
     const user = this.currentUser();
     const courseData = this.course();
 
     if (user?.role === 'ADMIN' || (user?.role === 'INSTRUCTOR' && courseData?.instructorId === user.userId)) {
-      return 'COURSE_DETAIL.ACCESS_COURSE'; // Clé à ajouter : "Accéder au cours"
+      return 'COURSE_DETAIL.ACCESS_COURSE'; // "Access Course"
     }
 
     if (this.isAlreadyEnrolled()) {
-      return 'COURSE_DETAIL.RESUME_COURSE'; // Clé à ajouter : "Reprendre le cours"
+      return 'COURSE_DETAIL.RESUME_COURSE'; // "Resume Course"
     }
 
-    return 'COURSE_DETAIL.ENROLL_NOW'; // "S'inscrire maintenant"
+    return 'COURSE_DETAIL.ENROLL_NOW'; // "Enroll Now"
   });
 
   totalSections = computed(() => this.course()?.sections?.length || 0);
@@ -111,6 +115,12 @@ export class CourseDetailComponent implements OnInit {
   });
 
   expandedSections = signal<Set<string>>(new Set());
+
+  isDescriptionExpanded = signal<boolean>(false);
+
+  toggleDescription(): void {
+    this.isDescriptionExpanded.set(!this.isDescriptionExpanded());
+  }
 
   ngOnInit(): void {
     this.isAuthenticated.set(this.authService.isAuthenticated());
@@ -131,7 +141,7 @@ export class CourseDetailComponent implements OnInit {
           this.toggleSection(data.sections[0].id);
         }
 
-        // On vérifie l'inscription uniquement si l'utilisateur est connecté et n'est ni Admin ni le Propriétaire
+        // Check enrollment ONLY if user is logged in, not Admin, and not the course Owner
         const user = this.currentUser();
         if (this.isAuthenticated() && user?.role !== 'ADMIN' && !(user?.role === 'INSTRUCTOR' && data.instructorId === user.userId)) {
           this.checkEnrollmentStatus(id);
@@ -140,7 +150,7 @@ export class CourseDetailComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Erreur lors de la récupération du cours :', error);
+        console.error('Error fetching course:', error);
         this.isLoading.set(false);
       }
     });
@@ -154,7 +164,7 @@ export class CourseDetailComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error("Erreur vérification inscription", err);
+        console.error("Enrollment check error", err);
         this.isLoading.set(false);
       }
     });
@@ -164,7 +174,7 @@ export class CourseDetailComponent implements OnInit {
     const courseData = this.course();
     if (!courseData) return;
 
-    // 1. Redirection vers le login si non connecté
+    // 1. Redirect to login if not authenticated
     if (!this.isAuthenticated()) {
       this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
       return;
@@ -172,29 +182,29 @@ export class CourseDetailComponent implements OnInit {
 
     const user = this.currentUser();
 
-    // 2. L'administrateur a un accès absolu
+    // 2. Admin has absolute access
     if (user?.role === 'ADMIN') {
       this.router.navigate(['/player', courseData.id]);
       return;
     }
 
-    // 3. Gestion stricte pour l'instructeur
+    // 3. Strict rule for Instructors
     if (user?.role === 'INSTRUCTOR') {
       if (courseData.instructorId === user.userId) {
         this.router.navigate(['/player', courseData.id]);
       } else {
-        alert("En tant qu'instructeur, vous ne pouvez pas vous inscrire aux cours d'autres formateurs.");
+        alert("As an instructor, you cannot enroll in courses created by other instructors.");
       }
       return;
     }
 
-    // 4. L'étudiant possède déjà le cours
+    // 4. Student already owns the course
     if (this.isAlreadyEnrolled()) {
       this.router.navigate(['/player', courseData.id]);
       return;
     }
 
-    // 5. Étudiant non inscrit -> Redirection vers le paiement
+    // 5. Student not enrolled -> Redirect to payment
     this.isProcessingPayment.set(true);
 
     this.paymentService.createCheckoutSession(courseData.id).subscribe({
@@ -203,8 +213,8 @@ export class CourseDetailComponent implements OnInit {
         window.location.href = stripeCheckoutUrl;
       },
       error: (err) => {
-        console.error("Erreur de création de session Stripe", err);
-        alert("Impossible de procéder au paiement. Veuillez réessayer plus tard.");
+        console.error("Stripe session creation error", err);
+        alert("Unable to process payment. Please try again later.");
         this.isProcessingPayment.set(false);
       }
     });
@@ -214,12 +224,11 @@ export class CourseDetailComponent implements OnInit {
     const courseData = this.course();
     if (!courseData) return;
 
-    // Si la leçon est en aperçu gratuit OU si l'utilisateur a un accès total, on ouvre le lecteur
+    // If lesson is free preview OR user has full access, open player
     if (lesson.freePreview || this.hasFullAccess()) {
       this.router.navigate(['/player', courseData.id]);
     } else {
-      // Si la leçon est bloquée, on redirige vers la logique d'inscription
-      // Cela fera défiler la page vers le bouton d'achat ou déclenchera l'alerte/redirection appropriée
+      // If locked, redirect to enrollment logic (scrolls to buy button or alerts)
       this.handleEnrollAction();
     }
   }
