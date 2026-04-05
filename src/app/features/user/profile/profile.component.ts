@@ -7,11 +7,12 @@ import { Router } from '@angular/router';
 
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { NavbarComponent } from "../../layouts/navbar-component/navbar.component";
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule, NavbarComponent],
   templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnInit {

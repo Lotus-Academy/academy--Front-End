@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule, User, BookOpen, Globe, FileText, CheckCircle, ChevronRight, ChevronLeft, Loader2, AlertTriangle } from 'lucide-angular'; // <-- AJOUT de AlertTriangle
 import { InstructorProfileService, InstructorOnboardingRequestDTO, InstructorProfileResponseDTO } from '../../../core/services/instructor-profile.service';
+import { NavbarComponent } from "../../layouts/navbar-component/navbar.component";
 
 @Component({
   selector: 'app-instructor-onboarding',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule, NavbarComponent],
   templateUrl: './onboarding.component.html' // Assurez-vous que le nom du fichier matche
 })
 export class InstructorOnboardingComponent implements OnInit { // <-- Implémente OnInit
