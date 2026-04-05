@@ -12,6 +12,7 @@ import { UserService } from '../../../core/services/user.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { AppNotification, NotificationService } from '../../../core/services/notification.service';
 import { LanguageService } from '../../../core/services/language.service';
+import { environment } from '../../../../environments/environment';
 
 export interface NavLink {
   labelKey: string;
@@ -92,7 +93,7 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
     const code = this.referralCode();
     if (!code) return;
 
-    const referralLink = `${window.location.origin}/login?ref=${code}`;
+    const referralLink = `${environment.clientApiUrl}/login?ref=${code}`;
 
     navigator.clipboard.writeText(referralLink).then(() => {
       this.copySuccess.set(true);
