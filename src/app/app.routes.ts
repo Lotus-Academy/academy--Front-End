@@ -58,6 +58,8 @@ import { authGuard } from './core/guards/auth.guard-guard';
 import { instructorApprovedGuard } from './core/guards/instructor-approved.guard-guard';
 import { AdminInstructorProfileComponent } from './features/admin/admin-instructor-profil/admin-instructor-profile.component';
 import { AdminStudentProfileComponent } from './features/admin/admin-student-profile/admin-student-profile.component';
+import { LiveSessionCreateComponent } from './features/live-session/live-session-create/live-session-create.component';
+import { LiveSessionRoomComponent } from './features/live-session/live-session-room/live-session-room.component';
 
 export const routes: Routes = [
     // --- ROUTES PUBLIQUES ---
@@ -130,6 +132,16 @@ export const routes: Routes = [
             { path: 'preview', component: CourseEditPreviewComponent },
             { path: '', redirectTo: 'basic', pathMatch: 'full' }
         ]
+    },
+    {
+        path: 'instructor/live-sessions/create',
+        component: LiveSessionCreateComponent,
+        canActivate: [authGuard, instructorApprovedGuard]
+    },
+    {
+        path: 'live-session/:id',
+        component: LiveSessionRoomComponent,
+        canActivate: [authGuard]
     },
 
 

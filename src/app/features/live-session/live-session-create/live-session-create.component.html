@@ -1,0 +1,179 @@
+<app-instructor-layout title="{{ 'LAYOUT.INSTRUCTOR_SPACE' | translate }}">
+
+    <div class="min-h-screen bg-slate-50 dark:bg-ds-black py-10 px-4 sm:px-6 lg:px-8 font-syne">
+        <div class="max-w-4xl mx-auto">
+
+            <div class="mb-8">
+                <a routerLink="/instructor/dashboard"
+                    class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 hover:text-lotus transition-colors mb-4">
+                    <lucide-icon [name]="icons.ChevronLeft" class="w-4 h-4"></lucide-icon> Back to Dashboard
+                </a>
+                <h1 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white">Schedule Live Session</h1>
+                <p class="text-slate-500 dark:text-ds-muted/70 mt-2 text-sm">Configure your interactive live broadcast
+                    for
+                    Elite students.</p>
+            </div>
+
+            @if (isLoading()) {
+            <div
+                class="flex justify-center items-center py-20 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-sm">
+                <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin stroke-[2px]"></lucide-icon>
+            </div>
+            } @else {
+
+            @if (errorMessage()) {
+            <div
+                class="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded flex items-center gap-4 text-red-500 animate-fade-in">
+                <lucide-icon [name]="icons.AlertTriangle" class="w-5 h-5 shrink-0"></lucide-icon>
+                <p class="font-syne text-sm font-bold">{{ errorMessage() }}</p>
+            </div>
+            }
+
+            <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()" class="space-y-8 animate-fade-in-up">
+
+                <div
+                    class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-sm p-6 sm:p-8">
+                    <h2
+                        class="font-mono text-[11px] uppercase tracking-widest font-bold text-lotus mb-6 flex items-center gap-2">
+                        <lucide-icon [name]="icons.Calendar" class="w-4 h-4"></lucide-icon> 1. General Information
+                    </h2>
+
+                    <div class="space-y-6">
+                        <div>
+                            <label
+                                class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">Session
+                                Title</label>
+                            <input type="text" formControlName="title" placeholder="E.g., Live Algorithm Review & Q&A"
+                                class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border rounded focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors text-sm"
+                                [ngClass]="isFieldInvalid('title') ? 'border-red-500' : 'border-slate-300 dark:border-ds-border'">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">Description</label>
+                            <textarea formControlName="description" rows="3"
+                                placeholder="What will be covered in this live session?"
+                                class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border rounded focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors text-sm resize-y"
+                                [ngClass]="isFieldInvalid('description') ? 'border-red-500' : 'border-slate-300 dark:border-ds-border'"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label
+                                    class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">Program
+                                    Category</label>
+                                <select formControlName="categoryId"
+                                    class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border rounded focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors text-sm appearance-none cursor-pointer"
+                                    [ngClass]="isFieldInvalid('categoryId') ? 'border-red-500' : 'border-slate-300 dark:border-ds-border'">
+                                    <option value="" disabled selected>Select a category...</option>
+                                    @for (cat of categories(); track cat.id) {
+                                    <option [value]="cat.id">{{ cat.name }}</option>
+                                    }
+                                </select>
+                            </div>
+                            <div>
+                                <label
+                                    class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">Scheduled
+                                    Date & Time</label>
+                                <input type="datetime-local" formControlName="scheduledAt"
+                                    class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border rounded focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors text-sm"
+                                    [ngClass]="isFieldInvalid('scheduledAt') ? 'border-red-500' : 'border-slate-300 dark:border-ds-border'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-sm p-6 sm:p-8">
+                    <h2
+                        class="font-mono text-[11px] uppercase tracking-widest font-bold text-lotus mb-6 flex items-center gap-2">
+                        <lucide-icon [name]="icons.Video" class="w-4 h-4"></lucide-icon> 2. Broadcast Stream
+                    </h2>
+
+                    <div>
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">YouTube
+                            Live Unlisted URL</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <lucide-icon [name]="icons.Link" class="w-4 h-4 text-slate-400"></lucide-icon>
+                            </div>
+                            <input type="url" formControlName="youtubeUnlistedUrl"
+                                placeholder="https://youtube.com/watch?v=..."
+                                class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-ds-black border rounded focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors text-sm"
+                                [ngClass]="isFieldInvalid('youtubeUnlistedUrl') ? 'border-red-500' : 'border-slate-300 dark:border-ds-border'">
+                        </div>
+                        <p class="font-mono text-[9px] text-slate-500 dark:text-ds-muted/60 mt-2">Create an "Unlisted"
+                            stream in YouTube Studio and paste the link here. Do not use public links.</p>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-sm p-6 sm:p-8">
+                    <h2
+                        class="font-mono text-[11px] uppercase tracking-widest font-bold text-lotus mb-6 flex items-center gap-2">
+                        <lucide-icon [name]="icons.PenTool" class="w-4 h-4"></lucide-icon> 3. Elite Interactive Tool
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        <div>
+                            <label
+                                class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-2">Associated
+                                Tool</label>
+                            <select formControlName="toolType"
+                                class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-300 dark:border-ds-border rounded focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors text-sm appearance-none cursor-pointer">
+                                <option value="NONE">None (Video Only)</option>
+                                <option value="TRADING_TERMINAL">Lotus Trading Terminal</option>
+                                <option value="PYTHON_IDE">Python IDE (Replit)</option>
+                                <option value="JUPYTER_NOTEBOOK">Jupyter Notebook</option>
+                                <option value="AGENT_INTERFACE">Agentic AI Interface</option>
+                            </select>
+                            <p class="font-mono text-[9px] text-slate-500 dark:text-ds-muted/60 mt-2">This tool will be
+                                displayed in Split-Screen for Elite students.</p>
+                        </div>
+
+                        <div class="p-5 border border-slate-200 dark:border-ds-border rounded bg-slate-50/50 dark:bg-ds-black/50 transition-opacity"
+                            [ngClass]="sessionForm.get('toolType')?.value === 'TRADING_TERMINAL' ? 'opacity-100' : 'opacity-40 pointer-events-none'">
+                            <div class="flex items-start gap-3">
+                                <input type="checkbox" id="autoTrader" formControlName="autoTraderEnabled"
+                                    class="mt-1 w-4 h-4 rounded border-slate-300 text-lotus focus:ring-lotus dark:bg-ds-black dark:border-ds-border accent-lotus cursor-pointer">
+                                <label for="autoTrader" class="cursor-pointer">
+                                    <span
+                                        class="block font-syne font-bold text-sm text-slate-900 dark:text-white mb-1">Enable
+                                        Auto-Trader</span>
+                                    <span
+                                        class="block font-syne text-xs text-slate-500 dark:text-ds-muted/80 leading-relaxed">
+                                        Allows Elite students to actively connect their broker account and confirm
+                                        copy-trades during the broadcast.
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-4 pt-4">
+                    @if (successMessage()) {
+                    <span
+                        class="font-mono text-[10px] uppercase tracking-widest font-bold text-green flex items-center gap-1.5 animate-fade-in">
+                        <lucide-icon [name]="icons.CheckCircle" class="w-3.5 h-3.5"></lucide-icon>
+                        {{ successMessage() }}
+                    </span>
+                    }
+
+                    <button type="submit" [disabled]="sessionForm.invalid || isSubmitting()"
+                        class="px-8 py-4 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded hover:bg-lotus-light disabled:opacity-50 transition-all flex items-center gap-2 shadow-sm">
+                        @if (isSubmitting()) {
+                        <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
+                        Scheduling...
+                        } @else {
+                        <lucide-icon [name]="icons.Save" class="w-4 h-4 stroke-[2px]"></lucide-icon>
+                        Schedule Live Session
+                        }
+                    </button>
+                </div>
+            </form>
+            }
+        </div>
+    </div>
+</app-instructor-layout>

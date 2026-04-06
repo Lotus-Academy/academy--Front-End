@@ -21,6 +21,10 @@ export interface UserDTO {
   emailVerified: boolean;
   createdAt: string;
   referralCode?: string;
+
+  // ADDED: Subscription fields as per the backend Swagger definition
+  subscriptionTier?: 'FREE' | 'CORE' | 'PRO' | 'ELITE';
+  subscriptionStatus?: 'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'INCOMPLETE';
 }
 
 export interface UpdateProfileDTO {
@@ -43,7 +47,7 @@ export class UserService {
   private baseUrl = `${environment.apiUrl}/api/v1/users`;
 
   /**
-   * Récupère les informations détaillées de l'utilisateur connecté
+   * Retrieves detailed information of the connected user, including subscription status
    * Endpoint: GET /api/v1/users/me
    */
   getMyProfile(): Observable<UserDTO> {
@@ -51,16 +55,16 @@ export class UserService {
   }
 
   /**
-   * Met à jour le profil (Informations textuelles et photo optionnelle)
+   * Updates user profile (Text info and optional photo)
    * Endpoint: PUT /api/v1/users/profile
    */
   updateProfile(profileData: UpdateProfileDTO, photoFile?: File): Observable<UserDTO> {
     const formData = new FormData();
 
-    // Le backend attend un champ 'data' contenant le JSON sous forme de chaîne
+    // The backend expects a 'data' field containing a stringified JSON
     formData.append('data', JSON.stringify(profileData));
 
-    // Si une nouvelle photo est sélectionnée, on l'ajoute au payload
+    // Append photo if selected
     if (photoFile) {
       formData.append('photo', photoFile);
     }
@@ -69,18 +73,15 @@ export class UserService {
   }
 
   /**
-   * Modifie le mot de passe de l'utilisateur
+   * Changes the user password
    * Endpoint: POST /api/v1/users/change-password
    */
   changePassword(passwordData: ChangePasswordDTO): Observable<string> {
-    // Spécification de responseType: 'text' obligatoire pour les retours String purs du backend
     return this.http.post(`${this.baseUrl}/change-password`, passwordData, { responseType: 'text' });
   }
 
   /**
-   * Archive / Supprime le compte de l'utilisateur
-   * ATTENTION : Ce endpoint n'est pas encore documenté dans le Swagger fourni.
-   * Si la route n'existe pas côté Spring Boot, cela générera une erreur 404.
+   * Archives / Deletes the user account
    */
   archiveAccount(): Observable<string> {
     return this.http.delete(`${this.baseUrl}/me`, { responseType: 'text' });
