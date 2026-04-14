@@ -39,16 +39,15 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
   isLoading = signal<boolean>(true);
   errorMessage = signal<string>('');
 
-  safeYoutubeUrl = signal<SafeResourceUrl | null>(null);
+  // URL sécurisée pour le flux WebRTC (MediaMTX) au lieu de YouTube
+  safeStreamUrl = signal<SafeResourceUrl | null>(null);
   safeToolUrl = signal<SafeResourceUrl | null>(null);
 
   currentUser = computed(() => this.authService.getUser());
 
-  // Profile state from backend
   userProfile = signal<UserDTO | null>(null);
   isProfileLoading = signal<boolean>(true);
 
-  // Elite Access Validation
   isEliteUser = computed(() => {
     const user = this.currentUser();
     const profile = this.userProfile();
@@ -56,18 +55,14 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
     if (!user) return false;
     if (user.role === 'ADMIN' || user.role === 'INSTRUCTOR') return true;
 
-    // Prevent locking if the profile is still being fetched from the server
     if (!profile) return false;
 
-    // Strict validation against real-time database values
     return profile.subscriptionTier === 'ELITE' && profile.subscriptionStatus === 'ACTIVE';
   });
 
-  // Layout States
   isToolVisible = signal<boolean>(true);
   isChatVisible = signal<boolean>(true);
 
-  // Chat States
   chatInput = signal<string>('');
   chatMessages = signal<{ user: string, text: string, time: string, isInstructor: boolean, isSystem: boolean }[]>([]);
 
@@ -82,7 +77,7 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Future implementation: Close WebSocket connections for the live chat
+    // Logique future : Fermer les WebSockets
   }
 
   private fetchUserProfile(): void {
@@ -126,7 +121,9 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
     this.liveSessionService.joinLiveSession(id).subscribe({
       next: (data) => {
         this.sessionData.set(data);
-        this.setupYoutubeIframe(data.youtubeUrl);
+
+        // Utilisation de whepUrl
+        this.setupStreamIframe(data.whepUrl);
         this.setupToolIframe(data.toolType);
 
         if (data.toolType === 'NONE') {
@@ -147,18 +144,30 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
     });
   }
 
-  private setupYoutubeIframe(url: string): void {
+  // Configuration de l'Iframe pour le player WebRTC de MediaMTX
+  private setupStreamIframe(url: string | undefined): void {
     if (!url) return;
 
-    let embedUrl = url;
-    if (url.includes('watch?v=')) {
-      embedUrl = url.replace('watch?v=', 'embed/');
-    } else if (url.includes('youtu.be/')) {
-      embedUrl = url.replace('youtu.be/', 'youtube.com/embed/');
+    // 1. On nettoie l'URL pour pointer vers le lecteur web HTML de MediaMTX
+    let playerUrl = url;
+    if (playerUrl.endsWith('/whep')) {
+      playerUrl = playerUrl.substring(0, playerUrl.length - 5);
+    } else if (playerUrl.endsWith('/whep/')) {
+      playerUrl = playerUrl.substring(0, playerUrl.length - 6);
     }
 
-    const finalUrl = `${embedUrl}?autoplay=1&rel=0&modestbranding=1`;
-    this.safeYoutubeUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(finalUrl));
+    // 2. On récupère le Token JWT de l'utilisateur connecté
+    const token = this.authService.getToken();
+
+    // 3. On ajoute le token en paramètre d'URL pour l'authentification MediaMTX
+    if (token) {
+      // On vérifie s'il y a déjà des paramètres (avec '?') pour utiliser '&' ou '?'
+      const separator = playerUrl.includes('?') ? '&' : '?';
+      playerUrl = `${playerUrl}${separator}token=${token}`;
+    }
+
+    // 4. On sécurise l'URL finale pour l'Iframe
+    this.safeStreamUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(playerUrl));
   }
 
   private setupToolIframe(toolType: string): void {

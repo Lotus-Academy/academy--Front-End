@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LucideAngularModule, Calendar, Video, PenTool, CheckCircle, Loader2, AlertTriangle, Link, Save, ChevronLeft } from 'lucide-angular';
+import { LucideAngularModule, Calendar, PenTool, CheckCircle, Loader2, AlertTriangle, Save, ChevronLeft, Server } from 'lucide-angular';
 
 import { LiveSessionService } from '../../../core/services/live-session.service';
 import { CourseService } from '../../../core/services/course.service';
@@ -23,7 +23,7 @@ export class LiveSessionCreateComponent implements OnInit {
   private router = inject(Router);
   private translate = inject(TranslateService);
 
-  readonly icons = { Calendar, Video, PenTool, CheckCircle, Loader2, AlertTriangle, Link, Save, ChevronLeft };
+  readonly icons = { Calendar, PenTool, CheckCircle, Loader2, AlertTriangle, Save, ChevronLeft, Server };
 
   categories = signal<CategoryDTO[]>([]);
   isLoading = signal<boolean>(true);
@@ -31,23 +31,23 @@ export class LiveSessionCreateComponent implements OnInit {
   errorMessage = signal<string>('');
   successMessage = signal<string>('');
 
-  // Regex basic to ensure it's a YouTube URL
-  private ytRegex = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
-
+  // Mis à jour : Plus de champ YouTube
   sessionForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(5)]],
     description: ['', [Validators.required]],
-    categoryId: ['', [Validators.required]],
+    courseId: ['', [Validators.required]], // CHANGEMENT : Le Swagger indique courseId, pas categoryId
     scheduledAt: ['', [Validators.required]],
-    youtubeUnlistedUrl: ['', [Validators.required, Validators.pattern(this.ytRegex)]],
     toolType: ['NONE', [Validators.required]],
-    autoTraderEnabled: [{ value: false, disabled: true }] // Disabled by default
+    autoTraderEnabled: [{ value: false, disabled: true }]
   });
 
-  ngOnInit(): void {
-    this.loadCategories();
+  // Pour le MVP, on doit récupérer les cours de l'instructeur au lieu des catégories générales
+  // Car le Swagger DTO spécifie "courseId"
+  courses = signal<any[]>([]);
 
-    // Dynamically handle Auto-Trader based on selected tool
+  ngOnInit(): void {
+    this.loadMyCourses();
+
     this.sessionForm.get('toolType')?.valueChanges.subscribe(val => {
       const autoTraderControl = this.sessionForm.get('autoTraderEnabled');
       if (val === 'TRADING_TERMINAL') {
@@ -59,15 +59,17 @@ export class LiveSessionCreateComponent implements OnInit {
     });
   }
 
-  loadCategories(): void {
-    this.courseService.getCategories().subscribe({
-      next: (data) => {
-        this.categories.set(data);
+  loadMyCourses(): void {
+    // Récupérer les cours de l'instructeur pour le menu déroulant
+    this.courseService.getInstructorCourses().subscribe({
+      next: (data: any) => { // Ajuster selon le retour de getInstructorCourses
+        // Si getInstructorCourses renvoie une pagination (PageCourseResponseDTO) :
+        this.courses.set(data.content || data);
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Error loading categories', err);
-        this.errorMessage.set('Could not load program categories.');
+        console.error('Error loading courses', err);
+        this.errorMessage.set('Could not load your courses.');
         this.isLoading.set(false);
       }
     });
@@ -84,7 +86,6 @@ export class LiveSessionCreateComponent implements OnInit {
       return;
     }
 
-    // Validate that the date is in the future
     const scheduledDate = new Date(this.sessionForm.value.scheduledAt);
     if (scheduledDate <= new Date()) {
       this.errorMessage.set('The scheduled date and time must be in the future.');
@@ -95,17 +96,16 @@ export class LiveSessionCreateComponent implements OnInit {
     this.isSubmitting.set(true);
     this.errorMessage.set('');
 
-    // getRawValue gets all values including disabled ones (like autoTraderEnabled)
     const payload = this.sessionForm.getRawValue();
     payload.scheduledAt = scheduledDate.toISOString();
 
     this.liveSessionService.scheduleSession(payload).subscribe({
-      next: () => {
+      next: (response) => {
         this.isSubmitting.set(false);
-        this.successMessage.set('Live session successfully scheduled!');
+        this.successMessage.set('Live session successfully scheduled! Stream keys generated.');
         setTimeout(() => {
-          this.router.navigate(['/instructor/dashboard']);
-        }, 2000);
+          this.router.navigate(['/instructor/live-sessions']);
+        }, 2500);
       },
       error: (err) => {
         console.error('Scheduling error', err);

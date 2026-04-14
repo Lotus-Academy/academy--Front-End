@@ -60,6 +60,8 @@ import { AdminInstructorProfileComponent } from './features/admin/admin-instruct
 import { AdminStudentProfileComponent } from './features/admin/admin-student-profile/admin-student-profile.component';
 import { LiveSessionCreateComponent } from './features/live-session/live-session-create/live-session-create.component';
 import { LiveSessionRoomComponent } from './features/live-session/live-session-room/live-session-room.component';
+import { InstructorLiveSessionsComponent } from './features/instructor/instructor-live-sessions/instructor-live-sessions.component';
+import { StudentLiveSessionsComponent } from './features/student/student-live-sessions/student-live-sessions.component';
 
 export const routes: Routes = [
     // --- ROUTES PUBLIQUES ---
@@ -82,7 +84,14 @@ export const routes: Routes = [
     { path: 'user/profile', component: ProfileComponent, canActivate: [authGuard] },
     { path: 'instructor/profile', component: ProfileComponent, canActivate: [authGuard] },
 
-    // --- NOUVEAU : SALLE DE CLASSE (PLAYER & QUIZ ÉTUDIANT) ---
+    //routes for the students
+
+    {
+        path: 'student/live-sessions',
+        component: StudentLiveSessionsComponent,
+        canActivate: [authGuard]
+    },
+    // SALLE DE CLASSE (PLAYER & QUIZ ÉTUDIANT) ---
     {
         path: 'player/:id',
         component: CoursePlayerComponent,
@@ -142,6 +151,11 @@ export const routes: Routes = [
         path: 'live-session/:id',
         component: LiveSessionRoomComponent,
         canActivate: [authGuard]
+    },
+    {
+        path: 'instructor/live-sessions',
+        component: InstructorLiveSessionsComponent,
+        canActivate: [authGuard, instructorApprovedGuard]
     },
 
 

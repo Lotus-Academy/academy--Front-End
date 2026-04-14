@@ -71,9 +71,9 @@
             [ngClass]="isToolVisible() ? 'w-full lg:w-[55%]' : 'w-full lg:w-full'">
 
             <div class="w-full bg-black relative flex-1 min-h-[40vh]">
-                @if (safeYoutubeUrl()) {
-                <iframe [src]="safeYoutubeUrl()" class="w-full h-full border-none outline-none absolute inset-0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                @if (safeStreamUrl()) {
+                <iframe [src]="safeStreamUrl()" class="w-full h-full border-none outline-none absolute inset-0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; camera; microphone"
                     allowfullscreen>
                 </iframe>
                 } @else {

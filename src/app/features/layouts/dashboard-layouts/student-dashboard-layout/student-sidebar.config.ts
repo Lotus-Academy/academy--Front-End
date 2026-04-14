@@ -37,7 +37,7 @@ export const STUDENT_SIDEBAR_LINKS = [
     },
     {
         labelKey: 'SIDEBAR.STUDENT.LIVE_CLASSES',
-        href: '/student/live',
+        href: '/student/live-sessions',
         icon: Radio,
         requiresApproval: false,
         badgeKey: 'SIDEBAR.BADGES.SOON'

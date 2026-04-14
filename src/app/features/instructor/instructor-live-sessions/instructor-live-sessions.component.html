@@ -1,0 +1,177 @@
+<app-instructor-layout title="">
+    <div class="min-h-screen bg-slate-50 dark:bg-ds-black py-8 px-4 sm:px-6 lg:px-8 font-syne">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+                <div>
+                    <h1 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white mb-2">Live Sessions</h1>
+                    <p class="text-slate-500 dark:text-ds-muted/70 text-sm">Manage your upcoming broadcasts and
+                        interactive rooms.</p>
+                </div>
+
+                <a routerLink="/instructor/live-sessions/create"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded hover:bg-lotus-light transition-colors shadow-sm shrink-0">
+                    <lucide-icon [name]="icons.Plus" class="w-4 h-4 stroke-[2px]"></lucide-icon>
+                    Schedule Session
+                </a>
+            </div>
+
+            @if (isLoading()) {
+            <div
+                class="flex justify-center items-center py-32 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-sm">
+                <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin stroke-[2px]"></lucide-icon>
+            </div>
+            } @else if (sessions().length === 0) {
+            <div
+                class="flex flex-col items-center justify-center py-32 bg-white dark:bg-ds-surface border border-dashed border-slate-300 dark:border-ds-border rounded shadow-sm text-center">
+                <div class="w-16 h-16 rounded-full bg-slate-100 dark:bg-ds-black flex items-center justify-center mb-4">
+                    <lucide-icon [name]="icons.Video" class="w-8 h-8 text-slate-400 dark:text-ds-muted"></lucide-icon>
+                </div>
+                <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">No Live Sessions</h3>
+                <p class="font-syne text-slate-500 dark:text-ds-muted/70 max-w-md mb-6">You haven't scheduled any
+                    interactive live sessions yet. Schedule one to engage with your Elite students.</p>
+                <a routerLink="/instructor/live-sessions/create"
+                    class="font-mono text-[11px] uppercase tracking-widest font-bold text-lotus hover:text-lotus-light transition-colors">
+                    + Create your first session
+                </a>
+            </div>
+            } @else {
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                @for (session of sessions(); track session.id) {
+                <div class="bg-white dark:bg-ds-surface border rounded overflow-hidden shadow-sm flex flex-col transition-all"
+                    [ngClass]="session.status === 'LIVE' ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : 'border-slate-200 dark:border-ds-border hover:border-lotus/50'">
+
+                    <div
+                        class="px-5 py-4 border-b border-slate-100 dark:border-ds-border/50 flex justify-between items-center bg-slate-50/50 dark:bg-ds-black/30">
+                        @if (session.status === 'SCHEDULED') {
+                        <span
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-500/10 text-blue-500 font-mono text-[9px] uppercase tracking-widest font-bold">
+                            <lucide-icon [name]="icons.Calendar" class="w-3 h-3"></lucide-icon> Scheduled
+                        </span>
+                        } @else if (session.status === 'LIVE') {
+                        <span
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-500/10 text-red-500 font-mono text-[9px] uppercase tracking-widest font-bold">
+                            <span class="relative flex h-2 w-2">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                            </span>
+                            Live Now
+                        </span>
+                        } @else if (session.status === 'COMPLETED') {
+                        <span
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-green/10 text-green font-mono text-[9px] uppercase tracking-widest font-bold">
+                            <lucide-icon [name]="icons.StopCircle" class="w-3 h-3"></lucide-icon> Completed
+                        </span>
+                        } @else {
+                        <span
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-200 dark:bg-ds-border text-slate-500 dark:text-ds-muted font-mono text-[9px] uppercase tracking-widest font-bold">
+                            <lucide-icon [name]="icons.XCircle" class="w-3 h-3"></lucide-icon> Cancelled
+                        </span>
+                        }
+
+                        @if (session.toolType !== 'NONE') {
+                        <span
+                            class="font-mono text-[9px] uppercase tracking-wider text-lotus border border-lotus/30 px-2 py-0.5 rounded">
+                            {{ session.toolType.replace('_', ' ') }}
+                        </span>
+                        }
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col">
+                        <h3 class="font-cormorant text-xl font-bold text-slate-900 dark:text-white mb-3 line-clamp-2">
+                            {{ session.title }}
+                        </h3>
+
+                        <div
+                            class="flex items-center gap-2 text-slate-500 dark:text-ds-muted/80 font-syne text-sm mb-4">
+                            <lucide-icon [name]="icons.Clock" class="w-4 h-4"></lucide-icon>
+                            {{ session.scheduledAt | date:'medium' }}
+                        </div>
+
+                        <p class="font-syne text-sm text-slate-600 dark:text-ds-muted/70 line-clamp-3 mb-6 flex-1">
+                            {{ session.description }}
+                        </p>
+
+                        @if ((session.status === 'SCHEDULED' || session.status === 'LIVE') && (session.whipUrl ||
+                        session.streamKey)) {
+                        <div class="mt-auto pt-4 border-t border-slate-100 dark:border-ds-border">
+                            <p
+                                class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted mb-2">
+                                OBS Stream Configuration (WHIP)
+                            </p>
+                            <div
+                                class="flex items-center gap-2 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded p-2">
+                                <input type="text" [value]="session.serUrlForObs" readonly
+                                    class="bg-transparent border-none font-mono text-[10px] text-slate-600 dark:text-ds-muted w-full focus:outline-none truncate">
+
+                                <button (click)="copyToClipboard((session.serUrlForObs), session.id)"
+                                    class="p-1.5 text-slate-400 hover:text-lotus transition-colors rounded hover:bg-slate-200 dark:hover:bg-ds-surface shrink-0"
+                                    title="Copy Stream URL">
+                                    <lucide-icon [name]="copiedId() === session.id ? icons.Check : icons.Copy"
+                                        class="w-3.5 h-3.5" [ngClass]="{'text-green': copiedId() === session.id}">
+                                    </lucide-icon>
+                                </button>
+                            </div>
+                        </div>
+                        }
+                    </div>
+
+                    <div class="p-5 pt-0 mt-auto flex flex-col gap-2">
+
+                        @if (session.status === 'SCHEDULED') {
+                        <button (click)="startSession(session.id)" [disabled]="actionLoadingId() === session.id"
+                            class="w-full py-2.5 bg-lotus text-ds-black font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-lotus-light transition-colors flex items-center justify-center gap-2">
+                            @if (actionLoadingId() === session.id) {
+                            <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
+                            } @else {
+                            <lucide-icon [name]="icons.Radio" class="w-4 h-4"></lucide-icon> Start Broadcast
+                            }
+                        </button>
+
+                        <div class="flex gap-2">
+                            <button (click)="joinRoom(session.id)"
+                                class="flex-1 py-2 bg-slate-100 dark:bg-ds-black border border-slate-200 dark:border-ds-border text-slate-700 dark:text-white font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-slate-200 dark:hover:bg-ds-border/80 transition-colors">
+                                Enter Room
+                            </button>
+                            <button (click)="cancelSession(session.id)" [disabled]="actionLoadingId() === session.id"
+                                class="flex-1 py-2 border border-red-500/30 text-red-500 hover:bg-red-500/10 font-mono text-[10px] uppercase tracking-widest font-bold rounded transition-colors">
+                                Cancel
+                            </button>
+                        </div>
+                        }
+
+                        @if (session.status === 'LIVE') {
+                        <button (click)="joinRoom(session.id)"
+                            class="w-full py-2.5 bg-red-500 text-white font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-red-600 transition-colors flex items-center justify-center gap-2 shadow-[0_4px_10px_rgba(239,68,68,0.3)]">
+                            <lucide-icon [name]="icons.MonitorPlay" class="w-4 h-4"></lucide-icon> Resume Live Room
+                        </button>
+                        <button (click)="completeSession(session.id)" [disabled]="actionLoadingId() === session.id"
+                            class="w-full py-2 border border-slate-300 dark:border-ds-border text-slate-600 dark:text-ds-muted hover:text-white hover:border-white transition-colors font-mono text-[10px] uppercase tracking-widest font-bold rounded">
+                            End Session
+                        </button>
+                        }
+
+                        @if (session.status === 'COMPLETED') {
+                        <button (click)="joinRoom(session.id)"
+                            class="w-full py-2.5 bg-slate-100 dark:bg-ds-black border border-slate-200 dark:border-ds-border text-slate-700 dark:text-white font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-slate-200 dark:hover:bg-ds-border/80 transition-colors flex items-center justify-center gap-2">
+                            <lucide-icon [name]="icons.PlayCircle" class="w-4 h-4"></lucide-icon> View Replay Room
+                        </button>
+                        }
+
+                        @if (session.status === 'CANCELLED') {
+                        <button disabled
+                            class="w-full py-2.5 bg-slate-100 dark:bg-ds-black border border-slate-200 dark:border-ds-border text-slate-400 dark:text-ds-muted/50 font-mono text-[10px] uppercase tracking-widest font-bold rounded cursor-not-allowed">
+                            Session Cancelled
+                        </button>
+                        }
+
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+    </div>
+</app-instructor-layout>

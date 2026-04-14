@@ -22,7 +22,7 @@ export interface EnrollmentDTO {
   progress: number; // Ex: 33.33
   completed: boolean;
   lastAccessedAt?: string;
-  categoryId?: string; // Optionnel si le backend l'ajoute plus tard
+  categoryId?: string;
 }
 
 @Component({

@@ -41,11 +41,10 @@ export const INSTRUCTOR_SIDEBAR_LINKS: SidebarLink[] = [
     },
     {
         labelKey: 'SIDEBAR.INSTRUCTOR.LIVE_SESSIONS',
-        href: '/instructor/live',
+        href: '/instructor/live-sessions',
         icon: Radio,
         requiresApproval: true,
-        badgeKey: 'SIDEBAR.BADGES.SOON',
-        isDisabled: true
+        badgeKey: 'SIDEBAR.BADGES.SOON'
     },
     {
         labelKey: 'SIDEBAR.INSTRUCTOR.STUDENTS',

@@ -1,0 +1,201 @@
+<app-student-layout title="hfh">
+
+    <div class="min-h-screen bg-slate-50 dark:bg-ds-black py-8 px-4 sm:px-6 lg:px-8 font-syne">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="mb-8">
+                <h1 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white mb-2">Live Sessions Hub</h1>
+                <p class="text-slate-500 dark:text-ds-muted/70 text-sm">Join interactive broadcasts, code along with
+                    instructors, and master complex concepts.</p>
+            </div>
+
+            <div class="flex border-b border-slate-200 dark:border-ds-border mb-8">
+                <button (click)="setTab('SCHEDULE')"
+                    class="px-6 py-3 font-mono text-[11px] uppercase tracking-widest font-bold transition-colors border-b-2 flex items-center gap-2"
+                    [ngClass]="activeTab() === 'SCHEDULE' ? 'border-lotus text-lotus' : 'border-transparent text-slate-500 dark:text-ds-muted hover:text-slate-800 dark:hover:text-white'">
+                    <lucide-icon [name]="icons.Bookmark" class="w-4 h-4"></lucide-icon> My Schedule
+                </button>
+                <button (click)="setTab('EXPLORE')"
+                    class="px-6 py-3 font-mono text-[11px] uppercase tracking-widest font-bold transition-colors border-b-2 flex items-center gap-2"
+                    [ngClass]="activeTab() === 'EXPLORE' ? 'border-lotus text-lotus' : 'border-transparent text-slate-500 dark:text-ds-muted hover:text-slate-800 dark:hover:text-white'">
+                    <lucide-icon [name]="icons.Compass" class="w-4 h-4"></lucide-icon> Explore
+                </button>
+            </div>
+
+            @if (activeTab() === 'SCHEDULE') {
+            @if (isLoading()) {
+            <div class="flex justify-center py-20"><lucide-icon [name]="icons.Loader2"
+                    class="w-8 h-8 text-lotus animate-spin"></lucide-icon></div>
+            } @else if (mySchedule().length === 0) {
+            <div
+                class="flex flex-col items-center justify-center py-24 bg-white dark:bg-ds-surface border border-dashed border-slate-300 dark:border-ds-border rounded text-center">
+                <lucide-icon [name]="icons.Video"
+                    class="w-12 h-12 text-slate-300 dark:text-ds-muted mb-4"></lucide-icon>
+                <h3 class="font-cormorant text-2xl font-bold dark:text-white mb-2">No Upcoming Sessions</h3>
+                <p class="font-syne text-slate-500 dark:text-ds-muted/70 mb-6">You haven't registered for any active
+                    live sessions yet.</p>
+                <button (click)="setTab('EXPLORE')"
+                    class="px-6 py-2.5 bg-lotus text-ds-black font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-lotus-light">
+                    Explore Sessions
+                </button>
+            </div>
+            } @else {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @for (session of mySchedule(); track session.id) {
+                <div class="bg-white dark:bg-ds-surface border rounded shadow-sm flex flex-col"
+                    [ngClass]="session.status === 'LIVE' || isSessionActionable(session) ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : 'border-slate-200 dark:border-ds-border'">
+
+                    <div
+                        class="px-5 py-3 border-b border-slate-100 dark:border-ds-border/50 flex justify-between items-center bg-slate-50 dark:bg-ds-black/30">
+                        @if (session.status === 'LIVE') {
+                        <span
+                            class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-red-500/10 text-red-500 font-mono text-[9px] uppercase tracking-widest font-bold">
+                            <span class="relative flex h-2 w-2"><span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span
+                                    class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>
+                            LIVE NOW
+                        </span>
+                        } @else {
+                        <span
+                            class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-blue-500/10 text-blue-500 font-mono text-[9px] uppercase tracking-widest font-bold">
+                            <lucide-icon [name]="icons.Calendar" class="w-3 h-3"></lucide-icon> SCHEDULED
+                        </span>
+                        }
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col">
+                        <h3 class="font-cormorant text-xl font-bold dark:text-white mb-2 line-clamp-2">{{ session.title
+                            }}</h3>
+                        <p class="text-sm font-syne text-lotus mb-4">By {{ session.instructorName }}</p>
+                        <div class="flex flex-col gap-1 text-slate-500 dark:text-ds-muted font-syne text-sm mb-6">
+                            <span class="font-bold flex items-center gap-2">
+                                <lucide-icon [name]="icons.Calendar" class="w-4 h-4"></lucide-icon>
+                                {{ session.scheduledAt | date:'mediumDate' }}
+                            </span>
+                            <span class="flex items-center gap-2">
+                                <lucide-icon [name]="icons.Clock" class="w-4 h-4"></lucide-icon>
+                                {{ getStatusLabel(session) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-5 pt-0 mt-auto">
+                        @if (isSessionActionable(session)) {
+                        <button (click)="joinRoom(session.id)"
+                            class="w-full py-2.5 bg-red-500 text-white font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-red-600 flex items-center justify-center gap-2 animate-pulse shadow-[0_4px_10px_rgba(239,68,68,0.3)]">
+                            <lucide-icon [name]="icons.MonitorPlay" class="w-4 h-4"></lucide-icon> Join Live Room
+                        </button>
+                        } @else {
+                        <div class="flex gap-2">
+                            <button disabled
+                                class="flex-1 py-2 bg-slate-100 dark:bg-ds-black border border-slate-200 dark:border-ds-border text-slate-400 dark:text-ds-muted/50 font-mono text-[10px] uppercase tracking-widest font-bold rounded cursor-not-allowed">
+                                Waiting Room
+                            </button>
+                            <button (click)="unregisterFromSession(session.id, 'SCHEDULE')"
+                                [disabled]="isActionLoading() === session.id"
+                                class="px-3 py-2 border border-red-500/30 text-red-500 hover:bg-red-500/10 rounded transition-colors">
+                                <lucide-icon [name]="isActionLoading() === session.id ? icons.Loader2 : icons.XCircle"
+                                    [class.animate-spin]="isActionLoading() === session.id"
+                                    class="w-4 h-4"></lucide-icon>
+                            </button>
+                        </div>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+            }
+            }
+
+            @if (activeTab() === 'EXPLORE') {
+
+            <div class="flex gap-2 overflow-x-auto pb-4 mb-4 scrollbar-hide">
+                @for (cat of categories(); track cat.id) {
+                <button (click)="selectCategory(cat.id)"
+                    class="px-4 py-2 whitespace-nowrap font-mono text-[10px] uppercase tracking-widest font-bold rounded border transition-colors"
+                    [ngClass]="selectedCategoryId() === cat.id ? 'bg-lotus text-ds-black border-lotus' : 'bg-transparent text-slate-600 dark:text-ds-muted border-slate-200 dark:border-ds-border hover:border-lotus'">
+                    {{ cat.name }}
+                </button>
+                }
+            </div>
+
+            @if (isLoading()) {
+            <div class="flex justify-center py-20"><lucide-icon [name]="icons.Loader2"
+                    class="w-8 h-8 text-lotus animate-spin"></lucide-icon></div>
+            } @else if (exploreSessions().length === 0) {
+            <div class="py-12 text-center text-slate-500 dark:text-ds-muted font-syne">
+                No active sessions found in this category.
+            </div>
+            } @else {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @for (session of exploreSessions(); track session.id) {
+                <div
+                    class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-sm flex flex-col">
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-3">
+                            @if (session.status === 'LIVE') {
+                            <span
+                                class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-red-500/10 text-red-500 font-mono text-[9px] uppercase tracking-widest font-bold">
+                                <span class="relative flex h-2 w-2"><span
+                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span
+                                        class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>
+                                LIVE NOW
+                            </span>
+                            } @else {
+                            <span
+                                class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-blue-500/10 text-blue-500 font-mono text-[9px] uppercase tracking-widest font-bold">
+                                {{ session.scheduledAt | date:'MMM d, HH:mm' }}
+                            </span>
+                            }
+
+                            @if (session.toolType !== 'NONE') {
+                            <span
+                                class="font-mono text-[9px] uppercase tracking-wider text-lotus border border-lotus/30 px-1.5 py-0.5 rounded">
+                                {{ session.toolType.replace('_', ' ') }}
+                            </span>
+                            }
+                        </div>
+                        <h3 class="font-cormorant text-xl font-bold dark:text-white mb-1 line-clamp-2">{{ session.title
+                            }}</h3>
+                        <p class="text-sm font-syne text-slate-500 dark:text-ds-muted mb-4">By {{ session.instructorName
+                            }}</p>
+                        <p class="font-syne text-sm text-slate-600 dark:text-ds-muted/70 line-clamp-2 mb-4">{{
+                            session.description }}</p>
+                    </div>
+
+                    <div class="p-5 pt-0 mt-auto">
+                        @if (session.isRegistered) {
+                        <div class="flex gap-2">
+                            <div
+                                class="flex-1 py-2.5 bg-green/10 text-green font-mono text-[10px] uppercase tracking-widest font-bold rounded flex items-center justify-center gap-2 border border-green/20">
+                                <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4"></lucide-icon> Registered
+                            </div>
+                            <button (click)="unregisterFromSession(session.id, 'EXPLORE')"
+                                [disabled]="isActionLoading() === session.id"
+                                class="px-3 py-2 border border-red-500/30 text-red-500 hover:bg-red-500/10 rounded transition-colors">
+                                <lucide-icon [name]="isActionLoading() === session.id ? icons.Loader2 : icons.XCircle"
+                                    [class.animate-spin]="isActionLoading() === session.id"
+                                    class="w-4 h-4"></lucide-icon>
+                            </button>
+                        </div>
+                        } @else {
+                        <button (click)="registerForSession(session.id)" [disabled]="isActionLoading() === session.id"
+                            class="w-full py-2.5 font-mono text-[10px] uppercase tracking-widest font-bold rounded flex items-center justify-center gap-2 transition-colors"
+                            [ngClass]="session.status === 'LIVE' ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-lotus text-ds-black hover:bg-lotus-light'">
+
+                            @if (isActionLoading() === session.id) {
+                            <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
+                            } @else {
+                            {{ session.status === 'LIVE' ? 'RSVP & Join Live' : 'RSVP Now' }}
+                            }
+                        </button>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+            }
+            }
+        </div>
+    </div>
+</app-student-layout>
