@@ -5,21 +5,77 @@
 @import "prismjs/themes/prism-tomorrow.css";
 
 @layer base {
+    /* ========================================================= */
+    /* LIGHT MODE (PREDOMINANTLY BLUE)                           */
+    /* ========================================================= */
     :root {
+        /* Backgrounds: Very light slate blue / off-white */
+        --background: 210 40% 98%; 
+        /* Foreground: Deep navy blue for high contrast text */
+        --foreground: 222 47% 11%; 
+        
+        /* Cards & Popovers: Pure white with dark blue text */
+        --card: 0 0% 100%;
+        --card-foreground: 222 47% 11%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222 47% 11%;
+        
+        /* Primary: Strong Royal Blue (Predominant accent) */
+        --primary: 221 83% 53%;
+        --primary-foreground: 210 40% 98%;
+        
+        /* Secondary & Muted: Light blue-grays for subtle elements */
+        --secondary: 214 32% 91%;
+        --secondary-foreground: 222 47% 11%;
+        --muted: 214 32% 91%;
+        --muted-foreground: 215 16% 47%;
+        
+        --accent: 214 32% 91%;
+        --accent-foreground: 222 47% 11%;
+        
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 210 40% 98%;
+
+        /* Borders & Inputs: Subtle blue-gray lines */
+        --border: 214 32% 91%;
+        --border-bright: 214 32% 80%;
+        --input: 214 32% 91%;
+        --ring: 221 83% 53%;
+
+        --radius: 2px;
+
+        /* BRAND COLORS: Mapped to Blue in Light Mode to keep HTML intact */
+        --gold: 221 83% 53%;       /* Acts as the main Blue in light mode */
+        --gold-hover: 221 83% 45%; /* Darker blue on hover */
+        --green: 142 71% 45%;      /* Adjusted green for light mode contrast */
+        --surface: 0 0% 100%;      /* White surface */
+
+        color-scheme: light;
+    }
+
+    /* ========================================================= */
+    /* DARK MODE (ORIGINAL LOTUS THEME)                          */
+    /* ========================================================= */
+    .dark {
         --background: 140 12% 3%;
         --foreground: 38 38% 93%;
+        
         --card: 140 10% 5%;
         --card-foreground: 38 38% 93%;
         --popover: 140 10% 5%;
         --popover-foreground: 38 38% 93%;
+        
         --primary: 34 34% 64%;
         --primary-foreground: 140 12% 3%;
+        
         --secondary: 145 74% 59%;
         --secondary-foreground: 140 12% 3%;
         --muted: 140 10% 7%;
         --muted-foreground: 38 38% 93% / 0.44;
+        
         --accent: 34 34% 64%;
         --accent-foreground: 38 38% 93%;
+        
         --destructive: 0 62% 65%;
         --destructive-foreground: 38 38% 93%;
 
@@ -28,17 +84,12 @@
         --input: 0 0% 100% / 0.07;
         --ring: 34 34% 64%;
 
-        --radius: 2px;
-
+        /* BRAND COLORS: Original Gold & Green */
         --gold: 34 34% 64%;
         --gold-hover: 34 45% 76%;
         --green: 145 74% 59%;
         --surface: 140 10% 8%;
 
-        color-scheme: dark;
-    }
-
-    .dark {
         color-scheme: dark;
     }
 }
@@ -64,7 +115,6 @@
     --color-border-bright: hsl(var(--border-bright));
     --color-input: hsl(var(--input));
     --color-ring: hsl(var(--ring));
-
 
     --color-lotus: hsl(var(--gold));
     --color-lotus-light: hsl(var(--gold-hover));
@@ -158,14 +208,17 @@
         inset: 0;
         pointer-events: none;
         z-index: 9999;
+        /* Opacity adjusted for light mode compatibility if needed, 
+           though it's usually handled by the background image itself */
         opacity: 0.42;
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
         background-repeat: repeat;
         background-size: 256px 256px;
     }
 
+    /* The glow will now adapt based on the --primary or --gold variables */
     .gold-glow {
-        background: radial-gradient(600px circle at var(--glow-x, 50%) var(--glow-y, 30%), hsl(34 34% 64% / 0.08), transparent 60%);
+        background: radial-gradient(600px circle at var(--glow-x, 50%) var(--glow-y, 30%), hsl(var(--gold) / 0.08), transparent 60%);
     }
 
     .card-hover {
