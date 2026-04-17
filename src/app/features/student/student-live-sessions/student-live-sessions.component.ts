@@ -16,7 +16,7 @@ import { StudentLayoutComponent } from "../../layouts/dashboard-layouts/student-
 @Component({
   selector: 'app-student-live-sessions',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, TranslateModule, DatePipe, StudentLayoutComponent],
+  imports: [CommonModule, LucideAngularModule, TranslateModule, DatePipe, StudentLayoutComponent],
   templateUrl: './student-live-sessions.component.html'
 })
 export class StudentLiveSessionsComponent implements OnInit, OnDestroy {
