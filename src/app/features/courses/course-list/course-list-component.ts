@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router'; // <-- AJOUT
 import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule, Search, Filter, X, Loader2 } from 'lucide-angular';
 
@@ -26,6 +27,7 @@ import { FooterComponent } from '../../layouts/footer-component/footer-component
 })
 export class CourseListComponent implements OnInit {
   private courseService = inject(CourseService);
+  private route = inject(ActivatedRoute); // <-- INJECTION
 
   readonly icons = { Search, Filter, X, Loader2 };
 
@@ -37,10 +39,7 @@ export class CourseListComponent implements OnInit {
   selectedLevel = signal<string>('All');
   selectedPrice = signal<string>('All');
 
-  // Les catégories viendront de l'API
   categories = signal<CategoryDTO[]>([]);
-
-  // Niveaux et Prix codés en dur (utiliseront les clés JSON pour l'affichage HTML)
   levels = ['All', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
   priceFilters = ['All', 'Free', 'Paid'];
 
@@ -62,9 +61,7 @@ export class CourseListComponent implements OnInit {
         (course.instructorName && course.instructorName.toLowerCase().includes(query));
 
       const matchesCategory = category === 'All' || course.categoryId === category;
-
       const matchesLevel = level === 'All' || (course.level && course.level.toUpperCase() === level);
-
       const matchesPrice = price === 'All' ||
         (price === 'Free' && course.price === 0) ||
         (price === 'Paid' && course.price > 0);
@@ -74,22 +71,27 @@ export class CourseListComponent implements OnInit {
   });
 
   ngOnInit() {
+    // 1. Lire les paramètres de l'URL au chargement
+    this.route.queryParams.subscribe(params => {
+      if (params['q']) {
+        this.searchQuery.set(params['q']);
+      }
+    });
+
     this.fetchData();
   }
 
   fetchData() {
     this.isLoading.set(true);
 
-    // 1. Récupération des catégories
     this.courseService.getCategories().subscribe({
       next: (cats) => this.categories.set(cats),
       error: (err) => console.error('Erreur chargement catégories', err)
     });
 
-    // 2. Récupération du catalogue paginé (on prend la première page, très large pour l'instant)
     this.courseService.getPublishedCourses(0, 100).subscribe({
       next: (pageData: PageCourseResponseDTO) => {
-        this.allCourses.set(pageData.content); // Extraction du tableau
+        this.allCourses.set(pageData.content);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -106,7 +108,6 @@ export class CourseListComponent implements OnInit {
     this.selectedPrice.set('All');
   }
 
-  // Helper pour traduire les badges dynamiquement
   translateLevel(level: string): string {
     if (level === 'All') return 'COURSE_LIST.FILTERS.ALL';
     return `COURSE_LIST.FILTERS.${level.toUpperCase()}`;

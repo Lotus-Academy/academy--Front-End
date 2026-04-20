@@ -1,10 +1,11 @@
-import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import {
-  LucideAngularModule, Menu, X, Search, Globe, Moon, Sun, ChevronDown, CheckCircle,
-  LayoutDashboard, Bell, CheckCheck, AlertTriangle, Info
+  LucideAngularModule, Menu, X, Search, Moon, Sun, CheckCircle, ChevronDown,
+  LayoutDashboard, Bell, CheckCheck, AlertTriangle, Info, Globe
 } from 'lucide-angular';
 
 import { ThemeService } from '../../../core/services/theme.service';
@@ -21,8 +22,7 @@ interface NavLink {
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  // N'oubliez pas d'ajouter le DatePipe ici
-  imports: [CommonModule, RouterLink, RouterLinkActive, LucideAngularModule, TranslateModule, DatePipe],
+  imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive, LucideAngularModule, TranslateModule, DatePipe],
   templateUrl: './navbar.component.html'
 })
 export class NavbarComponent implements OnInit, OnDestroy {
@@ -31,35 +31,38 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private notificationService = inject(NotificationService);
   private router = inject(Router);
+  private elementRef = inject(ElementRef);
 
   isLoggedIn = computed(() => this.authService.isAuthenticated());
   user = computed(() => this.authService.getUser());
 
   isMobileMenuOpen = false;
-  isLanguageMenuOpen = signal<boolean>(false);
   isNotificationsOpen = signal<boolean>(false);
+  isLanguageMenuOpen = signal<boolean>(false);
+
+  // --- LOGIQUE DE RECHERCHE ---
+  searchQuery = signal<string>('');
+  isOverlaySearchOpen = signal<boolean>(false);
 
   notifications = signal<AppNotification[]>([]);
   unreadNotifications = computed(() => this.notifications().filter(n => !n.read).length);
 
   readonly icons = {
-    Menu, X, Search, Globe, Moon, Sun, ChevronDown, CheckCircle,
+    Menu, X, Search, Moon, Sun, CheckCircle, ChevronDown, Globe,
     LayoutDashboard, Bell, CheckCheck, AlertTriangle, Info
   };
 
   navLinks: NavLink[] = [
-    { href: '/', fragment: 'hero', labelKey: 'NAVBAR.HOME' },
     { href: '/courses', labelKey: 'NAVBAR.COURSES' },
     { href: '/instructor-register', fragment: 'topics', labelKey: 'NAVBAR.TEACH' },
-    { href: '/', fragment: 'faq', labelKey: 'NAVBAR.FAQ' },
+    { href: '/', fragment: 'faq', labelKey: 'NAVBAR.FAQ' }
   ];
 
   ngOnInit(): void {
-    // On ne charge les notifications que si l'utilisateur est connecté
     if (this.isLoggedIn()) {
       this.notificationService.getNotifications().subscribe({
         next: (data) => this.notifications.set(data),
-        error: (err) => console.error('Erreur lors du chargement des notifications', err)
+        error: (err) => console.error('Error loading notifications', err)
       });
 
       this.notificationService.connectToStream((newNotif: AppNotification) => {
@@ -74,13 +77,45 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
+  // --- RECHERCHE ---
+  toggleOverlaySearch(): void {
+    this.isOverlaySearchOpen.update(v => !v);
+  }
+
+  closeOverlaySearch(): void {
+    this.isOverlaySearchOpen.set(false);
+  }
+
+  onSearch(): void {
+    const query = this.searchQuery().trim();
+    if (query) {
+      this.router.navigate(['/courses'], { queryParams: { q: query } });
+      this.searchQuery.set('');
+      this.closeOverlaySearch();
+      this.isMobileMenuOpen = false;
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.isOverlaySearchOpen()) {
+      const clickedInside = this.elementRef.nativeElement.contains(event.target);
+      const target = event.target as HTMLElement;
+      const isSearchButton = target.closest('button[aria-label="Open search"]');
+      
+      if (!clickedInside && !isSearchButton) {
+        this.closeOverlaySearch();
+      }
+    }
+  }
+
+  // --- MENUS ---
   toggleMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
-  // --- GESTION DE LA LANGUE ---
   toggleLanguageMenu(): void {
-    this.isNotificationsOpen.set(false); // Ferme les notifications si ouvertes
+    this.isNotificationsOpen.set(false);
     this.isLanguageMenuOpen.update(v => !v);
   }
 
@@ -93,9 +128,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.closeLanguageMenu();
   }
 
-  // --- GESTION DES NOTIFICATIONS ---
   toggleNotifications(): void {
-    this.isLanguageMenuOpen.set(false); // Ferme les langues si ouvertes
+    this.isLanguageMenuOpen.set(false);
     this.isNotificationsOpen.update(v => !v);
   }
 
@@ -105,27 +139,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   markAsRead(notification: AppNotification): void {
     if (notification.read) return;
-
-    this.notifications.update(notifs =>
-      notifs.map(n => n.id === notification.id ? { ...n, read: true } : n)
-    );
-
+    this.notifications.update(notifs => notifs.map(n => n.id === notification.id ? { ...n, read: true } : n));
     this.notificationService.markAsRead(notification.id).subscribe({
-      error: () => {
-        this.notifications.update(notifs =>
-          notifs.map(n => n.id === notification.id ? { ...n, read: false } : n)
-        );
-      }
+      error: () => this.notifications.update(notifs => notifs.map(n => n.id === notification.id ? { ...n, read: false } : n))
     });
   }
 
   markAllAsRead(): void {
     if (this.unreadNotifications() === 0) return;
-
-    this.notifications.update(notifs =>
-      notifs.map(n => ({ ...n, read: true }))
-    );
-
+    this.notifications.update(notifs => notifs.map(n => ({ ...n, read: true })));
     this.notificationService.markAllAsRead().subscribe();
   }
 }
