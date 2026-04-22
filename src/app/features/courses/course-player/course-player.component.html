@@ -1,17 +1,17 @@
-<div class="h-screen w-full flex flex-col bg-ds-black text-white font-syne overflow-hidden">
+<div class="h-screen w-full flex flex-col bg-slate-50 dark:bg-ds-black text-slate-900 dark:text-white font-syne overflow-hidden transition-colors duration-300">
 
     <header
-        class="h-16 border-b border-ds-border bg-ds-black flex items-center justify-between px-4 sm:px-6 shrink-0 z-50">
+        class="h-16 border-b border-slate-200 dark:border-ds-border bg-white dark:bg-ds-black flex items-center justify-between px-4 sm:px-6 shrink-0 z-50 transition-colors">
         <div class="flex items-center gap-4">
             <a [routerLink]="hasFullAccess() ? '/dashboard' : ['/courses', courseId()]"
-                class="p-2 text-ds-muted hover:text-lotus transition-colors rounded hover:bg-ds-surface">
+                class="p-2 text-slate-500 dark:text-ds-muted hover:text-lotus transition-colors rounded hover:bg-slate-100 dark:hover:bg-ds-surface">
                 <lucide-icon [name]="icons.ChevronLeft" class="w-5 h-5 stroke-[2px]"></lucide-icon>
             </a>
 
-            <div class="h-6 w-px bg-ds-border mx-2 hidden sm:block"></div>
+            <div class="h-6 w-px bg-slate-200 dark:bg-ds-border mx-2 hidden sm:block"></div>
 
             <h1
-                class="font-cormorant font-bold text-lg sm:text-xl md:text-2xl truncate max-w-[200px] sm:max-w-md md:max-w-xl">
+                class="font-cormorant font-bold text-lg sm:text-xl md:text-2xl truncate max-w-[200px] sm:max-w-md md:max-w-xl text-slate-900 dark:text-white">
                 @if (isLoading()) { {{ 'PLAYER.LOADING' | translate }} } @else { {{ course()?.title }} }
             </h1>
         </div>
@@ -21,12 +21,12 @@
             <div class="flex items-center gap-2 sm:gap-4">
                 <div class="flex items-center gap-1.5 sm:gap-2">
                     <lucide-icon [name]="icons.Trophy" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-lotus"></lucide-icon>
-                    <span class="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest font-bold">
+                    <span class="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted">
                         {{ progressPercentage() }}% <span class="hidden sm:inline">{{ 'PLAYER.COMPLETED' | translate
                             }}</span>
                     </span>
                 </div>
-                <div class="w-16 sm:w-32 h-1.5 bg-ds-surface rounded-full overflow-hidden">
+                <div class="w-16 sm:w-32 h-1.5 bg-slate-200 dark:bg-ds-surface rounded-full overflow-hidden border border-slate-300 dark:border-transparent">
                     <div class="h-full bg-lotus transition-all duration-500 ease-out"
                         [style.width.%]="progressPercentage()"></div>
                 </div>
@@ -37,7 +37,7 @@
 
     <div class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden relative">
 
-        <main class="w-full lg:flex-1 flex flex-col shrink-0 lg:overflow-y-auto bg-ds-black">
+        <main class="w-full lg:flex-1 flex flex-col shrink-0 lg:overflow-y-auto bg-slate-50 dark:bg-ds-black">
 
             @if (isLoading()) {
             <div class="flex-1 flex items-center justify-center py-32 lg:py-0">
@@ -46,7 +46,7 @@
             </div>
             } @else if (currentLesson()) {
 
-            <div class="w-full bg-black sticky top-0 z-40 lg:relative border-b border-ds-border flex justify-center"
+            <div class="w-full bg-slate-200 dark:bg-black sticky top-0 z-40 lg:relative border-b border-slate-300 dark:border-ds-border flex justify-center"
                 [ngClass]="currentLesson()?.type === 'PDF' && !isLessonLocked() ? 'h-[50vh] lg:h-[80vh]' : 'aspect-video lg:aspect-auto lg:min-h-[50vh]'">
 
                 <div class="w-full h-full max-w-5xl relative flex items-center justify-center"
@@ -54,14 +54,14 @@
 
                     @if (isLessonLocked()) {
                     <div
-                        class="absolute inset-0 flex flex-col items-center justify-center bg-ds-surface border border-ds-border m-4 sm:m-8 rounded text-center p-6">
+                        class="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-ds-surface border border-slate-300 dark:border-ds-border m-4 sm:m-8 rounded text-center p-6 shadow-sm">
                         <div
-                            class="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6">
-                            <lucide-icon [name]="icons.Lock" class="w-8 h-8 text-white"></lucide-icon>
+                            class="w-16 h-16 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center mb-6">
+                            <lucide-icon [name]="icons.Lock" class="w-8 h-8 text-slate-400 dark:text-white"></lucide-icon>
                         </div>
-                        <h3 class="font-cormorant text-3xl font-bold text-white mb-3">This content is restricted to
+                        <h3 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-3">This content is restricted to
                             enrolled students</h3>
-                        <p class="font-syne text-ds-muted max-w-md mb-8">Enroll in this course to unlock this lesson and
+                        <p class="font-syne text-slate-500 dark:text-ds-muted max-w-md mb-8">Enroll in this course to unlock this lesson and
                             access the full curriculum.</p>
                         <a [routerLink]="['/courses', courseId()]"
                             class="px-8 py-3.5 bg-lotus hover:bg-lotus-light text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded transition-colors shadow-lg">
@@ -75,29 +75,29 @@
                     } @else {
                     <video #videoPlayer [src]="currentLesson()?.mediaUrl" controls autoplay controlsList="nodownload"
                         oncontextmenu="return false;"
-                        class="w-full h-full object-contain outline-none shadow-2xl"></video>
+                        class="w-full h-full object-contain outline-none shadow-2xl bg-black"></video>
                     }
 
                     } @else {
                     <div
-                        class="absolute inset-0 flex flex-col items-center justify-center bg-ds-surface border border-ds-border m-4 sm:m-8 rounded text-center p-4">
+                        class="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-ds-surface border border-slate-300 dark:border-ds-border m-4 sm:m-8 rounded text-center p-4 shadow-sm">
                         <lucide-icon [name]="icons.FileText"
-                            class="w-10 h-10 sm:w-12 sm:h-12 text-ds-muted mb-4"></lucide-icon>
-                        <p class="font-cormorant text-xl sm:text-2xl font-bold text-white mb-2">{{
+                            class="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 dark:text-ds-muted mb-4"></lucide-icon>
+                        <p class="font-cormorant text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">{{
                             'PLAYER.MEDIA_UNAVAILABLE' | translate }}</p>
-                        <p class="font-syne text-xs sm:text-sm text-ds-muted">{{ 'PLAYER.MEDIA_UNAVAILABLE_DESC' |
+                        <p class="font-syne text-xs sm:text-sm text-slate-500 dark:text-ds-muted">{{ 'PLAYER.MEDIA_UNAVAILABLE_DESC' |
                             translate }}</p>
                     </div>
                     }
                 </div>
             </div>
 
-            <div class="max-w-5xl mx-auto w-full p-4 sm:p-6 lg:p-10 lg:pb-24 shrink-0">
+            <div class="max-w-5xl mx-auto w-full p-4 sm:p-6 lg:p-10 lg:pb-24 shrink-0 bg-slate-50 dark:bg-ds-black">
                 <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-6 mb-8">
 
                     <div class="flex-1 min-w-0">
                         <div class="flex flex-wrap items-center gap-3 mb-4">
-                            <h2 class="font-cormorant text-2xl sm:text-3xl font-bold text-white leading-tight">
+                            <h2 class="font-cormorant text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white leading-tight">
                                 {{ currentLesson()?.title }}
                             </h2>
                             @if (!hasFullAccess() && currentLesson()?.freePreview) {
@@ -108,7 +108,7 @@
                             }
                         </div>
 
-                        <div class="font-syne text-sm sm:text-base text-ds-muted leading-relaxed prose prose-sm prose-invert max-w-none break-words"
+                        <div class="font-syne text-sm sm:text-base text-slate-600 dark:text-ds-muted leading-relaxed prose prose-sm dark:prose-invert max-w-none break-words"
                             [appLivePreview]="currentLesson()?.description || ('PLAYER.NO_DESC' | translate)">
                         </div>
                     </div>
@@ -127,68 +127,68 @@
         </main>
 
         <aside
-            class="w-full lg:w-[400px] shrink-0 bg-ds-black border-t lg:border-t-0 lg:border-l border-ds-border flex flex-col lg:h-full lg:overflow-y-auto">
-            <div class="p-4 sm:p-5 border-b border-ds-border bg-ds-surface/50">
-                <h3 class="font-mono text-[11px] uppercase tracking-widest font-bold text-white">{{
+            class="w-full lg:w-[400px] shrink-0 bg-white dark:bg-ds-black border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-ds-border flex flex-col lg:h-full lg:overflow-y-auto">
+            <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-ds-border bg-slate-50 dark:bg-ds-surface/50 sticky top-0 z-10">
+                <h3 class="font-mono text-[11px] uppercase tracking-widest font-bold text-slate-900 dark:text-white">{{
                     'PLAYER.COURSE_CONTENT' | translate }}</h3>
             </div>
 
-            <div class="flex-1">
+            <div class="flex-1 pb-10">
                 @for (section of course()?.sections; track section.id; let secIndex = $index) {
-                <div class="border-b border-ds-border">
+                <div class="border-b border-slate-200 dark:border-ds-border bg-white dark:bg-transparent">
 
                     <button (click)="toggleSection(section.id)"
-                        class="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-ds-surface transition-colors group">
+                        class="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-slate-50 dark:hover:bg-ds-surface transition-colors group">
                         <div class="flex flex-col items-start text-left">
                             <span
-                                class="font-mono text-[9px] uppercase tracking-widest font-bold text-ds-muted mb-1.5">{{
+                                class="font-mono text-[9px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted mb-1.5">{{
                                 'PLAYER.SECTION' | translate }} {{ secIndex + 1 }}</span>
                             <span
-                                class="font-syne text-sm sm:text-base font-bold text-white group-hover:text-lotus transition-colors">{{
+                                class="font-syne text-sm sm:text-base font-bold text-slate-900 dark:text-white group-hover:text-lotus transition-colors">{{
                                 section.title }}</span>
                         </div>
                         <lucide-icon [name]="isSectionExpanded(section.id) ? icons.ChevronUp : icons.ChevronDown"
-                            class="w-4 h-4 text-ds-muted shrink-0"></lucide-icon>
+                            class="w-4 h-4 text-slate-400 dark:text-ds-muted shrink-0"></lucide-icon>
                     </button>
 
                     @if (isSectionExpanded(section.id)) {
-                    <div class="bg-ds-surface/30 py-2">
+                    <div class="bg-slate-50 dark:bg-ds-surface/30 py-2 border-t border-slate-100 dark:border-transparent">
                         @for (lesson of section.lessons; track lesson.id; let lesIndex = $index) {
 
                         <button (click)="selectLesson(lesson)"
-                            class="w-full flex items-start gap-3 sm:gap-4 p-3 sm:p-4 hover:bg-ds-surface transition-colors text-left"
-                            [ngClass]="{'bg-lotus/5 border-l-2 border-lotus pl-[10px] sm:pl-[14px]': currentLesson()?.id === lesson.id}">
+                            class="w-full flex items-start gap-3 sm:gap-4 p-3 sm:p-4 hover:bg-slate-100 dark:hover:bg-ds-surface transition-colors text-left"
+                            [ngClass]="{'bg-lotus/10 dark:bg-lotus/5 border-l-2 border-lotus pl-[10px] sm:pl-[14px]': currentLesson()?.id === lesson.id}">
 
                             <div class="mt-0.5 shrink-0">
                                 @if (!hasFullAccess() && !lesson.freePreview) {
                                 <lucide-icon [name]="icons.Lock"
-                                    class="w-4 h-4 sm:w-5 sm:h-5 text-ds-muted/40 stroke-[1.5px]"></lucide-icon>
+                                    class="w-4 h-4 sm:w-5 sm:h-5 text-slate-400 dark:text-ds-muted/40 stroke-[1.5px]"></lucide-icon>
                                 } @else if (lesson.completed) {
                                 <lucide-icon [name]="icons.CheckCircle"
                                     class="w-4 h-4 sm:w-5 sm:h-5 text-green stroke-[2px]"></lucide-icon>
                                 } @else {
                                 <lucide-icon [name]="icons.Circle"
-                                    class="w-4 h-4 sm:w-5 sm:h-5 text-ds-muted/50 stroke-[1.5px]"></lucide-icon>
+                                    class="w-4 h-4 sm:w-5 sm:h-5 text-slate-300 dark:text-ds-muted/50 stroke-[1.5px]"></lucide-icon>
                                 }
                             </div>
 
                             <div class="flex flex-col flex-1">
                                 <span class="font-syne text-xs sm:text-sm font-bold transition-colors leading-tight"
-                                    [ngClass]="currentLesson()?.id === lesson.id ? 'text-lotus' : (!hasFullAccess() && !lesson.freePreview ? 'text-ds-muted/50' : 'text-ds-muted group-hover:text-white')">
+                                    [ngClass]="currentLesson()?.id === lesson.id ? 'text-lotus' : (!hasFullAccess() && !lesson.freePreview ? 'text-slate-400 dark:text-ds-muted/50' : 'text-slate-600 dark:text-ds-muted group-hover:text-slate-900 dark:group-hover:text-white')">
                                     {{ lesIndex + 1 }}. {{ lesson.title }}
                                 </span>
                                 <div class="flex items-center gap-2 mt-1.5">
                                     @if (!hasFullAccess() && lesson.freePreview) {
                                     <span
-                                        class="font-mono text-[8px] uppercase tracking-wider text-green">Preview</span>
+                                        class="font-mono text-[8px] uppercase tracking-wider text-green font-bold">Preview</span>
                                     }
                                     @if (lesson.type === 'PDF') {
-                                    <lucide-icon [name]="icons.FileText" class="w-3 h-3 text-ds-muted/70"></lucide-icon>
-                                    <span class="font-mono text-[9px] sm:text-[10px] text-ds-muted/70">PDF</span>
+                                    <lucide-icon [name]="icons.FileText" class="w-3 h-3 text-slate-400 dark:text-ds-muted/70"></lucide-icon>
+                                    <span class="font-mono text-[9px] sm:text-[10px] text-slate-500 dark:text-ds-muted/70">PDF</span>
                                     } @else {
                                     <lucide-icon [name]="icons.PlayCircle"
-                                        class="w-3 h-3 text-ds-muted/70"></lucide-icon>
-                                    <span class="font-mono text-[9px] sm:text-[10px] text-ds-muted/70">{{
+                                        class="w-3 h-3 text-slate-400 dark:text-ds-muted/70"></lucide-icon>
+                                    <span class="font-mono text-[9px] sm:text-[10px] text-slate-500 dark:text-ds-muted/70">{{
                                         formatDuration(lesson.duration) }}</span>
                                     }
                                 </div>
@@ -201,14 +201,14 @@
                 }
 
                 @if (progressPercentage() === 100 && hasFullAccess()) {
-                <div class="p-4 sm:p-6 bg-ds-surface lg:border-b border-ds-border">
+                <div class="p-4 sm:p-6 bg-white dark:bg-ds-surface lg:border-b border-slate-200 dark:border-ds-border m-4 sm:m-0 rounded border sm:rounded-none sm:border-0">
                     <a [routerLink]="['/player', courseId(), 'quiz']"
-                        class="flex flex-col items-center justify-center p-4 sm:p-6 border border-lotus/50 rounded bg-lotus/10 hover:bg-lotus/20 transition-colors text-center group">
+                        class="flex flex-col items-center justify-center p-4 sm:p-6 border border-lotus/50 rounded bg-lotus/10 hover:bg-lotus/20 transition-colors text-center group cursor-pointer shadow-sm">
                         <lucide-icon [name]="icons.Trophy"
                             class="w-6 h-6 sm:w-8 sm:h-8 text-lotus mb-2 sm:mb-3 group-hover:scale-110 transition-transform"></lucide-icon>
-                        <span class="font-cormorant font-bold text-lg sm:text-xl text-white mb-1">{{ 'PLAYER.QUIZ_TITLE'
+                        <span class="font-cormorant font-bold text-lg sm:text-xl text-slate-900 dark:text-white mb-1">{{ 'PLAYER.QUIZ_TITLE'
                             | translate }}</span>
-                        <span class="font-syne text-[10px] sm:text-xs text-ds-muted">{{ 'PLAYER.QUIZ_DESC' | translate
+                        <span class="font-syne text-[10px] sm:text-xs text-slate-600 dark:text-ds-muted">{{ 'PLAYER.QUIZ_DESC' | translate
                             }}</span>
                     </a>
                 </div>

@@ -9,34 +9,34 @@
     } @else if (course(); as data) {
     <main class="flex-1 relative">
 
-        <section class="bg-ds-black text-white py-12 md:py-20 relative border-b border-ds-border">
+        <section class="bg-white dark:bg-ds-black py-12 md:py-20 relative border-b border-slate-200 dark:border-ds-border transition-colors">
             @if (data.thumbnailUrl) {
-            <div class="absolute inset-0 opacity-[0.03] bg-cover bg-center mix-blend-luminosity"
+            <div class="absolute inset-0 opacity-[0.05] dark:opacity-[0.03] bg-cover bg-center mix-blend-luminosity"
                 [style.backgroundImage]="'url(' + data.thumbnailUrl + ')'"></div>
             }
 
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
                 <div class="max-w-3xl">
                     <div
-                        class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-ds-muted/70 mb-6">
+                        class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-ds-muted/70 mb-6">
                         <a routerLink="/courses" class="hover:text-lotus transition-colors">{{
                             'COURSE_DETAIL.CATALOG_LINK' | translate }}</a>
                         <span>/</span>
                         <span class="text-lotus">{{ data.categoryName }}</span>
                     </div>
 
-                    <h1 class="font-cormorant text-4xl md:text-6xl font-bold leading-[1.1] mb-6 text-white">
+                    <h1 class="font-cormorant text-4xl md:text-6xl font-bold leading-[1.1] mb-6 text-slate-900 dark:text-white">
                         {{ data.title }}
                     </h1>
 
-                    <p class="font-syne text-lg text-ds-muted mb-8 leading-relaxed line-clamp-3">
+                    <p class="font-syne text-lg text-slate-600 dark:text-ds-muted mb-8 leading-relaxed line-clamp-3">
                         {{ data.subtitle }}
                     </p>
 
                     <div class="flex flex-wrap items-center gap-6 font-mono text-[11px] uppercase tracking-wider">
                         <div class="flex items-center gap-3">
                             <div
-                                class="w-8 h-8 rounded-full border border-lotus/50 flex items-center justify-center overflow-hidden bg-ds-surface shrink-0">
+                                class="w-8 h-8 rounded-full border border-lotus/50 flex items-center justify-center overflow-hidden bg-slate-100 dark:bg-ds-surface shrink-0">
                                 @if (data.instructorPictureUrl) {
                                 <img [src]="data.instructorPictureUrl" class="w-full h-full object-cover">
                                 } @else {
@@ -44,10 +44,10 @@
                                     data.instructorName.charAt(0) || 'I' }}</span>
                                 }
                             </div>
-                            <span class="text-white">{{ 'COURSE_DETAIL.BY' | translate }} <span class="text-lotus">{{
+                            <span class="text-slate-900 dark:text-white">{{ 'COURSE_DETAIL.BY' | translate }} <span class="text-lotus">{{
                                     data.instructorName }}</span></span>
                         </div>
-                        <div class="flex items-center gap-2 text-ds-muted/80">
+                        <div class="flex items-center gap-2 text-slate-500 dark:text-ds-muted/80">
                             <lucide-icon [name]="icons.Globe" class="w-4 h-4 stroke-[1.5px]"></lucide-icon>
                             <span>{{ data.language }}</span>
                         </div>
@@ -91,7 +91,7 @@
                         </div>
 
                         <div
-                            class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border p-6 sm:p-8 rounded shadow-sm">
+                            class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border p-6 sm:p-8 rounded shadow-sm transition-colors">
                             <h2 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-6">
                                 {{ 'COURSE_DETAIL.ABOUT_INSTRUCTOR' | translate }}
                             </h2>
@@ -139,7 +139,7 @@
                             </div>
 
                             <div
-                                class="border border-slate-200 dark:border-ds-border rounded bg-white dark:bg-ds-surface shadow-sm">
+                                class="border border-slate-200 dark:border-ds-border rounded bg-white dark:bg-ds-surface shadow-sm overflow-hidden">
                                 @for (section of data.sections; track section.id) {
                                 <div class="border-b border-slate-200 dark:border-ds-border last:border-0">
 
@@ -212,7 +212,7 @@
 
                     <div class="lg:w-[380px] shrink-0">
                         <div
-                            class="sticky top-24 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-xl overflow-hidden">
+                            class="sticky top-24 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-xl overflow-hidden transition-colors">
 
                             <div (click)="openTrailer()"
                                 class="relative aspect-video bg-slate-100 dark:bg-ds-black cursor-pointer group border-b border-slate-200 dark:border-ds-border">
@@ -225,7 +225,7 @@
                                 <div
                                     class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors backdrop-blur-[1px]">
                                     <div
-                                        class="w-16 h-16 bg-white/90 dark:bg-ds-surface rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform border border-ds-border">
+                                        class="w-16 h-16 bg-white/90 dark:bg-ds-surface rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform border border-white/20 dark:border-ds-border">
                                         <lucide-icon [name]="icons.PlayCircle"
                                             class="w-6 h-6 text-lotus ml-1 stroke-[1.5px]"></lucide-icon>
                                     </div>
@@ -305,12 +305,12 @@
         <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 sm:p-8 animate-fade-in">
 
             <button (click)="closeTrailer()"
-                class="absolute top-6 right-6 text-ds-muted hover:text-lotus transition-colors z-50 p-2">
+                class="absolute top-6 right-6 text-slate-400 dark:text-ds-muted hover:text-lotus transition-colors z-50 p-2">
                 <lucide-icon [name]="icons.X" class="w-8 h-8 stroke-[1.5px]"></lucide-icon>
             </button>
 
             <div
-                class="w-full max-w-5xl aspect-video bg-black rounded overflow-hidden shadow-2xl relative border border-ds-border/50 animate-fade-in-up">
+                class="w-full max-w-5xl aspect-video bg-black rounded overflow-hidden shadow-2xl relative border border-slate-800 dark:border-ds-border/50 animate-fade-in-up">
                 <video [src]="data.trailerUrl" controls autoplay controlsList="nodownload" oncontextmenu="return false;"
                     class="w-full h-full object-contain outline-none">
                     Your browser does not support the video tag.

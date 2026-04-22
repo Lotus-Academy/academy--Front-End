@@ -1,0 +1,154 @@
+<app-student-layout title="My Learning">
+
+    <div class="min-h-screen bg-slate-50 dark:bg-ds-black py-8 px-4 sm:px-6 lg:px-8 font-syne transition-colors duration-300">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="mb-8 animate-fade-in-up">
+                <h1 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white mb-2">My Learning</h1>
+                <p class="text-slate-500 dark:text-ds-muted/70 text-sm">Resume your courses, track your progress, and review your achievements.</p>
+            </div>
+
+            <div class="flex border-b border-slate-200 dark:border-ds-border mb-8 animate-fade-in-up" style="animation-delay: 50ms;">
+                <button (click)="setTab('IN_PROGRESS')" 
+                        class="px-6 py-3 font-mono text-[11px] uppercase tracking-widest font-bold transition-colors border-b-2 flex items-center gap-2"
+                        [ngClass]="activeTab() === 'IN_PROGRESS' ? 'border-lotus text-lotus' : 'border-transparent text-slate-500 dark:text-ds-muted hover:text-slate-800 dark:hover:text-white'">
+                    <lucide-icon [name]="icons.Clock" class="w-4 h-4"></lucide-icon> 
+                    In Progress ({{ inProgressCourses().length }})
+                </button>
+                <button (click)="setTab('COMPLETED')" 
+                        class="px-6 py-3 font-mono text-[11px] uppercase tracking-widest font-bold transition-colors border-b-2 flex items-center gap-2"
+                        [ngClass]="activeTab() === 'COMPLETED' ? 'border-lotus text-lotus' : 'border-transparent text-slate-500 dark:text-ds-muted hover:text-slate-800 dark:hover:text-white'">
+                    <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4"></lucide-icon> 
+                    Completed ({{ completedCourses().length }})
+                </button>
+            </div>
+
+            @if (isLoading()) {
+                <div class="flex justify-center items-center py-32 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-sm">
+                    <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin stroke-[2px]"></lucide-icon>
+                </div>
+            } @else {
+
+                @if (activeTab() === 'IN_PROGRESS') {
+                    @if (inProgressCourses().length === 0) {
+                        <div class="flex flex-col items-center justify-center py-24 bg-white dark:bg-ds-surface border border-dashed border-slate-300 dark:border-ds-border rounded text-center">
+                            <div class="w-16 h-16 rounded-full bg-slate-100 dark:bg-ds-black flex items-center justify-center mb-4">
+                                <lucide-icon [name]="icons.BookOpen" class="w-8 h-8 text-slate-400 dark:text-ds-muted"></lucide-icon>
+                            </div>
+                            <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">No Active Courses</h3>
+                            <p class="font-syne text-slate-500 dark:text-ds-muted/70 max-w-md mb-6">You don't have any courses in progress right now. Start exploring the catalog to learn something new.</p>
+                            <a routerLink="/courses" class="px-6 py-3 bg-lotus text-ds-black font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-lotus-light transition-colors">
+                                Explore Catalog
+                            </a>
+                        </div>
+                    } @else {
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @for (enrollment of inProgressCourses(); track enrollment.id) {
+                                <div class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-lg overflow-hidden shadow-sm flex flex-col group hover:border-lotus/50 transition-colors relative z-0">
+                                    
+                                    <div class="relative h-48 w-full bg-slate-100 dark:bg-ds-black overflow-hidden shrink-0">
+                                        @if (enrollment.courseThumbnail) {
+                                            <img [src]="enrollment.courseThumbnail" [alt]="enrollment.courseTitle" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                        } @else {
+                                            <div class="absolute inset-0 flex items-center justify-center">
+                                                <lucide-icon [name]="icons.PlayCircle" class="w-12 h-12 text-slate-300 dark:text-ds-muted/30"></lucide-icon>
+                                            </div>
+                                        }
+                                        
+                                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                            <a [routerLink]="['/player', enrollment.courseId]" class="h-12 w-12 rounded-full bg-lotus text-ds-black flex items-center justify-center shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
+                                                <lucide-icon [name]="icons.PlayCircle" class="w-5 h-5 ml-1"></lucide-icon>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-5 flex-1 flex flex-col">
+                                        <p class="font-mono text-[9px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/70 mb-2">Instructor: {{ enrollment.instructorName }}</p>
+                                        <h3 class="font-cormorant text-xl font-bold text-slate-900 dark:text-white line-clamp-2 mb-4 flex-1">
+                                            {{ enrollment.courseTitle }}
+                                        </h3>
+                                        
+                                        <div class="mt-auto">
+                                            <div class="flex justify-between items-end mb-2">
+                                                <span class="font-syne text-xs text-slate-600 dark:text-ds-muted/80">
+                                                    {{ enrollment.completedLessons }} / {{ enrollment.totalLessons }} lessons
+                                                </span>
+                                                <span class="font-mono text-[10px] font-bold text-lotus">{{ enrollment.progress | number:'1.0-0' }}%</span>
+                                            </div>
+                                            <div class="h-2 w-full bg-slate-100 dark:bg-ds-black rounded-full overflow-hidden">
+                                                <div class="h-full bg-lotus transition-all duration-1000 ease-out" [style.width.%]="enrollment.progress"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="border-t border-slate-100 dark:border-ds-border/50 shrink-0 relative z-10">
+                                        <a [routerLink]="['/player', enrollment.courseId]" class="px-5 py-4 w-full flex items-center justify-between bg-slate-50/50 dark:bg-ds-black/30 hover:bg-slate-100 dark:hover:bg-ds-black text-slate-700 dark:text-white font-mono text-[10px] uppercase tracking-widest font-bold group/btn transition-colors cursor-pointer block">
+                                            <span>Continue Learning</span>
+                                            <lucide-icon [name]="icons.ArrowRight" class="w-4 h-4 text-lotus group-hover/btn:translate-x-1 transition-transform"></lucide-icon>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+
+                @if (activeTab() === 'COMPLETED') {
+                    @if (completedCourses().length === 0) {
+                        <div class="flex flex-col items-center justify-center py-24 bg-white dark:bg-ds-surface border border-dashed border-slate-300 dark:border-ds-border rounded text-center">
+                            <div class="w-16 h-16 rounded-full bg-slate-100 dark:bg-ds-black flex items-center justify-center mb-4">
+                                <lucide-icon [name]="icons.Trophy" class="w-8 h-8 text-slate-400 dark:text-ds-muted"></lucide-icon>
+                            </div>
+                            <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">No Completed Courses</h3>
+                            <p class="font-syne text-slate-500 dark:text-ds-muted/70 max-w-md mb-6">Keep pushing! Your completed courses and certificates will appear here.</p>
+                        </div>
+                    } @else {
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @for (enrollment of completedCourses(); track enrollment.id) {
+                                <div class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-lg overflow-hidden shadow-sm flex flex-col relative z-0">
+                                    
+                                    <div class="relative h-40 w-full bg-slate-100 dark:bg-ds-black opacity-90 shrink-0">
+                                        @if (enrollment.courseThumbnail) {
+                                            <img [src]="enrollment.courseThumbnail" [alt]="enrollment.courseTitle" class="w-full h-full object-cover filter grayscale-[15%]">
+                                        }
+                                        <div class="absolute top-3 right-3 bg-green text-white font-mono text-[9px] uppercase tracking-widest font-bold px-2 py-1 rounded flex items-center gap-1.5 shadow-sm">
+                                            <lucide-icon [name]="icons.CheckCircle" class="w-3 h-3"></lucide-icon> Completed
+                                        </div>
+                                    </div>
+
+                                    <div class="p-5 flex-1 flex flex-col">
+                                        <h3 class="font-cormorant text-xl font-bold text-slate-900 dark:text-white line-clamp-2 mb-2">
+                                            {{ enrollment.courseTitle }}
+                                        </h3>
+                                        <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 mb-4">Instructor: {{ enrollment.instructorName }}</p>
+                                        
+                                        <div class="mt-auto pt-4">
+                                            <div class="h-1.5 w-full bg-green/20 rounded-full overflow-hidden mb-2">
+                                                <div class="h-full bg-green w-full"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 border-t border-slate-100 dark:border-ds-border/50 divide-x divide-slate-100 dark:divide-ds-border/50 shrink-0 relative z-10">
+                                        
+                                        <a [routerLink]="['/player', enrollment.courseId]" 
+                                           class="px-4 py-3 bg-slate-50/50 dark:bg-ds-black/30 hover:bg-slate-100 dark:hover:bg-ds-black flex items-center justify-center gap-2 text-slate-700 dark:text-white font-mono text-[9px] uppercase tracking-widest font-bold transition-colors cursor-pointer block text-center">
+                                            <lucide-icon [name]="icons.PlayCircle" class="w-3.5 h-3.5 inline-block -mt-0.5"></lucide-icon> Review
+                                        </a>
+
+                                        <a routerLink="/student/my-certificates" 
+                                           class="px-4 py-3 bg-lotus/10 hover:bg-lotus/20 text-lotus flex items-center justify-center gap-2 font-mono text-[9px] uppercase tracking-widest font-bold transition-colors cursor-pointer block text-center">
+                                            <lucide-icon [name]="icons.Trophy" class="w-3.5 h-3.5 inline-block -mt-0.5"></lucide-icon> Certificate
+                                        </a>
+                                        
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+
+</app-student-layout>

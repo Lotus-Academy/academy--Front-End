@@ -19,7 +19,7 @@ export const STUDENT_SIDEBAR_LINKS = [
     },
     {
         labelKey: 'SIDEBAR.STUDENT.MY_LEARNING',
-        href: '/student/learning',
+        href: '/student/my-learning',
         icon: PlayCircle,
         requiresApproval: false
     },
@@ -51,7 +51,7 @@ export const STUDENT_SIDEBAR_LINKS = [
     },
     {
         labelKey: 'SIDEBAR.STUDENT.CERTIFICATES',
-        href: '/student/certificates',
+        href: '/student/my-certificates',
         icon: Award,
         requiresApproval: false,
         dividerBefore: true

@@ -1,0 +1,180 @@
+<app-student-layout title="My Certificates">
+
+    <div class="min-h-screen bg-slate-50 dark:bg-ds-black py-8 px-4 sm:px-6 lg:px-8 font-syne transition-colors duration-300 relative">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="mb-8 animate-fade-in-up">
+                <h1 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-3">
+                    <lucide-icon [name]="icons.Award" class="w-8 h-8 text-lotus"></lucide-icon>
+                    My Certificates
+                </h1>
+                <p class="text-slate-500 dark:text-ds-muted/70 text-sm">View, verify, and download your official Lotus Academy credentials.</p>
+            </div>
+
+            @if (certificates().length > 0) {
+            <div class="mb-8 flex flex-col sm:flex-row gap-4 animate-fade-in-up" style="animation-delay: 100ms;">
+                <div class="relative flex-1">
+                    <lucide-icon [name]="icons.Search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></lucide-icon>
+                    <input type="text" 
+                           [ngModel]="searchQuery()" 
+                           (ngModelChange)="searchQuery.set($event)"
+                           placeholder="Search by course title or ID..." 
+                           class="w-full h-12 pl-11 pr-4 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border focus:border-lotus rounded-lg text-sm font-syne outline-none transition-all dark:text-white shadow-sm">
+                    @if (searchQuery()) {
+                        <button (click)="searchQuery.set('')" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-500 transition-colors">
+                            <lucide-icon [name]="icons.X" class="w-4 h-4"></lucide-icon>
+                        </button>
+                    }
+                </div>
+
+                <div class="relative w-full sm:w-64 shrink-0">
+                    <lucide-icon [name]="icons.Filter" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></lucide-icon>
+                    <select [ngModel]="selectedCourseFilter()" 
+                            (ngModelChange)="selectedCourseFilter.set($event)"
+                            class="w-full h-12 pl-11 pr-10 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border focus:border-lotus rounded-lg text-sm font-syne outline-none transition-all dark:text-white appearance-none cursor-pointer shadow-sm">
+                        @for (course of uniqueCourses(); track course) {
+                            <option [value]="course">{{ course === 'All' ? 'All Courses' : course }}</option>
+                        }
+                    </select>
+                    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </div>
+            </div>
+            }
+
+            @if (isLoading()) {
+                <div class="flex justify-center items-center py-32 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-sm">
+                    <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin stroke-[2px]"></lucide-icon>
+                </div>
+            } @else if (certificates().length === 0) {
+                <div class="flex flex-col items-center justify-center py-24 bg-white dark:bg-ds-surface border border-dashed border-slate-300 dark:border-ds-border rounded-xl shadow-sm text-center">
+                    <div class="w-20 h-20 rounded-full bg-slate-100 dark:bg-ds-black flex items-center justify-center mb-6 shadow-inner border border-slate-200 dark:border-ds-border">
+                        <lucide-icon [name]="icons.Trophy" class="w-10 h-10 text-slate-300 dark:text-ds-muted"></lucide-icon>
+                    </div>
+                    <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">No Certificates Yet</h3>
+                    <p class="font-syne text-slate-500 dark:text-ds-muted/70 max-w-md mb-8">Complete a course and pass the final exam to earn your first official certificate.</p>
+                    <a routerLink="/student/my-learning" class="px-6 py-3 bg-lotus text-ds-black font-mono text-[10px] uppercase tracking-widest font-bold rounded-full hover:bg-lotus-light transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                        Continue Learning
+                    </a>
+                </div>
+            } @else if (filteredCertificates().length === 0) {
+                <div class="flex flex-col items-center justify-center py-20 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl text-center">
+                    <lucide-icon [name]="icons.Search" class="w-10 h-10 text-slate-300 dark:text-ds-muted mb-4"></lucide-icon>
+                    <h3 class="font-cormorant text-xl font-bold text-slate-900 dark:text-white mb-2">No results found</h3>
+                    <p class="font-syne text-slate-500 dark:text-ds-muted/70 mb-6">Try adjusting your search query or course filter.</p>
+                    <button (click)="clearFilters()" class="text-lotus font-mono text-[10px] uppercase tracking-widest font-bold hover:underline">
+                        Clear Filters
+                    </button>
+                </div>
+            } @else {
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @for (cert of filteredCertificates(); track cert.id) {
+                        <div (click)="openDetails(cert)" class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl overflow-hidden shadow-sm flex flex-col group relative cursor-pointer hover:border-lotus/50 hover:shadow-md transition-all">
+                            
+                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-lotus to-yellow-600"></div>
+
+                            <div class="p-6 flex-1 flex flex-col">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="w-12 h-12 bg-lotus/10 rounded-full flex items-center justify-center border border-lotus/20 text-lotus group-hover:bg-lotus group-hover:text-ds-black transition-colors">
+                                        <lucide-icon [name]="icons.FileText" class="w-5 h-5"></lucide-icon>
+                                    </div>
+                                    <button class="p-2 text-slate-400 hover:text-lotus transition-colors">
+                                        <lucide-icon [name]="icons.Eye" class="w-4 h-4"></lucide-icon>
+                                    </button>
+                                </div>
+                                
+                                <p class="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-ds-muted/60 mb-1">Course Credential</p>
+                                <h3 class="font-cormorant text-xl font-bold text-slate-900 dark:text-white line-clamp-2 mb-4 flex-1">
+                                    {{ cert.courseTitle }}
+                                </h3>
+
+                                <div class="bg-slate-50 dark:bg-ds-black p-3 rounded border border-slate-100 dark:border-ds-border/50 mb-2">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-[10px] font-mono text-slate-500 dark:text-ds-muted">ISSUED</span>
+                                        <span class="text-[10px] font-mono font-bold text-slate-700 dark:text-white">{{ cert.issuedAt | date:'mediumDate' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="px-6 py-4 border-t border-slate-100 dark:border-ds-border bg-slate-50/50 dark:bg-ds-black/30">
+                                <button (click)="downloadPdf(cert, $event)" [disabled]="downloadingId() === cert.id"
+                                        class="w-full flex items-center justify-center gap-2 py-2.5 font-mono text-[10px] uppercase tracking-widest font-bold border border-slate-200 dark:border-ds-border text-slate-700 dark:text-white rounded hover:bg-slate-100 dark:hover:bg-ds-surface hover:border-lotus/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed group/btn">
+                                    @if (downloadingId() === cert.id) {
+                                        <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin text-lotus"></lucide-icon> Generating...
+                                    } @else {
+                                        <lucide-icon [name]="icons.Download" class="w-4 h-4 text-slate-400 group-hover/btn:text-lotus transition-colors"></lucide-icon> Download
+                                    }
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (selectedCertificate()) {
+        <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 font-syne">
+            <div class="absolute inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm animate-fade-in" (click)="closeDetails()"></div>
+            
+            <div class="relative w-full max-w-2xl bg-white dark:bg-ds-surface rounded-2xl shadow-2xl border border-slate-200 dark:border-ds-border overflow-hidden animate-fade-in-up z-10 flex flex-col max-h-[90vh]">
+                
+                <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-ds-border bg-slate-50/50 dark:bg-ds-black/30 shrink-0">
+                    <div class="flex items-center gap-2 text-lotus">
+                        <lucide-icon [name]="icons.ShieldCheck" class="w-5 h-5"></lucide-icon>
+                        <span class="font-mono text-[11px] uppercase tracking-widest font-bold">Official Credential</span>
+                    </div>
+                    <button (click)="closeDetails()" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors">
+                        <lucide-icon [name]="icons.X" class="w-5 h-5"></lucide-icon>
+                    </button>
+                </div>
+
+                <div class="p-6 sm:p-10 overflow-y-auto flex-1">
+                    
+                    <div class="text-center mb-8">
+                        <div class="inline-flex h-20 w-20 rounded-full bg-lotus/10 items-center justify-center text-lotus mb-4 border-4 border-white dark:border-ds-surface shadow-[0_0_0_1px_rgba(212,175,55,0.2)]">
+                            <lucide-icon [name]="icons.Award" class="w-10 h-10"></lucide-icon>
+                        </div>
+                        <h2 class="font-cormorant text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-2">Certificate of Completion</h2>
+                        <p class="text-slate-500 dark:text-ds-muted/80">This confirms that you have successfully completed the course:</p>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border p-6 rounded-xl text-center mb-8">
+                        <h3 class="font-cormorant text-2xl font-bold text-lotus">{{ selectedCertificate()?.courseTitle }}</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 border border-slate-100 dark:border-ds-border/50 rounded-lg">
+                            <p class="font-mono text-[9px] uppercase tracking-widest text-slate-400 mb-1">Issue Date</p>
+                            <p class="font-syne font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4 text-green"></lucide-icon>
+                                {{ selectedCertificate()?.issuedAt | date:'longDate' }}
+                            </p>
+                        </div>
+                        <div class="p-4 border border-slate-100 dark:border-ds-border/50 rounded-lg">
+                            <p class="font-mono text-[9px] uppercase tracking-widest text-slate-400 mb-1">Credential ID</p>
+                            <p class="font-mono text-sm text-slate-900 dark:text-white break-all">
+                                {{ selectedCertificate()?.serialNumber }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 border-t border-slate-100 dark:border-ds-border bg-slate-50 dark:bg-ds-black shrink-0 flex flex-col sm:flex-row gap-3">
+                    <button (click)="closeDetails()" class="flex-1 py-3 px-4 font-mono text-[11px] uppercase tracking-widest font-bold border border-slate-200 dark:border-ds-border text-slate-700 dark:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-ds-surface transition-colors">
+                        Close
+                    </button>
+                    <button (click)="downloadPdf(selectedCertificate()!)" [disabled]="downloadingId() === selectedCertificate()?.id"
+                            class="flex-1 py-3 px-4 font-mono text-[11px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded-lg hover:bg-lotus-light transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                        @if (downloadingId() === selectedCertificate()?.id) {
+                            <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon> Generating...
+                        } @else {
+                            <lucide-icon [name]="icons.Download" class="w-4 h-4"></lucide-icon> Download PDF
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</app-student-layout>

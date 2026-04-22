@@ -25,6 +25,7 @@ import { ProfileComponent } from './features/user/profile/profile.component';
 import { CoursePlayerComponent } from './features/courses/course-player/course-player.component';
 import { StudentQuizComponent } from './features/student/student-quiz/student-quiz.component';
 
+
 // ==========================================
 // IMPORTS : ESPACE INSTRUCTEUR
 // ==========================================
@@ -62,6 +63,8 @@ import { LiveSessionCreateComponent } from './features/live-session/live-session
 import { LiveSessionRoomComponent } from './features/live-session/live-session-room/live-session-room.component';
 import { InstructorLiveSessionsComponent } from './features/instructor/instructor-live-sessions/instructor-live-sessions.component';
 import { StudentLiveSessionsComponent } from './features/student/student-live-sessions/student-live-sessions.component';
+import { MyLearningComponent } from './features/student/my-learning/my-learning.component';
+import { MyCertificatesComponent } from './features/student/my-certificates/my-certificates.component';
 
 export const routes: Routes = [
     // --- ROUTES PUBLIQUES ---
@@ -100,6 +103,16 @@ export const routes: Routes = [
     {
         path: 'player/:id/quiz',
         component: StudentQuizComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'student/my-learning',
+        component: MyLearningComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'student/my-certificates',
+        component: MyCertificatesComponent,
         canActivate: [authGuard]
     },
 
