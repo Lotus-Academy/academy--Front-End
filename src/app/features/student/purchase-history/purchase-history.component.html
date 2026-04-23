@@ -1,0 +1,111 @@
+<app-student-layout title="Purchase History">
+
+    <div class="min-h-screen bg-slate-50 dark:bg-ds-black py-8 px-4 sm:px-6 lg:px-8 font-syne transition-colors duration-300">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="mb-8 animate-fade-in-up">
+                <h1 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-3">
+                    <lucide-icon [name]="icons.CreditCard" class="w-8 h-8 text-lotus"></lucide-icon>
+                    Purchase History
+                </h1>
+                <p class="text-slate-500 dark:text-ds-muted/70 text-sm">View your past transactions and download official receipts.</p>
+            </div>
+
+            @if (isLoading()) {
+                <div class="flex justify-center items-center py-32 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-sm">
+                    <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin stroke-[2px]"></lucide-icon>
+                </div>
+            } @else if (payments().length === 0) {
+                <div class="flex flex-col items-center justify-center py-24 bg-white dark:bg-ds-surface border border-dashed border-slate-300 dark:border-ds-border rounded-xl shadow-sm text-center">
+                    <div class="w-20 h-20 rounded-full bg-slate-100 dark:bg-ds-black flex items-center justify-center mb-6 shadow-inner border border-slate-200 dark:border-ds-border">
+                        <lucide-icon [name]="icons.Receipt" class="w-10 h-10 text-slate-300 dark:text-ds-muted"></lucide-icon>
+                    </div>
+                    <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">No Transactions Yet</h3>
+                    <p class="font-syne text-slate-500 dark:text-ds-muted/70 max-w-md mb-8">You haven't made any purchases on Lotus Academy yet.</p>
+                    <a routerLink="/courses" class="px-6 py-3 bg-lotus text-ds-black font-mono text-[10px] uppercase tracking-widest font-bold rounded-full hover:bg-lotus-light transition-colors shadow-sm">
+                        Explore Courses
+                    </a>
+                </div>
+            } @else {
+                <div class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-sm overflow-hidden animate-fade-in-up" style="animation-delay: 100ms;">
+                    
+                    <div class="hidden md:grid grid-cols-12 gap-4 p-5 bg-slate-50 dark:bg-ds-black/30 border-b border-slate-200 dark:border-ds-border font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted">
+                        <div class="col-span-5">Item / Course</div>
+                        <div class="col-span-2 text-center">Date</div>
+                        <div class="col-span-2 text-right">Amount</div>
+                        <div class="col-span-2 text-center">Status</div>
+                        <div class="col-span-1 text-center">Receipt</div>
+                    </div>
+
+                    <div class="divide-y divide-slate-100 dark:divide-ds-border">
+                        @for (payment of payments(); track payment.date) {
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 p-5 items-center hover:bg-slate-50 dark:hover:bg-ds-black/20 transition-colors">
+                                
+                                <div class="md:hidden font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-ds-muted mb-1">Item</div>
+                                <div class="col-span-5 flex flex-col">
+                                    <span class="font-syne font-bold text-slate-900 dark:text-white leading-tight">
+                                        {{ payment.courseTitle }}
+                                    </span>
+                                    @if (payment.appliedCouponCode && payment.appliedCouponCode !== 'None') {
+                                        <span class="mt-1 font-mono text-[9px] uppercase tracking-wider text-lotus bg-lotus/10 self-start px-2 py-0.5 rounded border border-lotus/20">
+                                            Coupon: {{ payment.appliedCouponCode }}
+                                        </span>
+                                    }
+                                </div>
+
+                                <div class="md:hidden font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-ds-muted mt-3 mb-1">Date</div>
+                                <div class="col-span-2 md:text-center font-mono text-xs text-slate-600 dark:text-ds-muted/90">
+                                    {{ payment.date | date:'mediumDate' }}
+                                </div>
+
+                                <div class="md:hidden font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-ds-muted mt-3 mb-1">Amount</div>
+                                <div class="col-span-2 md:text-right font-mono text-sm font-bold text-slate-900 dark:text-white">
+                                    @if (payment.amount === 0) {
+                                        <span class="text-green uppercase text-xs">Free</span>
+                                    } @else {
+                                        {{ payment.amount | currency:payment.currency:'symbol':'1.2-2' }}
+                                    }
+                                </div>
+
+                                <div class="md:hidden font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-ds-muted mt-3 mb-1">Status</div>
+                                <div class="col-span-2 flex md:justify-center">
+                                    @if (payment.status === 'PAID') {
+                                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-green/10 text-green border border-green/20">
+                                            <lucide-icon [name]="icons.CheckCircle" class="w-3.5 h-3.5"></lucide-icon>
+                                            <span class="font-mono text-[10px] uppercase tracking-widest font-bold">Paid</span>
+                                        </div>
+                                    } @else if (payment.status === 'REFUNDED') {
+                                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-100 dark:bg-ds-surface text-slate-500 dark:text-ds-muted border border-slate-200 dark:border-ds-border">
+                                            <lucide-icon [name]="icons.RefreshCw" class="w-3.5 h-3.5"></lucide-icon>
+                                            <span class="font-mono text-[10px] uppercase tracking-widest font-bold">Refunded</span>
+                                        </div>
+                                    } @else {
+                                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 border border-yellow-500/20">
+                                            <lucide-icon [name]="icons.AlertCircle" class="w-3.5 h-3.5"></lucide-icon>
+                                            <span class="font-mono text-[10px] uppercase tracking-widest font-bold">{{ payment.status }}</span>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="col-span-1 flex md:justify-center mt-4 md:mt-0">
+                                    @if (payment.receiptUrl) {
+                                        <button (click)="openReceipt(payment.receiptUrl)" title="View Receipt"
+                                                class="w-full md:w-auto flex items-center justify-center p-2 rounded-full text-slate-400 hover:text-lotus hover:bg-lotus/10 transition-all border border-transparent hover:border-lotus/20">
+                                            <lucide-icon [name]="icons.ExternalLink" class="w-5 h-5"></lucide-icon>
+                                            <span class="md:hidden ml-2 font-mono text-[10px] uppercase tracking-widest font-bold text-lotus">View Receipt</span>
+                                        </button>
+                                    } @else {
+                                        <span class="text-slate-300 dark:text-ds-muted/30" title="No receipt available">
+                                            <lucide-icon [name]="icons.XCircle" class="w-5 h-5 mx-auto"></lucide-icon>
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</app-student-layout>

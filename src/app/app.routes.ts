@@ -65,6 +65,8 @@ import { InstructorLiveSessionsComponent } from './features/instructor/instructo
 import { StudentLiveSessionsComponent } from './features/student/student-live-sessions/student-live-sessions.component';
 import { MyLearningComponent } from './features/student/my-learning/my-learning.component';
 import { MyCertificatesComponent } from './features/student/my-certificates/my-certificates.component';
+import { PaymentSuccessComponent } from './features/payments/payment-success/payment-success.component';
+import { PurchaseHistoryComponent } from './features/student/purchase-history/purchase-history.component';
 
 export const routes: Routes = [
     // --- ROUTES PUBLIQUES ---
@@ -92,6 +94,17 @@ export const routes: Routes = [
     {
         path: 'student/live-sessions',
         component: StudentLiveSessionsComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'student/purchases',
+        component: PurchaseHistoryComponent,
+        canActivate: [authGuard]
+    },
+
+    { 
+        path: 'payment/success', 
+        component: PaymentSuccessComponent,
         canActivate: [authGuard]
     },
     // SALLE DE CLASSE (PLAYER & QUIZ ÉTUDIANT) ---

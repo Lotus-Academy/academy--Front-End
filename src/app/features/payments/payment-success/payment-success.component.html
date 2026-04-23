@@ -1,0 +1,58 @@
+<div class="min-h-screen bg-slate-50 dark:bg-ds-black flex flex-col transition-colors duration-300">
+
+    <app-navbar></app-navbar>
+
+    <main class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6">
+        <div class="max-w-md w-full">
+            
+            @if (isLoading()) {
+                <div class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-sm p-12 flex flex-col items-center justify-center text-center">
+                    <lucide-icon [name]="icons.Loader2" class="w-12 h-12 text-lotus animate-spin mb-4 stroke-[1.5px]"></lucide-icon>
+                    <h2 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">Verifying Payment...</h2>
+                    <p class="font-syne text-slate-500 dark:text-ds-muted">Please wait a moment while we confirm your transaction.</p>
+                </div>
+            } @else {
+                <div class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-xl overflow-hidden animate-fade-in-up">
+                    
+                    <div class="h-1.5 w-full bg-gradient-to-r from-lotus to-yellow-600"></div>
+                    
+                    <div class="p-8 sm:p-10 text-center">
+                        <div class="w-20 h-20 bg-green/10 border-2 border-green/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(0,255,0,0.15)]">
+                            <lucide-icon [name]="icons.CheckCircle" class="w-10 h-10 text-green stroke-[1.5px]"></lucide-icon>
+                        </div>
+                        
+                        <h1 class="font-cormorant text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+                            Payment Successful!
+                        </h1>
+                        
+                        <p class="font-syne text-slate-600 dark:text-ds-muted/80 mb-6 leading-relaxed">
+                            Thank you for your purchase. Your payment has been processed successfully and the course is now unlocked in your account.
+                        </p>
+                        
+                        <div class="bg-slate-50 dark:bg-ds-black rounded-lg border border-slate-100 dark:border-ds-border p-4 mb-8">
+                            <p class="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-ds-muted/70 mb-1">Transaction Reference</p>
+                            <p class="font-mono text-xs text-slate-900 dark:text-white font-bold break-all">
+                                {{ sessionId() ? sessionId()?.substring(0, 16) + '...' : 'SECURE_TXN_OK' }}
+                            </p>
+                        </div>
+                        
+                        <div class="flex flex-col gap-3">
+                            <a routerLink="/student/my-learning" 
+                               class="w-full py-4 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded-lg hover:bg-lotus-light transition-all shadow-sm flex items-center justify-center gap-2">
+                                <lucide-icon [name]="icons.BookOpen" class="w-4 h-4"></lucide-icon>
+                                Go to My Learning
+                            </a>
+                            
+                            <a routerLink="/courses" 
+                               class="w-full py-3.5 border border-slate-200 dark:border-ds-border text-slate-700 dark:text-white font-mono text-[11px] uppercase tracking-widest font-bold rounded-lg hover:bg-slate-50 dark:hover:bg-ds-surface transition-colors flex items-center justify-center gap-2">
+                                Browse More Courses
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </main>
+
+    <app-footer class="mt-auto"></app-footer>
+</div>

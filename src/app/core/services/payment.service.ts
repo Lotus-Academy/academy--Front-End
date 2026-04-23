@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { PaymentHistoryDTO } from '../models/payment.dto';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
@@ -19,5 +20,12 @@ export class PaymentService {
     }
 
     return this.http.post<any>(`${this.baseUrl}/checkout/${courseId}`, null, { params });
+  }
+
+  /**
+   * Récupère l'historique complet des achats de l'étudiant
+   */
+  getMyPaymentHistory(): Observable<PaymentHistoryDTO[]> {
+    return this.http.get<PaymentHistoryDTO[]>(`${this.baseUrl}/history`);
   }
 }
