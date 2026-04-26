@@ -80,7 +80,7 @@
                         @if (course.price === 0) {
                         {{ 'COURSE_CARD.FREE' | translate }}
                         } @else {
-                        {{ course.price | currency:'USD':'symbol':'1.2-2' }}
+                        {{ (course.price * location().exchangeRate) | number:'1.2-2' }} {{ location().symbol }}
                         }
                     </span>
                     <span

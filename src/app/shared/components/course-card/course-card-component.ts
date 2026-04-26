@@ -1,21 +1,32 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Inclut DecimalPipe (number)
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule, Star, Clock, Users, BookOpen } from 'lucide-angular';
 import { CourseResponseDTO } from '../../../core/models/course.dto';
+import { LocationService } from '../../../core/services/location.service';
 
 @Component({
   selector: 'app-course-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, CurrencyPipe, TranslateModule],
+  imports: [CommonModule, RouterLink, LucideAngularModule, TranslateModule],
   templateUrl: './course-card-component.html'
 })
-export class CourseCardComponent {
+export class CourseCardComponent implements OnInit {
   @Input({ required: true }) course!: CourseResponseDTO;
   @Input() index: number = 0;
 
+  private locationService = inject(LocationService);
+
+  // On expose le signal pour le template HTML
+  location = this.locationService.location;
+
   readonly icons = { Star, Clock, Users, BookOpen };
+
+  ngOnInit(): void {
+    // Déclenche l'appel réseau ou récupère le cache instantanément
+    this.locationService.fetchLocation().subscribe();
+  }
 
   getLevelClasses(level: string): string {
     const base = 'px-2.5 py-1 rounded font-mono text-[9px] uppercase tracking-widest font-bold border backdrop-blur-sm ';
