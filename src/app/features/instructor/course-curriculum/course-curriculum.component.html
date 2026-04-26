@@ -125,83 +125,106 @@
                 </form>
                 } @else {
                 <div
-                    class="flex flex-col md:flex-row md:items-center justify-between p-3 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded group/lesson gap-4 transition-colors hover:border-lotus/30">
+                    class="flex flex-col p-3 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded group/lesson transition-colors hover:border-lotus/30">
 
-                    <div class="flex items-center gap-3">
-                        @if (lesson.type === 'PDF') {
-                        <lucide-icon [name]="icons.FileText"
-                            class="w-5 h-5 text-slate-400 dark:text-ds-muted/50 stroke-[1.5px]"></lucide-icon>
-                        } @else {
-                        <lucide-icon [name]="icons.PlayCircle"
-                            class="w-5 h-5 text-slate-400 dark:text-ds-muted/50 stroke-[1.5px]"></lucide-icon>
-                        }
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            @if (lesson.type === 'PDF') {
+                            <lucide-icon [name]="icons.FileText"
+                                class="w-5 h-5 text-slate-400 dark:text-ds-muted/50 stroke-[1.5px]"></lucide-icon>
+                            } @else {
+                            <lucide-icon [name]="icons.PlayCircle"
+                                class="w-5 h-5 text-slate-400 dark:text-ds-muted/50 stroke-[1.5px]"></lucide-icon>
+                            }
 
-                        <div>
-                            <p class="font-syne font-bold text-slate-900 dark:text-white text-sm">
-                                <span class="text-slate-400 text-xs mr-1">[#{{ lesson.orderIndex }}]</span>
-                                {{ 'COURSE_EDITOR.CURRICULUM.LESSON' | translate }} {{ lesIndex + 1 }}: {{ lesson.title
-                                }}
-                            </p>
-                            <div class="flex items-center gap-2 mt-1.5 font-mono text-[9px] uppercase tracking-wider">
-                                <span
-                                    class="text-slate-500 dark:text-ds-muted/60 bg-slate-100 dark:bg-ds-black px-1.5 py-0.5 rounded">{{
-                                    lesson.duration }} {{ 'COURSE_EDITOR.CURRICULUM.SEC' | translate }}</span>
-                                @if (lesson.freePreview) {
-                                <span class="px-1.5 py-0.5 rounded bg-green/10 text-green">{{
-                                    'COURSE_EDITOR.CURRICULUM.FREE_PREVIEW' | translate }}</span>
+                            <div>
+                                <p class="font-syne font-bold text-slate-900 dark:text-white text-sm">
+                                    <span class="text-slate-400 text-xs mr-1">[#{{ lesson.orderIndex }}]</span>
+                                    {{ 'COURSE_EDITOR.CURRICULUM.LESSON' | translate }} {{ lesIndex + 1 }}: {{
+                                    lesson.title }}
+                                </p>
+                                <div
+                                    class="flex items-center gap-2 mt-1.5 font-mono text-[9px] uppercase tracking-wider">
+                                    <span
+                                        class="text-slate-500 dark:text-ds-muted/60 bg-slate-100 dark:bg-ds-black px-1.5 py-0.5 rounded">{{
+                                        lesson.duration }} {{ 'COURSE_EDITOR.CURRICULUM.SEC' | translate }}</span>
+                                    @if (lesson.freePreview) {
+                                    <span class="px-1.5 py-0.5 rounded bg-green/10 text-green">{{
+                                        'COURSE_EDITOR.CURRICULUM.FREE_PREVIEW' | translate }}</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4 self-end md:self-auto">
+                            <div
+                                class="flex items-center gap-1 opacity-0 group-hover/lesson:opacity-100 transition-opacity mr-2">
+                                <button (click)="startEditLesson(lesson)"
+                                    class="p-1.5 text-slate-400 hover:text-lotus transition-colors rounded hover:bg-slate-100 dark:hover:bg-ds-black"
+                                    [title]="'COURSE_EDITOR.CURRICULUM.BTN_EDIT' | translate">
+                                    <lucide-icon [name]="icons.Edit2" class="w-4 h-4 stroke-[1.5px]"></lucide-icon>
+                                </button>
+                                <button (click)="deleteLesson(section.id, lesson.id)"
+                                    class="p-1.5 text-slate-400 hover:text-red-500 transition-colors rounded hover:bg-slate-100 dark:hover:bg-ds-black"
+                                    [title]="'COURSE_EDITOR.CURRICULUM.BTN_DELETE' | translate">
+                                    <lucide-icon [name]="icons.Trash2" class="w-4 h-4 stroke-[1.5px]"></lucide-icon>
+                                </button>
+                            </div>
+
+                            <div
+                                class="border-l border-slate-200 dark:border-ds-border pl-4 w-48 shrink-0 flex justify-end">
+
+                                @if (isMediaUploading(lesson.id)) {
+                                <div class="w-full flex items-center gap-3">
+                                    <div
+                                        class="flex-1 h-1.5 bg-slate-200 dark:bg-ds-black rounded-full overflow-hidden border border-slate-300 dark:border-ds-border/50">
+                                        <div class="h-full bg-lotus transition-all duration-300 ease-out"
+                                            [style.width.%]="getLessonProgress(lesson.id)"></div>
+                                    </div>
+                                    <span class="font-mono text-[9px] uppercase font-bold text-lotus w-8 text-right">
+                                        {{ getLessonProgress(lesson.id) }}%
+                                    </span>
+                                </div>
+                                } @else if (!lesson.mediaUrl) {
+                                <label
+                                    class="cursor-pointer px-4 py-1.5 bg-slate-100 dark:bg-ds-black text-slate-700 dark:text-ds-muted/80 border border-slate-200 dark:border-ds-border font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-lotus hover:text-ds-black hover:border-lotus transition-all flex items-center gap-2">
+                                    <lucide-icon [name]="icons.UploadCloud" class="w-3.5 h-3.5"></lucide-icon>
+                                    {{ 'COURSE_EDITOR.CURRICULUM.BTN_UPLOAD' | translate }}
+                                    <input type="file" class="hidden"
+                                        (change)="onFileSelected($event, section.id, lesson)"
+                                        accept="video/mp4,application/pdf">
+                                </label>
+                                } @else {
+                                <div class="flex items-center justify-end gap-2 w-full">
+                                    <span
+                                        class="font-mono text-[9px] uppercase tracking-widest font-bold text-green flex items-center gap-1.5 bg-green/10 border border-green/20 px-2 py-1 rounded truncate">
+                                        <lucide-icon [name]="icons.CheckCircle"
+                                            class="w-3.5 h-3.5 shrink-0"></lucide-icon>
+                                        {{ 'COURSE_EDITOR.CURRICULUM.UPLOAD_SUCCESS' | translate }}
+                                    </span>
+                                    <label
+                                        class="cursor-pointer p-1.5 text-slate-400 hover:text-lotus transition-colors shrink-0"
+                                        [title]="'COURSE_EDITOR.CURRICULUM.REPLACE_MEDIA' | translate">
+                                        <lucide-icon [name]="icons.UploadCloud" class="w-4 h-4"></lucide-icon>
+                                        <input type="file" class="hidden"
+                                            (change)="onFileSelected($event, section.id, lesson)"
+                                            accept="video/mp4,application/pdf">
+                                    </label>
+                                </div>
                                 }
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-4 self-end md:self-auto">
-                        <div
-                            class="flex items-center gap-1 opacity-0 group-hover/lesson:opacity-100 transition-opacity mr-2">
-                            <button (click)="startEditLesson(lesson)"
-                                class="p-1.5 text-slate-400 hover:text-lotus transition-colors rounded hover:bg-slate-100 dark:hover:bg-ds-black"
-                                [title]="'COURSE_EDITOR.CURRICULUM.BTN_EDIT' | translate">
-                                <lucide-icon [name]="icons.Edit2" class="w-4 h-4 stroke-[1.5px]"></lucide-icon>
-                            </button>
-                            <button (click)="deleteLesson(section.id, lesson.id)"
-                                class="p-1.5 text-slate-400 hover:text-red-500 transition-colors rounded hover:bg-slate-100 dark:hover:bg-ds-black"
-                                [title]="'COURSE_EDITOR.CURRICULUM.BTN_DELETE' | translate">
-                                <lucide-icon [name]="icons.Trash2" class="w-4 h-4 stroke-[1.5px]"></lucide-icon>
-                            </button>
-                        </div>
-
-                        <div class="border-l border-slate-200 dark:border-ds-border pl-4">
-                            @if (isMediaUploading(lesson.id)) {
-                            <span
-                                class="font-mono text-[10px] uppercase tracking-widest font-bold text-lotus flex items-center gap-2 bg-lotus/10 px-3 py-1.5 rounded">
-                                <lucide-icon [name]="icons.Loader2" class="w-3.5 h-3.5 animate-spin"></lucide-icon>
-                                {{ 'COURSE_EDITOR.CURRICULUM.UPLOADING' | translate }}
-                            </span>
-                            } @else if (!lesson.mediaUrl) {
-                            <label
-                                class="cursor-pointer px-4 py-1.5 bg-slate-100 dark:bg-ds-black text-slate-700 dark:text-ds-muted/80 border border-slate-200 dark:border-ds-border font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-lotus hover:text-ds-black hover:border-lotus transition-all flex items-center gap-2">
-                                <lucide-icon [name]="icons.UploadCloud" class="w-3.5 h-3.5"></lucide-icon>
-                                {{ 'COURSE_EDITOR.CURRICULUM.BTN_UPLOAD' | translate }}
-                                <input type="file" class="hidden" (change)="onFileSelected($event, section.id, lesson)"
-                                    accept="video/mp4,application/pdf">
-                            </label>
-                            } @else {
-                            <div class="flex items-center gap-2">
-                                <span
-                                    class="font-mono text-[10px] uppercase tracking-widest font-bold text-green flex items-center gap-1.5 bg-green/10 border border-green/20 px-3 py-1.5 rounded">
-                                    <lucide-icon [name]="icons.CheckCircle" class="w-3.5 h-3.5"></lucide-icon>
-                                    {{ 'COURSE_EDITOR.CURRICULUM.UPLOAD_SUCCESS' | translate }}
-                                </span>
-                                <label class="cursor-pointer p-1.5 text-slate-400 hover:text-lotus transition-colors"
-                                    [title]="'COURSE_EDITOR.CURRICULUM.REPLACE_MEDIA' | translate">
-                                    <lucide-icon [name]="icons.UploadCloud" class="w-4 h-4"></lucide-icon>
-                                    <input type="file" class="hidden"
-                                        (change)="onFileSelected($event, section.id, lesson)"
-                                        accept="video/mp4,application/pdf">
-                                </label>
-                            </div>
-                            }
-                        </div>
+                    @if (mediaErrors().has(lesson.id)) {
+                    <div
+                        class="mt-3 p-3 bg-red-500/10 border border-red-500/20 rounded flex items-start gap-3 animate-fade-in text-red-600 dark:text-red-400">
+                        <lucide-icon [name]="icons.AlertTriangle"
+                            class="w-4 h-4 shrink-0 mt-0.5 stroke-[2px]"></lucide-icon>
+                        <p class="font-syne text-xs font-bold leading-tight">{{ mediaErrors().get(lesson.id) }}</p>
                     </div>
+                    }
+
                 </div>
                 }
                 }
@@ -284,7 +307,9 @@
                 }
             </div>
         </div>
-        } @if (isAddingSection()) {
+        }
+
+        @if (isAddingSection()) {
         <form [formGroup]="sectionForm" (ngSubmit)="onSaveSection()"
             class="bg-slate-50 dark:bg-ds-border/30 border border-slate-200 dark:border-ds-border p-6 rounded shadow-sm">
             <div class="mb-4">

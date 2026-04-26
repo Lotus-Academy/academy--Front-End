@@ -57,10 +57,27 @@
         </div>
 
         <div>
-            <h3
-                class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70 mb-3">
-                {{ 'COURSE_EDITOR.PRICING.TRAILER_TITLE' | translate }}
-            </h3>
+            <div class="flex items-center justify-between mb-3">
+                <h3
+                    class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70">
+                    {{ 'COURSE_EDITOR.PRICING.TRAILER_TITLE' | translate }}
+                </h3>
+                <span class="font-mono text-[9px] uppercase text-slate-400 dark:text-ds-muted/50">
+                    Max 50MB • Max 3min
+                </span>
+            </div>
+
+            @if (trailerError()) {
+            <div
+                class="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded flex items-start gap-3 animate-fade-in text-red-600 dark:text-red-400">
+                <lucide-icon [name]="icons.AlertTriangle" class="w-4 h-4 shrink-0 mt-0.5 stroke-[2px]"></lucide-icon>
+                <p class="font-syne text-sm font-bold leading-tight">{{ trailerError() }}</p>
+                <button type="button" (click)="trailerError.set(null)"
+                    class="ml-auto opacity-50 hover:opacity-100 transition-opacity">
+                    <lucide-icon [name]="icons.X" class="w-4 h-4"></lucide-icon>
+                </button>
+            </div>
+            }
 
             <div
                 class="aspect-video bg-slate-50 dark:bg-ds-black rounded border border-slate-200 dark:border-ds-border flex items-center justify-center relative group overflow-hidden shadow-sm transition-all hover:border-lotus/50">
@@ -78,20 +95,34 @@
                 </div>
                 }
 
-                <div
-                    class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-all backdrop-blur-[2px] z-10">
+                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-all backdrop-blur-[2px] z-10"
+                    [ngClass]="{'opacity-100 backdrop-blur-md': isUploadingTrailer()}">
+
+                    @if (isUploadingTrailer()) {
+                    <div class="w-full max-w-[200px] px-6 text-center">
+                        <p class="font-mono text-[10px] uppercase tracking-widest font-bold text-white mb-3">
+                            Uploading... {{ uploadProgress() }}%
+                        </p>
+                        <div class="h-2 w-full bg-slate-700/50 rounded-full overflow-hidden border border-white/10">
+                            <div class="h-full bg-lotus transition-all duration-300 ease-out"
+                                [style.width.%]="uploadProgress()"></div>
+                        </div>
+                        @if (uploadProgress() === 100) {
+                        <p class="font-syne text-[10px] text-slate-300 mt-2 flex items-center justify-center gap-1">
+                            <lucide-icon [name]="icons.Loader2" class="w-3 h-3 animate-spin"></lucide-icon>
+                            Validation en cours...
+                        </p>
+                        }
+                    </div>
+                    } @else {
                     <label
                         class="cursor-pointer bg-lotus text-ds-black px-5 py-2.5 rounded font-mono text-[10px] uppercase tracking-widest font-bold hover:bg-lotus-light transition-colors shadow-lg">
-                        @if (isUploadingTrailer()) {
-                        <lucide-icon [name]="icons.Loader2" class="w-4 h-4 inline animate-spin mr-1.5"></lucide-icon>
-                        {{ 'COURSE_EDITOR.PRICING.LOADING' | translate }}
-                        } @else {
                         <lucide-icon [name]="icons.UploadCloud" class="w-4 h-4 inline mr-1.5"></lucide-icon>
                         {{ currentCourse()?.trailerUrl ? ('COURSE_EDITOR.PRICING.BTN_REPLACE_TRAILER' | translate) :
                         ('COURSE_EDITOR.PRICING.BTN_UPLOAD_TRAILER' | translate) }}
-                        }
                         <input type="file" class="hidden" (change)="onTrailerSelected($event)" accept="video/mp4">
                     </label>
+                    }
                 </div>
             </div>
         </div>
