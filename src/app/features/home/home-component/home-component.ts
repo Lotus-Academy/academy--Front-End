@@ -14,7 +14,9 @@ import {
   Heart,
   Database,
   BookOpen,
-  Star
+  Star,
+  Cpu,
+  Activity
 } from 'lucide-angular';
 import { HomeLayoutComponent } from '../../layouts/home-layout/home-layout.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -29,7 +31,7 @@ import { TranslateModule } from '@ngx-translate/core';
 export class HomeComponent {
   readonly icons = {
     ArrowRight, Play, TrendingUp, Users, Award,
-    BarChart3, Brain, Shield, Heart, Database, BookOpen, Star
+    BarChart3, Brain, Shield, Heart, Database, BookOpen, Star, Cpu, Activity
   };
 
   stats = [
@@ -39,11 +41,26 @@ export class HomeComponent {
   ];
 
   topics = [
-    { nameKey: "HOME.TOPICS.ITEMS.ALGO", query: "Algorithmic Trading", icon: TrendingUp, courses: 45, color: "bg-lotus/10 text-lotus" },
-    { nameKey: "HOME.TOPICS.ITEMS.QUANT", query: "Quantitative Finance", icon: BarChart3, courses: 32, color: "bg-lotus/10 text-lotus" },
-    { nameKey: "HOME.TOPICS.ITEMS.ML", query: "Machine Learning", icon: Brain, courses: 28, color: "bg-green/10 text-green" },
-    { nameKey: "HOME.TOPICS.ITEMS.RISK", query: "Risk Management", icon: Shield, courses: 24, color: "bg-lotus/10 text-lotus" },
-    { nameKey: "HOME.TOPICS.ITEMS.PSYCHO", query: "Trading Psychology", icon: Heart, courses: 18, color: "bg-lotus/10 text-lotus" },
+    { nameKey: "HOME.TOPICS.ITEMS.ALGO", query: "Algorithmic Trading", icon: TrendingUp, courses: 45, color: "text-lotus bg-lotus/10 border-lotus/20" },
+    { nameKey: "HOME.TOPICS.ITEMS.QUANT", query: "Quantitative Finance", icon: BarChart3, courses: 32, color: "text-green bg-green/10 border-green/20" },
+    { nameKey: "HOME.TOPICS.ITEMS.ML", query: "Machine Learning", icon: Brain, courses: 28, color: "text-lotus bg-lotus/10 border-lotus/20" },
+    { nameKey: "HOME.TOPICS.ITEMS.RISK", query: "Risk Management", icon: Shield, courses: 24, color: "text-green bg-green/10 border-green/20" },
+    { nameKey: "HOME.TOPICS.ITEMS.PSYCHO", query: "Trading Psychology", icon: Heart, courses: 18, color: "text-lotus bg-lotus/10 border-lotus/20" },
+  ];
+
+  marqueeItems: string[] = [
+    'ALGORITHMIC TRADING', '•',
+    'QUANTITATIVE ANALYSIS', '•',
+    'MACHINE LEARNING', '•',
+    'HIGH-FREQUENCY TRADING', '•',
+    'RISK MANAGEMENT', '•',
+    'NEURAL NETWORKS', '•',
+    'ALGORITHMIC TRADING', '•',
+    'QUANTITATIVE ANALYSIS', '•',
+    'MACHINE LEARNING', '•',
+    'HIGH-FREQUENCY TRADING', '•',
+    'RISK MANAGEMENT', '•',
+    'NEURAL NETWORKS'
   ];
 
   activeIndex: number | null = null;

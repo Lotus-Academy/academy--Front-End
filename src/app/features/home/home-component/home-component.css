@@ -1,0 +1,183 @@
+/* ========================================= */
+/* ARRIÈRE-PLAN GLOBAL HIGH-TECH             */
+/* ========================================= */
+
+.global-tech-bg {
+    position: relative;
+}
+
+.global-tech-bg::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        linear-gradient(to right, hsl(var(--foreground) / 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, hsl(var(--foreground) / 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.dark .global-tech-bg::before {
+    background-image:
+        linear-gradient(to right, hsl(var(--gold) / 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, hsl(var(--gold) / 0.06) 1px, transparent 1px);
+}
+
+/* ========================================= */
+/* ANIMATIONS ET STRUCTURE HERO              */
+/* ========================================= */
+
+.futuristic-hero {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Grille 3D Principale (Effet de sol dans le Hero) */
+.grid-overlay {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: 0;
+    left: -50%;
+    background-image:
+        linear-gradient(hsl(var(--foreground) / 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, hsl(var(--foreground) / 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    transform: perspective(600px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+    animation: grid-move 15s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.dark .grid-overlay {
+    background-image:
+        linear-gradient(hsl(var(--gold) / 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, hsl(var(--gold) / 0.15) 1px, transparent 1px);
+}
+
+@keyframes grid-move {
+    0% {
+        transform: perspective(600px) rotateX(60deg) translateY(0) translateZ(-200px);
+    }
+
+    100% {
+        transform: perspective(600px) rotateX(60deg) translateY(60px) translateZ(-200px);
+    }
+}
+
+/* ========================================= */
+/* TYPOGRAPHIE ET GLOW                       */
+/* ========================================= */
+
+.tech-text-accent {
+    color: hsl(var(--gold));
+}
+
+.dark .tech-text-accent {
+    color: hsl(var(--gold));
+    text-shadow:
+        0 0 5px hsl(var(--gold) / 0.8),
+        0 0 15px hsl(var(--gold) / 0.5),
+        0 0 30px hsl(var(--gold) / 0.3);
+}
+
+.star-glow {
+    fill: hsl(var(--gold));
+    color: hsl(var(--gold));
+}
+
+.dark .star-glow {
+    filter: drop-shadow(0 0 4px hsl(var(--gold) / 0.7));
+}
+
+/* ========================================= */
+/* BANDEAU DEFILEMENT INFINI (MARQUEE)       */
+/* ========================================= */
+
+.marquee-container {
+    width: 100%;
+    overflow: hidden;
+    background: hsl(var(--card));
+    border-top: 1px solid hsl(var(--border));
+    border-bottom: 1px solid hsl(var(--border));
+    padding: 15px 0;
+    display: flex;
+    position: relative;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.dark .marquee-container {
+    background: hsl(var(--background));
+    border-color: hsl(var(--gold) / 0.3);
+    box-shadow: 0 0 20px hsl(var(--gold) / 0.08);
+}
+
+.marquee-content {
+    display: flex;
+    animation: marquee-scroll 25s linear infinite;
+    white-space: nowrap;
+}
+
+.marquee-item {
+    padding: 0 20px;
+    color: hsl(var(--foreground));
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+.dark .marquee-item {
+    color: hsl(var(--gold));
+    text-shadow: 0 0 8px hsl(var(--gold) / 0.6);
+}
+
+@keyframes marquee-scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* ========================================= */
+/* INTERACTIONS                              */
+/* ========================================= */
+
+.float-animation {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.hover-tech-card {
+    transition: all 0.3s ease;
+}
+
+.hover-tech-card:hover {
+    border-color: hsl(var(--gold) / 0.5);
+    transform: translateY(-4px);
+}
+
+.dark .hover-tech-card:hover {
+    box-shadow: 0 0 20px hsl(var(--gold) / 0.15);
+}
