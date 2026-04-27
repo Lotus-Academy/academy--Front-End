@@ -1,9 +1,9 @@
 import { Component, effect, inject, signal, untracked, computed, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Info, Mail, Loader2, CheckCircle2, LucideAngularModule, Ticket } from 'lucide-angular';
+import { Info, Mail, Loader2, CheckCircle2, LucideAngularModule, Ticket, ShieldCheck, KeyRound } from 'lucide-angular';
 
 import { AuthService, LoginRequest, RegisterRequest } from '../../../core/services/auth.service';
 
@@ -11,7 +11,52 @@ import { AuthService, LoginRequest, RegisterRequest } from '../../../core/servic
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, TranslateModule, LucideAngularModule],
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  styles: [`
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink-caret {
+      from, to { border-right-color: transparent; }
+    }
+    .typing-effect {
+      overflow: hidden;
+      white-space: nowrap;
+      animation: typing 4s steps(40, end) infinite alternate, blink-caret .75s step-end infinite;
+    }
+    
+    @keyframes trade-bar {
+      0% { transform: scaleY(0.2); }
+      50% { transform: scaleY(0.85); }
+      100% { transform: scaleY(0.45); }
+    }
+    .animate-trade-1, .animate-trade-2, .animate-trade-3, .animate-trade-4 {
+      height: 100%;
+      transform-origin: bottom;
+      will-change: transform;
+    }
+    .animate-trade-1 { animation: trade-bar 3s ease-in-out infinite alternate; }
+    .animate-trade-2 { animation: trade-bar 4s ease-in-out infinite alternate-reverse; }
+    .animate-trade-3 { animation: trade-bar 2.5s ease-in-out infinite alternate; }
+    .animate-trade-4 { animation: trade-bar 3.5s ease-in-out infinite alternate-reverse; }
+
+    @keyframes pulse-node {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.25); filter: drop-shadow(0 0 6px currentColor); }
+    }
+    .neural-node {
+      animation: pulse-node 2s infinite;
+      transform-origin: center;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .typing-effect, .neural-node, .animate-trade-1, .animate-trade-2, .animate-trade-3, .animate-trade-4 {
+        animation: none !important;
+        transform: none !important;
+      }
+    }
+  `]
 })
 export class LoginComponent implements OnInit {
 
@@ -20,7 +65,7 @@ export class LoginComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  readonly icons = { Mail, Info, Loader2, CheckCircle2, Ticket };
+  readonly icons = { Mail, Info, Loader2, CheckCircle2, Ticket, ShieldCheck, KeyRound };
 
   private routeParams = toSignal(this.route.queryParams);
 
@@ -31,17 +76,23 @@ export class LoginComponent implements OnInit {
 
   isLoading = signal<boolean>(false);
   showPassword = signal<boolean>(false);
+  showConfirmPassword = signal<boolean>(false); // NOUVEAU
   errorMessage = signal<string>('');
   isUnverified = signal<boolean>(false);
   isRegistrationSuccess = signal<boolean>(false);
 
+  // Regex pour mot de passe fort
+  private strongPasswordRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])/;
+
+  //Ajout de confirmPassword et des validateurs dynamiques
   authForm: FormGroup = this.fb.group({
     firstName: [''],
     lastName: [''],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    password: ['', [Validators.required]],
+    confirmPassword: [''],
     referredByCode: ['']
-  });
+  }, { validators: this.passwordMatchValidator });
 
   constructor() {
     if (this.authService.isAuthenticated()) {
@@ -54,29 +105,47 @@ export class LoginComponent implements OnInit {
       untracked(() => {
         this.updateValidators(loginMode);
         this.errorMessage.set('');
+        // Réinitialiser les champs spécifiques à l'inscription si on repasse en login
+        if (loginMode) {
+          this.authForm.patchValue({ confirmPassword: '' });
+          this.authForm.get('confirmPassword')?.markAsUntouched();
+        }
       });
     });
   }
 
-  // --- NOUVEAU : Capture du code de parrainage au chargement ---
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const refCode = params['ref'];
 
       if (refCode) {
-        // 1. Pré-remplir le champ de parrainage avec le code de l'URL
         this.authForm.patchValue({ referredByCode: refCode });
 
-        // 2. Basculer automatiquement sur le mode inscription si ce n'est pas le cas
         if (params['mode'] !== 'signup') {
           this.router.navigate([], {
             relativeTo: this.route,
             queryParams: { mode: 'signup' },
-            queryParamsHandling: 'merge', // Conserve le paramètre ?ref=
+            queryParamsHandling: 'merge',
           });
         }
       }
     });
+  }
+
+  private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+
+    // On ne valide que si on n'est pas vide (sinon c'est 'required' qui gère)
+    if (password && confirmPassword && password !== confirmPassword) {
+      control.get('confirmPassword')?.setErrors({ mismatch: true });
+      return { mismatch: true };
+    } else {
+      if (control.get('confirmPassword')?.hasError('mismatch')) {
+        control.get('confirmPassword')?.setErrors(null);
+      }
+      return null;
+    }
   }
 
   toggleMode() {
@@ -92,19 +161,50 @@ export class LoginComponent implements OnInit {
   private updateValidators(isLoginMode: boolean) {
     const firstNameControl = this.authForm.get('firstName');
     const lastNameControl = this.authForm.get('lastName');
+    const passwordControl = this.authForm.get('password');
+    const confirmPasswordControl = this.authForm.get('confirmPassword'); // NOUVEAU
 
     if (isLoginMode) {
+      // MODE LOGIN
       firstNameControl?.clearValidators();
       lastNameControl?.clearValidators();
+      confirmPasswordControl?.clearValidators();
+      passwordControl?.setValidators([Validators.required]);
+
       firstNameControl?.reset('');
       lastNameControl?.reset('');
+      confirmPasswordControl?.reset('');
     } else {
+      // MODE INSCRIPTION
       firstNameControl?.setValidators([Validators.required, Validators.minLength(2)]);
       lastNameControl?.setValidators([Validators.required, Validators.minLength(2)]);
+      confirmPasswordControl?.setValidators([Validators.required]);
+      passwordControl?.setValidators([Validators.required, Validators.minLength(8), Validators.pattern(this.strongPasswordRegex)]); // NOUVEAU
     }
 
     firstNameControl?.updateValueAndValidity();
     lastNameControl?.updateValueAndValidity();
+    passwordControl?.updateValueAndValidity();
+    confirmPasswordControl?.updateValueAndValidity();
+  }
+
+  generateStrongPassword() {
+    const length = 16;
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_+?";
+    let password = "A" + "a" + "1" + "!";
+
+    for (let i = 4; i < length; ++i) {
+      password += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+
+    password = password.split('').sort(() => 0.5 - Math.random()).join('');
+
+    this.authForm.patchValue({
+      password: password,
+      confirmPassword: password
+    });
+    this.showPassword.set(true);
+    this.showConfirmPassword.set(true);
   }
 
   onSubmit() {
@@ -158,7 +258,6 @@ export class LoginComponent implements OnInit {
       email: formValues.email,
       password: formValues.password,
       role: 'STUDENT',
-      // Assurez-vous que le service envoie bien ce champ au backend
       referredByCode: formValues.referredByCode
     };
 
@@ -179,8 +278,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  togglePasswordVisibility() {
-    this.showPassword.update(current => !current);
+  togglePasswordVisibility(field: 'password' | 'confirm') {
+    if (field === 'password') {
+      this.showPassword.update(current => !current);
+    } else {
+      this.showConfirmPassword.update(current => !current);
+    }
   }
 
   resetToLogin() {
@@ -196,7 +299,6 @@ export class LoginComponent implements OnInit {
   isResending = signal<boolean>(false);
   resendSuccessMessage = signal<string | null>(null);
 
-  // Méthode pour renvoyer l'email
   resendVerificationEmail(): void {
     const email = this.authForm.get('email')?.value;
     if (!email) return;
@@ -204,7 +306,6 @@ export class LoginComponent implements OnInit {
     this.isResending.set(true);
     this.resendSuccessMessage.set(null);
 
-    // Adaptez "authService.resendVerificationEmail" selon le nom de la méthode dans votre service
     this.authService.resendVerificationEmail(email).subscribe({
       next: () => {
         this.isResending.set(false);
@@ -212,7 +313,6 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.isResending.set(false);
-        // Vous pouvez définir l'erreur globale ici si l'envoi échoue
         this.errorMessage.set('LOGIN.ERRORS.RESEND_FAILED');
       }
     });
