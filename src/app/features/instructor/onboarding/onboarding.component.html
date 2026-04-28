@@ -86,11 +86,11 @@
                         <input type="text" formControlName="headline"
                             [placeholder]="'ONBOARDING.STEP1.HEADLINE_PLACEHOLDER' | translate"
                             class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors"
-                            [ngClass]="onboardingForm.get('step1.headline')?.invalid && onboardingForm.get('step1.headline')?.touched ? 'border-red-500' : 'border-slate-200 dark:border-ds-border'">
-                        @if (onboardingForm.get('step1.headline')?.touched &&
-                        onboardingForm.get('step1.headline')?.invalid) {
-                        <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">{{
-                            'ONBOARDING.STEP1.HEADLINE_ERR' | translate }}</p>
+                            [ngClass]="isFieldInvalid('step1', 'headline') ? 'border-red-500' : 'border-slate-200 dark:border-ds-border'">
+                        @if (isFieldInvalid('step1', 'headline')) {
+                        <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">
+                            Required field (Max 100 chars). Example: "Senior Quantitative Analyst & Options Trader"
+                        </p>
                         }
                     </div>
 
@@ -102,11 +102,11 @@
                         <textarea formControlName="bio" rows="6"
                             [placeholder]="'ONBOARDING.STEP1.BIO_PLACEHOLDER' | translate"
                             class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:border-lotus outline-none dark:text-white transition-colors resize-y"
-                            [ngClass]="onboardingForm.get('step1.bio')?.invalid && onboardingForm.get('step1.bio')?.touched ? 'border-red-500' : 'border-slate-200 dark:border-ds-border'"></textarea>
-                        @if (onboardingForm.get('step1.bio')?.touched &&
-                        onboardingForm.get('step1.bio')?.hasError('minlength')) {
-                        <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">{{
-                            'ONBOARDING.STEP1.BIO_ERR' | translate }}</p>
+                            [ngClass]="isFieldInvalid('step1', 'bio') ? 'border-red-500' : 'border-slate-200 dark:border-ds-border'"></textarea>
+                        @if (isFieldInvalid('step1', 'bio')) {
+                        <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">
+                            Bio is too short. Please provide at least 50 characters detailing your background.
+                        </p>
                         }
                     </div>
                 </div>
@@ -125,33 +125,70 @@
                             class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70">
                             {{ 'ONBOARDING.STEP2.EXPERTISE_LABEL' | translate }}
                         </label>
-                        <input type="text" formControlName="expertiseDomainsStr"
-                            [placeholder]="'ONBOARDING.STEP2.EXPERTISE_PLACEHOLDER' | translate"
-                            class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors">
-                        <p
-                            class="font-mono text-[9px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/50 mt-2">
-                            {{ 'ONBOARDING.STEP2.EXPERTISE_HINT' | translate }}</p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            @for (item of expertiseOptions; track item) {
+                            <button type="button" (click)="toggleSelection('expertise', item)"
+                                [class.bg-lotus]="onboardingForm.get('step2.expertise')?.value.includes(item)"
+                                [class.text-ds-black]="onboardingForm.get('step2.expertise')?.value.includes(item)"
+                                [class.border-lotus]="onboardingForm.get('step2.expertise')?.value.includes(item)"
+                                [class.bg-slate-50]="!onboardingForm.get('step2.expertise')?.value.includes(item)"
+                                [class.text-slate-600]="!onboardingForm.get('step2.expertise')?.value.includes(item)"
+                                [class.dark:bg-ds-black]="!onboardingForm.get('step2.expertise')?.value.includes(item)"
+                                [class.dark:text-ds-muted]="!onboardingForm.get('step2.expertise')?.value.includes(item)"
+                                class="px-4 py-2 rounded-full font-syne text-sm border border-slate-200 dark:border-ds-border transition-colors hover:border-lotus/50">
+                                {{ item }}
+                            </button>
+                            }
+                        </div>
+                        @if (isFieldInvalid('step2', 'expertise')) {
+                        <p class="text-[9px] font-mono text-red-500 mt-2 uppercase tracking-wider">
+                            Please select at least one area of expertise from the list above.
+                        </p>
+                        }
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
                         <div class="space-y-3">
                             <label
                                 class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70">
                                 {{ 'ONBOARDING.STEP2.YEARS_LABEL' | translate }}
                             </label>
-                            <input type="number" formControlName="yearsOfExperience" min="0"
-                                class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors">
+                            <input type="number" formControlName="yearsOfExperience" min="0" placeholder="e.g., 5"
+                                class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors"
+                                [ngClass]="isFieldInvalid('step2', 'yearsOfExperience') ? 'border-red-500' : 'border-slate-200 dark:border-ds-border'">
+                            @if (isFieldInvalid('step2', 'yearsOfExperience')) {
+                            <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">
+                                Invalid input. Example: 3, 5, or 10.
+                            </p>
+                            }
                         </div>
+                    </div>
 
-                        <div class="space-y-3">
-                            <label
-                                class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70">
-                                {{ 'ONBOARDING.STEP2.LANGUAGES_LABEL' | translate }}
-                            </label>
-                            <input type="text" formControlName="teachingLanguagesStr"
-                                [placeholder]="'ONBOARDING.STEP2.LANGUAGES_PLACEHOLDER' | translate"
-                                class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors">
+                    <div class="space-y-3 pt-2">
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70">
+                            {{ 'ONBOARDING.STEP2.LANGUAGES_LABEL' | translate }}
+                        </label>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            @for (lang of languageOptions; track lang) {
+                            <button type="button" (click)="toggleSelection('languages', lang)"
+                                [class.bg-lotus]="onboardingForm.get('step2.languages')?.value.includes(lang)"
+                                [class.text-ds-black]="onboardingForm.get('step2.languages')?.value.includes(lang)"
+                                [class.border-lotus]="onboardingForm.get('step2.languages')?.value.includes(lang)"
+                                [class.bg-slate-50]="!onboardingForm.get('step2.languages')?.value.includes(lang)"
+                                [class.text-slate-600]="!onboardingForm.get('step2.languages')?.value.includes(lang)"
+                                [class.dark:bg-ds-black]="!onboardingForm.get('step2.languages')?.value.includes(lang)"
+                                [class.dark:text-ds-muted]="!onboardingForm.get('step2.languages')?.value.includes(lang)"
+                                class="px-4 py-2 rounded-full font-syne text-sm border border-slate-200 dark:border-ds-border transition-colors hover:border-lotus/50">
+                                {{ lang }}
+                            </button>
+                            }
                         </div>
+                        @if (isFieldInvalid('step2', 'languages')) {
+                        <p class="text-[9px] font-mono text-red-500 mt-2 uppercase tracking-wider">
+                            Please select at least one teaching language.
+                        </p>
+                        }
                     </div>
                 </div>
                 }
@@ -172,11 +209,11 @@
                         <input type="url" formControlName="linkedinUrl"
                             [placeholder]="'ONBOARDING.STEP3.LINKEDIN_PLACEHOLDER' | translate"
                             class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors"
-                            [ngClass]="onboardingForm.get('step3.linkedinUrl')?.invalid && onboardingForm.get('step3.linkedinUrl')?.touched ? 'border-red-500' : 'border-slate-200 dark:border-ds-border'">
-                        @if (onboardingForm.get('step3.linkedinUrl')?.touched &&
-                        onboardingForm.get('step3.linkedinUrl')?.invalid) {
-                        <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">{{
-                            'ONBOARDING.STEP3.LINKEDIN_ERR' | translate }}</p>
+                            [ngClass]="isFieldInvalid('step3', 'linkedinUrl') ? 'border-red-500' : 'border-slate-200 dark:border-ds-border'">
+                        @if (isFieldInvalid('step3', 'linkedinUrl')) {
+                        <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">
+                            Invalid LinkedIn URL. Example: https://www.linkedin.com/in/your-profile
+                        </p>
                         }
                     </div>
 
@@ -210,7 +247,7 @@
                         {{ 'ONBOARDING.STEPS.LEGAL_FINANCE' | translate }}
                     </h2>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 gap-6">
                         <div class="space-y-3">
                             <label
                                 class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70">
@@ -218,7 +255,13 @@
                             </label>
                             <input type="text" formControlName="legalName"
                                 [placeholder]="'ONBOARDING.STEP4.LEGAL_NAME_PLACEHOLDER' | translate"
-                                class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors">
+                                class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors"
+                                [ngClass]="isFieldInvalid('step4', 'legalName') ? 'border-red-500' : 'border-slate-200 dark:border-ds-border'">
+                            @if (isFieldInvalid('step4', 'legalName')) {
+                            <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">
+                                Legal name is required. Example: John Doe
+                            </p>
+                            }
                         </div>
 
                         <div class="space-y-3">
@@ -226,9 +269,22 @@
                                 class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70">
                                 {{ 'ONBOARDING.STEP4.PHONE_LABEL' | translate }}
                             </label>
-                            <input type="tel" formControlName="phoneNumber"
-                                [placeholder]="'ONBOARDING.STEP4.PHONE_PLACEHOLDER' | translate"
-                                class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors">
+                            <div class="flex gap-2">
+                                <select formControlName="phonePrefix"
+                                    class="w-[120px] px-3 py-3.5 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors cursor-pointer">
+                                    @for (prefix of phonePrefixes; track prefix.code) {
+                                    <option [value]="prefix.code">{{ prefix.label }}</option>
+                                    }
+                                </select>
+                                <input type="tel" formControlName="phoneNumber" placeholder="612345678"
+                                    class="flex-1 px-4 py-3.5 bg-slate-50 dark:bg-ds-black border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors"
+                                    [ngClass]="isFieldInvalid('step4', 'phoneNumber') ? 'border-red-500' : 'border-slate-200 dark:border-ds-border'">
+                            </div>
+                            @if (isFieldInvalid('step4', 'phoneNumber')) {
+                            <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">
+                                Invalid phone number format. Example: 612345678 (Without the country code)
+                            </p>
+                            }
                         </div>
                     </div>
 
@@ -238,7 +294,14 @@
                             {{ 'ONBOARDING.STEP4.ADDRESS_LABEL' | translate }}
                         </label>
                         <textarea formControlName="billingAddress" rows="3"
-                            class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors resize-none"></textarea>
+                            placeholder="123 Trading Avenue, Financial District, NY 10001"
+                            class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors resize-none"
+                            [ngClass]="isFieldInvalid('step4', 'billingAddress') ? 'border-red-500' : 'border-slate-200 dark:border-ds-border'"></textarea>
+                        @if (isFieldInvalid('step4', 'billingAddress')) {
+                        <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">
+                            Billing address is required for invoicing.
+                        </p>
+                        }
                     </div>
 
                     <div class="space-y-3">
@@ -246,7 +309,7 @@
                             class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted/70">
                             {{ 'ONBOARDING.STEP4.TAX_LABEL' | translate }}
                         </label>
-                        <input type="text" formControlName="taxId"
+                        <input type="text" formControlName="taxId" placeholder="Optional: Enterprise Tax ID"
                             class="w-full px-4 py-3.5 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus focus:outline-none dark:text-white transition-colors">
                     </div>
                 </div>
@@ -295,10 +358,22 @@
                         </label>
                         @if (onboardingForm.get('step5.termsAccepted')?.touched &&
                         onboardingForm.get('step5.termsAccepted')?.invalid) {
-                        <p class="text-[9px] font-mono text-red-500 mt-3 uppercase tracking-wider ml-9">{{
-                            'ONBOARDING.STEP5.TERMS_ERR' | translate }}</p>
+                        <p class="text-[9px] font-mono text-red-500 mt-3 uppercase tracking-wider ml-9">
+                            You must accept the terms and conditions to proceed.
+                        </p>
                         }
                     </div>
+
+                    @if (onboardingForm.invalid && onboardingForm.touched) {
+                    <div
+                        class="p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded flex items-center gap-3">
+                        <lucide-icon [name]="icons.AlertTriangle" class="w-5 h-5 text-red-500"></lucide-icon>
+                        <p class="font-syne text-sm text-red-800 dark:text-red-400 font-bold">
+                            Action required: Please review previous steps. Some mandatory fields are missing or invalid.
+                        </p>
+                    </div>
+                    }
+
                 </div>
                 }
 
@@ -318,7 +393,6 @@
                         } @else {
                         <button type="submit" [disabled]="onboardingForm.invalid || isSubmitting()"
                             class="flex items-center gap-3 px-8 py-3.5 rounded font-mono text-[11px] uppercase tracking-widest font-bold bg-green hover:bg-green/90 text-ds-black disabled:opacity-50 disabled:bg-slate-300 dark:disabled:bg-ds-border dark:disabled:text-ds-muted transition-colors shadow-sm">
-
                             @if (isSubmitting()) {
                             <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
                             {{ isEditMode() ? ('ONBOARDING.NAV.UPDATING' | translate) : ('ONBOARDING.NAV.SUBMITTING' |
@@ -328,7 +402,6 @@
                             {{ isEditMode() ? ('ONBOARDING.NAV.UPDATE' | translate) : ('ONBOARDING.NAV.SUBMIT' |
                             translate) }}
                             }
-
                         </button>
                         }
                 </div>

@@ -1,9 +1,9 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core'; // <-- AJOUT de OnInit
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LucideAngularModule, User, BookOpen, Globe, FileText, CheckCircle, ChevronRight, ChevronLeft, Loader2, AlertTriangle } from 'lucide-angular'; // <-- AJOUT de AlertTriangle
+import { LucideAngularModule, User, BookOpen, Globe, FileText, CheckCircle, ChevronRight, ChevronLeft, Loader2, AlertTriangle } from 'lucide-angular';
 import { InstructorProfileService, InstructorOnboardingRequestDTO, InstructorProfileResponseDTO } from '../../../core/services/instructor-profile.service';
 import { NavbarComponent } from "../../layouts/navbar-component/navbar.component";
 
@@ -11,9 +11,9 @@ import { NavbarComponent } from "../../layouts/navbar-component/navbar.component
   selector: 'app-instructor-onboarding',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule, NavbarComponent],
-  templateUrl: './onboarding.component.html' // Assurez-vous que le nom du fichier matche
+  templateUrl: './onboarding.component.html'
 })
-export class InstructorOnboardingComponent implements OnInit { // <-- Implémente OnInit
+export class InstructorOnboardingComponent implements OnInit {
   private fb = inject(FormBuilder);
   private instructorService = inject(InstructorProfileService);
   private router = inject(Router);
@@ -21,9 +21,8 @@ export class InstructorOnboardingComponent implements OnInit { // <-- Implément
 
   readonly icons = { User, BookOpen, Globe, FileText, CheckCircle, ChevronRight, ChevronLeft, Loader2, AlertTriangle };
 
-  // NOUVEAUX ÉTATS
-  isPageLoading = signal<boolean>(true); // Loader global au démarrage
-  isEditMode = signal<boolean>(false);   // Vaut true si l'admin a rejeté le dossier
+  isPageLoading = signal<boolean>(true);
+  isEditMode = signal<boolean>(false);
 
   currentStep = signal<number>(1);
   isSubmitting = signal<boolean>(false);
@@ -37,24 +36,49 @@ export class InstructorOnboardingComponent implements OnInit { // <-- Implément
     { num: 5, titleKey: 'ONBOARDING.STEPS.VALIDATION', icon: this.icons.CheckCircle, formGroupName: 'step5' }
   ];
 
+  expertiseOptions = [
+    'Algorithmic Trading', 'Risk Management', 'Machine Learning',
+    'Quantitative Analysis', 'Forex', 'Crypto Trading', 'Portfolio Strategy',
+    'Financial Modeling', 'Data Science', 'Python Programming'
+  ];
+
+  languageOptions = [
+    'English', 'Français', 'Spanish', 'Arabic', 'German', 'Mandarin'
+  ];
+
+  // Liste des indicatifs téléphoniques (Focus MENA / Europe / US)
+  phonePrefixes = [
+    { code: '+212', label: 'MA (+212)' },
+    { code: '+1', label: 'US/CA (+1)' },
+    { code: '+33', label: 'FR (+33)' },
+    { code: '+44', label: 'UK (+44)' },
+    { code: '+971', label: 'AE (+971)' },
+    { code: '+966', label: 'SA (+966)' },
+    { code: '+49', label: 'DE (+49)' },
+    { code: '+34', label: 'ES (+34)' },
+    { code: '+91', label: 'IN (+91)' }
+  ];
+
   onboardingForm: FormGroup = this.fb.group({
     step1: this.fb.group({
       headline: ['', [Validators.required, Validators.maxLength(100)]],
       bio: ['', [Validators.required, Validators.minLength(50)]]
     }),
     step2: this.fb.group({
-      expertiseDomainsStr: ['', [Validators.required]],
-      yearsOfExperience: [0, [Validators.required, Validators.min(0)]],
-      teachingLanguagesStr: ['', [Validators.required]]
+      expertise: [[], [Validators.required, Validators.minLength(1)]],
+      yearsOfExperience: [null, [Validators.required, Validators.min(0)]],
+      languages: [[], [Validators.required, Validators.minLength(1)]]
     }),
     step3: this.fb.group({
-      linkedinUrl: ['', [Validators.required, Validators.pattern('^(https?://)?(www\\.)?linkedin\\.com/.*$')]],
+      // LinkedIn Regex stricte mais flexible
+      linkedinUrl: ['', [Validators.required, Validators.pattern('^(https?:\\/\\/)?(www\\.)?linkedin\\.com\\/.*$')]],
       websiteUrl: [''],
       githubUrl: ['']
     }),
     step4: this.fb.group({
       legalName: ['', [Validators.required, Validators.maxLength(150)]],
-      phoneNumber: ['', [Validators.required, Validators.pattern('^\\+?[1-9]\\d{1,14}$')]],
+      phonePrefix: ['+212', [Validators.required]], // Indicatif par défaut
+      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{6,14}$')]], // Numéro local seul
       billingAddress: ['', [Validators.required, Validators.maxLength(500)]],
       taxId: ['']
     }),
@@ -66,48 +90,45 @@ export class InstructorOnboardingComponent implements OnInit { // <-- Implément
 
   progressPercentage = computed(() => ((this.currentStep() - 1) / (this.steps.length - 1)) * 100);
 
-  // ==========================================
-  // NOUVELLE MÉTHODE : Vérification au démarrage
-  // ==========================================
   ngOnInit(): void {
     this.instructorService.getMyProfile().subscribe({
       next: (profile: InstructorProfileResponseDTO) => {
-        // Si le profil est en cours d'examen ou déjà validé, on l'éjecte d'ici.
         if (profile.approvalStatus === 'APPROVED' || profile.approvalStatus === 'PENDING') {
           this.router.navigate(['/dashboard']);
           return;
         }
 
-        // Si le profil est rejeté, on passe en mode édition et on pré-remplit !
         if (profile.approvalStatus === 'REJECTED') {
           this.isEditMode.set(true);
           this.prefillForm(profile);
         }
-
         this.isPageLoading.set(false);
       },
-      error: (err) => {
-        // Erreur 404 (Not Found) => Pas encore de profil ! C'est un nouvel utilisateur.
-        // On enlève le loader et on le laisse remplir le formulaire vide.
+      error: () => {
         this.isPageLoading.set(false);
       }
     });
   }
 
-  // ==========================================
-  // NOUVELLE MÉTHODE : Pré-remplissage
-  // ==========================================
   private prefillForm(profile: InstructorProfileResponseDTO): void {
+    // Extraction de l'indicatif si le numéro commence par '+'
+    let prefix = '+212';
+    let phoneNum = profile.phoneNumber || '';
+
+    if (phoneNum.startsWith('+')) {
+      const match = this.phonePrefixes.find(p => phoneNum.startsWith(p.code));
+      if (match) {
+        prefix = match.code;
+        phoneNum = phoneNum.substring(match.code.length).trim();
+      }
+    }
+
     this.onboardingForm.patchValue({
-      step1: {
-        headline: profile.headline,
-        bio: profile.bio
-      },
+      step1: { headline: profile.headline, bio: profile.bio },
       step2: {
-        // Les tableaux string[] de Spring Boot doivent être convertis en texte (virgules) pour l'UI
-        expertiseDomainsStr: profile.expertiseDomains?.join(', '),
+        expertise: profile.expertiseDomains || [],
         yearsOfExperience: profile.yearsOfExperience,
-        teachingLanguagesStr: profile.teachingLanguages?.join(', ')
+        languages: profile.teachingLanguages || []
       },
       step3: {
         linkedinUrl: profile.linkedinUrl,
@@ -116,15 +137,36 @@ export class InstructorOnboardingComponent implements OnInit { // <-- Implément
       },
       step4: {
         legalName: profile.legalName,
-        phoneNumber: profile.phoneNumber,
+        phonePrefix: prefix, // Champ sélecteur
+        phoneNumber: phoneNum, // Champ input texte
         billingAddress: profile.billingAddress,
         taxId: profile.taxId
       },
       step5: {
         availableForMentoring: profile.availableForMentoring,
-        termsAccepted: false // On l'oblige à re-cocher les CGU par sécurité
+        termsAccepted: false
       }
     });
+  }
+
+  toggleSelection(controlName: 'expertise' | 'languages', value: string): void {
+    const control = this.onboardingForm.get(`step2.${controlName}`);
+    if (!control) return;
+
+    const currentValues: string[] = control.value || [];
+    const index = currentValues.indexOf(value);
+
+    if (index === -1) {
+      control.setValue([...currentValues, value]);
+    } else {
+      control.setValue(currentValues.filter(v => v !== value));
+    }
+    control.markAsTouched();
+  }
+
+  isFieldInvalid(step: string, field: string): boolean {
+    const control = this.onboardingForm.get(`${step}.${field}`);
+    return control ? (control.invalid && (control.dirty || control.touched)) : false;
   }
 
   nextStep(): void {
@@ -155,24 +197,22 @@ export class InstructorOnboardingComponent implements OnInit { // <-- Implément
 
     const formValues = this.onboardingForm.value;
 
-    const expertiseArray = formValues.step2.expertiseDomainsStr.split(',').map((s: string) => s.trim()).filter(Boolean);
-    const languagesArray = formValues.step2.teachingLanguagesStr.split(',').map((s: string) => s.trim()).filter(Boolean);
+    // Fusion du préfixe et du numéro pour le backend
+    const fullPhoneNumber = `${formValues.step4.phonePrefix}${formValues.step4.phoneNumber}`;
 
     const requestDTO: InstructorOnboardingRequestDTO = {
       ...formValues.step1,
-      expertiseDomains: expertiseArray,
+      expertiseDomains: formValues.step2.expertise,
       yearsOfExperience: formValues.step2.yearsOfExperience,
-      teachingLanguages: languagesArray,
+      teachingLanguages: formValues.step2.languages,
       ...formValues.step3,
-      ...formValues.step4,
+      legalName: formValues.step4.legalName,
+      phoneNumber: fullPhoneNumber, // Numéro fusionné envoyé à l'API
+      billingAddress: formValues.step4.billingAddress,
+      taxId: formValues.step4.taxId,
       ...formValues.step5
     };
 
-    // ==========================================
-    // MODIFICATION DE LA SOUMISSION
-    // ==========================================
-    // Si isEditMode est vrai -> On appelle updateProfile (PUT)
-    // Sinon -> On appelle submitOnboarding (POST)
     const request$ = this.isEditMode()
       ? this.instructorService.updateProfile(requestDTO)
       : this.instructorService.submitOnboarding(requestDTO);
@@ -184,7 +224,7 @@ export class InstructorOnboardingComponent implements OnInit { // <-- Implément
       },
       error: (err) => {
         this.isSubmitting.set(false);
-        this.errorMessage.set(err.error?.message || err.error || this.translate.instant('ONBOARDING.ERRORS.GENERIC'));
+        this.errorMessage.set(err.error?.message || err.error || "An error occurred during submission.");
       }
     });
   }
