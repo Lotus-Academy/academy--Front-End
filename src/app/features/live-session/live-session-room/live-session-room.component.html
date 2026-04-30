@@ -24,7 +24,7 @@
             }
         </div>
 
-        @if (sessionData()) {
+        @if (sessionData() && hasFullAccess()) {
         <div class="flex items-center gap-4">
             <div class="font-mono text-[10px] uppercase tracking-widest text-ds-muted hidden sm:block">
                 Instructor: <span class="text-white">{{ sessionData()?.instructorName }}</span>
@@ -52,7 +52,10 @@
                 </p>
             </div>
         </div>
-        } @else if (errorMessage()) {
+        }
+
+        @else if (errorMessage()) {
+        <!-- BLOCAGE TOTAL SI L'ÉTUDIANT N'EST PAS INSCRIT AU COURS (Erreur 403 API) -->
         <div class="absolute inset-0 flex items-center justify-center bg-ds-black z-50 p-6">
             <div class="max-w-md bg-ds-surface border border-ds-border rounded p-8 text-center shadow-2xl">
                 <lucide-icon [name]="icons.AlertTriangle"
@@ -65,10 +68,39 @@
                 </a>
             </div>
         </div>
-        } @else if (sessionData()) {
+        }
 
+        @else if (sessionData()) {
+
+        @if (!hasFullAccess()) {
+        <!-- BLOCAGE TOTAL SI L'ÉTUDIANT N'EST PAS ENREGISTRÉ (isRegistered = false) -->
+        <div class="absolute inset-0 flex items-center justify-center bg-ds-black z-50 p-6">
+            <div class="max-w-md bg-ds-surface border border-ds-border rounded-lg p-8 text-center shadow-2xl">
+                <div
+                    class="w-16 h-16 rounded-full bg-lotus/10 border border-lotus/20 flex items-center justify-center mx-auto mb-6">
+                    <lucide-icon [name]="icons.UserPlus" class="w-8 h-8 text-lotus"></lucide-icon>
+                </div>
+                <h2 class="font-cormorant text-3xl font-bold text-white mb-3">Join Live Room</h2>
+                <p class="font-syne text-ds-muted text-sm leading-relaxed mb-8">
+                    You are enrolled in this course, but you haven't reserved your spot for this live session yet. Join
+                    the room to access the stream and chat.
+                </p>
+                <button (click)="registerAndJoin()" [disabled]="isRegistering()"
+                    class="w-full px-6 py-4 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded hover:bg-lotus-light disabled:opacity-50 transition-colors shadow-[0_0_20px_rgba(212,175,55,0.2)] flex items-center justify-center gap-3">
+                    @if (isRegistering()) {
+                    <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
+                    Registering...
+                    } @else {
+                    Enter Room
+                    }
+                </button>
+            </div>
+        </div>
+        } @else {
+
+        <!-- CONTENU DE LA SALLE (Affiche uniquement si l'accès est total) -->
         <div class="h-full flex flex-col transition-all duration-300 ease-in-out shrink-0 border-r border-ds-border"
-            [ngClass]="isToolVisible() ? 'w-full lg:w-[55%]' : 'w-full lg:w-full'">
+            [ngClass]="isToolVisible() && sessionData()?.toolType !== 'NONE' ? 'w-full lg:w-[55%]' : 'w-full lg:w-full'">
 
             <div class="w-full bg-black relative flex-1 min-h-[40vh]">
                 @if (safeStreamUrl()) {
@@ -99,24 +131,6 @@
 
                 @if (isChatVisible()) {
                 <div class="flex-1 flex flex-col relative overflow-hidden bg-ds-black/20">
-
-                    @if (!isProfileLoading() && !isEliteUser()) {
-                    <div
-                        class="absolute inset-0 z-40 bg-ds-black/80 backdrop-blur-sm flex items-center justify-center p-4 text-center">
-                        <div class="flex flex-col items-center">
-                            <div
-                                class="w-10 h-10 rounded-full bg-ds-surface border border-ds-border flex items-center justify-center mb-3">
-                                <lucide-icon [name]="icons.Lock" class="w-4 h-4 text-lotus"></lucide-icon>
-                            </div>
-                            <span
-                                class="font-mono text-[11px] uppercase tracking-widest font-bold text-white mb-1">Elite
-                                Chat Locked</span>
-                            <span class="font-syne text-xs text-ds-muted">Upgrade to participate in the live
-                                discussion.</span>
-                        </div>
-                    </div>
-                    }
-
                     <div class="flex-1 overflow-y-auto p-4 space-y-4">
                         @if (chatMessages().length === 0) {
                         <div class="h-full flex flex-col items-center justify-center text-ds-muted/50">
@@ -167,28 +181,6 @@
 
         @if (isToolVisible() && sessionData()?.toolType !== 'NONE') {
         <div class="w-full h-full lg:w-[45%] bg-ds-surface relative flex flex-col shrink-0 transition-all duration-300">
-
-            @if (!isProfileLoading() && !isEliteUser()) {
-            <div
-                class="absolute inset-0 z-40 bg-ds-black/80 backdrop-blur-sm flex items-center justify-center p-6 sm:p-10 text-center">
-                <div class="bg-ds-surface border border-ds-border rounded-lg p-8 shadow-2xl max-w-sm">
-                    <div
-                        class="w-16 h-16 rounded-full bg-lotus/10 border border-lotus/20 flex items-center justify-center mx-auto mb-6">
-                        <lucide-icon [name]="icons.Lock" class="w-8 h-8 text-lotus"></lucide-icon>
-                    </div>
-                    <h3 class="font-cormorant text-2xl font-bold text-white mb-3">Elite Interactive Tools</h3>
-                    <p class="font-syne text-sm text-ds-muted leading-relaxed mb-6">
-                        You are in Watch Only mode. Upgrade to Elite to access the synchronized coding environment,
-                        trading terminal, and live chat.
-                    </p>
-                    <button
-                        class="w-full px-6 py-3 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded hover:bg-lotus-light transition-colors shadow-[0_0_20px_rgba(212,175,55,0.2)]">
-                        Upgrade to Elite
-                    </button>
-                </div>
-            </div>
-            }
-
             <div class="h-10 border-b border-ds-border bg-ds-black flex items-center justify-between px-4 shrink-0">
                 <div class="flex items-center gap-2">
                     <div class="w-2 h-2 rounded-full bg-green"></div>
@@ -216,9 +208,10 @@
                 </div>
                 }
             </div>
-
         </div>
         }
+
+        } <!-- Fin de la condition hasFullAccess() -->
         }
     </main>
 </div>

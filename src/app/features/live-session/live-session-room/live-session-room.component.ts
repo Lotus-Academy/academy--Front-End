@@ -6,13 +6,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   LucideAngularModule, ChevronLeft, Loader2, Lock, MessageSquare, AlertTriangle,
-  PlayCircle, ChevronDown, ChevronUp, PanelRightClose, PanelRightOpen, Send
+  PlayCircle, ChevronDown, ChevronUp, PanelRightClose, PanelRightOpen, Send, UserPlus
 } from 'lucide-angular';
 
 import { LiveSessionService } from '../../../core/services/live-session.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserService, UserDTO } from '../../../core/services/user.service';
-import { LiveSessionStudentDTO } from '../../../core/models/live-session.dto';
+import { LiveSessionStudentDTO } from '../../../core/services/live-session.service';
 
 @Component({
   selector: 'app-live-session-room',
@@ -28,18 +28,19 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
   private userService = inject(UserService);
   private sanitizer = inject(DomSanitizer);
 
+  // Ajout de UserPlus pour l'icône d'inscription
   readonly icons = {
     ChevronLeft, Loader2, Lock, MessageSquare, AlertTriangle, PlayCircle,
-    ChevronDown, ChevronUp, PanelRightClose, PanelRightOpen, Send
+    ChevronDown, ChevronUp, PanelRightClose, PanelRightOpen, Send, UserPlus
   };
 
   sessionId = signal<string>('');
   sessionData = signal<LiveSessionStudentDTO | null>(null);
 
   isLoading = signal<boolean>(true);
+  isRegistering = signal<boolean>(false); // Nouvel état pour le bouton d'inscription
   errorMessage = signal<string>('');
 
-  // URL sécurisée pour le flux WebRTC (MediaMTX) au lieu de YouTube
   safeStreamUrl = signal<SafeResourceUrl | null>(null);
   safeToolUrl = signal<SafeResourceUrl | null>(null);
 
@@ -48,16 +49,16 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
   userProfile = signal<UserDTO | null>(null);
   isProfileLoading = signal<boolean>(true);
 
-  isEliteUser = computed(() => {
+  // Logique d'accès complet basée sur le rôle ou l'inscription (isRegistered)
+  hasFullAccess = computed(() => {
     const user = this.currentUser();
-    const profile = this.userProfile();
+    const session = this.sessionData();
 
     if (!user) return false;
     if (user.role === 'ADMIN' || user.role === 'INSTRUCTOR') return true;
+    if (session && session.isRegistered) return true;
 
-    if (!profile) return false;
-
-    return profile.subscriptionTier === 'ELITE' && profile.subscriptionStatus === 'ACTIVE';
+    return false;
   });
 
   isToolVisible = signal<boolean>(true);
@@ -88,7 +89,7 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
         this.isProfileLoading.set(false);
       },
       error: (err) => {
-        console.error('Failed to fetch real-time subscription status', err);
+        console.error('Failed to fetch user profile', err);
         this.isProfileLoading.set(false);
       }
     });
@@ -122,7 +123,6 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.sessionData.set(data);
 
-        // Utilisation de whepUrl
         this.setupStreamIframe(data.whepUrl);
         this.setupToolIframe(data.toolType);
 
@@ -134,8 +134,9 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Failed to join session', err);
+        // Si l'utilisateur n'est pas du tout inscrit au cours (403)
         if (err.status === 403) {
-          this.errorMessage.set('Your current subscription tier does not grant access to live sessions. Please upgrade.');
+          this.errorMessage.set('You must be enrolled in the associated course to access its live sessions.');
         } else {
           this.errorMessage.set('The session is unavailable or has not started yet.');
         }
@@ -144,11 +145,26 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Configuration de l'Iframe pour le player WebRTC de MediaMTX
+  // Permet à un étudiant de s'enregistrer à la session s'il a déjà acheté le cours
+  registerAndJoin(): void {
+    this.isRegistering.set(true);
+    this.liveSessionService.registerForSession(this.sessionId()).subscribe({
+      next: () => {
+        // Recharge les données pour obtenir les URL (whepUrl, etc.) si elles étaient cachées
+        this.joinSession(this.sessionId());
+        this.isRegistering.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to RSVP', err);
+        this.errorMessage.set('Failed to register for the session. Please try again.');
+        this.isRegistering.set(false);
+      }
+    });
+  }
+
   private setupStreamIframe(url: string | undefined): void {
     if (!url) return;
 
-    // 1. On nettoie l'URL pour pointer vers le lecteur web HTML de MediaMTX
     let playerUrl = url;
     if (playerUrl.endsWith('/whep')) {
       playerUrl = playerUrl.substring(0, playerUrl.length - 5);
@@ -156,17 +172,13 @@ export class LiveSessionRoomComponent implements OnInit, OnDestroy {
       playerUrl = playerUrl.substring(0, playerUrl.length - 6);
     }
 
-    // 2. On récupère le Token JWT de l'utilisateur connecté
     const token = this.authService.getToken();
 
-    // 3. On ajoute le token en paramètre d'URL pour l'authentification MediaMTX
     if (token) {
-      // On vérifie s'il y a déjà des paramètres (avec '?') pour utiliser '&' ou '?'
       const separator = playerUrl.includes('?') ? '&' : '?';
       playerUrl = `${playerUrl}${separator}token=${token}`;
     }
 
-    // 4. On sécurise l'URL finale pour l'Iframe
     this.safeStreamUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(playerUrl));
   }
 

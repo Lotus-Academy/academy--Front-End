@@ -1,4 +1,82 @@
-<app-instructor-layout title="">
+<app-instructor-layout title="Live Sessions">
+
+    <!-- ======================= GLOBAL TOAST NOTIFICATION ======================= -->
+    @if (globalMessage()) {
+    <div class="fixed top-20 right-4 sm:right-8 z-[100] animate-fade-in-up max-w-sm">
+        <div class="flex items-start gap-3 px-4 py-3 rounded shadow-lg border font-syne text-sm bg-white dark:bg-ds-surface"
+            [ngClass]="{
+                   'border-red-500/30 text-red-500': globalMessage()?.type === 'error',
+                   'border-green/30 text-green': globalMessage()?.type === 'success',
+                   'border-blue-500/30 text-blue-500': globalMessage()?.type === 'info'
+                 }">
+            @if (globalMessage()?.type === 'error') {
+            <lucide-icon [name]="icons.AlertTriangle" class="w-5 h-5 shrink-0"></lucide-icon>
+            } @else if (globalMessage()?.type === 'success') {
+            <lucide-icon [name]="icons.CheckCircle" class="w-5 h-5 shrink-0"></lucide-icon>
+            } @else {
+            <lucide-icon [name]="icons.Info" class="w-5 h-5 shrink-0"></lucide-icon>
+            }
+            <p class="font-bold pt-0.5">{{ globalMessage()?.text }}</p>
+        </div>
+    </div>
+    }
+
+    <!-- ======================= DYNAMIC CONFIRMATION DIALOG ======================= -->
+    @if (confirmDialog().isOpen) {
+    <div
+        class="fixed inset-0 z-[110] bg-slate-900/60 dark:bg-ds-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+            class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-lg shadow-2xl p-8 max-w-sm w-full animate-fade-in-up text-center">
+
+            @if (confirmDialog().action === 'START') {
+            <div
+                class="w-16 h-16 rounded-full bg-lotus/10 border border-lotus/20 flex items-center justify-center mx-auto mb-6">
+                <lucide-icon [name]="icons.Radio" class="w-8 h-8 text-lotus"></lucide-icon>
+            </div>
+            <h3 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-2">Start Broadcast?</h3>
+            <p class="font-syne text-sm text-slate-500 dark:text-ds-muted mb-8">
+                Are you sure you want to go live? Registered students will be notified to join the room.
+            </p>
+            } @else if (confirmDialog().action === 'COMPLETE') {
+            <div
+                class="w-16 h-16 rounded-full bg-slate-100 dark:bg-ds-black border border-slate-200 dark:border-ds-border flex items-center justify-center mx-auto mb-6">
+                <lucide-icon [name]="icons.StopCircle" class="w-8 h-8 text-slate-600 dark:text-white"></lucide-icon>
+            </div>
+            <h3 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-2">End Session?</h3>
+            <p class="font-syne text-sm text-slate-500 dark:text-ds-muted mb-8">
+                This will permanently end the live broadcast and mark it as completed. Students will no longer be able
+                to watch.
+            </p>
+            } @else {
+            <div
+                class="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-6">
+                <lucide-icon [name]="icons.AlertTriangle" class="w-8 h-8 text-red-500"></lucide-icon>
+            </div>
+            <h3 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-2">Cancel Session?</h3>
+            <p class="font-syne text-sm text-slate-500 dark:text-ds-muted mb-8">
+                Are you sure you want to CANCEL this scheduled session? This action is irreversible.
+            </p>
+            }
+
+            <div class="flex gap-3">
+                <button (click)="cancelDialog()"
+                    class="flex-1 py-3 border border-slate-200 dark:border-ds-border text-slate-600 dark:text-ds-muted font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-slate-50 dark:hover:bg-ds-black transition-colors">
+                    Go Back
+                </button>
+                <button (click)="confirmAction()"
+                    class="flex-1 py-3 font-mono text-[10px] uppercase tracking-widest font-bold rounded transition-colors"
+                    [ngClass]="{
+                            'bg-lotus text-ds-black hover:bg-lotus-light shadow-sm': confirmDialog().action === 'START',
+                            'bg-slate-800 text-white hover:bg-black dark:bg-white dark:text-ds-black dark:hover:bg-slate-200': confirmDialog().action === 'COMPLETE',
+                            'bg-red-500 text-white hover:bg-red-600 shadow-[0_4px_10px_rgba(239,68,68,0.3)]': confirmDialog().action === 'CANCEL'
+                        }">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+
     <div class="min-h-screen bg-slate-50 dark:bg-ds-black py-8 px-4 sm:px-6 lg:px-8 font-syne">
         <div class="max-w-7xl mx-auto">
 
@@ -29,16 +107,52 @@
                 </div>
                 <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-2">No Live Sessions</h3>
                 <p class="font-syne text-slate-500 dark:text-ds-muted/70 max-w-md mb-6">You haven't scheduled any
-                    interactive live sessions yet. Schedule one to engage with your Elite students.</p>
+                    interactive live sessions yet. Schedule one to engage with your enrolled students.</p>
                 <a routerLink="/instructor/live-sessions/create"
                     class="font-mono text-[11px] uppercase tracking-widest font-bold text-lotus hover:text-lotus-light transition-colors">
                     + Create your first session
                 </a>
             </div>
             } @else {
+
+            <!-- ======================= SMART FILTERS BAR ======================= -->
+            <div class="flex flex-col sm:flex-row gap-3 mb-8 animate-fade-in">
+                <div class="relative flex-1">
+                    <lucide-icon [name]="icons.Search"
+                        class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></lucide-icon>
+                    <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
+                        placeholder="Search session by title or description..."
+                        class="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus outline-none dark:text-white transition-colors">
+                </div>
+                <div class="flex gap-3">
+                    <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)"
+                        class="px-4 py-2.5 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm outline-none dark:text-white cursor-pointer hover:border-lotus/50 transition-colors">
+                        <option value="ALL">All Statuses</option>
+                        <option value="LIVE">🔴 Live Now</option>
+                        <option value="SCHEDULED">📅 Scheduled</option>
+                        <option value="COMPLETED">✅ Completed</option>
+                        <option value="CANCELLED">❌ Cancelled</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- EMPTY FILTER STATE -->
+            @if (filteredSessions().length === 0) {
+            <div
+                class="py-16 text-center border border-dashed border-slate-200 dark:border-ds-border rounded bg-white dark:bg-ds-surface flex flex-col items-center">
+                <lucide-icon [name]="icons.Filter"
+                    class="w-10 h-10 text-slate-300 dark:text-ds-muted mb-3"></lucide-icon>
+                <p class="font-syne text-slate-500 dark:text-ds-muted">No sessions match your search filters.</p>
+                <button (click)="searchQuery.set(''); statusFilter.set('ALL')"
+                    class="mt-4 text-lotus font-bold font-syne text-sm hover:underline">
+                    Clear Filters
+                </button>
+            </div>
+            } @else {
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
-                @for (session of sessions(); track session.id) {
+                <!-- BOUCLE SUR filteredSessions() AU LIEU DE sessions() -->
+                @for (session of filteredSessions(); track session.id) {
                 <div class="bg-white dark:bg-ds-surface border rounded overflow-hidden shadow-sm flex flex-col transition-all"
                     [ngClass]="session.status === 'LIVE' ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : 'border-slate-200 dark:border-ds-border hover:border-lotus/50'">
 
@@ -94,7 +208,7 @@
                             {{ session.description }}
                         </p>
 
-                        @if ((session.status === 'SCHEDULED' || session.status === 'LIVE') && (session.whipUrl ||
+                        @if ((session.status === 'SCHEDULED' || session.status === 'LIVE') && (session.whepUrl ||
                         session.streamKey)) {
                         <div class="mt-auto pt-4 border-t border-slate-100 dark:border-ds-border">
                             <p
@@ -121,7 +235,8 @@
                     <div class="p-5 pt-0 mt-auto flex flex-col gap-2">
 
                         @if (session.status === 'SCHEDULED') {
-                        <button (click)="startSession(session.id)" [disabled]="actionLoadingId() === session.id"
+                        <button (click)="requestAction(session.id, 'START')"
+                            [disabled]="actionLoadingId() === session.id"
                             class="w-full py-2.5 bg-lotus text-ds-black font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-lotus-light transition-colors flex items-center justify-center gap-2">
                             @if (actionLoadingId() === session.id) {
                             <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
@@ -135,7 +250,8 @@
                                 class="flex-1 py-2 bg-slate-100 dark:bg-ds-black border border-slate-200 dark:border-ds-border text-slate-700 dark:text-white font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-slate-200 dark:hover:bg-ds-border/80 transition-colors">
                                 Enter Room
                             </button>
-                            <button (click)="cancelSession(session.id)" [disabled]="actionLoadingId() === session.id"
+                            <button (click)="requestAction(session.id, 'CANCEL')"
+                                [disabled]="actionLoadingId() === session.id"
                                 class="flex-1 py-2 border border-red-500/30 text-red-500 hover:bg-red-500/10 font-mono text-[10px] uppercase tracking-widest font-bold rounded transition-colors">
                                 Cancel
                             </button>
@@ -147,7 +263,8 @@
                             class="w-full py-2.5 bg-red-500 text-white font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-red-600 transition-colors flex items-center justify-center gap-2 shadow-[0_4px_10px_rgba(239,68,68,0.3)]">
                             <lucide-icon [name]="icons.MonitorPlay" class="w-4 h-4"></lucide-icon> Resume Live Room
                         </button>
-                        <button (click)="completeSession(session.id)" [disabled]="actionLoadingId() === session.id"
+                        <button (click)="requestAction(session.id, 'COMPLETE')"
+                            [disabled]="actionLoadingId() === session.id"
                             class="w-full py-2 border border-slate-300 dark:border-ds-border text-slate-600 dark:text-ds-muted hover:text-white hover:border-white transition-colors font-mono text-[10px] uppercase tracking-widest font-bold rounded">
                             End Session
                         </button>
@@ -171,6 +288,7 @@
                 </div>
                 }
             </div>
+            }
             }
         </div>
     </div>

@@ -1,4 +1,54 @@
-<app-student-layout title="hfh">
+<app-student-layout title="Live Sessions">
+
+    <!-- ======================= GLOBAL TOAST NOTIFICATION ======================= -->
+    @if (globalMessage()) {
+    <div class="fixed top-20 right-4 sm:right-8 z-[100] animate-fade-in-up max-w-sm">
+        <div class="flex items-start gap-3 px-4 py-3 rounded shadow-lg border font-syne text-sm bg-white dark:bg-ds-surface"
+            [ngClass]="{
+                   'border-red-500/30 text-red-500': globalMessage()?.type === 'error',
+                   'border-green/30 text-green': globalMessage()?.type === 'success',
+                   'border-blue-500/30 text-blue-500': globalMessage()?.type === 'info'
+                 }">
+            @if (globalMessage()?.type === 'error') {
+            <lucide-icon [name]="icons.AlertTriangle" class="w-5 h-5 shrink-0"></lucide-icon>
+            } @else if (globalMessage()?.type === 'success') {
+            <lucide-icon [name]="icons.CheckCircle" class="w-5 h-5 shrink-0"></lucide-icon>
+            } @else {
+            <lucide-icon [name]="icons.Info" class="w-5 h-5 shrink-0"></lucide-icon>
+            }
+            <p class="font-bold pt-0.5">{{ globalMessage()?.text }}</p>
+        </div>
+    </div>
+    }
+
+    <!-- ======================= CONFIRMATION DIALOG (MODAL) ======================= -->
+    @if (confirmDialog().isOpen) {
+    <div
+        class="fixed inset-0 z-[110] bg-slate-900/60 dark:bg-ds-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+            class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-lg shadow-2xl p-8 max-w-sm w-full animate-fade-in-up text-center">
+            <div
+                class="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-6">
+                <lucide-icon [name]="icons.AlertTriangle" class="w-8 h-8 text-red-500"></lucide-icon>
+            </div>
+            <h3 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-2">Cancel RSVP?</h3>
+            <p class="font-syne text-sm text-slate-500 dark:text-ds-muted mb-8">
+                Are you sure you want to cancel your registration for this live session? You can always register again
+                later if spots are available.
+            </p>
+            <div class="flex gap-3">
+                <button (click)="cancelUnregister()"
+                    class="flex-1 py-3 border border-slate-200 dark:border-ds-border text-slate-600 dark:text-ds-muted font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-slate-50 dark:hover:bg-ds-black transition-colors">
+                    Keep It
+                </button>
+                <button (click)="confirmUnregister()"
+                    class="flex-1 py-3 bg-red-500 text-white font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-red-600 transition-colors shadow-[0_4px_10px_rgba(239,68,68,0.3)]">
+                    Yes, Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    }
 
     <div class="min-h-screen bg-slate-50 dark:bg-ds-black py-8 px-4 sm:px-6 lg:px-8 font-syne">
         <div class="max-w-7xl mx-auto">
@@ -22,6 +72,7 @@
                 </button>
             </div>
 
+            <!-- ======================= TAB: MY SCHEDULE ======================= -->
             @if (activeTab() === 'SCHEDULE') {
             @if (isLoading()) {
             <div class="flex justify-center py-20"><lucide-icon [name]="icons.Loader2"
@@ -42,7 +93,7 @@
             } @else {
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @for (session of mySchedule(); track session.id) {
-                <div class="bg-white dark:bg-ds-surface border rounded shadow-sm flex flex-col"
+                <div class="bg-white dark:bg-ds-surface border rounded shadow-sm flex flex-col transition-all"
                     [ngClass]="session.status === 'LIVE' || isSessionActionable(session) ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : 'border-slate-200 dark:border-ds-border'">
 
                     <div
@@ -50,9 +101,11 @@
                         @if (session.status === 'LIVE') {
                         <span
                             class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-red-500/10 text-red-500 font-mono text-[9px] uppercase tracking-widest font-bold">
-                            <span class="relative flex h-2 w-2"><span
-                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span
-                                    class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>
+                            <span class="relative flex h-2 w-2">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                            </span>
                             LIVE NOW
                         </span>
                         } @else {
@@ -91,7 +144,8 @@
                                 class="flex-1 py-2 bg-slate-100 dark:bg-ds-black border border-slate-200 dark:border-ds-border text-slate-400 dark:text-ds-muted/50 font-mono text-[10px] uppercase tracking-widest font-bold rounded cursor-not-allowed">
                                 Waiting Room
                             </button>
-                            <button (click)="unregisterFromSession(session.id, 'SCHEDULE')"
+                            <!-- UPDATED to requestUnregister -->
+                            <button (click)="requestUnregister(session.id, 'SCHEDULE')"
                                 [disabled]="isActionLoading() === session.id"
                                 class="px-3 py-2 border border-red-500/30 text-red-500 hover:bg-red-500/10 rounded transition-colors">
                                 <lucide-icon [name]="isActionLoading() === session.id ? icons.Loader2 : icons.XCircle"
@@ -107,6 +161,7 @@
             }
             }
 
+            <!-- ======================= TAB: EXPLORE ======================= -->
             @if (activeTab() === 'EXPLORE') {
 
             <div class="flex gap-2 overflow-x-auto pb-4 mb-4 scrollbar-hide">
@@ -119,26 +174,63 @@
                 }
             </div>
 
+            <!-- SMART FILTERS BAR -->
+            <div class="flex flex-col sm:flex-row gap-3 mb-8 animate-fade-in">
+                <div class="relative flex-1">
+                    <lucide-icon [name]="icons.Search"
+                        class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></lucide-icon>
+                    <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
+                        placeholder="Search session or instructor..."
+                        class="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus outline-none dark:text-white transition-colors">
+                </div>
+                <div class="flex gap-3">
+                    <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)"
+                        class="px-4 py-2.5 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm outline-none dark:text-white cursor-pointer hover:border-lotus/50 transition-colors">
+                        <option value="ALL">All Statuses</option>
+                        <option value="LIVE">🔴 Live Now</option>
+                        <option value="SCHEDULED">📅 Scheduled</option>
+                    </select>
+                    <select [ngModel]="toolFilter()" (ngModelChange)="toolFilter.set($event)"
+                        class="px-4 py-2.5 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded font-syne text-sm outline-none dark:text-white cursor-pointer hidden sm:block hover:border-lotus/50 transition-colors">
+                        <option value="ALL">All Environments</option>
+                        <option value="TRADING_TERMINAL">Trading Terminal</option>
+                        <option value="PYTHON_IDE">Python IDE</option>
+                        <option value="JUPYTER_NOTEBOOK">Jupyter Notebook</option>
+                        <option value="NONE">Watch Only</option>
+                    </select>
+                </div>
+            </div>
+
             @if (isLoading()) {
             <div class="flex justify-center py-20"><lucide-icon [name]="icons.Loader2"
                     class="w-8 h-8 text-lotus animate-spin"></lucide-icon></div>
-            } @else if (exploreSessions().length === 0) {
-            <div class="py-12 text-center text-slate-500 dark:text-ds-muted font-syne">
-                No active sessions found in this category.
+            } @else if (filteredExploreSessions().length === 0) {
+            <div
+                class="py-16 text-center border border-dashed border-slate-200 dark:border-ds-border rounded bg-white dark:bg-ds-surface flex flex-col items-center">
+                <lucide-icon [name]="icons.Filter"
+                    class="w-10 h-10 text-slate-300 dark:text-ds-muted mb-3"></lucide-icon>
+                <p class="font-syne text-slate-500 dark:text-ds-muted">No sessions match your search filters.</p>
+                <button (click)="searchQuery.set(''); statusFilter.set('ALL'); toolFilter.set('ALL')"
+                    class="mt-4 text-lotus font-bold font-syne text-sm hover:underline">
+                    Clear Filters
+                </button>
             </div>
             } @else {
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @for (session of exploreSessions(); track session.id) {
-                <div
-                    class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-sm flex flex-col">
+                @for (session of filteredExploreSessions(); track session.id) {
+                <div class="bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded shadow-sm flex flex-col transition-all"
+                    [ngClass]="(session.status === 'LIVE' || isSessionActionable(session)) ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : 'border-slate-200 dark:border-ds-border'">
+
                     <div class="p-5 flex-1 flex flex-col">
                         <div class="flex justify-between items-start mb-3">
                             @if (session.status === 'LIVE') {
                             <span
                                 class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-red-500/10 text-red-500 font-mono text-[9px] uppercase tracking-widest font-bold">
-                                <span class="relative flex h-2 w-2"><span
-                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span
-                                        class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>
+                                <span class="relative flex h-2 w-2">
+                                    <span
+                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                </span>
                                 LIVE NOW
                             </span>
                             } @else {
@@ -165,12 +257,19 @@
 
                     <div class="p-5 pt-0 mt-auto">
                         @if (session.isRegistered) {
+                        @if (isSessionActionable(session)) {
+                        <button (click)="joinRoom(session.id)"
+                            class="w-full py-2.5 bg-red-500 text-white font-mono text-[10px] uppercase tracking-widest font-bold rounded hover:bg-red-600 flex items-center justify-center gap-2 animate-pulse shadow-[0_4px_10px_rgba(239,68,68,0.3)]">
+                            <lucide-icon [name]="icons.MonitorPlay" class="w-4 h-4"></lucide-icon> Join Live Room
+                        </button>
+                        } @else {
                         <div class="flex gap-2">
                             <div
                                 class="flex-1 py-2.5 bg-green/10 text-green font-mono text-[10px] uppercase tracking-widest font-bold rounded flex items-center justify-center gap-2 border border-green/20">
                                 <lucide-icon [name]="icons.CheckCircle" class="w-4 h-4"></lucide-icon> Registered
                             </div>
-                            <button (click)="unregisterFromSession(session.id, 'EXPLORE')"
+                            <!-- UPDATED to requestUnregister -->
+                            <button (click)="requestUnregister(session.id, 'EXPLORE')"
                                 [disabled]="isActionLoading() === session.id"
                                 class="px-3 py-2 border border-red-500/30 text-red-500 hover:bg-red-500/10 rounded transition-colors">
                                 <lucide-icon [name]="isActionLoading() === session.id ? icons.Loader2 : icons.XCircle"
@@ -178,15 +277,18 @@
                                     class="w-4 h-4"></lucide-icon>
                             </button>
                         </div>
+                        }
                         } @else {
-                        <button (click)="registerForSession(session.id)" [disabled]="isActionLoading() === session.id"
+                        <button (click)="registerForSession(session)" [disabled]="isActionLoading() === session.id"
                             class="w-full py-2.5 font-mono text-[10px] uppercase tracking-widest font-bold rounded flex items-center justify-center gap-2 transition-colors"
-                            [ngClass]="session.status === 'LIVE' ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-lotus text-ds-black hover:bg-lotus-light'">
+                            [ngClass]="session.status === 'LIVE' || isSessionActionable(session) ? 'bg-red-500 hover:bg-red-600 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse' : 'bg-lotus text-ds-black hover:bg-lotus-light'">
 
                             @if (isActionLoading() === session.id) {
                             <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon>
                             } @else {
-                            {{ session.status === 'LIVE' ? 'RSVP & Join Live' : 'RSVP Now' }}
+                            <lucide-icon [name]="icons.MonitorPlay" class="w-4 h-4"></lucide-icon>
+                            {{ session.status === 'LIVE' || isSessionActionable(session) ? 'RSVP & Join Live' : 'RSVP
+                            Now' }}
                             }
                         </button>
                         }

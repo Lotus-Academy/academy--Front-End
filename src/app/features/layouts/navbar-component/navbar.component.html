@@ -95,11 +95,8 @@
 
             <button (click)="themeService.toggleTheme()"
                 class="h-9 w-9 rounded-full flex items-center justify-center text-slate-500 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus hover:bg-slate-100 dark:hover:bg-ds-surface transition-all cursor-pointer">
-                @if (themeService.darkMode()) {
-                <lucide-icon [name]="icons.Sun" class="w-4 h-4"></lucide-icon>
-                } @else {
-                <lucide-icon [name]="icons.Moon" class="w-4 h-4"></lucide-icon>
-                }
+                @if (themeService.darkMode()) { <lucide-icon [name]="icons.Sun" class="w-4 h-4"></lucide-icon> }
+                @else { <lucide-icon [name]="icons.Moon" class="w-4 h-4"></lucide-icon> }
             </button>
 
             @if (isLoggedIn()) {
@@ -108,17 +105,19 @@
                 <button (click)="toggleNotifications()"
                     class="relative z-50 h-9 w-9 rounded-full flex items-center justify-center text-slate-500 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus hover:bg-slate-100 dark:hover:bg-ds-surface transition-all cursor-pointer"
                     [ngClass]="isNotificationsOpen() ? 'bg-slate-100 dark:bg-ds-surface text-lotus' : ''">
-                    <lucide-icon [name]="icons.Bell" class="w-4 h-4 pointer-events-none"></lucide-icon>
+                    <lucide-icon [name]="icons.Bell" class="w-5 h-5 pointer-events-none"></lucide-icon>
                     @if (unreadNotifications() > 0) {
+                    <!-- J'ai très légèrement grossi le badge pour qu'il soit plus cliquable/visible sur mobile -->
                     <span
-                        class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 border-2 border-white dark:border-ds-black rounded-full pointer-events-none"></span>
+                        class="absolute top-1.5 right-1.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 border-2 border-white dark:border-ds-black rounded-full pointer-events-none"></span>
                     }
                 </button>
 
                 @if (isNotificationsOpen()) {
                 <div class="fixed inset-0 z-40 cursor-default" (click)="closeNotifications()"></div>
+                <!-- VRAIE MAGIE RESPONSIVE ICI : fixed au centre sur mobile, et absolute sur desktop -->
                 <div
-                    class="absolute right-0 mt-2 w-[90vw] sm:w-96 max-w-sm bg-white dark:bg-ds-surface rounded shadow-xl border border-slate-200 dark:border-ds-border z-50 overflow-hidden origin-top-right animate-fade-in-up">
+                    class="fixed top-[72px] left-4 right-4 sm:absolute sm:top-full sm:left-auto sm:right-0 mt-0 sm:mt-2 sm:w-96 max-w-sm mx-auto bg-white dark:bg-ds-surface rounded-xl shadow-2xl border border-slate-200 dark:border-ds-border z-50 overflow-hidden origin-top sm:origin-top-right animate-fade-in-up">
                     <div
                         class="p-4 border-b border-slate-200 dark:border-ds-border flex justify-between items-center bg-slate-50/50 dark:bg-ds-border/30">
                         <div class="flex items-center gap-2">
@@ -139,7 +138,8 @@
                         </button>
                         }
                     </div>
-                    <div class="max-h-[400px] overflow-y-auto">
+                    <!-- Hauteur max ajustée pour les petits écrans -->
+                    <div class="max-h-[60vh] sm:max-h-[400px] overflow-y-auto">
                         @if (notifications().length === 0) {
                         <div
                             class="p-8 text-center text-slate-500 dark:text-ds-muted/50 flex flex-col items-center font-syne">
@@ -185,8 +185,9 @@
                 {{ 'NAVBAR.DASHBOARD' | translate }}
             </a>
 
+            <!-- Avatar caché sur mobile pour faire respirer le header (il sera dans le menu) -->
             <a routerLink="/user/profile"
-                class="h-9 w-9 rounded-full bg-slate-100 dark:bg-ds-surface flex items-center justify-center text-lotus font-cormorant font-bold border border-slate-200 dark:border-ds-border shadow-sm shrink-0 overflow-hidden hover:border-lotus dark:hover:border-lotus transition-colors cursor-pointer">
+                class="hidden sm:flex h-9 w-9 rounded-full bg-slate-100 dark:bg-ds-surface items-center justify-center text-lotus font-cormorant font-bold border border-slate-200 dark:border-ds-border shadow-sm shrink-0 overflow-hidden hover:border-lotus dark:hover:border-lotus transition-colors cursor-pointer">
                 @if (user()?.profilePictureUrl) {
                 <img [src]="user()?.profilePictureUrl" class="w-full h-full object-cover">
                 } @else {
@@ -236,7 +237,20 @@
 
         <div class="pt-4 border-t border-slate-200 dark:border-ds-border">
             @if (isLoggedIn()) {
-            <div class="flex items-center gap-3 px-4 mb-4">
+
+            <!-- DEUXIÈME ACCÈS AUX NOTIFICATIONS : Dans le menu Mobile -->
+            <button (click)="toggleNotifications(); isMobileMenuOpen = false"
+                class="w-full flex items-center justify-between px-4 py-3 mb-2 font-mono text-[11px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted hover:bg-slate-50 dark:hover:bg-ds-surface rounded-xl transition-colors">
+                <div class="flex items-center gap-3">
+                    <lucide-icon [name]="icons.Bell" class="w-4 h-4"></lucide-icon>
+                    {{ 'NOTIFICATIONS.TITLE' | translate }}
+                </div>
+                @if (unreadNotifications() > 0) {
+                <span class="bg-red-500 text-white px-2 py-0.5 rounded text-[10px]">{{ unreadNotifications() }}</span>
+                }
+            </button>
+
+            <div class="flex items-center gap-3 px-4 mb-4 mt-2">
                 <div
                     class="h-12 w-12 rounded-full bg-slate-100 dark:bg-ds-surface flex items-center justify-center text-lotus font-cormorant text-xl font-bold border border-slate-200 dark:border-ds-border overflow-hidden shrink-0">
                     @if (user()?.profilePictureUrl) {
@@ -251,6 +265,7 @@
                     <span class="font-mono text-[9px] uppercase tracking-wider text-lotus">{{ user()?.role }}</span>
                 </div>
             </div>
+
             <a routerLink="/dashboard" (click)="isMobileMenuOpen = false"
                 class="w-full flex items-center justify-center gap-2 py-3.5 font-mono text-[11px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded-xl hover:bg-lotus-light transition-colors">
                 <lucide-icon [name]="icons.LayoutDashboard" class="w-4 h-4"></lucide-icon>
