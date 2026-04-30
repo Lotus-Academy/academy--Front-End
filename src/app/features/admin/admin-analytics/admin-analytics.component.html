@@ -1,122 +1,316 @@
-<app-admin-layout title="Analytiques et Finance">
-
-    <div class="space-y-6 animate-fade-in-up">
-
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Performances globales</h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Suivez les revenus et la croissance de votre
-                    plateforme.</p>
-            </div>
-            <button (click)="exportData()"
-                class="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm">
-                <lucide-icon [name]="icons.Download" class="w-4 h-4"></lucide-icon> Exporter CSV
-            </button>
-        </div>
+<app-admin-layout title="Global Analytics">
+    <div class="min-h-screen bg-slate-50 dark:bg-ds-black py-8 px-4 sm:px-6 lg:px-8 font-syne">
 
         @if (isLoading()) {
-        <div class="flex justify-center py-20">
-            <div class="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+        <div class="flex flex-col items-center justify-center h-[70vh]">
+            <div class="relative w-16 h-16 mb-4">
+                <div class="absolute inset-0 border-4 border-slate-200 dark:border-ds-border rounded-full"></div>
+                <div class="absolute inset-0 border-4 border-lotus rounded-full border-t-transparent animate-spin">
+                </div>
+            </div>
+            <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white mb-1">Compiling Data</h3>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-slate-500">Processing platform analytics...
+            </p>
         </div>
         } @else {
+        <div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            @for (kpi of kpiCards(); track kpi.title) {
-            <div
-                class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
-                <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-50 transition-transform group-hover:scale-110"
-                    [ngClass]="kpi.bg"></div>
+            <!-- HEADER -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+                <div>
+                    <h1 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white mb-2">Executive
+                        Dashboard</h1>
+                    <p class="text-slate-500 dark:text-ds-muted/70 text-sm">Comprehensive real-time analytics covering
+                        platform health, revenue, and engagement.</p>
+                </div>
+                <div
+                    class="px-4 py-2 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-md shadow-sm">
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-slate-500 font-bold">Reporting Period
+                    </p>
+                    <p class="font-syne text-sm font-bold text-slate-900 dark:text-white">Last 30 Days</p>
+                </div>
+            </div>
 
-                <div class="relative z-10">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" [ngClass]="kpi.bg">
-                        <lucide-icon [name]="kpi.icon" class="w-6 h-6" [ngClass]="kpi.color"></lucide-icon>
+            <!-- ===================== ROW 1: PRIMARY KPIs ===================== -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Total Revenue -->
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl p-6 border border-slate-200 dark:border-ds-border shadow-sm">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 rounded bg-green-500/10 flex items-center justify-center">
+                            <lucide-icon [name]="icons.DollarSign" class="w-5 h-5 text-green-600"></lucide-icon>
+                        </div>
+                        <span
+                            class="px-2.5 py-1 bg-green-500/10 text-green-600 font-mono text-[9px] uppercase font-bold rounded">+12.5%</span>
                     </div>
-                    <p class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-1">{{ kpi.title }}</p>
-                    <h3 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                        @if (kpi.isCurrency) {
-                        {{ kpi.value | currency:'USD':'symbol':'1.0-0' }}
-                        } @else {
-                        {{ kpi.value | number }}
-                        }
-                    </h3>
+                    <p
+                        class="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-ds-muted font-bold mb-1">
+                        Total Revenue</p>
+                    <!-- CORRECTION : Ajout de || 0 -->
+                    <h3 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white">{{
+                        (stats()?.totalRevenue || 0) | currency:'USD' }}</h3>
+                </div>
+
+                <!-- Enrollments -->
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl p-6 border border-slate-200 dark:border-ds-border shadow-sm">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 rounded bg-blue-500/10 flex items-center justify-center">
+                            <lucide-icon [name]="icons.TrendingUp" class="w-5 h-5 text-blue-600"></lucide-icon>
+                        </div>
+                    </div>
+                    <p
+                        class="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-ds-muted font-bold mb-1">
+                        Total Enrollments</p>
+                    <!-- CORRECTION : Ajout de || 0 -->
+                    <h3 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white">{{
+                        (stats()?.totalEnrollments || 0) | number }}</h3>
+                </div>
+
+                <!-- Total Courses -->
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl p-6 border border-slate-200 dark:border-ds-border shadow-sm">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 rounded bg-indigo-500/10 flex items-center justify-center">
+                            <lucide-icon [name]="icons.BookOpen" class="w-5 h-5 text-indigo-600"></lucide-icon>
+                        </div>
+                    </div>
+                    <p
+                        class="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-ds-muted font-bold mb-1">
+                        Published Courses</p>
+                    <div class="flex items-baseline gap-3">
+                        <!-- CORRECTION : Ajout de || 0 -->
+                        <h3 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white">{{
+                            (stats()?.totalCourses || 0) | number }}</h3>
+                        <span class="text-xs text-orange-500 font-bold">+{{ stats()?.pendingCoursesCount || 0 }}
+                            pending</span>
+                    </div>
+                </div>
+
+                <!-- Active Students -->
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl p-6 border border-slate-200 dark:border-ds-border shadow-sm">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 rounded bg-lotus/10 flex items-center justify-center">
+                            <lucide-icon [name]="icons.Users" class="w-5 h-5 text-lotus"></lucide-icon>
+                        </div>
+                    </div>
+                    <p
+                        class="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-ds-muted font-bold mb-1">
+                        Total Users</p>
+                    <div class="flex items-baseline gap-3">
+                        <h3 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white">{{
+                            (stats()?.totalStudents || 0) + (stats()?.totalInstructors || 0) | number }}</h3>
+                    </div>
                 </div>
             </div>
-            }
-        </div>
 
-        <div
-            class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden mt-8">
-            <div
-                class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/20">
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <lucide-icon [name]="icons.CreditCard" class="w-5 h-5 text-slate-400"></lucide-icon>
-                    Transactions Récentes
-                </h3>
-            </div>
+            <!-- ===================== ROW 2: CIRCULAR VISUALIZATIONS (Doughnuts & Gauges) ===================== -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
-                    <thead
-                        class="bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-800">
-                        <tr>
-                            <th scope="col" class="px-6 py-4">Transaction ID</th>
-                            <th scope="col" class="px-6 py-4">Utilisateur / Cours</th>
-                            <th scope="col" class="px-6 py-4">Date</th>
-                            <th scope="col" class="px-6 py-4">Statut</th>
-                            <th scope="col" class="px-6 py-4 text-right">Montant</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-                        @for (payment of recentPayments(); track payment.id) {
-                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                            <td class="px-6 py-4 font-mono text-xs text-slate-500">
-                                {{ payment.id }}...
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="font-bold text-slate-900 dark:text-white line-clamp-1">{{
-                                    payment.courseTitle || 'Achat de cours' }}</div>
-                                <div class="text-xs text-slate-500">{{ payment.studentEmail || 'Utilisateur inconnu' }}
+                <!-- Demographics (Doughnut) -->
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl border border-slate-200 dark:border-ds-border shadow-sm p-6 flex flex-col items-center">
+                    <div class="w-full flex justify-between items-center mb-6">
+                        <h3 class="font-syne font-bold text-slate-900 dark:text-white">User Base</h3>
+                        <lucide-icon [name]="icons.PieChart" class="w-4 h-4 text-slate-400"></lucide-icon>
+                    </div>
+                    <div class="relative w-full h-[200px]">
+                        <canvas baseChart [data]="userDemographicsChartData" [options]="userDemographicsChartOptions"
+                            [type]="userDemographicsChartType"></canvas>
+                        <!-- Center Text -->
+                        <div
+                            class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-5">
+                            <!-- CORRECTION : Ajout de || 0 -->
+                            <span class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white">{{
+                                (stats()?.totalStudents || 0) | number }}</span>
+                            <span class="font-mono text-[8px] uppercase tracking-widest text-slate-500">Students</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom SVG Circular Gauge (Completion Rate) -->
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl border border-slate-200 dark:border-ds-border shadow-sm p-6 flex flex-col items-center justify-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-6 opacity-5">
+                        <lucide-icon [name]="icons.Award" class="w-32 h-32"></lucide-icon>
+                    </div>
+                    <h3 class="font-syne font-bold text-slate-900 dark:text-white mb-6 w-full text-left z-10">Global
+                        Success Rate</h3>
+
+                    <!-- SVG Gauge -->
+                    <div class="relative flex items-center justify-center z-10">
+                        <svg class="transform -rotate-90 w-40 h-40">
+                            <!-- Background Circle -->
+                            <circle cx="80" cy="80" r="36" stroke="currentColor" stroke-width="8" fill="transparent"
+                                class="text-slate-100 dark:text-ds-border/50" />
+                            <!-- Progress Circle -->
+                            <circle cx="80" cy="80" r="36" stroke="currentColor" stroke-width="8" fill="transparent"
+                                class="text-green-500 transition-all duration-1000 ease-out"
+                                [style.strokeDasharray]="circumference" [style.strokeDashoffset]="dashOffset()"
+                                stroke-linecap="round" />
+                        </svg>
+                        <div class="absolute flex flex-col items-center justify-center text-center">
+                            <span class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white">{{
+                                completionRate() | number:'1.0-1' }}%</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full mt-6 text-center z-10">
+                        <!-- CORRECTION : Ajout de || 0 -->
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-slate-500"><strong
+                                class="text-slate-900 dark:text-white">{{ (stats()?.totalCertificatesIssued || 0) |
+                                number }}</strong> Certificates Issued</p>
+                    </div>
+                </div>
+
+                <!-- Revenue Distribution (Doughnut) -->
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl border border-slate-200 dark:border-ds-border shadow-sm p-6 flex flex-col">
+                    <div class="w-full flex justify-between items-center mb-6">
+                        <h3 class="font-syne font-bold text-slate-900 dark:text-white">Revenue by Top Courses</h3>
+                        <lucide-icon [name]="icons.DollarSign" class="w-4 h-4 text-slate-400"></lucide-icon>
+                    </div>
+                    <div class="relative w-full h-[160px] mb-4">
+                        <canvas baseChart [data]="revenueDistributionChartData"
+                            [options]="revenueDistributionChartOptions" [type]="revenueDistributionChartType"></canvas>
+                    </div>
+                    <!-- Custom HTML Legend -->
+                    <div class="flex-1 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+                        @for (label of revenueDistributionChartData.labels; track $index) {
+                        @if ($index < 4) { <!-- Limiter aux 4 premiers pour l'esthétique de la carte -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <!-- CORRECTION : Utilisation de la méthode getLegendColor() -->
+                                    <div class="w-2.5 h-2.5 rounded-full"
+                                        [style.backgroundColor]="getLegendColor($index)"></div>
+                                    <span
+                                        class="font-syne text-xs text-slate-600 dark:text-ds-muted/90 truncate max-w-[120px]">{{
+                                        label }}</span>
                                 </div>
-                            </td>
-                            <td class="px-6 py-4 font-medium">
-                                {{ payment.date | date:'dd MMM yyyy, HH:mm' }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 text-xs font-bold rounded-full"
-                                    [ngClass]="payment.status === 'succeeded' || payment.status === 'COMPLETED' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-yellow-100 text-yellow-700 border border-yellow-200'">
-                                    {{ payment.status }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <span class="font-black text-slate-900 dark:text-white">
-                                    {{ payment.amount | currency:payment.currency:'symbol':'1.2-2' }}
-                                </span>
-                            </td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
-
-                @if (recentPayments().length === 0) {
-                <div class="p-12 text-center">
-                    <lucide-icon [name]="icons.CreditCard"
-                        class="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-4"></lucide-icon>
-                    <p class="text-slate-500 font-medium">Aucune transaction trouvée.</p>
+                                <span class="font-mono text-[10px] font-bold text-slate-900 dark:text-white">{{
+                                    revenueDistributionChartData.datasets[0].data[$index] |
+                                    currency:'USD':'symbol':'1.0-0' }}</span>
+                            </div>
+                            }
+                            }
+                    </div>
                 </div>
-                }
             </div>
 
-            @if (recentPayments().length > 0) {
-            <div
-                class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-center">
-                <button
-                    class="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 transition-colors flex items-center justify-center gap-1 mx-auto">
-                    Voir tout l'historique <lucide-icon [name]="icons.ArrowUpRight" class="w-4 h-4"></lucide-icon>
-                </button>
+            <!-- ===================== ROW 3: TIMELINE CHARTS ===================== -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Revenue Growth -->
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl border border-slate-200 dark:border-ds-border shadow-sm p-6 flex flex-col">
+                    <div class="mb-6">
+                        <h3 class="font-syne font-bold text-lg text-slate-900 dark:text-white">Financial Growth
+                            (Timeline)</h3>
+                    </div>
+                    <div class="flex-1 min-h-[280px] w-full relative">
+                        <canvas baseChart [data]="revenueChartData" [options]="revenueChartOptions"
+                            [type]="revenueChartType"></canvas>
+                    </div>
+                </div>
+
+                <!-- Registrations -->
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl border border-slate-200 dark:border-ds-border shadow-sm p-6 flex flex-col">
+                    <div class="mb-6">
+                        <h3 class="font-syne font-bold text-lg text-slate-900 dark:text-white">Student Acquisition
+                            (Timeline)</h3>
+                    </div>
+                    <div class="flex-1 min-h-[280px] w-full relative">
+                        <canvas baseChart [data]="registrationsChartData" [options]="registrationsChartOptions"
+                            [type]="registrationsChartType"></canvas>
+                    </div>
+                </div>
             </div>
-            }
+
+            <!-- ===================== ROW 4: LEADERBOARDS ===================== -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Top Performing Courses -->
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl border border-slate-200 dark:border-ds-border shadow-sm">
+                    <div
+                        class="px-6 py-4 border-b border-slate-100 dark:border-ds-border/50 flex justify-between items-center bg-slate-50/50 dark:bg-ds-black/30 rounded-t-xl">
+                        <h3 class="font-syne font-bold text-slate-900 dark:text-white">Top Grossing Courses</h3>
+                        <lucide-icon [name]="icons.Award" class="w-5 h-5 text-lotus"></lucide-icon>
+                    </div>
+                    <div class="divide-y divide-slate-100 dark:divide-ds-border/50">
+                        @for (course of topCourses(); track course.id || $index; let i = $index) {
+                        <div
+                            class="px-6 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-ds-black/20 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <span class="font-mono text-sm font-bold w-6 text-center"
+                                    [ngClass]="{'text-lotus': i === 0, 'text-slate-400': i > 0}">#{{ i + 1 }}</span>
+                                <div>
+                                    <!-- UTILISATION DES NOUVELLES MÉTHODES ROBUSTES -->
+                                    <p
+                                        class="font-syne font-bold text-sm text-slate-900 dark:text-white line-clamp-1 max-w-[200px] sm:max-w-xs">
+                                        {{ getCourseTitle(course) }}</p>
+                                    <p class="font-mono text-[10px] uppercase text-slate-500">{{
+                                        getCourseInstructor(course) }}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <!-- UTILISATION DE LA NOUVELLE MÉTHODE ROBUSTE -->
+                                <p class="font-mono text-sm font-bold text-green-600">{{ getRevenueValue(course) |
+                                    currency:'USD' }}</p>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Top Earning Instructors -->
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl border border-slate-200 dark:border-ds-border shadow-sm">
+                    <div
+                        class="px-6 py-4 border-b border-slate-100 dark:border-ds-border/50 flex justify-between items-center bg-slate-50/50 dark:bg-ds-black/30 rounded-t-xl">
+                        <h3 class="font-syne font-bold text-slate-900 dark:text-white">Top Earning Instructors</h3>
+                        <lucide-icon [name]="icons.Users" class="w-5 h-5 text-lotus"></lucide-icon>
+                    </div>
+                    <div class="divide-y divide-slate-100 dark:divide-ds-border/50">
+                        @for (instructor of topInstructors(); track instructor.id || $index; let i = $index) {
+                        <div
+                            class="px-6 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-ds-black/20 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <span class="font-mono text-sm font-bold w-6 text-center"
+                                    [ngClass]="{'text-lotus': i === 0, 'text-slate-400': i > 0}">#{{ i + 1 }}</span>
+                                <div
+                                    class="w-8 h-8 rounded-full bg-slate-200 dark:bg-ds-border overflow-hidden shrink-0 hidden sm:block">
+                                    <!-- UTILISATION DES NOUVELLES MÉTHODES ROBUSTES -->
+                                    @if (getInstructorPicture(instructor)) {
+                                    <img [src]="getInstructorPicture(instructor)" class="w-full h-full object-cover">
+                                    } @else {
+                                    <div
+                                        class="w-full h-full flex items-center justify-center text-xs font-bold text-slate-500">
+                                        {{ getInstructorName(instructor).charAt(0) }}
+                                    </div>
+                                    }
+                                </div>
+                                <div>
+                                    <!-- UTILISATION DES NOUVELLES MÉTHODES ROBUSTES -->
+                                    <p class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{
+                                        getInstructorName(instructor) }}</p>
+                                    <p class="font-mono text-[10px] uppercase text-slate-500 truncate max-w-[120px]">{{
+                                        getInstructorEmail(instructor) }}</p>
+                                </div>
+                            </div>
+                            <div class="text-right flex items-center gap-2">
+                                <!-- UTILISATION DE LA NOUVELLE MÉTHODE ROBUSTE -->
+                                <p class="font-mono text-sm font-bold text-green-600">{{ getRevenueValue(instructor) |
+                                    currency:'USD' }}</p>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
         </div>
         }
     </div>
-
 </app-admin-layout>

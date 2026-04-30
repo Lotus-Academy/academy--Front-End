@@ -192,7 +192,7 @@ export const routes: Routes = [
     { path: 'dashboard/videos', component: AdminCoursesComponent, canActivate: [authGuard] },
     { path: 'dashboard/instructors', component: AdminInstructorsComponent, canActivate: [authGuard] },
     { path: 'dashboard/categories', component: AdminCategoriesComponent, canActivate: [authGuard] },
-    { path: 'dashboard/analytics', component: AdminAnalyticsComponent, canActivate: [authGuard] },
+    { path: 'admin/analytics', component: AdminAnalyticsComponent, canActivate: [authGuard] },
     { path: 'dashboard/payments', component: AdminPaymentsComponent, canActivate: [authGuard] },
     { path: 'admin/categories', component: AdminCategoriesComponent, canActivate: [authGuard] },
     { path: 'admin/courses', component: AdminCoursesComponent, canActivate: [authGuard] },
