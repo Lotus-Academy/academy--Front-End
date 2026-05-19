@@ -1,0 +1,192 @@
+<app-admin-layout title="Platform Settings">
+
+    @if (globalMessage()) {
+    <div class="fixed top-20 right-4 sm:right-8 z-[100] animate-fade-in-up max-w-sm">
+        <div class="flex items-start gap-3 px-4 py-3 rounded shadow-lg border font-syne text-sm bg-white dark:bg-ds-surface"
+            [ngClass]="{
+                   'border-red-500/30 text-red-500': globalMessage()?.type === 'error',
+                   'border-green/30 text-green': globalMessage()?.type === 'success',
+                   'border-blue-500/30 text-blue-500': globalMessage()?.type === 'info'
+                 }">
+            @if (globalMessage()?.type === 'error') {
+            <lucide-icon [name]="icons.AlertTriangle" class="w-5 h-5 shrink-0"></lucide-icon>
+            } @else if (globalMessage()?.type === 'success') {
+            <lucide-icon [name]="icons.CheckCircle" class="w-5 h-5 shrink-0"></lucide-icon>
+            } @else {
+            <lucide-icon [name]="icons.Info" class="w-5 h-5 shrink-0"></lucide-icon>
+            }
+            <p class="font-bold pt-0.5">{{ globalMessage()?.text }}</p>
+        </div>
+    </div>
+    }
+
+    <div class="min-h-screen bg-slate-50 dark:bg-ds-black py-8 px-4 sm:px-6 lg:px-8 font-syne">
+        <div class="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
+
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
+                <div>
+                    <h1 class="font-cormorant text-4xl font-bold text-slate-900 dark:text-white mb-2">Platform Settings
+                    </h1>
+                    <p class="text-slate-500 dark:text-ds-muted/70 text-sm">Configure global business rules, commission
+                        rates, and instructor progression thresholds.</p>
+                </div>
+                @if (lastUpdatedAt()) {
+                <div
+                    class="px-4 py-2 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-md shadow-sm text-right">
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-slate-500 font-bold">Last Modified
+                    </p>
+                    <p class="font-syne text-sm font-bold text-slate-900 dark:text-white">{{ lastUpdatedAt() |
+                        date:'medium' }}</p>
+                </div>
+                }
+            </div>
+
+            @if (isLoading()) {
+            <div
+                class="flex justify-center py-32 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-sm">
+                <lucide-icon [name]="icons.Loader2"
+                    class="w-10 h-10 text-lotus animate-spin stroke-[2px]"></lucide-icon>
+            </div>
+            } @else {
+            <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()" class="space-y-6">
+
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl border border-slate-200 dark:border-ds-border shadow-sm overflow-hidden">
+                    <div
+                        class="px-6 py-5 border-b border-slate-100 dark:border-ds-border/50 bg-slate-50/50 dark:bg-ds-black/30 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+                            <lucide-icon [name]="icons.Percent" class="w-4 h-4 text-green-600"></lucide-icon>
+                        </div>
+                        <div>
+                            <h3 class="font-syne font-bold text-lg text-slate-900 dark:text-white">Instructor Revenue
+                                Share</h3>
+                            <p class="text-xs text-slate-500 dark:text-ds-muted">Define the percentage of revenue
+                                instructors keep per sale based on their tier.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="space-y-2">
+                            <label
+                                class="block font-mono text-[11px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted">Default
+                                Tier Rate</label>
+                            <div class="relative">
+                                <input type="number" formControlName="defaultInstructorRate"
+                                    class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-ds-black border rounded-lg outline-none font-syne text-slate-900 dark:text-white transition-colors"
+                                    [ngClass]="isFieldInvalid('defaultInstructorRate') ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'border-slate-200 dark:border-ds-border focus:border-lotus'">
+                                <span
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">%</span>
+                            </div>
+                            @if (isFieldInvalid('defaultInstructorRate')) {
+                            <p class="text-xs text-red-500 font-bold mt-1">Must be between 0 and 100.</p>
+                            }
+                        </div>
+
+                        <div class="space-y-2">
+                            <label
+                                class="block font-mono text-[11px] uppercase tracking-widest font-bold text-blue-600">Premium
+                                Tier Rate</label>
+                            <div class="relative">
+                                <input type="number" formControlName="premiumInstructorRate"
+                                    class="w-full pl-4 pr-10 py-3 bg-blue-500/5 border rounded-lg outline-none font-syne text-slate-900 dark:text-white transition-colors"
+                                    [ngClass]="isFieldInvalid('premiumInstructorRate') ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'border-blue-500/20 focus:border-blue-500'">
+                                <span
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-blue-500/50">%</span>
+                            </div>
+                            @if (isFieldInvalid('premiumInstructorRate')) {
+                            <p class="text-xs text-red-500 font-bold mt-1">Must be between 0 and 100.</p>
+                            }
+                        </div>
+
+                        <div class="space-y-2">
+                            <label
+                                class="block font-mono text-[11px] uppercase tracking-widest font-bold text-lotus">Elite
+                                Tier Rate</label>
+                            <div class="relative">
+                                <input type="number" formControlName="eliteInstructorRate"
+                                    class="w-full pl-4 pr-10 py-3 bg-lotus/5 border rounded-lg outline-none font-syne text-slate-900 dark:text-white transition-colors"
+                                    [ngClass]="isFieldInvalid('eliteInstructorRate') ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'border-lotus/20 focus:border-lotus'">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-lotus/50">%</span>
+                            </div>
+                            @if (isFieldInvalid('eliteInstructorRate')) {
+                            <p class="text-xs text-red-500 font-bold mt-1">Must be between 0 and 100.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-ds-surface rounded-xl border border-slate-200 dark:border-ds-border shadow-sm overflow-hidden">
+                    <div
+                        class="px-6 py-5 border-b border-slate-100 dark:border-ds-border/50 bg-slate-50/50 dark:bg-ds-black/30 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
+                            <lucide-icon [name]="icons.Users" class="w-4 h-4 text-indigo-600"></lucide-icon>
+                        </div>
+                        <div>
+                            <h3 class="font-syne font-bold text-lg text-slate-900 dark:text-white">Tier Progression
+                                Thresholds</h3>
+                            <p class="text-xs text-slate-500 dark:text-ds-muted">Set the number of referred students
+                                required for an instructor to upgrade their tier.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label
+                                class="block font-mono text-[11px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted">To
+                                Reach Premium Tier</label>
+                            <div class="relative">
+                                <lucide-icon [name]="icons.ShieldCheck"
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500/50"></lucide-icon>
+                                <input type="number" formControlName="premiumReferralThreshold"
+                                    class="w-full pl-10 pr-16 py-3 bg-slate-50 dark:bg-ds-black border rounded-lg outline-none font-syne text-slate-900 dark:text-white transition-colors"
+                                    [ngClass]="isFieldInvalid('premiumReferralThreshold') ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'border-slate-200 dark:border-ds-border focus:border-lotus'">
+                                <span
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-[10px] uppercase text-slate-400">Users</span>
+                            </div>
+                            @if (isFieldInvalid('premiumReferralThreshold')) {
+                            <p class="text-xs text-red-500 font-bold mt-1">Must be at least 1.</p>
+                            }
+                        </div>
+
+                        <div class="space-y-2">
+                            <label
+                                class="block font-mono text-[11px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted">To
+                                Reach Elite Tier</label>
+                            <div class="relative">
+                                <lucide-icon [name]="icons.Award"
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-lotus/50"></lucide-icon>
+                                <input type="number" formControlName="eliteReferralThreshold"
+                                    class="w-full pl-10 pr-16 py-3 bg-slate-50 dark:bg-ds-black border rounded-lg outline-none font-syne text-slate-900 dark:text-white transition-colors"
+                                    [ngClass]="isFieldInvalid('eliteReferralThreshold') ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'border-slate-200 dark:border-ds-border focus:border-lotus'">
+                                <span
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-[10px] uppercase text-slate-400">Users</span>
+                            </div>
+                            @if (isFieldInvalid('eliteReferralThreshold')) {
+                            <p class="text-xs text-red-500 font-bold mt-1">Must be at least 1.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-4 pt-4">
+                    <button type="button" (click)="loadSettings()" [disabled]="isSaving() || !settingsForm.dirty"
+                        class="px-6 py-3 font-mono text-[11px] uppercase tracking-widest font-bold text-slate-500 hover:text-slate-800 dark:text-ds-muted dark:hover:text-white transition-colors disabled:opacity-50">
+                        Discard Changes
+                    </button>
+
+                    <button type="submit" [disabled]="isSaving() || settingsForm.invalid || !settingsForm.dirty"
+                        class="flex items-center gap-2 px-8 py-3 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded hover:bg-lotus-light transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        @if (isSaving()) {
+                        <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon> Saving...
+                        } @else {
+                        <lucide-icon [name]="icons.Save" class="w-4 h-4"></lucide-icon> Save Configuration
+                        }
+                    </button>
+                </div>
+
+            </form>
+            }
+        </div>
+    </div>
+</app-admin-layout>

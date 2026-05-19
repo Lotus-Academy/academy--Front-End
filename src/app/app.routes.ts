@@ -68,6 +68,7 @@ import { MyCertificatesComponent } from './features/student/my-certificates/my-c
 import { PaymentSuccessComponent } from './features/payments/payment-success/payment-success.component';
 import { PurchaseHistoryComponent } from './features/student/purchase-history/purchase-history.component';
 import { AdminFinanceComponent } from './features/admin/admin-finance/admin-finance.component';
+import { AdminSettingsComponent } from './features/admin/admin-settings/admin-settings.component';
 
 export const routes: Routes = [
     // --- ROUTES PUBLIQUES ---
@@ -204,6 +205,7 @@ export const routes: Routes = [
     { path: 'admin/users', component: AdminUsersComponent, canActivate: [authGuard] },
     { path: 'admin/users/:id', component: AdminStudentProfileComponent, canActivate: [authGuard] },
     { path: 'admin/finance', component: AdminFinanceComponent, canActivate: [authGuard] },
+    { path: 'admin/settings', component: AdminSettingsComponent, canActivate: [authGuard] },
     // --- FALLBACK (Page 404) ---
     { path: '**', redirectTo: '' }
 ];

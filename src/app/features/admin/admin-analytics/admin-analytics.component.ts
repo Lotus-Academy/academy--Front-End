@@ -115,7 +115,7 @@ export class AdminAnalyticsComponent implements OnInit {
   }
 
   // ---------------------------------------------------------------------------
-  // PARSEUR TIMELINE PAR TYPE DE DONNÉES (Ignorant les noms des clés)
+  // PARSEUR TIMELINE PAR TYPE DE DONNÉES
   // ---------------------------------------------------------------------------
   private parseTimelineData(raw: any): { labels: string[], values: number[] } {
     const result = { labels: [] as string[], values: [] as number[] };
