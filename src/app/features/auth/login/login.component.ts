@@ -4,13 +4,14 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validatio
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Info, Mail, Loader2, CheckCircle2, LucideAngularModule, Ticket, ShieldCheck, KeyRound } from 'lucide-angular';
+import { SocialAuthService, GoogleSigninButtonModule, GoogleLoginProvider } from '@abacritt/angularx-social-login';
 
 import { AuthService, LoginRequest, RegisterRequest } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, TranslateModule, LucideAngularModule],
+  imports: [ReactiveFormsModule, RouterLink, TranslateModule, LucideAngularModule, GoogleSigninButtonModule],
   templateUrl: './login.component.html',
   styles: [`
     @keyframes typing {
@@ -64,6 +65,7 @@ export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private socialAuthService = inject(SocialAuthService);
 
   readonly icons = { Mail, Info, Loader2, CheckCircle2, Ticket, ShieldCheck, KeyRound };
 
@@ -128,6 +130,20 @@ export class LoginComponent implements OnInit {
             queryParamsHandling: 'merge',
           });
         }
+      }
+    });
+
+    this.socialAuthService.authState.subscribe((user) => {
+      if (user && user.idToken) {
+        this.isLoading.set(true);
+        // Appel au backend
+        this.authService.googleLogin({ idToken: user.idToken }).subscribe({
+          next: () => this.router.navigate(['/dashboard']),
+          error: (err) => {
+            this.isLoading.set(false);
+            this.errorMessage.set('LOGIN.ERRORS.GOOGLE_FAILED');
+          }
+        });
       }
     });
   }
@@ -294,6 +310,10 @@ export class LoginComponent implements OnInit {
       queryParamsHandling: 'merge',
     });
     this.authForm.reset();
+  }
+
+  googleLogin() {
+    return;
   }
 
   isResending = signal<boolean>(false);

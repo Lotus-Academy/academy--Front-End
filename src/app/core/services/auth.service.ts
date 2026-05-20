@@ -46,6 +46,11 @@ export interface AuthResponse {
   subscriptionStatus?: 'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'INCOMPLETE';
 }
 
+// 5. DTO google login
+export interface GoogleLoginRequest {
+  idToken: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -181,5 +186,15 @@ export class AuthService {
     } catch (err) {
       return true;
     }
+  }
+
+  googleLogin(request: GoogleLoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.baseUrl}/google`, request).pipe(
+      tap(response => {
+        if (response.token) {
+          this.saveSession(response);
+        }
+      })
+    );
   }
 }

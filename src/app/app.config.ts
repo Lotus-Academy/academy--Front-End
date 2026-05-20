@@ -3,6 +3,7 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors, HttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { SocialAuthServiceConfig, GoogleLoginProvider, SOCIAL_AUTH_CONFIG } from '@abacritt/angularx-social-login';
 
 // --- Imports pour la traduction ---
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -46,6 +47,24 @@ export const appConfig: ApplicationConfig = {
           deps: [HttpClient]
         }
       })
-    )
+    ),
+
+    {
+      provide: SOCIAL_AUTH_CONFIG,
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider('517354632050-hut8tp1rnvolv965bef62ia96d85157c.apps.googleusercontent.com',
+              {
+                locale: "en"
+              }
+            )
+          }
+        ],
+        onError: (err) => console.error(err)
+      } as SocialAuthServiceConfig,
+    }
   ]
 };
