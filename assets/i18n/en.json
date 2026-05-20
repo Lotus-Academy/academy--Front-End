@@ -220,7 +220,8 @@
             "MIN_8_CHARS": "Min 8 chars required",
             "INVALID_CREDENTIALS": "Invalid email or password.",
             "GENERIC": "An error occurred during registration.",
-            "RESEND_FAILED": "Unable to resend email. Please try again later."
+            "RESEND_FAILED": "Unable to resend email. Please try again later.",
+            "GOOGLE_FAILED": "Google sign-in failed. Please try again."
         },
         "BTN_RESEND_EMAIL": "Resend Email",
         "RESEND_SUCCESS": "A new verification email has been sent to you.",
