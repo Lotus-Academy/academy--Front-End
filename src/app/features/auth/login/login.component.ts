@@ -6,6 +6,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Info, Mail, Loader2, CheckCircle2, LucideAngularModule, Ticket, ShieldCheck, KeyRound } from 'lucide-angular';
 import { SocialAuthService, GoogleSigninButtonModule, GoogleLoginProvider } from '@abacritt/angularx-social-login';
 
+import { DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import { AuthService, LoginRequest, RegisterRequest } from '../../../core/services/auth.service';
 
 @Component({
@@ -66,6 +69,7 @@ export class LoginComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private socialAuthService = inject(SocialAuthService);
+  private destroyRef = inject(DestroyRef);
 
   readonly icons = { Mail, Info, Loader2, CheckCircle2, Ticket, ShieldCheck, KeyRound };
 
@@ -133,19 +137,21 @@ export class LoginComponent implements OnInit {
       }
     });
 
-    this.socialAuthService.authState.subscribe((user) => {
-      if (user && user.idToken) {
-        this.isLoading.set(true);
-        // Appel au backend
-        this.authService.googleLogin({ idToken: user.idToken }).subscribe({
-          next: () => this.router.navigate(['/dashboard']),
-          error: (err) => {
-            this.isLoading.set(false);
-            this.errorMessage.set('LOGIN.ERRORS.GOOGLE_FAILED');
-          }
-        });
-      }
-    });
+    this.socialAuthService.authState
+      .pipe(takeUntilDestroyed(this.destroyRef)) // pour empêcher les abonnements multiples
+      .subscribe((user) => {
+        if (user && user.idToken) {
+          this.isLoading.set(true);
+          // Appel au backend
+          this.authService.googleLogin({ idToken: user.idToken }).subscribe({
+            next: () => this.router.navigate(['/dashboard']),
+            error: (err) => {
+              this.isLoading.set(false);
+              this.errorMessage.set('LOGIN.ERRORS.GOOGLE_FAILED');
+            }
+          });
+        }
+      });
   }
 
   private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { jwtDecode } from 'jwt-decode';
+import { SocialAuthService, GoogleLoginProvider } from '@abacritt/angularx-social-login';
 
 // 1. DTO REGISTER
 export interface RegisterRequest {
@@ -60,6 +61,7 @@ export class AuthService {
   private router = inject(Router);
   private httpBackend = inject(HttpBackend);
   private bypassHttp: HttpClient;
+  private socialAuthService = inject(SocialAuthService);
 
   private baseUrl = `${environment.apiUrl}/api/v1/auth`;
 
@@ -163,6 +165,14 @@ export class AuthService {
   }
 
   logout(): void {
+
+    // 1. Déconnexion explicite de la session Google
+    try {
+      this.socialAuthService.signOut();
+    } catch (err) {
+      // Ignorer si la session Google n'existait pas
+    }
+
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');

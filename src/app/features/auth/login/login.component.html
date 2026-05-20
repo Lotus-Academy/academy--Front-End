@@ -99,9 +99,9 @@
             <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="space-y-5 animate-fade-in-up"
                 style="animation-delay: 0.1s;">
 
-                <div class="w-full flex justify-center mb-6">
+                <div class="flex justify-center w-full mb-6">
                     <asl-google-signin-button type="standard" size="large" text="signin_with" shape="rectangular"
-                        theme="outline" locale="en" class="w-full">
+                        theme="outline" locale="en" style="width: 100%; display: flex; justify-content: center;">
                     </asl-google-signin-button>
                 </div>
 
