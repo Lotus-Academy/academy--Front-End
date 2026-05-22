@@ -1,13 +1,14 @@
 import {
     LayoutDashboard,
     Users,
-    ShieldCheck, // Remplaçant de UserCheck, plus autoritaire
-    Library,     // Remplaçant de Video, car l'admin gère un catalogue
+    ShieldCheck,
+    Library,
     FolderOpen,
-    Wallet,      // Remplaçant de CreditCard pour englober la finance globale
-    MessageSquareWarning, // NOUVEAU : Pour la modération des avis
+    Wallet,
+    MessageSquareWarning,
     BarChart3,
-    Settings     // NOUVEAU : Paramètres de la plateforme
+    Settings,
+    FileEdit
 } from 'lucide-angular';
 
 export const ADMIN_SIDEBAR_LINKS = [
@@ -22,7 +23,7 @@ export const ADMIN_SIDEBAR_LINKS = [
         href: '/admin/instructors',
         icon: ShieldCheck,
         requiresApproval: false,
-        badgeKey: 'SIDEBAR.BADGES.ACTION' // Pour indiquer qu'il y a des validations en attente
+        badgeKey: 'SIDEBAR.BADGES.ACTION'
     },
     {
         labelKey: 'SIDEBAR.ADMIN.USERS',
@@ -65,6 +66,12 @@ export const ADMIN_SIDEBAR_LINKS = [
         labelKey: 'SIDEBAR.ADMIN.SETTINGS',
         href: '/admin/settings',
         icon: Settings,
+        requiresApproval: false
+    },
+    {
+        labelKey: 'SIDEBAR.ADMIN.INSTRUCTOR_TERMS',
+        href: '/admin/instructor-terms',
+        icon: FileEdit,
         requiresApproval: false
     }
 ];

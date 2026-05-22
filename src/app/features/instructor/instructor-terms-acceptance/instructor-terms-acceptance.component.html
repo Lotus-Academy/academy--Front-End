@@ -1,0 +1,56 @@
+<div class="max-w-4xl mx-auto p-6 lg:p-12 animate-fade-in">
+    <div class="mb-10 text-center">
+        <h1 class="text-4xl font-cormorant font-bold text-slate-900 dark:text-white">Instructor Terms & Conditions</h1>
+        <p class="text-slate-500 font-syne mt-2">Please read and accept the latest version ({{ activeTerms()?.version
+            }})</p>
+    </div>
+
+    @if (isLoading()) {
+    <div class="flex justify-center py-20"><lucide-icon [name]="icons.Loader2"
+            class="animate-spin text-lotus"></lucide-icon></div>
+    } @else {
+    <div class="bg-white dark:bg-ds-surface p-8 rounded-xl border border-slate-200 dark:border-ds-border shadow-sm mb-8 h-[500px] overflow-y-auto prose dark:prose-invert max-w-none"
+        [appLivePreview]="activeTerms()?.content ?? ''">
+    </div>
+
+    <div class="space-y-4 bg-slate-50 dark:bg-ds-black p-6 rounded-xl border border-slate-200 dark:border-ds-border">
+        <h3 class="font-bold text-slate-900 dark:text-white mb-4">Mandatory Declarations</h3>
+
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" [(ngModel)]="accepted.terms" class="accent-lotus w-5 h-5">
+            <span class="text-sm dark:text-ds-muted">I have read and accepted the Instructor Terms & Conditions.</span>
+        </label>
+
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" [(ngModel)]="accepted.ownership" class="accent-lotus w-5 h-5">
+            <span class="text-sm dark:text-ds-muted">I confirm that all uploaded content belongs to me or is properly
+                licensed.</span>
+        </label>
+
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" [(ngModel)]="accepted.distribution" class="accent-lotus w-5 h-5">
+            <span class="text-sm dark:text-ds-muted">I agree that Lotus Capital may host, market, distribute, and
+                monetize my content.</span>
+        </label>
+
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" [(ngModel)]="accepted.revenue" class="accent-lotus w-5 h-5">
+            <span class="text-sm dark:text-ds-muted">I understand that revenue shares are subject to platform policies
+                and deductions.</span>
+        </label>
+
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" [(ngModel)]="accepted.compliance" class="accent-lotus w-5 h-5">
+            <span class="text-sm dark:text-ds-muted">I agree to comply with all platform rules and applicable
+                laws.</span>
+        </label>
+    </div>
+
+    <div class="mt-8 flex justify-end">
+        <button (click)="confirmAcceptance()" [disabled]="!isFormValid() || isSubmitting()"
+            class="px-10 py-4 bg-lotus hover:bg-lotus-light text-ds-black font-mono font-bold uppercase tracking-widest rounded transition-all disabled:opacity-50">
+            {{ isSubmitting() ? 'SAVING...' : 'ACCEPT AND CONTINUE' }}
+        </button>
+    </div>
+    }
+</div>

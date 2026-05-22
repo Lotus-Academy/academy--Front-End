@@ -74,6 +74,13 @@ export interface InstructorProfileDetailsDTO {
   billingAddress?: string;
   taxId?: string;
   availableForMentoring?: boolean;
+  termsAccepted: boolean;
+  termsVersion: string;
+  termsAcceptedAt?: string;
+  contentOwnershipConfirmed: boolean;
+  distributionRightsGranted: boolean;
+  revenueShareUnderstood: boolean;
+  complianceAgreed: boolean;
   approvalStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
   totalReferrals?: number;
   revenueShareRate?: number;

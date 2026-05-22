@@ -142,7 +142,7 @@
                         </div>
                         @if (isFieldInvalid('step2', 'expertise')) {
                         <p class="text-[9px] font-mono text-red-500 mt-2 uppercase tracking-wider">
-                            Please select at least one area of expertise from the list above.
+                            Please select at least one area of expertise.
                         </p>
                         }
                     </div>
@@ -282,7 +282,7 @@
                             </div>
                             @if (isFieldInvalid('step4', 'phoneNumber')) {
                             <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">
-                                Invalid phone number format. Example: 612345678 (Without the country code)
+                                Invalid phone number format. Example: 612345678
                             </p>
                             }
                         </div>
@@ -299,7 +299,7 @@
                             [ngClass]="isFieldInvalid('step4', 'billingAddress') ? 'border-red-500' : 'border-slate-200 dark:border-ds-border'"></textarea>
                         @if (isFieldInvalid('step4', 'billingAddress')) {
                         <p class="text-[9px] font-mono text-red-500 mt-1.5 uppercase tracking-wider">
-                            Billing address is required for invoicing.
+                            Billing address is required.
                         </p>
                         }
                     </div>
@@ -341,27 +341,68 @@
                         </label>
                     </div>
 
-                    <div class="p-6 border border-lotus/30 rounded bg-lotus/5 dark:bg-lotus/5 transition-colors">
-                        <label class="flex items-start gap-4 cursor-pointer w-full group">
-                            <input type="checkbox" formControlName="termsAccepted"
-                                class="mt-1 w-5 h-5 rounded-sm border-lotus/50 text-lotus focus:ring-lotus bg-white dark:bg-ds-surface dark:border-lotus/30 accent-lotus transition-all">
+                    <div
+                        class="p-6 border border-lotus/30 rounded bg-lotus/5 dark:bg-lotus/5 transition-colors relative">
+                        <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div>
-                                <span
-                                    class="block font-syne font-bold text-slate-900 dark:text-white group-hover:text-lotus transition-colors text-lg">
-                                    {{ 'ONBOARDING.STEP5.TERMS_TITLE' | translate }}
+                                <span class="block font-syne font-bold text-slate-900 dark:text-white text-lg">
+                                    Mandatory Declarations
                                 </span>
-                                <span
-                                    class="block font-syne text-sm text-slate-600 dark:text-ds-muted/70 mt-1.5 leading-relaxed">
-                                    {{ 'ONBOARDING.STEP5.TERMS_DESC' | translate }}
+                                <span class="block font-syne text-sm text-slate-600 dark:text-ds-muted/70 mt-1">
+                                    You must agree to all conditions below to submit your application.
                                 </span>
                             </div>
-                        </label>
-                        @if (onboardingForm.get('step5.termsAccepted')?.touched &&
-                        onboardingForm.get('step5.termsAccepted')?.invalid) {
-                        <p class="text-[9px] font-mono text-red-500 mt-3 uppercase tracking-wider ml-9">
-                            You must accept the terms and conditions to proceed.
-                        </p>
-                        }
+
+                            <button type="button" (click)="toggleTermsModal()"
+                                class="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted hover:border-lotus hover:text-lotus dark:hover:border-lotus dark:hover:text-lotus transition-colors shadow-sm">
+                                <lucide-icon [name]="icons.FileText" class="w-3.5 h-3.5"></lucide-icon>
+                                Read Contract ({{ activeTermsVersion() }})
+                            </button>
+                        </div>
+
+                        <div class="space-y-4">
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" formControlName="termsAccepted"
+                                    class="mt-0.5 w-5 h-5 rounded-sm border-lotus/50 text-lotus focus:ring-lotus bg-white dark:bg-ds-surface dark:border-lotus/30 accent-lotus transition-all">
+                                <span
+                                    class="text-sm font-syne text-slate-700 dark:text-ds-muted group-hover:text-lotus transition-colors">I
+                                    have read and accepted the Instructor Terms & Conditions.</span>
+                            </label>
+
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" formControlName="contentOwnershipConfirmed"
+                                    class="mt-0.5 w-5 h-5 rounded-sm border-lotus/50 text-lotus focus:ring-lotus bg-white dark:bg-ds-surface dark:border-lotus/30 accent-lotus transition-all">
+                                <span
+                                    class="text-sm font-syne text-slate-700 dark:text-ds-muted group-hover:text-lotus transition-colors">I
+                                    confirm that all uploaded content belongs to me or is properly licensed.</span>
+                            </label>
+
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" formControlName="distributionRightsGranted"
+                                    class="mt-0.5 w-5 h-5 rounded-sm border-lotus/50 text-lotus focus:ring-lotus bg-white dark:bg-ds-surface dark:border-lotus/30 accent-lotus transition-all">
+                                <span
+                                    class="text-sm font-syne text-slate-700 dark:text-ds-muted group-hover:text-lotus transition-colors">I
+                                    agree that Lotus Capital may host, market, distribute, and monetize my
+                                    content.</span>
+                            </label>
+
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" formControlName="revenueShareUnderstood"
+                                    class="mt-0.5 w-5 h-5 rounded-sm border-lotus/50 text-lotus focus:ring-lotus bg-white dark:bg-ds-surface dark:border-lotus/30 accent-lotus transition-all">
+                                <span
+                                    class="text-sm font-syne text-slate-700 dark:text-ds-muted group-hover:text-lotus transition-colors">I
+                                    understand that revenue shares are subject to platform policies and
+                                    deductions.</span>
+                            </label>
+
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" formControlName="complianceAgreed"
+                                    class="mt-0.5 w-5 h-5 rounded-sm border-lotus/50 text-lotus focus:ring-lotus bg-white dark:bg-ds-surface dark:border-lotus/30 accent-lotus transition-all">
+                                <span
+                                    class="text-sm font-syne text-slate-700 dark:text-ds-muted group-hover:text-lotus transition-colors">I
+                                    agree to comply with all platform rules and applicable laws.</span>
+                            </label>
+                        </div>
                     </div>
 
                     @if (onboardingForm.invalid && onboardingForm.touched) {
@@ -369,11 +410,10 @@
                         class="p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded flex items-center gap-3">
                         <lucide-icon [name]="icons.AlertTriangle" class="w-5 h-5 text-red-500"></lucide-icon>
                         <p class="font-syne text-sm text-red-800 dark:text-red-400 font-bold">
-                            Action required: Please review previous steps. Some mandatory fields are missing or invalid.
+                            Action required: Please ensure all mandatory declarations are checked.
                         </p>
                     </div>
                     }
-
                 </div>
                 }
 
@@ -408,7 +448,53 @@
 
             </form>
         </div>
-
         }
     </div>
 </div>
+
+@if (showTermsModal()) {
+<div
+    class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+    <div
+        class="bg-white dark:bg-ds-surface w-full max-w-4xl max-h-[90vh] rounded-xl shadow-2xl overflow-hidden flex flex-col">
+
+        <div
+            class="p-6 border-b border-slate-100 dark:border-ds-border flex justify-between items-center bg-slate-50 dark:bg-ds-surface shrink-0">
+            <div>
+                <h3 class="text-xl font-bold font-cormorant text-slate-900 dark:text-white">Instructor Legal Terms</h3>
+                <p class="text-xs text-slate-500 uppercase font-mono tracking-tighter mt-1">Version {{
+                    activeTermsVersion() }}</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button (click)="downloadTermsAsPdf()" [disabled]="isDownloadingPdf()"
+                    class="flex items-center gap-2 px-4 py-2 bg-lotus/10 hover:bg-lotus/20 text-lotus rounded font-mono text-[10px] uppercase tracking-widest font-bold transition-colors disabled:opacity-50">
+                    @if (isDownloadingPdf()) {
+                    <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon> Generating PDF...
+                    } @else {
+                    <lucide-icon [name]="icons.Download" class="w-4 h-4"></lucide-icon> Download PDF
+                    }
+                </button>
+                <button (click)="toggleTermsModal()"
+                    class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-200 dark:hover:bg-ds-black rounded-full transition-colors">
+                    <lucide-icon [name]="icons.X"></lucide-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-8 sm:p-10 bg-white dark:bg-ds-black">
+            <div id="legal-terms-content"
+                class="prose dark:prose-invert max-w-none font-syne text-sm text-slate-800 dark:text-ds-muted"
+                [appLivePreview]="activeTermsContent()">
+            </div>
+        </div>
+
+        <div
+            class="p-4 border-t border-slate-100 dark:border-ds-border bg-slate-50 dark:bg-ds-surface flex justify-end shrink-0">
+            <button (click)="toggleTermsModal()"
+                class="px-6 py-2.5 bg-slate-900 text-white dark:bg-white dark:text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded hover:opacity-90 transition-opacity">
+                Close & Accept Below
+            </button>
+        </div>
+    </div>
+</div>
+}

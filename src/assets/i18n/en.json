@@ -299,7 +299,8 @@
             "FINANCE": "Finance & Coupons",
             "REVIEWS": "Reviews & Moderation",
             "ANALYTICS": "Global Analytics",
-            "SETTINGS": "Platform Settings"
+            "SETTINGS": "Platform Settings",
+            "INSTRUCTOR_TERMS": "Instructor Terms"
         },
         "STUDENT": {
             "DASHBOARD": "Dashboard",

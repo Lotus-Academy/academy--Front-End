@@ -113,7 +113,7 @@
                         <div>
                             <p
                                 class="font-mono text-[9px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
-                                Téléphone</p>
+                                Phone</p>
                             <p class="font-syne text-sm text-slate-900 dark:text-white">{{
                                 user()?.instructorProfile?.phoneNumber || '-' }}</p>
                         </div>
@@ -124,7 +124,7 @@
                         <div>
                             <p
                                 class="font-mono text-[9px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
-                                Adresse de facturation</p>
+                                Billing Address</p>
                             <p class="font-syne text-sm text-slate-900 dark:text-white">{{
                                 user()?.instructorProfile?.billingAddress || '-' }}</p>
                         </div>
@@ -135,11 +135,11 @@
                         <div>
                             <p
                                 class="font-mono text-[9px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70">
-                                Nom légal / Tax ID</p>
-                            <p class="font-syne text-sm text-slate-900 dark:text-white">{{
-                                user()?.instructorProfile?.legalName || '-' }}
-                                <br> <span class="text-xs text-slate-500">{{ user()?.instructorProfile?.taxId || 'Non
-                                    renseigné' }}</span>
+                                Legal Name / Tax ID</p>
+                            <p class="font-syne text-sm text-slate-900 dark:text-white">
+                                {{ user()?.instructorProfile?.legalName || '-' }}
+                                <br> <span class="text-xs text-slate-500">{{ user()?.instructorProfile?.taxId || 'Not
+                                    assigned' }}</span>
                             </p>
                         </div>
                     </li>
@@ -171,7 +171,7 @@
                     <a [href]="user()?.instructorProfile?.websiteUrl" target="_blank"
                         class="flex items-center gap-3 p-3 rounded border border-slate-100 dark:border-ds-border bg-slate-50 dark:bg-ds-black hover:border-lotus transition-colors">
                         <lucide-icon [name]="icons.Globe" class="w-5 h-5 text-lotus"></lucide-icon>
-                        <span class="font-syne text-sm text-slate-700 dark:text-ds-muted">Site Web Personnel</span>
+                        <span class="font-syne text-sm text-slate-700 dark:text-ds-muted">Personal Website</span>
                     </a>
                     }
                     @if (!user()?.instructorProfile?.linkedinUrl && !user()?.instructorProfile?.githubUrl &&
@@ -200,7 +200,6 @@
 
             <div
                 class="bg-white dark:bg-ds-surface rounded border border-slate-200 dark:border-ds-border shadow-sm p-6 sm:p-8 grid sm:grid-cols-2 gap-8">
-
                 <div>
                     <h3
                         class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70 mb-4">
@@ -220,7 +219,6 @@
                     <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 italic">-</p>
                     }
                 </div>
-
                 <div>
                     <h3
                         class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70 mb-4">
@@ -240,7 +238,81 @@
                     <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 italic">-</p>
                     }
                 </div>
+            </div>
 
+            <div
+                class="bg-white dark:bg-ds-surface rounded border border-slate-200 dark:border-ds-border shadow-sm p-6 sm:p-8">
+                <h3
+                    class="font-cormorant text-xl font-bold text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-ds-border pb-3 flex items-center gap-2">
+                    <lucide-icon [name]="icons.ShieldCheck" class="w-5 h-5 text-lotus"></lucide-icon>
+                    Legal Compliance & Contracts
+                </h3>
+
+                <div class="grid sm:grid-cols-2 gap-6 mb-6">
+                    <div class="p-4 bg-slate-50 dark:bg-ds-black rounded border border-slate-100 dark:border-ds-border">
+                        <p
+                            class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70 mb-1">
+                            Contract Version</p>
+                        <p class="font-syne font-bold text-slate-900 dark:text-white">
+                            {{ user()?.instructorProfile?.termsVersion || 'Not Assigned' }}
+                        </p>
+                    </div>
+                    <div class="p-4 bg-slate-50 dark:bg-ds-black rounded border border-slate-100 dark:border-ds-border">
+                        <p
+                            class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70 mb-1">
+                            Acceptance Date</p>
+                        <p class="font-syne font-bold text-slate-900 dark:text-white">
+                            @if (user()?.instructorProfile?.termsAcceptedAt) {
+                            {{ user()?.instructorProfile?.termsAcceptedAt | date:'medium' }}
+                            } @else {
+                            <span class="text-slate-400 italic">Pending</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                <ul class="space-y-4">
+                    <li class="flex items-center gap-3">
+                        <lucide-icon
+                            [name]="user()?.instructorProfile?.termsAccepted ? icons.CheckCircle : icons.XCircle"
+                            [class]="user()?.instructorProfile?.termsAccepted ? 'text-green' : 'text-slate-300 dark:text-ds-muted/30'"
+                            class="w-5 h-5 shrink-0"></lucide-icon>
+                        <span class="font-syne text-sm text-slate-700 dark:text-ds-muted">Read and accepted Instructor
+                            Terms & Conditions.</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <lucide-icon
+                            [name]="user()?.instructorProfile?.contentOwnershipConfirmed ? icons.CheckCircle : icons.XCircle"
+                            [class]="user()?.instructorProfile?.contentOwnershipConfirmed ? 'text-green' : 'text-slate-300 dark:text-ds-muted/30'"
+                            class="w-5 h-5 shrink-0"></lucide-icon>
+                        <span class="font-syne text-sm text-slate-700 dark:text-ds-muted">Confirmed content ownership
+                            and licensing.</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <lucide-icon
+                            [name]="user()?.instructorProfile?.distributionRightsGranted ? icons.CheckCircle : icons.XCircle"
+                            [class]="user()?.instructorProfile?.distributionRightsGranted ? 'text-green' : 'text-slate-300 dark:text-ds-muted/30'"
+                            class="w-5 h-5 shrink-0"></lucide-icon>
+                        <span class="font-syne text-sm text-slate-700 dark:text-ds-muted">Granted distribution rights to
+                            Lotus Capital.</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <lucide-icon
+                            [name]="user()?.instructorProfile?.revenueShareUnderstood ? icons.CheckCircle : icons.XCircle"
+                            [class]="user()?.instructorProfile?.revenueShareUnderstood ? 'text-green' : 'text-slate-300 dark:text-ds-muted/30'"
+                            class="w-5 h-5 shrink-0"></lucide-icon>
+                        <span class="font-syne text-sm text-slate-700 dark:text-ds-muted">Understood revenue share
+                            policies.</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <lucide-icon
+                            [name]="user()?.instructorProfile?.complianceAgreed ? icons.CheckCircle : icons.XCircle"
+                            [class]="user()?.instructorProfile?.complianceAgreed ? 'text-green' : 'text-slate-300 dark:text-ds-muted/30'"
+                            class="w-5 h-5 shrink-0"></lucide-icon>
+                        <span class="font-syne text-sm text-slate-700 dark:text-ds-muted">Agreed to comply with platform
+                            rules and applicable laws.</span>
+                    </li>
+                </ul>
             </div>
 
             <div class="grid grid-cols-2 gap-6">
@@ -251,25 +323,22 @@
                     </p>
                     <p
                         class="font-mono text-[9px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70 mt-1">
-                        Années d'expérience
-                    </p>
+                        Years of experience</p>
                 </div>
                 <div
                     class="bg-white dark:bg-ds-surface rounded border border-slate-200 dark:border-ds-border shadow-sm p-5 text-center">
                     <p class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white">
                         @if (user()?.instructorProfile?.availableForMentoring) {
-                        <span class="text-green">Oui</span>
+                        <span class="text-green">Yes</span>
                         } @else {
-                        <span class="text-slate-400">Non</span>
+                        <span class="text-slate-400">No</span>
                         }
                     </p>
                     <p
                         class="font-mono text-[9px] uppercase tracking-widest font-bold text-slate-500 dark:text-ds-muted/70 mt-1">
-                        Disponible Mentoring
-                    </p>
+                        Available for mentoring</p>
                 </div>
             </div>
-
         </div>
     </div>
     }

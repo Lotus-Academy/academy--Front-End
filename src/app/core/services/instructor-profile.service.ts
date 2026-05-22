@@ -19,6 +19,11 @@ export interface InstructorOnboardingRequestDTO {
   taxId?: string;
   availableForMentoring: boolean;
   termsAccepted: boolean;
+  contentOwnershipConfirmed: boolean;
+  distributionRightsGranted: boolean;
+  revenueShareUnderstood: boolean;
+  complianceAgreed: boolean;
+  termsVersion: string;
 }
 
 export interface InstructorProfileResponseDTO {
@@ -42,6 +47,18 @@ export interface InstructorProfileResponseDTO {
   taxId: string;
   availableForMentoring: boolean;
   approvalStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
+
+  // --- Champs légaux ---
+  termsAccepted: boolean;
+  contentOwnershipConfirmed: boolean;
+  distributionRightsGranted: boolean;
+  revenueShareUnderstood: boolean;
+  complianceAgreed: boolean;
+  termsVersion: string;
+  termsAcceptedAt: string;
+
+  totalReferrals: number;
+  revenueShareRate: number;
   createdAt: string;
   updatedAt: string;
 }

@@ -69,6 +69,8 @@ import { PaymentSuccessComponent } from './features/payments/payment-success/pay
 import { PurchaseHistoryComponent } from './features/student/purchase-history/purchase-history.component';
 import { AdminFinanceComponent } from './features/admin/admin-finance/admin-finance.component';
 import { AdminSettingsComponent } from './features/admin/admin-settings/admin-settings.component';
+import { AdminTermsManagerComponent } from './features/admin/admin-terms-manager/admin-terms-manager.component';
+import { InstructorTermsAcceptanceComponent } from './features/instructor/instructor-terms-acceptance/instructor-terms-acceptance.component';
 
 export const routes: Routes = [
     // --- ROUTES PUBLIQUES ---
@@ -185,6 +187,11 @@ export const routes: Routes = [
         component: InstructorLiveSessionsComponent,
         canActivate: [authGuard, instructorApprovedGuard]
     },
+    {
+        path: 'instructor/terms-acceptance',
+        component: InstructorTermsAcceptanceComponent,
+        canActivate: [authGuard]
+    },
 
 
     // --- ROUTES ADMINISTRATION ---
@@ -206,6 +213,7 @@ export const routes: Routes = [
     { path: 'admin/users/:id', component: AdminStudentProfileComponent, canActivate: [authGuard] },
     { path: 'admin/finance', component: AdminFinanceComponent, canActivate: [authGuard] },
     { path: 'admin/settings', component: AdminSettingsComponent, canActivate: [authGuard] },
+    { path: 'admin/instructor-terms', component: AdminTermsManagerComponent, canActivate: [authGuard] },
     // --- FALLBACK (Page 404) ---
     { path: '**', redirectTo: '' }
 ];

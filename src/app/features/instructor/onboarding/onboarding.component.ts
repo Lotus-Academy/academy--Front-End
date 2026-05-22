@@ -3,31 +3,44 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LucideAngularModule, User, BookOpen, Globe, FileText, CheckCircle, ChevronRight, ChevronLeft, Loader2, AlertTriangle } from 'lucide-angular';
+import { LucideAngularModule, User, BookOpen, Globe, FileText, CheckCircle, ChevronRight, ChevronLeft, Loader2, AlertTriangle, ExternalLink, X, Download } from 'lucide-angular';
 import { InstructorProfileService, InstructorOnboardingRequestDTO, InstructorProfileResponseDTO } from '../../../core/services/instructor-profile.service';
+import { InstructorTermsService, InstructorTermsResponse } from '../../../core/services/instructor-terms.service';
 import { NavbarComponent } from "../../layouts/navbar-component/navbar.component";
+import { LivePreviewDirective } from '../../../shared/directives/live-preview.directive';
+import html2pdf from 'html2pdf.js';
+
 
 @Component({
   selector: 'app-instructor-onboarding',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule, NavbarComponent],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule, NavbarComponent, LivePreviewDirective],
   templateUrl: './onboarding.component.html'
 })
 export class InstructorOnboardingComponent implements OnInit {
   private fb = inject(FormBuilder);
   private instructorService = inject(InstructorProfileService);
+  private termsService = inject(InstructorTermsService);
   private router = inject(Router);
   private translate = inject(TranslateService);
 
-  readonly icons = { User, BookOpen, Globe, FileText, CheckCircle, ChevronRight, ChevronLeft, Loader2, AlertTriangle };
+  // Ajout de X et Download pour le modal
+  readonly icons = { User, BookOpen, Globe, FileText, CheckCircle, ChevronRight, ChevronLeft, Loader2, AlertTriangle, ExternalLink, X, Download };
 
   isPageLoading = signal<boolean>(true);
   isEditMode = signal<boolean>(false);
+
+  // État des Termes Légaux
+  activeTermsVersion = signal<string>('v1.0');
+  activeTermsContent = signal<string>('');
+  showTermsModal = signal<boolean>(false); // Contrôle du modal
+  isDownloadingPdf = signal<boolean>(false);
 
   currentStep = signal<number>(1);
   isSubmitting = signal<boolean>(false);
   errorMessage = signal<string>('');
 
+  // ... (Garder steps, expertiseOptions, languageOptions, phonePrefixes) ...
   steps = [
     { num: 1, titleKey: 'ONBOARDING.STEPS.PUBLIC_PROFILE', icon: this.icons.User, formGroupName: 'step1' },
     { num: 2, titleKey: 'ONBOARDING.STEPS.EXPERTISE', icon: this.icons.BookOpen, formGroupName: 'step2' },
@@ -46,7 +59,6 @@ export class InstructorOnboardingComponent implements OnInit {
     'English', 'Français', 'Spanish', 'Arabic', 'German', 'Mandarin'
   ];
 
-  // Liste des indicatifs téléphoniques (Focus MENA / Europe / US)
   phonePrefixes = [
     { code: '+212', label: 'MA (+212)' },
     { code: '+1', label: 'US/CA (+1)' },
@@ -59,7 +71,9 @@ export class InstructorOnboardingComponent implements OnInit {
     { code: '+91', label: 'IN (+91)' }
   ];
 
+
   onboardingForm: FormGroup = this.fb.group({
+    // ... (Garder la configuration des étapes 1 à 4) ...
     step1: this.fb.group({
       headline: ['', [Validators.required, Validators.maxLength(100)]],
       bio: ['', [Validators.required, Validators.minLength(50)]]
@@ -70,27 +84,40 @@ export class InstructorOnboardingComponent implements OnInit {
       languages: [[], [Validators.required, Validators.minLength(1)]]
     }),
     step3: this.fb.group({
-      // LinkedIn Regex stricte mais flexible
       linkedinUrl: ['', [Validators.required, Validators.pattern('^(https?:\\/\\/)?(www\\.)?linkedin\\.com\\/.*$')]],
       websiteUrl: [''],
       githubUrl: ['']
     }),
     step4: this.fb.group({
       legalName: ['', [Validators.required, Validators.maxLength(150)]],
-      phonePrefix: ['+212', [Validators.required]], // Indicatif par défaut
-      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{6,14}$')]], // Numéro local seul
+      phonePrefix: ['+212', [Validators.required]],
+      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{6,14}$')]],
       billingAddress: ['', [Validators.required, Validators.maxLength(500)]],
       taxId: ['']
     }),
     step5: this.fb.group({
       availableForMentoring: [false],
-      termsAccepted: [false, Validators.requiredTrue]
+      termsAccepted: [false, Validators.requiredTrue],
+      contentOwnershipConfirmed: [false, Validators.requiredTrue],
+      distributionRightsGranted: [false, Validators.requiredTrue],
+      revenueShareUnderstood: [false, Validators.requiredTrue],
+      complianceAgreed: [false, Validators.requiredTrue]
     })
   });
 
   progressPercentage = computed(() => ((this.currentStep() - 1) / (this.steps.length - 1)) * 100);
 
   ngOnInit(): void {
+    // Récupérer le contenu complet des termes pour le modal
+    this.termsService.getActiveTerms().subscribe({
+      next: (terms: InstructorTermsResponse) => {
+        if (terms && terms.version) {
+          this.activeTermsVersion.set(terms.version);
+          this.activeTermsContent.set(terms.content);
+        }
+      }
+    });
+
     this.instructorService.getMyProfile().subscribe({
       next: (profile: InstructorProfileResponseDTO) => {
         if (profile.approvalStatus === 'APPROVED' || profile.approvalStatus === 'PENDING') {
@@ -110,8 +137,8 @@ export class InstructorOnboardingComponent implements OnInit {
     });
   }
 
+  // ... (Garder prefillForm, toggleSelection, isFieldInvalid, nextStep, prevStep) ...
   private prefillForm(profile: InstructorProfileResponseDTO): void {
-    // Extraction de l'indicatif si le numéro commence par '+'
     let prefix = '+212';
     let phoneNum = profile.phoneNumber || '';
 
@@ -137,14 +164,18 @@ export class InstructorOnboardingComponent implements OnInit {
       },
       step4: {
         legalName: profile.legalName,
-        phonePrefix: prefix, // Champ sélecteur
-        phoneNumber: phoneNum, // Champ input texte
+        phonePrefix: prefix,
+        phoneNumber: phoneNum,
         billingAddress: profile.billingAddress,
         taxId: profile.taxId
       },
       step5: {
         availableForMentoring: profile.availableForMentoring,
-        termsAccepted: false
+        termsAccepted: false,
+        contentOwnershipConfirmed: false,
+        distributionRightsGranted: false,
+        revenueShareUnderstood: false,
+        complianceAgreed: false
       }
     });
   }
@@ -186,6 +217,41 @@ export class InstructorOnboardingComponent implements OnInit {
     }
   }
 
+  // --- Gestion du Modal et Téléchargement ---
+
+  toggleTermsModal(): void {
+    this.showTermsModal.update(v => !v);
+    if (this.showTermsModal()) {
+      document.body.style.overflow = 'hidden'; // Empêche le défilement du fond
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }
+
+  downloadTermsAsPdf(): void {
+    this.isDownloadingPdf.set(true);
+    const element = document.getElementById('legal-terms-content');
+
+    if (!element) {
+      this.isDownloadingPdf.set(false);
+      return;
+    }
+
+    const opt = {
+      margin: 10,
+      filename: `Lotus-Academy-Instructor-Terms-${this.activeTermsVersion()}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // @ts-ignore
+    html2pdf().set(opt).from(element).save().then(() => {
+      this.isDownloadingPdf.set(false);
+    });
+  }
+
+  // ... (Garder submit) ...
   submit(): void {
     if (this.onboardingForm.invalid) {
       this.onboardingForm.markAllAsTouched();
@@ -196,8 +262,6 @@ export class InstructorOnboardingComponent implements OnInit {
     this.errorMessage.set('');
 
     const formValues = this.onboardingForm.value;
-
-    // Fusion du préfixe et du numéro pour le backend
     const fullPhoneNumber = `${formValues.step4.phonePrefix}${formValues.step4.phoneNumber}`;
 
     const requestDTO: InstructorOnboardingRequestDTO = {
@@ -207,10 +271,17 @@ export class InstructorOnboardingComponent implements OnInit {
       teachingLanguages: formValues.step2.languages,
       ...formValues.step3,
       legalName: formValues.step4.legalName,
-      phoneNumber: fullPhoneNumber, // Numéro fusionné envoyé à l'API
+      phoneNumber: fullPhoneNumber,
       billingAddress: formValues.step4.billingAddress,
       taxId: formValues.step4.taxId,
-      ...formValues.step5
+      availableForMentoring: formValues.step5.availableForMentoring,
+
+      termsAccepted: formValues.step5.termsAccepted,
+      contentOwnershipConfirmed: formValues.step5.contentOwnershipConfirmed,
+      distributionRightsGranted: formValues.step5.distributionRightsGranted,
+      revenueShareUnderstood: formValues.step5.revenueShareUnderstood,
+      complianceAgreed: formValues.step5.complianceAgreed,
+      termsVersion: this.activeTermsVersion()
     };
 
     const request$ = this.isEditMode()
@@ -220,7 +291,7 @@ export class InstructorOnboardingComponent implements OnInit {
     request$.subscribe({
       next: () => {
         this.isSubmitting.set(false);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/instructor/dashboard']);
       },
       error: (err) => {
         this.isSubmitting.set(false);

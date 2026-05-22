@@ -2,6 +2,7 @@ import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedLayoutComponent } from '../../../../shared/components/shared-layout/shared-layout.component';
 import { InstructorProfileService } from '../../../../core/services/instructor-profile.service';
+import { InstructorTermsService } from '../../../../core/services/instructor-terms.service'; // NOUVEL IMPORT
 
 import { INSTRUCTOR_SIDEBAR_LINKS } from './instructor-sidebar.config';
 
@@ -17,23 +18,45 @@ import { INSTRUCTOR_SIDEBAR_LINKS } from './instructor-sidebar.config';
       badgeClasses="bg-lotus/10 text-lotus border-lotus/20 dark:bg-lotus/10 dark:text-lotus dark:border-lotus/30"
       profileLink="/user/profile"
       profileRoleText="LAYOUT.INSTRUCTOR_ROLE"
-      [profileStatus]="profileStatus()">
+      [profileStatus]="profileStatus()"
+      [hasValidTerms]="hasValidTerms()"
+      >
       <ng-content></ng-content>
     </app-shared-layout>
   `
 })
 export class InstructorLayoutComponent implements OnInit {
   @Input({ required: true }) title!: string;
+
   private instructorProfileService = inject(InstructorProfileService);
+  private instructorTermsService = inject(InstructorTermsService);
 
   profileStatus = signal<'LOADING' | 'MISSING' | 'PENDING' | 'APPROVED' | 'REJECTED'>('LOADING');
+
+  hasValidTerms = signal<boolean>(true);
 
   navLinks = INSTRUCTOR_SIDEBAR_LINKS;
 
   ngOnInit(): void {
     this.instructorProfileService.getMyProfile().subscribe({
-      next: (profile) => this.profileStatus.set(profile.approvalStatus),
-      error: (err) => this.profileStatus.set(err.status === 404 ? 'MISSING' : 'MISSING')
+      next: (profile) => {
+        this.profileStatus.set(profile.approvalStatus as any);
+
+        this.instructorTermsService.getActiveTerms().subscribe({
+          next: (activeTerms) => {
+            const isValid = profile.termsAccepted && profile.termsVersion === activeTerms.version;
+            this.hasValidTerms.set(isValid);
+          },
+          error: (err) => {
+            console.error("Impossible de vérifier la version des conditions générales", err);
+            this.hasValidTerms.set(true);
+          }
+        });
+      },
+      error: (err) => {
+        this.profileStatus.set('MISSING');
+        this.hasValidTerms.set(true);
+      }
     });
   }
 }

@@ -39,6 +39,8 @@ export class SharedLayoutComponent implements OnInit, OnDestroy {
   @Input({ required: true }) profileRoleText!: string;
   @Input() profileStatus?: 'LOADING' | 'MISSING' | 'PENDING' | 'APPROVED' | 'REJECTED';
 
+  @Input() hasValidTerms?: boolean = true;
+
   private authService = inject(AuthService);
   private userService = inject(UserService); // <-- AJOUT
   public themeService = inject(ThemeService);

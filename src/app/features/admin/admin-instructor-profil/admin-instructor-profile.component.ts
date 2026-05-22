@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common'; // Ajout de DatePipe
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -16,7 +16,8 @@ import {
   Github,
   Linkedin,
   FileText,
-  AlertTriangle
+  AlertTriangle,
+  ShieldCheck // Ajout de l'icône de sécurité/légal
 } from 'lucide-angular';
 
 import { AdminService, AdminUserDetailsDTO } from '../../../core/services/admin.service';
@@ -24,7 +25,7 @@ import { AdminService, AdminUserDetailsDTO } from '../../../core/services/admin.
 @Component({
   selector: 'app-admin-instructor-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule, LucideAngularModule, TranslateModule],
+  imports: [CommonModule, RouterModule, LucideAngularModule, TranslateModule, DatePipe], // Ajout de DatePipe ici
   templateUrl: './admin-instructor-profile.component.html'
 })
 export class AdminInstructorProfileComponent implements OnInit {
@@ -32,7 +33,7 @@ export class AdminInstructorProfileComponent implements OnInit {
   private router = inject(Router);
   private adminService = inject(AdminService);
 
-  readonly icons = { ArrowLeft, CheckCircle, XCircle, Loader2, Mail, Phone, MapPin, Briefcase, Globe, Github, Linkedin, FileText, AlertTriangle };
+  readonly icons = { ArrowLeft, CheckCircle, XCircle, Loader2, Mail, Phone, MapPin, Briefcase, Globe, Github, Linkedin, FileText, AlertTriangle, ShieldCheck };
 
   userId = signal<string | null>(null);
   user = signal<AdminUserDetailsDTO | null>(null);

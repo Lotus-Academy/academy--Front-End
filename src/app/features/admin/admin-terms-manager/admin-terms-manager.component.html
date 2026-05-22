@@ -1,0 +1,140 @@
+<app-admin-layout [title]="'Admin - ' + ('SIDEBAR.ADMIN.INSTRUCTOR_TERMS' | translate)">
+    <div class="min-h-full p-6 lg:p-8 animate-fade-in">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
+            <div>
+                <h2 class="text-3xl font-cormorant font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                    <lucide-icon [name]="icons.History" class="text-lotus"></lucide-icon>
+                    Legal Infrastructure
+                </h2>
+                <p class="font-syne text-sm text-slate-500 dark:text-ds-muted/70 mt-1">Manage dynamic instructor terms
+                    and auto-versioning.</p>
+            </div>
+
+            <button (click)="toggleCreateForm()"
+                class="px-6 py-3 bg-lotus hover:bg-lotus-light text-ds-black font-mono text-[11px] uppercase tracking-[0.12em] font-bold rounded transition-all flex items-center gap-2 shadow-lg shadow-lotus/10">
+                <lucide-icon [name]="showCreateForm() ? icons.ChevronLeft : icons.Plus" class="w-4 h-4"></lucide-icon>
+                {{ showCreateForm() ? 'BACK TO HISTORY' : 'PUBLISH NEW VERSION' }}
+            </button>
+        </div>
+
+        @if (isLoading()) {
+        <div class="flex justify-center items-center py-20">
+            <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin"></lucide-icon>
+        </div>
+        } @else {
+        @if (showCreateForm()) {
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up">
+            <div
+                class="bg-white dark:bg-ds-surface p-6 rounded-lg border border-slate-200 dark:border-ds-border shadow-sm">
+                <form [formGroup]="termsForm" class="space-y-6">
+                    <div>
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 mb-2">Release
+                            Notes</label>
+                        <input formControlName="releaseNotes"
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm focus:ring-1 focus:ring-lotus outline-none dark:text-white transition-colors"
+                            placeholder="Ex: Added VAT clauses...">
+                    </div>
+                    <div>
+                        <label
+                            class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-500 mb-2">Content
+                            (Markdown + LaTeX)</label>
+                        <textarea formControlName="content" rows="20"
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-mono text-sm focus:ring-1 focus:ring-lotus outline-none dark:text-white transition-colors resize-y"
+                            placeholder="Use $$...$$ for math..."></textarea>
+                    </div>
+                </form>
+                @if (errorMessage()) {
+                <div
+                    class="mt-4 p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded font-syne text-xs font-bold flex items-center gap-2">
+                    <lucide-icon [name]="icons.AlertTriangle" class="w-4 h-4"></lucide-icon> {{ errorMessage() }}
+                </div>
+                }
+                <button (click)="publishNewVersion()" [disabled]="isSaving() || termsForm.invalid"
+                    class="w-full mt-6 py-4 bg-green-600 hover:bg-green-500 text-white font-mono text-[11px] uppercase tracking-[0.12em] font-bold rounded transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                    @if (isSaving()) { <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon> }
+                    @else { <lucide-icon [name]="icons.Send" class="w-4 h-4"></lucide-icon> }
+                    PUBLISH VERSION
+                </button>
+            </div>
+
+            <div
+                class="bg-white dark:bg-ds-surface p-6 rounded-lg border border-slate-200 dark:border-ds-border shadow-sm">
+                <label
+                    class="block font-mono text-[10px] uppercase tracking-widest font-bold text-green mb-4 flex items-center gap-2">
+                    <lucide-icon [name]="icons.Eye" class="w-3.5 h-3.5"></lucide-icon> LIVE PREVIEW
+                </label>
+                <div class="prose dark:prose-invert max-w-none h-[600px] overflow-y-auto p-4 border border-dashed border-slate-200 dark:border-ds-border rounded font-syne text-sm text-slate-800 dark:text-ds-muted"
+                    [appLivePreview]="termsForm.get('content')?.value ?? ''">
+                </div>
+            </div>
+        </div>
+        } @else {
+        <div
+            class="bg-white dark:bg-ds-surface rounded-xl border border-slate-200 dark:border-ds-border shadow-sm overflow-hidden animate-fade-in-up">
+            <table class="w-full text-left font-syne">
+                <thead
+                    class="bg-slate-50 dark:bg-ds-black/50 text-slate-500 dark:text-ds-muted uppercase text-[10px] tracking-widest font-bold">
+                    <tr>
+                        <th class="p-5">Version</th>
+                        <th class="p-5">Status</th>
+                        <th class="p-5">Release Notes</th>
+                        <th class="p-5">Published At</th>
+                        <th class="p-5 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-ds-border">
+                    @for (term of termsHistory(); track term.id) {
+                    <tr class="hover:bg-slate-50 dark:hover:bg-ds-border/20 transition-colors">
+                        <td class="p-5 font-mono font-bold text-slate-900 dark:text-white">#{{ term.version }}</td>
+                        <td class="p-5">
+                            @if (term.isActive) {
+                            <span
+                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-[10px] font-bold uppercase border border-green-500/20">Active</span>
+                            } @else {
+                            <span
+                                class="px-3 py-1 rounded-full bg-slate-100 dark:bg-ds-black text-slate-400 text-[10px] font-bold uppercase border border-slate-200 dark:border-ds-border">Archived</span>
+                            }
+                        </td>
+                        <td class="p-5 text-sm text-slate-600 dark:text-ds-muted truncate max-w-xs">{{ term.releaseNotes
+                            }}</td>
+                        <td class="p-5 text-xs text-slate-500">{{ term.publishedAt | date:'medium' }}</td>
+                        <td class="p-5 text-right">
+                            <button (click)="viewTerm(term)"
+                                class="text-lotus hover:text-lotus-light text-xs font-bold uppercase flex items-center gap-1 ml-auto">
+                                <lucide-icon [name]="icons.Eye" class="w-3.5 h-3.5"></lucide-icon> VIEW
+                            </button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+        }
+    </div>
+
+    @if (selectedTermForView()) {
+    <div
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+        <div
+            class="bg-white dark:bg-ds-surface w-full max-w-4xl max-h-[90vh] rounded-xl shadow-2xl overflow-hidden flex flex-col">
+            <div
+                class="p-6 border-b border-slate-100 dark:border-ds-border flex justify-between items-center bg-slate-50 dark:bg-ds-surface">
+                <div>
+                    <h3 class="text-xl font-bold dark:text-white">Version {{ selectedTermForView()?.version }}</h3>
+                    <p class="text-xs text-slate-500 uppercase font-mono tracking-tighter">{{
+                        selectedTermForView()?.publishedAt | date:'full' }}</p>
+                </div>
+                <button (click)="selectedTermForView.set(null)"
+                    class="p-2 hover:bg-slate-200 dark:hover:bg-ds-black rounded-full transition-colors">
+                    <lucide-icon [name]="icons.X"></lucide-icon>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-8 prose dark:prose-invert max-w-none"
+                [appLivePreview]="selectedTermForView()?.content ?? ''">
+            </div>
+        </div>
+    </div>
+    }
+</app-admin-layout>
