@@ -298,7 +298,8 @@
             "FINANCE": "Finance & Coupons",
             "REVIEWS": "Avis & Modération",
             "ANALYTICS": "Analytiques Globales",
-            "SETTINGS": "Paramètres Plateforme"
+            "SETTINGS": "Paramètres Plateforme",
+            "INSTRUCTOR_TERMS": "Administration Légale"
         },
         "STUDENT": {
             "DASHBOARD": "Tableau de bord",
