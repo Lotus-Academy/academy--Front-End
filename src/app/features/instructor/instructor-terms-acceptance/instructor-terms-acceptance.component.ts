@@ -77,7 +77,7 @@ export class InstructorTermsAcceptanceComponent implements OnInit {
       };
 
       this.profileService.updateProfile(payload).subscribe({
-        next: () => this.router.navigate(['/instructor/dashboard']),
+        next: () => this.router.navigate(['/dashboard']),
         error: (err) => {
           this.isSubmitting.set(false);
           console.error('Erreur API:', err.error);

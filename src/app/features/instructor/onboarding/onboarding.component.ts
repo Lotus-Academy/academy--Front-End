@@ -108,7 +108,6 @@ export class InstructorOnboardingComponent implements OnInit {
   progressPercentage = computed(() => ((this.currentStep() - 1) / (this.steps.length - 1)) * 100);
 
   ngOnInit(): void {
-    // Récupérer le contenu complet des termes pour le modal
     this.termsService.getActiveTerms().subscribe({
       next: (terms: InstructorTermsResponse) => {
         if (terms && terms.version) {
@@ -137,7 +136,6 @@ export class InstructorOnboardingComponent implements OnInit {
     });
   }
 
-  // ... (Garder prefillForm, toggleSelection, isFieldInvalid, nextStep, prevStep) ...
   private prefillForm(profile: InstructorProfileResponseDTO): void {
     let prefix = '+212';
     let phoneNum = profile.phoneNumber || '';
@@ -251,7 +249,6 @@ export class InstructorOnboardingComponent implements OnInit {
     });
   }
 
-  // ... (Garder submit) ...
   submit(): void {
     if (this.onboardingForm.invalid) {
       this.onboardingForm.markAllAsTouched();
@@ -291,7 +288,7 @@ export class InstructorOnboardingComponent implements OnInit {
     request$.subscribe({
       next: () => {
         this.isSubmitting.set(false);
-        this.router.navigate(['/instructor/dashboard']);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.isSubmitting.set(false);
