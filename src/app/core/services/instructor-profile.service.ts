@@ -63,6 +63,23 @@ export interface InstructorProfileResponseDTO {
   updatedAt: string;
 }
 
+export interface InstructorPublicProfileResponseDTO {
+  profileId: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  headline: string;
+  bio: string;
+  profilePictureUrl: string;
+  expertiseDomains: string[];
+  yearsOfExperience: number;
+  teachingLanguages: string[];
+  linkedinUrl: string;
+  websiteUrl: string;
+  githubUrl: string;
+  availableForMentoring: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class InstructorProfileService {
   private http = inject(HttpClient);
@@ -108,5 +125,9 @@ export class InstructorProfileService {
     params = params.append('sort', 'paidAt,DESC');
 
     return this.http.get<any>(`${this.apiUrl}/instructors/me/payouts`, { params });
+  }
+
+  getInstructorById(id: string): Observable<InstructorPublicProfileResponseDTO> {
+    return this.http.get<InstructorPublicProfileResponseDTO>(`${this.apiUrl}/public/instructors/${id}`);
   }
 }

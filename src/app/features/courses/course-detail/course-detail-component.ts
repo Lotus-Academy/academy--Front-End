@@ -1,10 +1,11 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Contient le pipe 'number'
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   LucideAngularModule, PlayCircle, Clock, BookOpen, CheckCircle, Lock,
-  ChevronDown, ChevronUp, Award, Globe, MonitorPlay, Unlock, User, Loader2, X
+  ChevronDown, ChevronUp, Award, Globe, MonitorPlay, Unlock, User, Loader2, X, Calendar,
+  Briefcase, Linkedin, Github, Link // Ajout des nouvelles icônes
 } from 'lucide-angular';
 
 import { NavbarComponent } from '../../layouts/navbar-component/navbar.component';
@@ -16,6 +17,7 @@ import { EnrollmentService } from '../../../core/services/enrollment.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { LocationService } from '../../../core/services/location.service';
 import { LivePreviewDirective } from '../../../shared/directives/live-preview.directive';
+import { InstructorProfileService } from '../../../core/services/instructor-profile.service';
 
 @Component({
   selector: 'app-course-detail',
@@ -39,17 +41,21 @@ export class CourseDetailComponent implements OnInit {
   private enrollmentService = inject(EnrollmentService);
   private authService = inject(AuthService);
   private locationService = inject(LocationService);
+  private instructorService = inject(InstructorProfileService);
 
   readonly icons = {
     PlayCircle, Clock, BookOpen, CheckCircle, Lock,
-    ChevronDown, ChevronUp, Award, Globe, MonitorPlay, Unlock, User, Loader2, X
+    ChevronDown, ChevronUp, Award, Globe, MonitorPlay, Unlock, User, Loader2, X, Calendar,
+    Briefcase, Linkedin, Github, Link
   };
+
+  isProfileModalOpen = signal<boolean>(false);
+  selectedInstructor = signal<any | null>(null);
 
   course = signal<CourseResponseDTO | null>(null);
   isLoading = signal<boolean>(true);
   isPlayingTrailer = signal<boolean>(false);
 
-  // Localisation dynamique exposée au template
   location = this.locationService.location;
 
   isProcessingPayment = signal<boolean>(false);
@@ -109,8 +115,6 @@ export class CourseDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAuthenticated.set(this.authService.isAuthenticated());
-
-    // Initialisation de la localisation
     this.locationService.fetchLocation().subscribe();
 
     const id = this.route.snapshot.paramMap.get('id');
@@ -246,6 +250,28 @@ export class CourseDetailComponent implements OnInit {
 
   closeTrailer(): void {
     this.isPlayingTrailer.set(false);
+    document.body.style.overflow = 'auto';
+  }
+
+  openInstructorModal(instructorId: string): void {
+    this.isLoading.set(true);
+
+    this.instructorService.getInstructorById(instructorId).subscribe({
+      next: (profile) => {
+        this.selectedInstructor.set(profile);
+        this.isProfileModalOpen.set(true);
+        this.isLoading.set(false);
+        document.body.style.overflow = 'hidden';
+      },
+      error: () => {
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  closeInstructorModal(): void {
+    this.isProfileModalOpen.set(false);
+    this.selectedInstructor.set(null);
     document.body.style.overflow = 'auto';
   }
 }

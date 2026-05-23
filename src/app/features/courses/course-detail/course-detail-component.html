@@ -110,19 +110,19 @@
                                     </div>
                                 </div>
                                 <div class="flex-1">
-                                    <a [routerLink]="['/instructor/profile', data.instructorId]"
-                                        class="font-syne text-xl font-bold text-slate-900 dark:text-white hover:text-lotus transition-colors">
+                                    <button (click)="openInstructorModal(data.instructorId)"
+                                        class="font-syne text-xl font-bold text-slate-900 dark:text-white hover:text-lotus transition-colors text-left block">
                                         {{ data.instructorName }}
-                                    </a>
+                                    </button>
                                     <p class="font-mono text-[10px] uppercase tracking-widest text-lotus mt-1.5 mb-4">
                                         {{ data.instructorHeadline || 'Expert Instructor' }}
                                     </p>
 
-                                    <a [routerLink]="['/instructor/profile', data.instructorId]"
-                                        class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted hover:text-lotus dark:hover:text-lotus transition-colors">
+                                    <button (click)="openInstructorModal(data.instructorId)"
+                                        class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-ds-black hover:bg-slate-200 dark:hover:bg-ds-border rounded font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted transition-colors">
                                         <lucide-icon [name]="icons.User" class="w-3.5 h-3.5"></lucide-icon>
-                                        {{ 'COURSE_DETAIL.VIEW_PROFILE' | translate }}
-                                    </a>
+                                        View Full Profile
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -329,4 +329,132 @@
     }
 
     <app-footer class="mt-auto"></app-footer>
+
+    @if (isProfileModalOpen() && selectedInstructor(); as instructor) {
+    <div
+        class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+        <div
+            class="bg-white dark:bg-ds-surface w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl animate-fade-in-up relative flex flex-col">
+
+            <div
+                class="sticky top-0 z-10 bg-white/90 dark:bg-ds-surface/90 backdrop-blur-md p-6 border-b border-slate-100 dark:border-ds-border flex justify-between items-center">
+                <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white">{{
+                    'COURSE_DETAIL.ABOUT_INSTRUCTOR' | translate }}</h3>
+                <button (click)="closeInstructorModal()"
+                    class="p-2 text-slate-500 hover:text-slate-900 dark:text-ds-muted dark:hover:text-white hover:bg-slate-100 dark:hover:bg-ds-black rounded-full transition-colors">
+                    <lucide-icon [name]="icons.X" class="w-5 h-5"></lucide-icon>
+                </button>
+            </div>
+
+            <div class="p-8 flex-1">
+                <div class="flex flex-col sm:flex-row items-start gap-6 mb-8">
+                    <div
+                        class="w-24 h-24 rounded-full overflow-hidden bg-slate-100 dark:bg-ds-black flex items-center justify-center shrink-0 border border-slate-200 dark:border-ds-border">
+                        @if (instructor.profilePictureUrl) {
+                        <img [src]="instructor.profilePictureUrl" class="w-full h-full object-cover">
+                        } @else {
+                        <span class="font-cormorant font-bold text-3xl text-lotus">{{ instructor.firstName.charAt(0)
+                            }}</span>
+                        }
+                    </div>
+
+                    <div class="flex-1">
+                        <h4 class="text-2xl font-bold text-slate-900 dark:text-white">{{ instructor.firstName }} {{
+                            instructor.lastName }}</h4>
+                        <p class="text-lotus font-mono text-[11px] uppercase tracking-widest mt-1.5 mb-4">{{
+                            instructor.headline }}</p>
+
+                        <div class="flex flex-wrap gap-4">
+                            @if (instructor.yearsOfExperience) {
+                            <div
+                                class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-600 dark:text-ds-muted">
+                                <lucide-icon [name]="icons.Briefcase" class="w-4 h-4 text-lotus/80"></lucide-icon>
+                                <span>{{ instructor.yearsOfExperience }} Yrs Exp</span>
+                            </div>
+                            }
+                            @if (instructor.teachingLanguages && instructor.teachingLanguages.length > 0) {
+                            <div
+                                class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-600 dark:text-ds-muted">
+                                <lucide-icon [name]="icons.Globe" class="w-4 h-4 text-lotus/80"></lucide-icon>
+                                <span>{{ instructor.teachingLanguages.join(', ') }}</span>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <p
+                        class="text-slate-600 dark:text-ds-muted/90 leading-relaxed font-syne text-[15px] whitespace-pre-wrap">
+                        {{ instructor.bio }}
+                    </p>
+                </div>
+
+                @if (instructor.expertiseDomains && instructor.expertiseDomains.length > 0) {
+                <div class="mb-8">
+                    <h5
+                        class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-900 dark:text-white mb-3">
+                        Expertise</h5>
+                    <div class="flex flex-wrap gap-2">
+                        @for (domain of instructor.expertiseDomains; track domain) {
+                        <span
+                            class="px-3 py-1.5 bg-slate-50 dark:bg-ds-black text-slate-700 dark:text-ds-muted/80 font-syne text-xs font-semibold rounded-full border border-slate-200 dark:border-ds-border">
+                            {{ domain }}
+                        </span>
+                        }
+                    </div>
+                </div>
+                }
+
+                @if (instructor.linkedinUrl || instructor.githubUrl || instructor.websiteUrl) {
+                <div class="pt-6 border-t border-slate-100 dark:border-ds-border flex items-center gap-3">
+                    <span
+                        class="font-mono text-[10px] uppercase tracking-widest font-bold text-slate-400 dark:text-ds-muted/50 mr-2">Connect
+                        :</span>
+
+                    @if (instructor.linkedinUrl) {
+                    <a [href]="instructor.linkedinUrl" target="_blank" rel="noopener noreferrer"
+                        class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-50 hover:bg-blue-50 dark:bg-ds-black dark:hover:bg-blue-900/20 text-slate-400 hover:text-blue-600 transition-colors">
+                        <lucide-icon [name]="icons.Linkedin" class="w-4 h-4"></lucide-icon>
+                    </a>
+                    }
+
+                    @if (instructor.githubUrl) {
+                    <a [href]="instructor.githubUrl" target="_blank" rel="noopener noreferrer"
+                        class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-50 hover:bg-slate-200 dark:bg-ds-black dark:hover:bg-white/10 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+                        <lucide-icon [name]="icons.Github" class="w-4 h-4"></lucide-icon>
+                    </a>
+                    }
+
+                    @if (instructor.websiteUrl) {
+                    <a [href]="instructor.websiteUrl" target="_blank" rel="noopener noreferrer"
+                        class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-50 hover:bg-lotus/10 dark:bg-ds-black dark:hover:bg-lotus/10 text-slate-400 hover:text-lotus transition-colors">
+                        <lucide-icon [name]="icons.Link" class="w-4 h-4"></lucide-icon>
+                    </a>
+                    }
+                </div>
+                }
+            </div>
+
+            <div
+                class="sticky bottom-0 z-10 bg-slate-50/90 dark:bg-ds-black/90 backdrop-blur-md p-6 border-t border-slate-200 dark:border-ds-border flex justify-end gap-3">
+                <button (click)="closeInstructorModal()"
+                    class="px-6 py-2.5 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border text-slate-700 dark:text-white font-mono text-[11px] uppercase tracking-widest font-bold rounded hover:bg-slate-50 dark:hover:bg-ds-black transition-colors">
+                    Close
+                </button>
+
+                @if (instructor.availableForMentoring) {
+                <button
+                    class="inline-flex items-center gap-2 px-6 py-2.5 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded shadow-sm hover:bg-lotus-light transition-colors">
+                    <lucide-icon [name]="icons.Calendar" class="w-4 h-4"></lucide-icon>
+                    Book Mentoring
+                </button>
+                }
+            </div>
+
+        </div>
+
+        <div class="absolute inset-0 z-[-1]" (click)="closeInstructorModal()"></div>
+    </div>
+    }
 </div>
