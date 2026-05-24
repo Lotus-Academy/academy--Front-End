@@ -504,7 +504,8 @@
         "LEVEL_ADVANCED": "Advanced",
         "LEVEL_ALL_LEVELS": "All Levels",
         "FREE": "Free",
-        "VIEW_COURSE": "View course →"
+        "VIEW_COURSE": "View course →",
+        "VIEW_REVIEWS": "Clic to see the last reviews on this course."
     },
     "COURSE_DETAIL": {
         "CATALOG_LINK": "Catalog",
