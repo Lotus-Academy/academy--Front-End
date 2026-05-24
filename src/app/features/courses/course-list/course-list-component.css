@@ -1,0 +1,25 @@
+.filter-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+        grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.25s ease;
+}
+
+.filter-panel.open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+}
+
+.filter-panel>div {
+    overflow: hidden;
+}
+
+.filter-btn {
+    transition: all 0.15s ease-out;
+}
+
+.filter-btn:hover {
+    transform: translateY(-1px);
+}

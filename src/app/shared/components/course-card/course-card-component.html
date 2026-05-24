@@ -1,95 +1,182 @@
 <div class="group block h-full animate-fade-in-up" [style.animation-delay.ms]="index * 50">
-    <a [routerLink]="['/courses', course.id]" class="block h-full">
+    <div
+        class="flex flex-col h-full overflow-hidden rounded border border-slate-200 dark:border-ds-border bg-white dark:bg-ds-surface shadow-sm transition-all duration-300 hover:shadow-xl hover:border-lotus/50 relative">
+        <a [routerLink]="['/courses', course.id]" class="absolute inset-0 z-10" aria-hidden="true"></a>
+
         <div
-            class="flex flex-col h-full overflow-hidden rounded border border-slate-200 dark:border-ds-border bg-white dark:bg-ds-surface shadow-sm transition-all duration-300 hover:shadow-lg hover:border-lotus/50 hover:-translate-y-1 relative">
+            class="relative aspect-video overflow-hidden bg-slate-50 dark:bg-ds-black shrink-0 border-b border-slate-100 dark:border-ds-border/50">
+            @if (course.thumbnailUrl) {
+            <img [src]="course.thumbnailUrl" [alt]="course.title"
+                class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-95 group-hover:opacity-100" />
+            } @else {
+            <div class="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-ds-black/50">
+                <lucide-icon [name]="icons.BookOpen"
+                    class="w-10 h-10 text-slate-300 dark:text-ds-muted/20 stroke-[1px]"></lucide-icon>
+            </div>
+            }
+
+            <div class="absolute top-3 left-3 z-20">
+                <span [class]="getLevelClasses(course.level)">
+                    {{ getLevelTranslationKey(course.level) | translate }}
+                </span>
+            </div>
+        </div>
+
+        <div class="p-4 sm:p-5 flex flex-col flex-1">
+            <p class="font-mono text-[9px] uppercase tracking-widest font-bold text-lotus mb-2">
+                {{ course.categoryName }}
+            </p>
+
+            <h3
+                class="font-cormorant text-lg sm:text-xl font-bold text-slate-900 dark:text-white line-clamp-2 mb-3 group-hover:text-lotus transition-colors leading-tight relative z-20 pointer-events-none">
+                {{ course.title }}
+            </h3>
+
+            <div class="flex items-center gap-3 mb-4 relative z-20 pointer-events-none">
+                <div
+                    class="w-8 h-8 rounded-full overflow-hidden border border-slate-200 dark:border-ds-border shrink-0 bg-slate-100 dark:bg-ds-black flex items-center justify-center shadow-sm">
+                    @if (course.instructorPictureUrl) {
+                    <img [src]="course.instructorPictureUrl" class="w-full h-full object-cover">
+                    } @else {
+                    <span class="font-cormorant font-bold text-lotus text-sm">{{ course.instructorName.charAt(0) || 'I'
+                        }}</span>
+                    }
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="font-syne text-xs font-bold text-slate-900 dark:text-white truncate">{{
+                        course.instructorName }}</span>
+                    @if (course.instructorHeadline) {
+                    <span class="font-syne text-[10px] text-slate-500 dark:text-ds-muted/70 truncate">{{
+                        course.instructorHeadline }}</span>
+                    }
+                </div>
+            </div>
 
             <div
-                class="relative aspect-video overflow-hidden bg-slate-50 dark:bg-ds-black shrink-0 border-b border-slate-100 dark:border-ds-border/50">
-                @if (course.thumbnailUrl) {
-                <img [src]="course.thumbnailUrl" [alt]="course.title"
-                    class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-95 group-hover:opacity-100" />
-                } @else {
-                <div class="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-ds-black/50">
-                    <lucide-icon [name]="icons.BookOpen"
-                        class="w-10 h-10 text-slate-300 dark:text-ds-muted/20 stroke-[1px]"></lucide-icon>
-                </div>
-                }
+                class="flex items-center gap-4 mt-auto mb-4 font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/70">
 
-                <div class="absolute top-3 left-3 z-10">
-                    <span [class]="getLevelClasses(course.level)">
-                        {{ getLevelTranslationKey(course.level) | translate }}
-                    </span>
-                </div>
-            </div>
+                <button (click)="openReviewsModal($event)" title="{{ 'COURSE_CARD.VIEW_REVIEWS' | translate }}"
+                    class="group/rating flex items-center gap-1.5 hover:text-lotus transition-all z-20 relative px-2 py-1 -ml-2 rounded-md hover:bg-slate-100 dark:hover:bg-ds-black cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-ds-border">
 
-            <div class="p-4 sm:p-5 flex flex-col flex-1">
+                    <lucide-icon [name]="icons.Star"
+                        class="h-3.5 w-3.5 text-yellow-400 fill-yellow-400 drop-shadow-[0_0_4px_rgba(250,204,21,0.6)] group-hover/rating:scale-110 transition-transform">
+                    </lucide-icon>
 
-                <p class="font-mono text-[9px] uppercase tracking-widest font-bold text-lotus mb-2">
-                    {{ course.categoryName }}
-                </p>
-
-                <h3
-                    class="font-cormorant text-lg sm:text-xl font-bold text-slate-900 dark:text-white line-clamp-2 mb-3 group-hover:text-lotus transition-colors leading-tight">
-                    {{ course.title }}
-                </h3>
-
-                <div class="flex items-center gap-3 mb-4">
-                    <div
-                        class="w-8 h-8 rounded-full overflow-hidden border border-slate-200 dark:border-ds-border shrink-0 bg-slate-100 dark:bg-ds-black flex items-center justify-center shadow-sm">
-                        @if (course.instructorPictureUrl) {
-                        <img [src]="course.instructorPictureUrl" class="w-full h-full object-cover">
-                        } @else {
-                        <span class="font-cormorant font-bold text-lotus text-sm">{{ course.instructorName.charAt(0) ||
-                            'I' }}</span>
-                        }
-                    </div>
-                    <div class="flex flex-col min-w-0">
-                        <span class="font-syne text-xs font-bold text-slate-900 dark:text-white truncate">{{
-                            course.instructorName }}</span>
-                        @if (course.instructorHeadline) {
-                        <span class="font-syne text-[10px] text-slate-500 dark:text-ds-muted/70 truncate">{{
-                            course.instructorHeadline }}</span>
-                        }
-                    </div>
-                </div>
-
-                <div
-                    class="flex items-center gap-4 mt-auto mb-4 font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/70">
-                    <div class="flex items-center gap-1.5">
-                        <lucide-icon [name]="icons.Star"
-                            class="h-3.5 w-3.5 text-yellow-400 fill-yellow-400 drop-shadow-[0_0_4px_rgba(250,204,21,0.6)] transition-all">
-                        </lucide-icon>
-                        <span class="font-bold text-slate-900 dark:text-white">
+                    <div class="flex items-baseline gap-1">
+                        <span
+                            class="font-bold text-slate-900 dark:text-white group-hover/rating:text-lotus transition-colors">
                             {{ course.averageRating ? (course.averageRating | number:'1.1-1') : '0.0' }}
                         </span>
-                        <span class="text-[9px] opacity-70">({{ course.reviewCount || 0 }})</span>
+                        <span class="text-[9px] opacity-70 group-hover/rating:underline">
+                            ({{ course.reviewCount || 0 }} reviews)
+                        </span>
                     </div>
-                    <div class="flex items-center gap-1.5">
-                        <lucide-icon [name]="icons.Users" class="h-3.5 w-3.5 stroke-[1.5px]"></lucide-icon>
-                        <span>{{ course.studentsCount || 0 }}</span>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <lucide-icon [name]="icons.Clock" class="h-3.5 w-3.5 stroke-[1.5px]"></lucide-icon>
-                        <span>{{ course.totalDuration || '0m' }}</span>
-                    </div>
-                </div>
+                </button>
 
-                <div
-                    class="flex items-center justify-between border-t border-slate-100 dark:border-ds-border pt-3 mt-1">
-                    <span class="font-mono text-lg font-bold text-slate-900 dark:text-white">
-                        @if (course.price === 0) {
-                        {{ 'COURSE_CARD.FREE' | translate }}
-                        } @else {
-                        {{ (course.price * location().exchangeRate) | number:'1.2-2' }} {{ location().symbol }}
-                        }
-                    </span>
-                    <span
-                        class="font-mono text-[9px] uppercase tracking-widest font-bold text-lotus opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                        {{ 'COURSE_CARD.VIEW_COURSE' | translate }}
-                    </span>
+                <div class="flex items-center gap-1.5 relative z-20 pointer-events-none">
+                    <lucide-icon [name]="icons.Users" class="h-3.5 w-3.5 stroke-[1.5px]"></lucide-icon>
+                    <span>{{ course.studentsCount || 0 }}</span>
+                </div>
+                <div class="flex items-center gap-1.5 relative z-20 pointer-events-none">
+                    <lucide-icon [name]="icons.Clock" class="h-3.5 w-3.5 stroke-[1.5px]"></lucide-icon>
+                    <span>{{ course.totalDuration || '0m' }}</span>
                 </div>
             </div>
 
+            <div
+                class="flex items-center justify-between border-t border-slate-100 dark:border-ds-border pt-3 mt-1 relative z-20 pointer-events-none">
+                <span class="font-mono text-lg font-bold text-slate-900 dark:text-white">
+                    @if (course.price === 0) {
+                    {{ 'COURSE_CARD.FREE' | translate }}
+                    } @else {
+                    {{ (course.price * location().exchangeRate) | number:'1.2-2' }} {{ location().symbol }}
+                    }
+                </span>
+                <span
+                    class="font-mono text-[9px] uppercase tracking-widest font-bold text-lotus opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                    {{ 'COURSE_CARD.VIEW_COURSE' | translate }}
+                </span>
+            </div>
         </div>
-    </a>
+    </div>
 </div>
+
+@if (isReviewsModalOpen()) {
+<div
+    class="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in cursor-default">
+    <div class="bg-white dark:bg-ds-surface w-full max-w-2xl max-h-[85vh] rounded-xl shadow-2xl flex flex-col animate-fade-in-up"
+        (click)="$event.stopPropagation()">
+
+        <div
+            class="p-6 border-b border-slate-100 dark:border-ds-border flex justify-between items-center bg-slate-50 dark:bg-ds-black rounded-t-xl shrink-0">
+            <div>
+                <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white">Student Reviews</h3>
+                <p class="font-syne text-xs text-slate-500 dark:text-ds-muted">{{ course.title }}</p>
+            </div>
+            <button (click)="closeReviewsModal()"
+                class="p-2 hover:bg-slate-200 dark:hover:bg-ds-border rounded-full transition-colors text-slate-500">
+                <lucide-icon [name]="icons.X" class="w-5 h-5"></lucide-icon>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 bg-slate-50/50 dark:bg-ds-black/50">
+            @if (isLoadingReviews()) {
+            <div class="flex justify-center items-center py-12">
+                <lucide-icon [name]="icons.Loader2" class="w-8 h-8 text-lotus animate-spin"></lucide-icon>
+            </div>
+            } @else if (reviews().length === 0) {
+            <div
+                class="text-center py-12 bg-white dark:bg-ds-surface rounded-lg border border-slate-200 dark:border-ds-border shadow-sm">
+                <lucide-icon [name]="icons.MessageSquare"
+                    class="w-12 h-12 text-slate-300 dark:text-ds-border mx-auto mb-4 stroke-[1px]"></lucide-icon>
+                <p class="font-syne text-slate-500 dark:text-ds-muted">No reviews yet for this course.</p>
+            </div>
+            } @else {
+            <div class="space-y-6">
+                @for (review of reviews(); track review.id) {
+                <div
+                    class="bg-white dark:bg-ds-surface p-5 rounded-lg border border-slate-200 dark:border-ds-border shadow-sm">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-full bg-slate-100 dark:bg-ds-black flex items-center justify-center overflow-hidden">
+                                @if (review.studentPictureUrl) {
+                                <img [src]="review.studentPictureUrl" class="w-full h-full object-cover">
+                                } @else {
+                                <span class="font-bold text-lotus">{{ review.studentName.charAt(0) }}</span>
+                                }
+                            </div>
+                            <div>
+                                <p class="font-syne text-sm font-bold text-slate-900 dark:text-white">{{
+                                    review.studentName }}</p>
+                                <p class="font-mono text-[9px] text-slate-500 dark:text-ds-muted">{{ review.createdAt |
+                                    date:'mediumDate' }}</p>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center gap-1 bg-yellow-50 dark:bg-yellow-900/10 px-2 py-1 rounded shrink-0">
+                            <span class="font-bold text-sm text-yellow-600 dark:text-yellow-500">{{ review.rating
+                                }}</span>
+                            <lucide-icon [name]="icons.Star"
+                                class="w-3.5 h-3.5 text-yellow-500 fill-yellow-500"></lucide-icon>
+                        </div>
+                    </div>
+                    <p class="font-syne text-sm text-slate-700 dark:text-ds-muted/90 mb-4 whitespace-pre-wrap">{{
+                        review.comment }}</p>
+
+                    <div class="flex justify-end">
+                        <button (click)="markReviewAsHelpful(review.id)"
+                            class="flex items-center gap-1.5 text-[10px] uppercase font-mono font-bold tracking-widest text-slate-500 hover:text-lotus transition-colors px-3 py-1.5 rounded hover:bg-slate-50 dark:hover:bg-ds-black">
+                            <lucide-icon [name]="icons.ThumbsUp" class="w-3.5 h-3.5"></lucide-icon>
+                            Helpful ({{ review.helpfulCount || 0 }})
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+    </div>
+    <div class="absolute inset-0 z-[-1]" (click)="closeReviewsModal(); $event.stopPropagation()"></div>
+</div>
+}
