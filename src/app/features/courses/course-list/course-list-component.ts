@@ -1,10 +1,9 @@
 import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router'; // <-- AJOUT
+import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule, Search, Filter, X, Loader2 } from 'lucide-angular';
-
 import { CourseCardComponent } from '../../../shared/components/course-card/course-card-component';
 import { CourseService } from '../../../core/services/course.service';
 import { CourseResponseDTO, PageCourseResponseDTO, CategoryDTO } from '../../../core/models/course.dto';
@@ -23,32 +22,33 @@ import { FooterComponent } from '../../layouts/footer-component/footer-component
     CourseCardComponent,
     TranslateModule
   ],
-  templateUrl: './course-list-component.html'
+  templateUrl: './course-list-component.html',
+  styleUrl: './course-list-component.css'
 })
 export class CourseListComponent implements OnInit {
   private courseService = inject(CourseService);
-  private route = inject(ActivatedRoute); // <-- INJECTION
+  private route = inject(ActivatedRoute);
 
   readonly icons = { Search, Filter, X, Loader2 };
 
   allCourses = signal<CourseResponseDTO[]>([]);
   isLoading = signal<boolean>(true);
-
   searchQuery = signal<string>('');
   selectedCategory = signal<string>('All');
   selectedLevel = signal<string>('All');
   selectedPrice = signal<string>('All');
-
   categories = signal<CategoryDTO[]>([]);
+  filtersOpen = signal<boolean>(false);
+
   levels = ['All', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
   priceFilters = ['All', 'Free', 'Paid'];
 
-  hasActiveFilters = computed(() => {
-    return this.searchQuery() !== '' ||
-      this.selectedCategory() !== 'All' ||
-      this.selectedLevel() !== 'All' ||
-      this.selectedPrice() !== 'All';
-  });
+  hasActiveFilters = computed(() =>
+    this.searchQuery() !== '' ||
+    this.selectedCategory() !== 'All' ||
+    this.selectedLevel() !== 'All' ||
+    this.selectedPrice() !== 'All'
+  );
 
   filteredCourses = computed(() => {
     const query = this.searchQuery().toLowerCase();
@@ -59,7 +59,6 @@ export class CourseListComponent implements OnInit {
     return this.allCourses().filter(course => {
       const matchesSearch = course.title.toLowerCase().includes(query) ||
         (course.instructorName && course.instructorName.toLowerCase().includes(query));
-
       const matchesCategory = category === 'All' || course.categoryId === category;
       const matchesLevel = level === 'All' || (course.level && course.level.toUpperCase() === level);
       const matchesPrice = price === 'All' ||
@@ -71,24 +70,18 @@ export class CourseListComponent implements OnInit {
   });
 
   ngOnInit() {
-    // 1. Lire les paramètres de l'URL au chargement
     this.route.queryParams.subscribe(params => {
-      if (params['q']) {
-        this.searchQuery.set(params['q']);
-      }
+      if (params['q']) this.searchQuery.set(params['q']);
     });
-
     this.fetchData();
   }
 
   fetchData() {
     this.isLoading.set(true);
-
     this.courseService.getCategories().subscribe({
       next: (cats) => this.categories.set(cats),
       error: (err) => console.error('Erreur chargement catégories', err)
     });
-
     this.courseService.getPublishedCourses(0, 100).subscribe({
       next: (pageData: PageCourseResponseDTO) => {
         this.allCourses.set(pageData.content);
@@ -99,6 +92,10 @@ export class CourseListComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  toggleFilters() {
+    this.filtersOpen.update(v => !v);
   }
 
   clearFilters() {

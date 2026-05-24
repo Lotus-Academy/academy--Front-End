@@ -30,6 +30,7 @@ export class LocationService {
         if (!this.locationCache$) {
             this.locationCache$ = this.http.get<LocationData>(`${environment.apiUrl}/api/v1/location/me`).pipe(
                 tap(data => {
+                    console.log('✅ Données reçues du backend :', data);
                     if (data) {
                         this.location.set(data);
                     }

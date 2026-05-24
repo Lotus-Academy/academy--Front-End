@@ -29,12 +29,12 @@ export const STUDENT_SIDEBAR_LINKS = [
         icon: Compass,
         requiresApproval: false
     },
-    {
-        labelKey: 'SIDEBAR.STUDENT.FAVORITES',
-        href: '/student/favorites',
-        icon: Heart,
-        requiresApproval: false
-    },
+    //{
+    //    labelKey: 'SIDEBAR.STUDENT.FAVORITES',
+    //    href: '/student/favorites',
+    //    icon: Heart,
+    //    requiresApproval: false
+    //},
     {
         labelKey: 'SIDEBAR.STUDENT.LIVE_CLASSES',
         href: '/student/live-sessions',
@@ -47,7 +47,8 @@ export const STUDENT_SIDEBAR_LINKS = [
         href: '/student/qna',
         icon: MessageSquare,
         requiresApproval: false,
-        badgeKey: 'SIDEBAR.BADGES.SOON'
+        badgeKey: 'SIDEBAR.BADGES.SOON',
+        isDisabled: true
     },
     {
         labelKey: 'SIDEBAR.STUDENT.CERTIFICATES',
@@ -64,7 +65,7 @@ export const STUDENT_SIDEBAR_LINKS = [
     },
     {
         labelKey: 'SIDEBAR.STUDENT.SETTINGS',
-        href: '/student/settings',
+        href: '/user/profile',
         icon: Settings,
         requiresApproval: false
     }

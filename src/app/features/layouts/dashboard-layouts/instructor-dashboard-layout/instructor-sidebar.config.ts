@@ -58,14 +58,14 @@ export const INSTRUCTOR_SIDEBAR_LINKS: SidebarLink[] = [
         icon: LineChart,
         requiresApproval: true
     },
-    {
-        labelKey: 'SIDEBAR.INSTRUCTOR.MENTORING',
-        href: '/instructor/mentoring',
-        icon: MessageSquare,
-        requiresApproval: true,
-        badgeKey: 'SIDEBAR.BADGES.BETA',
-        isDisabled: true
-    },
+    //{
+    //    labelKey: 'SIDEBAR.INSTRUCTOR.MENTORING',
+    //    href: '/instructor/mentoring',
+    //    icon: MessageSquare,
+    //    requiresApproval: true,
+    //    badgeKey: 'SIDEBAR.BADGES.BETA',
+    //    isDisabled: true
+    //},
     {
         labelKey: 'SIDEBAR.INSTRUCTOR.PROFILE',
         href: '/instructor/profile',

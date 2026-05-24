@@ -1,4 +1,5 @@
-<div class="h-screen w-full flex flex-col bg-slate-50 dark:bg-ds-black text-slate-900 dark:text-white font-syne overflow-hidden transition-colors duration-300">
+<div
+    class="h-screen w-full flex flex-col bg-slate-50 dark:bg-ds-black text-slate-900 dark:text-white font-syne overflow-hidden transition-colors duration-300">
 
     <header
         class="h-16 border-b border-slate-200 dark:border-ds-border bg-white dark:bg-ds-black flex items-center justify-between px-4 sm:px-6 shrink-0 z-50 transition-colors">
@@ -21,12 +22,14 @@
             <div class="flex items-center gap-2 sm:gap-4">
                 <div class="flex items-center gap-1.5 sm:gap-2">
                     <lucide-icon [name]="icons.Trophy" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-lotus"></lucide-icon>
-                    <span class="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted">
+                    <span
+                        class="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted">
                         {{ progressPercentage() }}% <span class="hidden sm:inline">{{ 'PLAYER.COMPLETED' | translate
                             }}</span>
                     </span>
                 </div>
-                <div class="w-16 sm:w-32 h-1.5 bg-slate-200 dark:bg-ds-surface rounded-full overflow-hidden border border-slate-300 dark:border-transparent">
+                <div
+                    class="w-16 sm:w-32 h-1.5 bg-slate-200 dark:bg-ds-surface rounded-full overflow-hidden border border-slate-300 dark:border-transparent">
                     <div class="h-full bg-lotus transition-all duration-500 ease-out"
                         [style.width.%]="progressPercentage()"></div>
                 </div>
@@ -57,11 +60,14 @@
                         class="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-ds-surface border border-slate-300 dark:border-ds-border m-4 sm:m-8 rounded text-center p-6 shadow-sm">
                         <div
                             class="w-16 h-16 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center mb-6">
-                            <lucide-icon [name]="icons.Lock" class="w-8 h-8 text-slate-400 dark:text-white"></lucide-icon>
+                            <lucide-icon [name]="icons.Lock"
+                                class="w-8 h-8 text-slate-400 dark:text-white"></lucide-icon>
                         </div>
-                        <h3 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-3">This content is restricted to
+                        <h3 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-3">This content
+                            is restricted to
                             enrolled students</h3>
-                        <p class="font-syne text-slate-500 dark:text-ds-muted max-w-md mb-8">Enroll in this course to unlock this lesson and
+                        <p class="font-syne text-slate-500 dark:text-ds-muted max-w-md mb-8">Enroll in this course to
+                            unlock this lesson and
                             access the full curriculum.</p>
                         <a [routerLink]="['/courses', courseId()]"
                             class="px-8 py-3.5 bg-lotus hover:bg-lotus-light text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded transition-colors shadow-lg">
@@ -85,7 +91,8 @@
                             class="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 dark:text-ds-muted mb-4"></lucide-icon>
                         <p class="font-cormorant text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">{{
                             'PLAYER.MEDIA_UNAVAILABLE' | translate }}</p>
-                        <p class="font-syne text-xs sm:text-sm text-slate-500 dark:text-ds-muted">{{ 'PLAYER.MEDIA_UNAVAILABLE_DESC' |
+                        <p class="font-syne text-xs sm:text-sm text-slate-500 dark:text-ds-muted">{{
+                            'PLAYER.MEDIA_UNAVAILABLE_DESC' |
                             translate }}</p>
                     </div>
                     }
@@ -97,7 +104,8 @@
 
                     <div class="flex-1 min-w-0">
                         <div class="flex flex-wrap items-center gap-3 mb-4">
-                            <h2 class="font-cormorant text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white leading-tight">
+                            <h2
+                                class="font-cormorant text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white leading-tight">
                                 {{ currentLesson()?.title }}
                             </h2>
                             @if (!hasFullAccess() && currentLesson()?.freePreview) {
@@ -128,7 +136,8 @@
 
         <aside
             class="w-full lg:w-[400px] shrink-0 bg-white dark:bg-ds-black border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-ds-border flex flex-col lg:h-full lg:overflow-y-auto">
-            <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-ds-border bg-slate-50 dark:bg-ds-surface/50 sticky top-0 z-10">
+            <div
+                class="p-4 sm:p-5 border-b border-slate-200 dark:border-ds-border bg-slate-50 dark:bg-ds-surface/50 sticky top-0 z-10">
                 <h3 class="font-mono text-[11px] uppercase tracking-widest font-bold text-slate-900 dark:text-white">{{
                     'PLAYER.COURSE_CONTENT' | translate }}</h3>
             </div>
@@ -152,7 +161,8 @@
                     </button>
 
                     @if (isSectionExpanded(section.id)) {
-                    <div class="bg-slate-50 dark:bg-ds-surface/30 py-2 border-t border-slate-100 dark:border-transparent">
+                    <div
+                        class="bg-slate-50 dark:bg-ds-surface/30 py-2 border-t border-slate-100 dark:border-transparent">
                         @for (lesson of section.lessons; track lesson.id; let lesIndex = $index) {
 
                         <button (click)="selectLesson(lesson)"
@@ -183,12 +193,15 @@
                                         class="font-mono text-[8px] uppercase tracking-wider text-green font-bold">Preview</span>
                                     }
                                     @if (lesson.type === 'PDF') {
-                                    <lucide-icon [name]="icons.FileText" class="w-3 h-3 text-slate-400 dark:text-ds-muted/70"></lucide-icon>
-                                    <span class="font-mono text-[9px] sm:text-[10px] text-slate-500 dark:text-ds-muted/70">PDF</span>
+                                    <lucide-icon [name]="icons.FileText"
+                                        class="w-3 h-3 text-slate-400 dark:text-ds-muted/70"></lucide-icon>
+                                    <span
+                                        class="font-mono text-[9px] sm:text-[10px] text-slate-500 dark:text-ds-muted/70">PDF</span>
                                     } @else {
                                     <lucide-icon [name]="icons.PlayCircle"
                                         class="w-3 h-3 text-slate-400 dark:text-ds-muted/70"></lucide-icon>
-                                    <span class="font-mono text-[9px] sm:text-[10px] text-slate-500 dark:text-ds-muted/70">{{
+                                    <span
+                                        class="font-mono text-[9px] sm:text-[10px] text-slate-500 dark:text-ds-muted/70">{{
                                         formatDuration(lesson.duration) }}</span>
                                     }
                                 </div>
@@ -201,20 +214,91 @@
                 }
 
                 @if (progressPercentage() === 100 && hasFullAccess()) {
-                <div class="p-4 sm:p-6 bg-white dark:bg-ds-surface lg:border-b border-slate-200 dark:border-ds-border m-4 sm:m-0 rounded border sm:rounded-none sm:border-0">
-                    <a [routerLink]="['/player', courseId(), 'quiz']"
-                        class="flex flex-col items-center justify-center p-4 sm:p-6 border border-lotus/50 rounded bg-lotus/10 hover:bg-lotus/20 transition-colors text-center group cursor-pointer shadow-sm">
-                        <lucide-icon [name]="icons.Trophy"
-                            class="w-6 h-6 sm:w-8 sm:h-8 text-lotus mb-2 sm:mb-3 group-hover:scale-110 transition-transform"></lucide-icon>
-                        <span class="font-cormorant font-bold text-lg sm:text-xl text-slate-900 dark:text-white mb-1">{{ 'PLAYER.QUIZ_TITLE'
-                            | translate }}</span>
-                        <span class="font-syne text-[10px] sm:text-xs text-slate-600 dark:text-ds-muted">{{ 'PLAYER.QUIZ_DESC' | translate
-                            }}</span>
-                    </a>
+                <div
+                    class="p-4 sm:p-6 bg-white dark:bg-ds-surface lg:border-b border-slate-200 dark:border-ds-border m-4 sm:m-0 rounded border sm:rounded-none sm:border-0">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <a [routerLink]="['/player', courseId(), 'quiz']"
+                            class="flex flex-col items-center justify-center p-4 border border-lotus/50 rounded bg-lotus/10 hover:bg-lotus/20 transition-colors text-center group cursor-pointer shadow-sm">
+                            <lucide-icon [name]="icons.Trophy"
+                                class="w-6 h-6 text-lotus mb-2 group-hover:scale-110 transition-transform"></lucide-icon>
+                            <span class="font-cormorant font-bold text-lg text-slate-900 dark:text-white mb-1">{{
+                                'PLAYER.QUIZ_TITLE' | translate }}</span>
+                        </a>
+
+                        <button (click)="openReviewModal()"
+                            class="flex flex-col items-center justify-center p-4 border border-slate-200 dark:border-ds-border rounded bg-slate-50 dark:bg-ds-black hover:bg-slate-100 dark:hover:bg-ds-black/80 transition-colors text-center group cursor-pointer shadow-sm">
+                            <lucide-icon [name]="icons.Star"
+                                class="w-6 h-6 text-yellow-500 mb-2 group-hover:scale-110 transition-transform"></lucide-icon>
+                            <span class="font-cormorant font-bold text-lg text-slate-900 dark:text-white mb-1">Leave a
+                                Review</span>
+                        </button>
+                    </div>
                 </div>
                 }
             </div>
         </aside>
 
     </div>
+
+    @if (isReviewModalOpen()) {
+    <div
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+        <div
+            class="bg-white dark:bg-ds-surface w-full max-w-lg rounded-xl shadow-2xl overflow-hidden animate-fade-in-up flex flex-col">
+
+            <div
+                class="p-6 border-b border-slate-100 dark:border-ds-border flex justify-between items-center bg-slate-50 dark:bg-ds-black">
+                <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white">Rate this Course</h3>
+                <button (click)="closeReviewModal()"
+                    class="p-2 hover:bg-slate-200 dark:hover:bg-ds-border rounded-full transition-colors text-slate-500">
+                    <lucide-icon [name]="icons.X" class="w-5 h-5"></lucide-icon>
+                </button>
+            </div>
+
+            <div class="p-6 md:p-8 flex flex-col items-center">
+                <p class="font-syne text-sm text-slate-500 dark:text-ds-muted mb-4 text-center">How would you rate your
+                    experience with this course?</p>
+
+                <div class="flex items-center gap-2 mb-8" (mouseleave)="setHoveredRating(0)">
+                    @for (star of [1, 2, 3, 4, 5]; track star) {
+                    <button (click)="setRating(star)" (mouseenter)="setHoveredRating(star)"
+                        class="transition-transform hover:scale-110 focus:outline-none">
+                        <lucide-icon [name]="icons.Star" class="w-10 h-10 transition-colors"
+                            [ngClass]="(hoveredRating() >= star || reviewRating() >= star) ? 'text-yellow-400 fill-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]' : 'text-slate-300 dark:text-ds-border'">
+                        </lucide-icon>
+                    </button>
+                    }
+                </div>
+
+                <div class="w-full">
+                    <label
+                        class="block font-mono text-[10px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted mb-2">Your
+                        Review</label>
+                    <textarea [value]="reviewComment()" (input)="updateComment($event)" rows="4"
+                        placeholder="Tell us what you liked or what could be improved..."
+                        class="w-full p-3 bg-slate-50 dark:bg-ds-black border border-slate-200 dark:border-ds-border rounded font-syne text-sm text-slate-900 dark:text-white focus:outline-none focus:border-lotus focus:ring-1 focus:ring-lotus transition-all resize-none"></textarea>
+                </div>
+            </div>
+
+            <div
+                class="p-6 border-t border-slate-100 dark:border-ds-border flex justify-end gap-3 bg-slate-50 dark:bg-ds-black">
+                <button (click)="closeReviewModal()"
+                    class="px-5 py-2.5 bg-transparent text-slate-700 dark:text-white font-mono text-[11px] uppercase tracking-widest font-bold rounded hover:bg-slate-200 dark:hover:bg-ds-border transition-colors">
+                    Cancel
+                </button>
+                <button (click)="submitReview()"
+                    [disabled]="reviewRating() === 0 || !reviewComment().trim() || isSubmittingReview()"
+                    class="px-6 py-2.5 bg-lotus text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded shadow-sm hover:bg-lotus-light transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                    @if (isSubmittingReview()) {
+                    <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon> Submitting...
+                    } @else {
+                    Submit Review
+                    }
+                </button>
+            </div>
+
+        </div>
+        <div class="absolute inset-0 z-[-1]" (click)="closeReviewModal()"></div>
+    </div>
+    }
 </div>
