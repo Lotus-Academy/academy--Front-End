@@ -1,6 +1,18 @@
 <div
     class="h-screen w-full flex flex-col bg-slate-50 dark:bg-ds-black text-slate-900 dark:text-white font-syne overflow-hidden transition-colors duration-300">
 
+    @if (toastMessage()) {
+    <div class="fixed top-20 right-4 sm:right-8 z-[200] animate-fade-in-up flex items-center gap-3 px-5 py-3.5 rounded-lg shadow-2xl font-syne text-sm font-bold transition-all"
+        [ngClass]="toastMessage()?.type === 'success' ? 'bg-green-500 text-white shadow-[0_5px_20px_rgba(34,197,94,0.4)]' : 'bg-red-500 text-white shadow-[0_5px_20px_rgba(239,68,68,0.4)]'">
+        @if (toastMessage()?.type === 'success') {
+        <lucide-icon [name]="icons.CheckCircle" class="w-5 h-5"></lucide-icon>
+        } @else {
+        <lucide-icon [name]="icons.AlertTriangle" class="w-5 h-5"></lucide-icon>
+        }
+        {{ toastMessage()?.text }}
+    </div>
+    }
+
     <header
         class="h-16 border-b border-slate-200 dark:border-ds-border bg-white dark:bg-ds-black flex items-center justify-between px-4 sm:px-6 shrink-0 z-50 transition-colors">
         <div class="flex items-center gap-4">
@@ -50,7 +62,7 @@
             } @else if (currentLesson()) {
 
             <div class="w-full bg-slate-200 dark:bg-black sticky top-0 z-40 lg:relative border-b border-slate-300 dark:border-ds-border flex justify-center"
-                [ngClass]="currentLesson()?.type === 'PDF' && !isLessonLocked() ? 'h-[50vh] lg:h-[80vh]' : 'aspect-video lg:aspect-auto lg:min-h-[50vh]'">
+                [ngClass]="currentLesson()?.type === 'PDF' && !isLessonLocked() ? 'h-[50vh] lg:h-[80vh]' : 'aspect-video lg:min-h-[50vh]'">
 
                 <div class="w-full h-full max-w-5xl relative flex items-center justify-center"
                     [ngClass]="currentLesson()?.type === 'PDF' && !isLessonLocked() ? 'bg-white' : ''">
@@ -64,11 +76,9 @@
                                 class="w-8 h-8 text-slate-400 dark:text-white"></lucide-icon>
                         </div>
                         <h3 class="font-cormorant text-3xl font-bold text-slate-900 dark:text-white mb-3">This content
-                            is restricted to
-                            enrolled students</h3>
+                            is restricted to enrolled students</h3>
                         <p class="font-syne text-slate-500 dark:text-ds-muted max-w-md mb-8">Enroll in this course to
-                            unlock this lesson and
-                            access the full curriculum.</p>
+                            unlock this lesson and access the full curriculum.</p>
                         <a [routerLink]="['/courses', courseId()]"
                             class="px-8 py-3.5 bg-lotus hover:bg-lotus-light text-ds-black font-mono text-[11px] uppercase tracking-widest font-bold rounded transition-colors shadow-lg">
                             Enroll Now
@@ -92,8 +102,7 @@
                         <p class="font-cormorant text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">{{
                             'PLAYER.MEDIA_UNAVAILABLE' | translate }}</p>
                         <p class="font-syne text-xs sm:text-sm text-slate-500 dark:text-ds-muted">{{
-                            'PLAYER.MEDIA_UNAVAILABLE_DESC' |
-                            translate }}</p>
+                            'PLAYER.MEDIA_UNAVAILABLE_DESC' | translate }}</p>
                     </div>
                     }
                 </div>
@@ -229,8 +238,9 @@
                             class="flex flex-col items-center justify-center p-4 border border-slate-200 dark:border-ds-border rounded bg-slate-50 dark:bg-ds-black hover:bg-slate-100 dark:hover:bg-ds-black/80 transition-colors text-center group cursor-pointer shadow-sm">
                             <lucide-icon [name]="icons.Star"
                                 class="w-6 h-6 text-yellow-500 mb-2 group-hover:scale-110 transition-transform"></lucide-icon>
-                            <span class="font-cormorant font-bold text-lg text-slate-900 dark:text-white mb-1">Leave a
-                                Review</span>
+                            <span class="font-cormorant font-bold text-lg text-slate-900 dark:text-white mb-1">
+                                {{ existingReviewId() ? 'Edit Review' : 'Leave a Review' }}
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -248,7 +258,9 @@
 
             <div
                 class="p-6 border-b border-slate-100 dark:border-ds-border flex justify-between items-center bg-slate-50 dark:bg-ds-black">
-                <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white">Rate this Course</h3>
+                <h3 class="font-cormorant text-2xl font-bold text-slate-900 dark:text-white">
+                    {{ existingReviewId() ? 'Edit Your Review' : 'Rate this Course' }}
+                </h3>
                 <button (click)="closeReviewModal()"
                     class="p-2 hover:bg-slate-200 dark:hover:bg-ds-border rounded-full transition-colors text-slate-500">
                     <lucide-icon [name]="icons.X" class="w-5 h-5"></lucide-icon>
@@ -292,7 +304,7 @@
                     @if (isSubmittingReview()) {
                     <lucide-icon [name]="icons.Loader2" class="w-4 h-4 animate-spin"></lucide-icon> Submitting...
                     } @else {
-                    Submit Review
+                    {{ existingReviewId() ? 'Update Review' : 'Submit Review' }}
                     }
                 </button>
             </div>

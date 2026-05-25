@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '../../../../environments/environment';
 import {
-  LucideAngularModule, ChevronLeft, ChevronDown, ChevronUp, CheckCircle, Circle, PlayCircle, Trophy, Loader2, Lock, FileText, Star, X
+  LucideAngularModule, ChevronLeft, ChevronDown, ChevronUp, CheckCircle, Circle, PlayCircle, Trophy, Loader2, Lock, FileText, Star, X, AlertTriangle
 } from 'lucide-angular';
 
 import { CourseService } from '../../../core/services/course.service';
@@ -30,7 +30,7 @@ export class CoursePlayerComponent implements OnInit {
   private authService = inject(AuthService);
   private http = inject(HttpClient);
 
-  readonly icons = { ChevronLeft, ChevronDown, ChevronUp, CheckCircle, Circle, PlayCircle, Trophy, Loader2, Lock, FileText, Star, X };
+  readonly icons = { ChevronLeft, ChevronDown, ChevronUp, CheckCircle, Circle, PlayCircle, Trophy, Loader2, Lock, FileText, Star, X, AlertTriangle };
 
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
 
@@ -45,11 +45,16 @@ export class CoursePlayerComponent implements OnInit {
   isEnrolled = signal<boolean>(false);
   isLessonLocked = signal<boolean>(false);
 
+  // --- REVIEW SYSTEM ---
   isReviewModalOpen = signal<boolean>(false);
   isSubmittingReview = signal<boolean>(false);
+  existingReviewId = signal<string | null>(null);
   reviewRating = signal<number>(0);
   reviewComment = signal<string>('');
   hoveredRating = signal<number>(0);
+
+  // --- TOAST SYSTEM ---
+  toastMessage = signal<{ text: string, type: 'success' | 'error' } | null>(null);
 
   safeMediaUrl = computed<SafeResourceUrl | null>(() => {
     const lesson = this.currentLesson();
@@ -114,6 +119,11 @@ export class CoursePlayerComponent implements OnInit {
         const arr = Array.isArray(enrollments) ? enrollments : (enrollments.content || []);
         this.isEnrolled.set(arr.some((e: any) => e.courseId === courseId || e.course?.id === courseId));
         this.initializePlayer(courseData.sections);
+
+        // Si l'étudiant est inscrit, on cherche s'il a déjà laissé un avis
+        if (this.isEnrolled()) {
+          this.fetchMyReview();
+        }
       },
       error: () => {
         this.isEnrolled.set(false);
@@ -199,15 +209,39 @@ export class CoursePlayerComponent implements OnInit {
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   }
 
-  // --- LOGIQUE DES AVIS ---
+  // --- LOGIQUE DES AVIS & TOASTS ---
+  showToast(text: string, type: 'success' | 'error' = 'success') {
+    this.toastMessage.set({ text, type });
+    setTimeout(() => {
+      this.toastMessage.set(null);
+    }, 4000);
+  }
+
+  fetchMyReview(): void {
+    this.http.get<any>(`${environment.apiUrl}/api/v1/courses/${this.courseId()}/reviews?size=100`).subscribe({
+      next: (res) => {
+        const userFullName = `${this.currentUser()?.firstName} ${this.currentUser()?.lastName}`;
+        const myReview = res.content?.find((r: any) => r.studentName === userFullName);
+
+        if (myReview) {
+          this.existingReviewId.set(myReview.id);
+          this.reviewRating.set(myReview.rating);
+          this.reviewComment.set(myReview.comment);
+        }
+      }
+    });
+  }
+
   openReviewModal(): void {
     this.isReviewModalOpen.set(true);
   }
 
   closeReviewModal(): void {
     this.isReviewModalOpen.set(false);
-    this.reviewRating.set(0);
-    this.reviewComment.set('');
+    if (!this.existingReviewId()) {
+      this.reviewRating.set(0);
+      this.reviewComment.set('');
+    }
   }
 
   setRating(rating: number): void {
@@ -232,15 +266,23 @@ export class CoursePlayerComponent implements OnInit {
       comment: this.reviewComment().trim()
     };
 
-    this.http.post(`${environment.apiUrl}/api/v1/courses/${this.courseId()}/reviews`, payload).subscribe({
+    const reviewId = this.existingReviewId();
+    const request = reviewId
+      ? this.http.put(`${environment.apiUrl}/api/v1/courses/${this.courseId()}/reviews/${reviewId}`, payload)
+      : this.http.post(`${environment.apiUrl}/api/v1/courses/${this.courseId()}/reviews`, payload);
+
+    request.subscribe({
       next: () => {
         this.isSubmittingReview.set(false);
         this.closeReviewModal();
-        // Après, je dois afficher un toast de succès
+        this.showToast(reviewId ? 'Your review has been updated!' : 'Your review has been submitted successfully!', 'success');
+
+        this.fetchMyReview();
       },
       error: (err) => {
         console.error('Error submitting review', err);
         this.isSubmittingReview.set(false);
+        this.showToast('An error occurred while saving the review.', 'error');
       }
     });
   }
