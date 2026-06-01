@@ -112,7 +112,8 @@
         "FAQ": "FAQ",
         "LOGIN": "Login",
         "SIGNUP": "Sign Up",
-        "DASHBOARD": "Dashboard"
+        "DASHBOARD": "Dashboard",
+        "SEARCH_PLACEHOLDER": "Search for courses or instructors..."
     },
     "FOOTER": {
         "DESC": "Learn from expert instructors with professional-grade video content and real-world trading strategies.",
