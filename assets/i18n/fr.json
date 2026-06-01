@@ -112,7 +112,8 @@
         "FAQ": "FAQ",
         "LOGIN": "Connexion",
         "SIGNUP": "Inscription",
-        "DASHBOARD": "Tableau de Bord"
+        "DASHBOARD": "Tableau de Bord",
+        "SEARCH_PLACEHOLDER": "Rechercher des cours ou des instructeurs..."
     },
     "FOOTER": {
         "DESC": "Apprenez auprès d'instructeurs experts avec du contenu vidéo de qualité professionnelle et des stratégies de trading concrètes.",
