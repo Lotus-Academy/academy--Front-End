@@ -103,6 +103,42 @@
             "REASON2_DESC": "Pratiquez avec des données de marché réelles et construisez des stratégies qui fonctionnent dans des environnements de trading réels.",
             "REASON3_TITLE": "Programme Structuré",
             "REASON3_DESC": "Suivez un parcours d'apprentissage soigneusement conçu, des principes fondamentaux aux stratégies de trading avancées."
+        },
+        "FEATURES": {
+            "CERT_TITLE": "Certificats Cryptographiques",
+            "CERT_DESC": "ID unique vérifiable publiquement par les recruteurs.",
+            "LIVE_TITLE": "Direct Ultra compétitif",
+            "LIVE_DESC": "Interactivité totale sans aucun décalage de streaming.",
+            "SPLIT_TITLE": "Pratique Métier Scindée",
+            "SPLIT_DESC": "IDE de programmation et terminaux financiers intégrés à l'écran."
+        },
+        "CERT_SECTION": {
+            "BADGE": "DOCUMENT OFFICIEL",
+            "DOC_TITLE": "Certificat de Réussite",
+            "TEXT_CERTIFY": "Ce document certifie que",
+            "TEXT_SUCCESS": "a validé avec succès toutes les exigences requises pour le cours",
+            "COURSE_NAME": "Modélisation de Stratégies Quantitatives",
+            "VERIFIABLE_ID": "ID VÉRIFIABLE (UUIDv4)",
+            "MAIN_TITLE": "Valorisez votre profil avec des",
+            "MAIN_TITLE_ACCENT": "Certifications Cryptographiques",
+            "DESCRIPTION": "Chaque parcours d'apprentissage validé génère automatiquement un diplôme numérique immuable. Ne vous contentez pas de prétendre avoir des compétences : prouvez-les auprès des hedge funds et institutions financières mondiales.",
+            "BULLET_1_BOLD": "ID Unique Universel :",
+            "BULLET_1_TEXT": "Intégration directe sur LinkedIn, CV et portefeuilles professionnels.",
+            "BULLET_2_BOLD": "Vérification instantanée :",
+            "BULLET_2_TEXT": "Un portail public permet aux recruteurs d'authentifier votre diplôme en un clic."
+        },
+        "LIVE_SECTION": {
+            "MAIN_TITLE": "Une expérience immersive en",
+            "MAIN_TITLE_ACCENT": "Écran Scindé unique",
+            "DESCRIPTION": "Oubliez le streaming passif. Lors des sessions de direct, notre architecture technologique divise votre espace de travail : suivez le flux vidéo de l'instructeur d'un côté, et manipulez vos algorithmes ou passez vos positions de l'autre.",
+            "CARD1_TITLE": "Zéro Latence Réseau",
+            "CARD1_DESC": "Retour vidéo fluide pour une expérience optimale.",
+            "CARD2_TITLE": "Outils Métiers Embarqués",
+            "CARD2_DESC": "IDE de programmation et vrais terminaux financiers synchronisés en temps réel.",
+            "BADGE_LIVE": "EN DIRECT",
+            "STREAM_LABEL": "Flux Instructeur",
+            "TERMINAL_LABEL": "Terminal Interactif",
+            "TERMINAL_COMMENT": "# Exécution de la matrice quantitative..."
         }
     },
     "NAVBAR": {
@@ -111,9 +147,19 @@
         "TEACH": "Enseigner",
         "FAQ": "FAQ",
         "LOGIN": "Connexion",
-        "SIGNUP": "Inscription",
-        "DASHBOARD": "Tableau de Bord",
-        "SEARCH_PLACEHOLDER": "Rechercher des cours ou des instructeurs..."
+        "SIGNUP": "S'inscrire",
+        "DASHBOARD": "Tableau de bord",
+        "SEARCH_PLACEHOLDER": "Que voulez-vous apprendre ?",
+        "EXPLORE": "Explorer",
+        "SEARCH_RESULTS": "Suggestions de cours",
+        "SEARCH_NO_RESULTS": "Aucun cours trouvé pour",
+        "SEARCH_VIEW_ALL": "Voir tous les résultats pour",
+        "EXPLORE_CATEGORIES": "Grandes Catégories",
+        "EXPLORE_SUB_ALGO": "Développement d'algorithmes financiers HFT et stratégies de scalping.",
+        "EXPLORE_SUB_QUANT": "Modélisation stochastique, gestion des risques et calculs de prix de dérivés.",
+        "EXPLORE_SUB_ML": "Réseaux de neurones profonds appliqués aux carnets d'ordres.",
+        "EXPLORE_SUB_RISK": "Couverture de portefeuilles institutionnels et critères d'intégrité.",
+        "EXPLORE_SUB_PSYCHO": "Biais cognitifs et gestion émotionnelle sur les marchés."
     },
     "FOOTER": {
         "DESC": "Apprenez auprès d'instructeurs experts avec du contenu vidéo de qualité professionnelle et des stratégies de trading concrètes.",
