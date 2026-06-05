@@ -5,34 +5,35 @@
 @import "prismjs/themes/prism-tomorrow.css";
 
 @layer base {
+
     /* ========================================================= */
     /* LIGHT MODE (PREDOMINANTLY BLUE)                           */
     /* ========================================================= */
     :root {
         /* Backgrounds: Very light slate blue / off-white */
-        --background: 210 40% 98%; 
+        --background: 210 40% 98%;
         /* Foreground: Deep navy blue for high contrast text */
-        --foreground: 222 47% 11%; 
-        
+        --foreground: 222 47% 11%;
+
         /* Cards & Popovers: Pure white with dark blue text */
         --card: 0 0% 100%;
         --card-foreground: 222 47% 11%;
         --popover: 0 0% 100%;
         --popover-foreground: 222 47% 11%;
-        
+
         /* Primary: Strong Royal Blue (Predominant accent) */
         --primary: 221 83% 53%;
         --primary-foreground: 210 40% 98%;
-        
+
         /* Secondary & Muted: Light blue-grays for subtle elements */
         --secondary: 214 32% 91%;
         --secondary-foreground: 222 47% 11%;
         --muted: 214 32% 91%;
         --muted-foreground: 215 16% 47%;
-        
+
         --accent: 214 32% 91%;
         --accent-foreground: 222 47% 11%;
-        
+
         --destructive: 0 84% 60%;
         --destructive-foreground: 210 40% 98%;
 
@@ -45,10 +46,14 @@
         --radius: 2px;
 
         /* BRAND COLORS: Mapped to Blue in Light Mode to keep HTML intact */
-        --gold: 221 83% 53%;       /* Acts as the main Blue in light mode */
-        --gold-hover: 221 83% 45%; /* Darker blue on hover */
-        --green: 142 71% 45%;      /* Adjusted green for light mode contrast */
-        --surface: 0 0% 100%;      /* White surface */
+        --gold: 221 83% 53%;
+        /* Acts as the main Blue in light mode */
+        --gold-hover: 221 83% 45%;
+        /* Darker blue on hover */
+        --green: 142 71% 45%;
+        /* Adjusted green for light mode contrast */
+        --surface: 0 0% 100%;
+        /* White surface */
 
         color-scheme: light;
     }
@@ -59,23 +64,23 @@
     .dark {
         --background: 140 12% 3%;
         --foreground: 38 38% 93%;
-        
+
         --card: 140 10% 5%;
         --card-foreground: 38 38% 93%;
         --popover: 140 10% 5%;
         --popover-foreground: 38 38% 93%;
-        
+
         --primary: 34 34% 64%;
         --primary-foreground: 140 12% 3%;
-        
+
         --secondary: 145 74% 59%;
         --secondary-foreground: 140 12% 3%;
         --muted: 140 10% 7%;
         --muted-foreground: 38 38% 93% / 0.44;
-        
+
         --accent: 34 34% 64%;
         --accent-foreground: 38 38% 93%;
-        
+
         --destructive: 0 62% 65%;
         --destructive-foreground: 38 38% 93%;
 
@@ -194,7 +199,7 @@
 
         to {
             opacity: 1;
-            transform: translateY(0);
+            transform: none;
         }
     }
 

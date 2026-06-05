@@ -103,6 +103,42 @@
             "REASON2_DESC": "Practice with real market data and build strategies that work in actual trading environments.",
             "REASON3_TITLE": "Structured Curriculum",
             "REASON3_DESC": "Follow a carefully designed learning path from fundamentals to advanced trading strategies."
+        },
+        "FEATURES": {
+            "CERT_TITLE": "Cryptographic Certificates",
+            "CERT_DESC": "Unique ID publicly verifiable by corporate recruiters.",
+            "LIVE_TITLE": "Fluid Live",
+            "LIVE_DESC": "Full interactivity with minimal streaming propagation delay.",
+            "SPLIT_TITLE": "Split-Screen Workspace",
+            "SPLIT_DESC": "Programming IDE and financial terminals embedded right on screen."
+        },
+        "CERT_SECTION": {
+            "BADGE": "OFFICIAL DOCUMENT",
+            "DOC_TITLE": "Certificate of Completion",
+            "TEXT_CERTIFY": "This document safely certifies that",
+            "TEXT_SUCCESS": "has successfully completed all requirements for",
+            "COURSE_NAME": "Quantitative Strategy Modeling",
+            "VERIFIABLE_ID": "VERIFIABLE ID (UUIDv4)",
+            "MAIN_TITLE": "Boost your profile with verified",
+            "MAIN_TITLE_ACCENT": "Cryptographic Certificates",
+            "DESCRIPTION": "Every completed learning path automatically triggers an immutable digital diploma. Don't just claim your skills: prove them to global hedge funds and tier-one financial institutions.",
+            "BULLET_1_BOLD": "Universal Unique ID:",
+            "BULLET_1_TEXT": "Direct integration into LinkedIn, CVs, and professional portfolios.",
+            "BULLET_2_BOLD": "Instant Verification:",
+            "BULLET_2_TEXT": "A public portal allows recruiters to authenticate your diploma in a single click."
+        },
+        "LIVE_SECTION": {
+            "MAIN_TITLE": "An immersive experience using a",
+            "MAIN_TITLE_ACCENT": "Unique Split-Screen UI",
+            "DESCRIPTION": "Forget passive streaming. During live sessions, our technological architecture divides your workspace: follow the instructor's video feed on one side, and tweak your algorithms or execute market orders on the other.",
+            "CARD1_TITLE": "Zero Network Latency",
+            "CARD1_DESC": "Fluid video feedback for an optimal experience.",
+            "CARD2_TITLE": "Embedded Domain Tools",
+            "CARD2_DESC": "Programming IDE and live trading terminals synchronized in real time.",
+            "BADGE_LIVE": "LIVE",
+            "STREAM_LABEL": "Instructor Stream",
+            "TERMINAL_LABEL": "Interactive Terminal",
+            "TERMINAL_COMMENT": "# Executing quantitative matrix..."
         }
     },
     "NAVBAR": {
@@ -110,10 +146,20 @@
         "COURSES": "Courses",
         "TEACH": "Teach",
         "FAQ": "FAQ",
-        "LOGIN": "Login",
-        "SIGNUP": "Sign Up",
+        "LOGIN": "Log In",
+        "SIGNUP": "Join for Free",
         "DASHBOARD": "Dashboard",
-        "SEARCH_PLACEHOLDER": "Search for courses or instructors..."
+        "SEARCH_PLACEHOLDER": "What do you want to learn?",
+        "EXPLORE": "Explore",
+        "SEARCH_RESULTS": "Suggested Courses",
+        "SEARCH_NO_RESULTS": "No courses found for",
+        "SEARCH_VIEW_ALL": "View all results for",
+        "EXPLORE_CATEGORIES": "Main Track Categories",
+        "EXPLORE_SUB_ALGO": "HFT financial algorithm development and scalping setups.",
+        "EXPLORE_SUB_QUANT": "Stochastic modeling, risk metrics, and derivatives pricing.",
+        "EXPLORE_SUB_ML": "Deep neural networks tailored for order book evaluation.",
+        "EXPLORE_SUB_RISK": "Institutional portfolio hedging and alignment criteria.",
+        "EXPLORE_SUB_PSYCHO": "Cognitive biases and emotional management during market live sessions."
     },
     "FOOTER": {
         "DESC": "Learn from expert instructors with professional-grade video content and real-world trading strategies.",

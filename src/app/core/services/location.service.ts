@@ -15,7 +15,6 @@ export interface LocationData {
 export class LocationService {
     private http = inject(HttpClient);
 
-    // Signal réactif contenant les données de localisation par défaut
     location = signal<LocationData>({
         countryCode: 'US',
         currency: 'USD',
@@ -23,7 +22,6 @@ export class LocationService {
         symbol: '$'
     });
 
-    // Cache pour éviter les requêtes multiples
     private locationCache$?: Observable<LocationData>;
 
     fetchLocation(): Observable<LocationData> {
@@ -36,12 +34,11 @@ export class LocationService {
                     }
                 }),
                 catchError(() => {
-                    // En cas d'erreur (ex: bloqueur de pub, API indisponible), on force le fallback
                     const fallback: LocationData = { countryCode: 'US', currency: 'USD', exchangeRate: 1, symbol: '$' };
                     this.location.set(fallback);
                     return of(fallback);
                 }),
-                shareReplay(1) // Conserve la dernière émission en mémoire pour les prochains abonnés
+                shareReplay(1)
             );
         }
         return this.locationCache$;

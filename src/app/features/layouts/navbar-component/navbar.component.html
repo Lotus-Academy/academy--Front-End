@@ -1,92 +1,157 @@
 <header
-    class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-ds-border bg-white/90 dark:bg-ds-black/90 backdrop-blur-xl transition-colors duration-300 shadow-sm dark:shadow-none">
-    <div class="container mx-auto px-4 h-16 flex items-center justify-between gap-4 relative">
+    class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-ds-border bg-white/95 dark:bg-ds-black/95 backdrop-blur-xl transition-all duration-300 shadow-sm dark:shadow-none">
+    <div class="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-4 relative">
 
-        @if (isOverlaySearchOpen()) {
-        <div
-            class="absolute inset-0 z-50 flex items-center px-4 bg-white/95 dark:bg-ds-black/95 backdrop-blur-md animate-fade-in">
-            <div class="relative w-full max-w-2xl mx-auto flex items-center gap-2">
-                <div class="relative flex-1">
-                    <lucide-icon [name]="icons.Search"
-                        class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-lotus"></lucide-icon>
-                    <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
-                        (keyup.enter)="onSearch()" placeholder="Search courses, skills..."
-                        class="w-full h-12 pl-12 pr-4 bg-slate-100 dark:bg-ds-surface border border-lotus focus:ring-1 focus:ring-lotus rounded-full text-base font-syne outline-none dark:text-white"
-                        autofocus>
+        <div class="flex items-center gap-4 shrink-0">
+            <a routerLink="/" class="flex items-center hover:opacity-90 transition-opacity" (click)="closeAllMenus()">
+                <div class="h-8 sm:h-9">
+                    <img src="assets/images/logoLotus1.png" alt="Lotus Academy"
+                        class="h-full w-auto object-contain block dark:hidden">
+                    <img src="assets/images/logoLotus-white1.png" alt="Lotus Academy"
+                        class="h-full w-auto object-contain hidden dark:block">
                 </div>
-                <button (click)="closeOverlaySearch()"
-                    class="p-2 text-slate-500 hover:text-red-500 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-ds-surface">
-                    <lucide-icon [name]="icons.X" class="w-6 h-6"></lucide-icon>
+            </a>
+
+            <div class="relative hidden md:block" (mouseenter)="isExploreMenuOpen.set(true)"
+                (mouseleave)="isExploreMenuOpen.set(false)">
+                <button
+                    class="px-4 py-2 bg-lotus/10 dark:bg-lotus/20 hover:bg-lotus hover:text-white dark:hover:text-ds-black text-lotus font-syne text-xs font-bold rounded-lg transition-all duration-200 flex items-center gap-1.5 border border-lotus/20">
+                    <span>{{ 'NAVBAR.EXPLORE' | translate }}</span>
+                    <lucide-icon [name]="icons.ChevronDown" class="w-3 h-3 transform transition-transform duration-200"
+                        [class.rotate-180]="isExploreMenuOpen()"></lucide-icon>
                 </button>
+
+                @if (isExploreMenuOpen()) {
+                <div
+                    class="absolute left-0 mt-0 w-[480px] bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-2xl z-50 overflow-hidden origin-top-left p-5 grid grid-cols-1 gap-4 animate-fade-in">
+                    <div class="border-b border-slate-100 dark:border-ds-border/40 pb-2">
+                        <span class="font-mono text-[9px] uppercase tracking-wider text-slate-400 font-bold block">
+                            {{ 'NAVBAR.EXPLORE_CATEGORIES' | translate }}
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-1 gap-1">
+                        @for (topic of topics(); track topic.id) {
+                        <a [routerLink]="['/courses']" [queryParams]="{categoryId: topic.id}"
+                            (click)="isExploreMenuOpen.set(false)"
+                            class="flex items-start gap-3 p-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-ds-black/40 group/item transition-colors">
+                            <div
+                                [class]="'flex h-8 w-8 items-center justify-center rounded border shrink-0 mt-0.5 ' + topic.color">
+                                <lucide-icon [name]="topic.icon" class="h-4 w-4"></lucide-icon>
+                            </div>
+                            <div class="text-left">
+                                <h5
+                                    class="font-syne font-bold text-xs text-slate-900 dark:text-white group-hover/item:text-lotus transition-colors">
+                                    {{ topic.name }}
+                                </h5>
+                                <p
+                                    class="text-[10px] text-slate-400 dark:text-ds-muted/60 mt-0.5 font-normal leading-normal line-clamp-2">
+                                    {{ topic.subKey | translate }}
+                                </p>
+                            </div>
+                        </a>
+                        }
+                    </div>
+                </div>
+                }
             </div>
         </div>
-        }
 
-        <a routerLink="/" class="flex items-center shrink-0 hover:opacity-80 transition-opacity">
-            <div class="h-8 sm:h-10">
-                <img src="assets/images/logoLotus1.png" alt="Lotus Academy"
-                    class="h-full w-auto object-contain block dark:hidden">
-                <img src="assets/images/logoLotus-white1.png" alt="Lotus Academy"
-                    class="h-full w-auto object-contain hidden dark:block">
-            </div>
-        </a>
-
-        <div class="hidden lg:flex flex-1 max-w-lg mx-auto">
+        <div class="hidden lg:flex flex-1 max-w-xl mx-6 relative z-50">
             <div class="relative w-full group">
                 <lucide-icon [name]="icons.Search"
                     class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-lotus transition-colors"></lucide-icon>
-                <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
-                    (keyup.enter)="onSearch()" [placeholder]="'COURSE_LIST.SEARCH_PLACEHOLDER' | translate"
-                    class="w-full h-10 pl-11 pr-4 bg-slate-100/70 dark:bg-ds-surface border border-transparent focus:border-lotus/50 focus:bg-white dark:focus:bg-ds-black rounded-full text-sm font-syne outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-ds-muted/50">
+                <input type="text" [ngModel]="searchQuery()" (ngModelChange)="onSearchQueryChange($event)"
+                    (focus)="isSearchFocused.set(true)" (keyup.enter)="onSearch()"
+                    [placeholder]="'NAVBAR.SEARCH_PLACEHOLDER' | translate"
+                    class="w-full h-10 pl-11 pr-4 bg-slate-100 dark:bg-ds-surface border border-slate-200 dark:border-transparent focus:border-lotus focus:bg-white dark:focus:bg-ds-black focus:ring-1 focus:ring-lotus rounded-lg text-sm font-syne outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-ds-muted/40 text-slate-800 dark:text-white shadow-inner">
             </div>
+
+            @if (isSearchFocused() && searchQuery().trim().length > 0) {
+            <div
+                class="absolute top-[calc(100%+8px)] left-0 w-full bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-2xl overflow-hidden animate-fade-in p-4 text-left">
+                <div
+                    class="font-mono text-[9px] uppercase tracking-wider text-slate-400 font-bold mb-3 border-b border-slate-100 dark:border-ds-border/40 pb-2">
+                    {{ 'NAVBAR.SEARCH_RESULTS' | translate }}
+                </div>
+
+                @if (filteredCourses().length === 0) {
+                <div class="py-4 text-center text-xs text-slate-400">
+                    {{ 'NAVBAR.SEARCH_NO_RESULTS' | translate }} <span class="text-lotus italic">"{{ searchQuery()
+                        }}"</span>
+                </div>
+                } @else {
+                <div class="space-y-1">
+                    @for (course of filteredCourses(); track course.id) {
+                    <a [routerLink]="['/courses', course.id]" (click)="isSearchFocused.set(false)"
+                        class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-ds-black/40 group/row transition-colors">
+                        <img [src]="course.thumbnailUrl || 'assets/images/default-course.png'"
+                            class="w-12 h-8 object-cover rounded bg-slate-100 dark:bg-ds-black shrink-0">
+                        <div class="min-w-0 flex-1">
+                            <h5
+                                class="font-syne font-bold text-xs text-slate-800 dark:text-white group-hover/row:text-lotus transition-colors truncate">
+                                {{ course.title }}
+                            </h5>
+                            <p class="font-mono text-[9px] text-slate-400 mt-0.5 truncate">By {{ course.instructorName
+                                }} • <span class="text-lotus font-bold text-[8px]">{{ course.level }}</span></p>
+                        </div>
+                    </a>
+                    }
+                </div>
+
+                <button (click)="onSearch()"
+                    class="w-full text-center mt-3 pt-3 border-t border-slate-100 dark:border-ds-border/40 font-syne text-[11px] font-bold text-lotus hover:text-lotus-light transition-colors block">
+                    {{ 'NAVBAR.SEARCH_VIEW_ALL' | translate }} "{{ searchQuery() }}" →
+                </button>
+                }
+            </div>
+            }
         </div>
 
-        <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        @if (isSearchFocused() && searchQuery().trim().length > 0) {
+        <div class="fixed inset-0 top-16 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm z-40 transition-all duration-300"
+            (click)="isSearchFocused.set(false)"></div>
+        }
 
-            <button aria-label="Open search" (click)="toggleOverlaySearch()"
-                class="hidden md:flex lg:hidden h-9 w-9 rounded-full items-center justify-center text-slate-500 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus hover:bg-slate-100 dark:hover:bg-ds-surface transition-all cursor-pointer">
-                <lucide-icon [name]="icons.Search" class="w-4 h-4"></lucide-icon>
-            </button>
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0 relative z-50">
 
-            <nav class="hidden md:flex items-center gap-1 mr-2">
+            <nav class="hidden md:flex items-center gap-1">
                 @for (link of navLinks; track link.labelKey) {
-                <a [routerLink]="[link.href]" [fragment]="link.fragment"
-                    routerLinkActive="text-lotus bg-lotus/10 dark:bg-lotus/10"
-                    [routerLinkActiveOptions]="{exact: link.href === '/'}"
-                    class="px-3 py-2 font-mono text-[10px] uppercase tracking-[0.15em] font-bold text-slate-600 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus hover:bg-slate-50 dark:hover:bg-ds-surface rounded-full transition-all">
+                <a [routerLink]="[link.href]" [fragment]="link.fragment" routerLinkActive="text-lotus font-bold"
+                    [routerLinkActiveOptions]="{exact: link.href === '/'}" (click)="closeAllMenus()"
+                    class="px-3 py-2 font-syne text-xs font-medium text-slate-600 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus rounded-md transition-colors">
                     {{ link.labelKey | translate }}
                 </a>
                 }
             </nav>
 
+            <div class="w-px h-5 bg-slate-200 dark:bg-ds-border/60 hidden md:block mx-1"></div>
+
             <div class="relative">
                 <button (click)="toggleLanguageMenu()"
-                    class="h-9 w-9 rounded-full flex items-center justify-center text-slate-500 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus hover:bg-slate-100 dark:hover:bg-ds-surface transition-all cursor-pointer"
+                    class="h-9 w-9 rounded-xl flex items-center justify-center text-slate-500 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus hover:bg-slate-100 dark:hover:bg-ds-surface transition-all cursor-pointer"
                     [ngClass]="isLanguageMenuOpen() ? 'bg-slate-100 dark:bg-ds-surface text-lotus' : ''">
-                    <span class="text-base leading-none">{{ languageService.getCurrentLanguage() === 'fr' ? '🇫🇷' :
+                    <span class="text-sm leading-none">{{ languageService.getCurrentLanguage() === 'fr' ? '🇫🇷' :
                         '🇬🇧' }}</span>
                 </button>
 
                 @if (isLanguageMenuOpen()) {
                 <div class="fixed inset-0 z-40 cursor-default" (click)="closeLanguageMenu()"></div>
                 <div
-                    class="absolute right-0 mt-2 w-48 bg-white dark:bg-ds-surface rounded shadow-xl border border-slate-200 dark:border-ds-border z-50 overflow-hidden origin-top-right animate-fade-in-up">
-                    <div class="py-2">
+                    class="absolute right-0 mt-2 w-44 bg-white dark:bg-ds-surface rounded-xl shadow-xl border border-slate-200 dark:border-ds-border z-50 overflow-hidden origin-top-right animate-fade-in">
+                    <div class="py-1">
                         <button (click)="switchLanguage('fr')"
-                            class="w-full text-left px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest transition-colors hover:bg-slate-50 dark:hover:bg-ds-border/50 flex items-center justify-between"
-                            [ngClass]="languageService.getCurrentLanguage() === 'fr' ? 'text-lotus bg-lotus/10' : 'text-slate-700 dark:text-ds-muted'">
-                            <span class="flex items-center gap-2"><span class="text-lg leading-none">🇫🇷</span>
-                                Français</span>
+                            class="w-full text-left px-4 py-2.5 font-syne text-xs transition-colors hover:bg-slate-50 dark:hover:bg-ds-border/40 flex items-center justify-between"
+                            [ngClass]="languageService.getCurrentLanguage() === 'fr' ? 'text-lotus font-bold bg-lotus/5' : 'text-slate-700 dark:text-ds-muted'">
+                            <span class="flex items-center gap-2">🇫🇷 Français</span>
                             @if (languageService.getCurrentLanguage() === 'fr') { <lucide-icon
-                                [name]="icons.CheckCircle" class="w-3.5 h-3.5"></lucide-icon> }
+                                [name]="icons.CheckCircle" class="w-3.5 h-3.5 text-lotus"></lucide-icon> }
                         </button>
                         <button (click)="switchLanguage('en')"
-                            class="w-full text-left px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest transition-colors hover:bg-slate-50 dark:hover:bg-ds-border/50 flex items-center justify-between"
-                            [ngClass]="languageService.getCurrentLanguage() === 'en' ? 'text-lotus bg-lotus/10' : 'text-slate-700 dark:text-ds-muted'">
-                            <span class="flex items-center gap-2"><span class="text-lg leading-none">🇬🇧</span>
-                                English</span>
+                            class="w-full text-left px-4 py-2.5 font-syne text-xs transition-colors hover:bg-slate-50 dark:hover:bg-ds-border/40 flex items-center justify-between"
+                            [ngClass]="languageService.getCurrentLanguage() === 'en' ? 'text-lotus font-bold bg-lotus/5' : 'text-slate-700 dark:text-ds-muted'">
+                            <span class="flex items-center gap-2">🇬🇧 English</span>
                             @if (languageService.getCurrentLanguage() === 'en') { <lucide-icon
-                                [name]="icons.CheckCircle" class="w-3.5 h-3.5"></lucide-icon> }
+                                [name]="icons.CheckCircle" class="w-3.5 h-3.5 text-lotus"></lucide-icon> }
                         </button>
                     </div>
                 </div>
@@ -94,100 +159,72 @@
             </div>
 
             <button (click)="themeService.toggleTheme()"
-                class="h-9 w-9 rounded-full flex items-center justify-center text-slate-500 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus hover:bg-slate-100 dark:hover:bg-ds-surface transition-all cursor-pointer">
+                class="h-9 w-9 rounded-xl flex items-center justify-center text-slate-500 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus hover:bg-slate-100 dark:hover:bg-ds-surface transition-all cursor-pointer">
                 @if (themeService.darkMode()) { <lucide-icon [name]="icons.Sun" class="w-4 h-4"></lucide-icon> }
                 @else { <lucide-icon [name]="icons.Moon" class="w-4 h-4"></lucide-icon> }
             </button>
 
             @if (isLoggedIn()) {
-
             <div class="relative">
                 <button (click)="toggleNotifications()"
-                    class="relative z-50 h-9 w-9 rounded-full flex items-center justify-center text-slate-500 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus hover:bg-slate-100 dark:hover:bg-ds-surface transition-all cursor-pointer"
+                    class="relative z-50 h-9 w-9 rounded-xl flex items-center justify-center text-slate-500 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus hover:bg-slate-100 dark:hover:bg-ds-surface transition-all cursor-pointer"
                     [ngClass]="isNotificationsOpen() ? 'bg-slate-100 dark:bg-ds-surface text-lotus' : ''">
-                    <lucide-icon [name]="icons.Bell" class="w-5 h-5 pointer-events-none"></lucide-icon>
+                    <lucide-icon [name]="icons.Bell" class="w-4 h-4 pointer-events-none"></lucide-icon>
                     @if (unreadNotifications() > 0) {
-                    <!-- J'ai très légèrement grossi le badge pour qu'il soit plus cliquable/visible sur mobile -->
                     <span
-                        class="absolute top-1.5 right-1.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 border-2 border-white dark:border-ds-black rounded-full pointer-events-none"></span>
+                        class="absolute top-2 right-2 w-2 h-2 bg-red-500 border border-white dark:border-ds-black rounded-full pointer-events-none"></span>
                     }
                 </button>
 
                 @if (isNotificationsOpen()) {
                 <div class="fixed inset-0 z-40 cursor-default" (click)="closeNotifications()"></div>
-                <!-- VRAIE MAGIE RESPONSIVE ICI : fixed au centre sur mobile, et absolute sur desktop -->
                 <div
-                    class="fixed top-[72px] left-4 right-4 sm:absolute sm:top-full sm:left-auto sm:right-0 mt-0 sm:mt-2 sm:w-96 max-w-sm mx-auto bg-white dark:bg-ds-surface rounded-xl shadow-2xl border border-slate-200 dark:border-ds-border z-50 overflow-hidden origin-top sm:origin-top-right animate-fade-in-up">
+                    class="fixed top-[72px] left-4 right-4 sm:absolute sm:top-full sm:left-auto sm:right-0 mt-2 sm:w-96 max-w-sm mx-auto bg-white dark:bg-ds-surface rounded-xl shadow-2xl border border-slate-200 dark:border-ds-border z-50 overflow-hidden origin-top sm:origin-top-right animate-fade-in">
                     <div
                         class="p-4 border-b border-slate-200 dark:border-ds-border flex justify-between items-center bg-slate-50/50 dark:bg-ds-border/30">
-                        <div class="flex items-center gap-2">
-                            <h3 class="font-syne font-bold text-slate-900 dark:text-white">{{ 'NOTIFICATIONS.TITLE' |
-                                translate }}</h3>
-                            @if (unreadNotifications() > 0) {
-                            <span
-                                class="bg-red-500/10 text-red-500 font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 rounded">
-                                {{ unreadNotifications() }} {{ 'NOTIFICATIONS.NEW' | translate }}
-                            </span>
-                            }
-                        </div>
-                        @if (notifications().length > 0) {
-                        <button (click)="markAllAsRead()" [disabled]="unreadNotifications() === 0"
-                            class="p-1.5 rounded transition-colors text-slate-500 hover:text-lotus disabled:opacity-30 disabled:cursor-not-allowed"
-                            [title]="'NOTIFICATIONS.MARK_ALL_READ' | translate">
-                            <lucide-icon [name]="icons.CheckCheck" class="w-4 h-4"></lucide-icon>
-                        </button>
+                        <h3 class="font-syne font-bold text-sm text-slate-900 dark:text-white">{{ 'NOTIFICATIONS.TITLE'
+                            | translate }}</h3>
+                        @if (unreadNotifications() > 0) {
+                        <span
+                            class="bg-red-500/10 text-red-500 font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 rounded">
+                            {{ unreadNotifications() }} New
+                        </span>
                         }
                     </div>
-                    <!-- Hauteur max ajustée pour les petits écrans -->
-                    <div class="max-h-[60vh] sm:max-h-[400px] overflow-y-auto">
+                    <div class="max-h-[400px] overflow-y-auto divide-y divide-slate-100 dark:divide-ds-border/50">
                         @if (notifications().length === 0) {
                         <div
-                            class="p-8 text-center text-slate-500 dark:text-ds-muted/50 flex flex-col items-center font-syne">
-                            <lucide-icon [name]="icons.Bell" class="w-8 h-8 opacity-20 mb-2"></lucide-icon>
+                            class="p-8 text-center text-slate-400 dark:text-ds-muted/40 flex flex-col items-center font-syne text-xs">
+                            <lucide-icon [name]="icons.Bell" class="w-6 h-6 opacity-20 mb-2"></lucide-icon>
                             <p>{{ 'NOTIFICATIONS.EMPTY' | translate }}</p>
                         </div>
                         } @else {
-                        <div class="divide-y divide-slate-100 dark:divide-ds-border/50">
-                            @for (notif of notifications(); track notif.id) {
-                            <div (click)="markAsRead(notif)"
-                                class="p-4 flex gap-4 cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-ds-border/30"
-                                [ngClass]="!notif.read ? 'bg-lotus/5 dark:bg-lotus/5' : ''">
-                                <div class="shrink-0 mt-1">
-                                    @if (notif.type === 'SUCCESS') { <lucide-icon [name]="icons.CheckCircle"
-                                        class="w-4 h-4 text-green"></lucide-icon> }
-                                    @else if (notif.type === 'WARNING' || notif.type === 'ERROR') { <lucide-icon
-                                        [name]="icons.AlertTriangle" class="w-4 h-4 text-red-500"></lucide-icon> }
-                                    @else { <lucide-icon [name]="icons.Info"
-                                        class="w-4 h-4 text-slate-400"></lucide-icon> }
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-syne text-slate-900 dark:text-ds-muted"
-                                        [ngClass]="!notif.read ? 'font-bold' : ''">{{ notif.message }}</p>
-                                    <p
-                                        class="font-mono text-[9px] uppercase tracking-wider text-slate-500 dark:text-ds-muted/50 mt-1">
-                                        {{ notif.createdAt | date:'short' }}</p>
-                                </div>
-                                @if (!notif.read) { <div class="shrink-0 w-2 h-2 rounded-full bg-lotus mt-2"></div> }
+                        @for (notif of notifications(); track notif.id) {
+                        <div (click)="markAsRead(notif)"
+                            class="p-4 flex gap-4 cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-ds-border/30"
+                            [ngClass]="!notif.read ? 'bg-lotus/5' : ''">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs sm:text-sm font-syne text-slate-800 dark:text-ds-muted"
+                                    [ngClass]="!notif.read ? 'font-bold' : ''">{{ notif.message }}</p>
+                                <p class="font-mono text-[8px] uppercase tracking-wider text-slate-400 mt-1">{{
+                                    notif.createdAt | date:'short' }}</p>
                             </div>
-                            }
                         </div>
+                        }
                         }
                     </div>
                 </div>
                 }
             </div>
 
-            <div class="hidden sm:block w-px h-6 bg-slate-200 dark:bg-ds-border mx-1"></div>
-
-            <a routerLink="/dashboard"
-                class="hidden lg:flex px-4 py-2 font-mono text-[10px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded-full hover:bg-lotus-light transition-all items-center gap-2 shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+            <a routerLink="/dashboard" (click)="closeAllMenus()"
+                class="hidden sm:flex px-4 py-2 bg-lotus text-ds-black font-syne text-xs font-bold rounded-lg hover:bg-lotus-light transition-all items-center gap-1.5 shadow-sm">
                 <lucide-icon [name]="icons.LayoutDashboard" class="w-3.5 h-3.5"></lucide-icon>
-                {{ 'NAVBAR.DASHBOARD' | translate }}
+                <span>Dashboard</span>
             </a>
 
-            <!-- Avatar caché sur mobile pour faire respirer le header (il sera dans le menu) -->
-            <a routerLink="/user/profile"
-                class="hidden sm:flex h-9 w-9 rounded-full bg-slate-100 dark:bg-ds-surface items-center justify-center text-lotus font-cormorant font-bold border border-slate-200 dark:border-ds-border shadow-sm shrink-0 overflow-hidden hover:border-lotus dark:hover:border-lotus transition-colors cursor-pointer">
+            <a routerLink="/user/profile" (click)="closeAllMenus()"
+                class="hidden sm:flex h-9 w-9 rounded-xl bg-slate-100 dark:bg-ds-surface items-center justify-center text-lotus font-syne font-bold border border-slate-200 dark:border-ds-border shadow-sm shrink-0 overflow-hidden hover:border-lotus dark:hover:border-lotus transition-colors cursor-pointer">
                 @if (user()?.profilePictureUrl) {
                 <img [src]="user()?.profilePictureUrl" class="w-full h-full object-cover">
                 } @else {
@@ -196,19 +233,20 @@
             </a>
 
             } @else {
-            <div class="hidden sm:block w-px h-6 bg-slate-200 dark:bg-ds-border mx-1"></div>
-            <a routerLink="/login"
-                class="hidden sm:block px-4 py-2 font-mono text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-ds-muted hover:text-lotus dark:hover:text-lotus rounded-full transition">
-                {{ 'NAVBAR.LOGIN' | translate }}
-            </a>
-            <a [routerLink]="['/login']" [queryParams]="{mode: 'signup'}"
-                class="hidden sm:block px-5 py-2 font-mono text-[10px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded-full hover:bg-lotus-light transition shadow-[0_0_15px_rgba(212,175,55,0.2)]">
-                {{ 'NAVBAR.SIGNUP' | translate }}
-            </a>
+            <div class="hidden sm:flex items-center gap-2">
+                <a routerLink="/login"
+                    class="px-4 py-2 font-syne text-xs font-bold text-slate-600 dark:text-ds-muted hover:text-lotus dark:hover:text-lotus transition-colors">
+                    {{ 'NAVBAR.LOGIN' | translate }}
+                </a>
+                <a [routerLink]="['/login']" [queryParams]="{mode: 'signup'}"
+                    class="px-4 py-2 font-syne text-xs font-bold bg-lotus text-ds-black rounded-lg hover:bg-lotus-light transition-all shadow-sm">
+                    {{ 'NAVBAR.SIGNUP' | translate }}
+                </a>
+            </div>
             }
 
             <button (click)="toggleMenu()"
-                class="md:hidden p-2 text-slate-600 dark:text-ds-muted/70 ml-1 rounded hover:bg-slate-100 dark:hover:bg-ds-surface">
+                class="md:hidden p-2 text-slate-600 dark:text-ds-muted/70 rounded-lg hover:bg-slate-100 dark:hover:bg-ds-surface">
                 <lucide-icon [name]="isMobileMenuOpen ? icons.X : icons.Menu" class="w-5 h-5"></lucide-icon>
             </button>
         </div>
@@ -216,20 +254,67 @@
 
     @if (isMobileMenuOpen) {
     <div
-        class="md:hidden absolute top-[100%] left-0 w-full border-b border-slate-200 dark:border-ds-border bg-white dark:bg-ds-black p-4 space-y-4 shadow-xl z-40">
+        class="md:hidden absolute top-[100%] left-0 w-full border-b border-slate-200 dark:border-ds-border bg-white dark:bg-ds-black p-4 space-y-4 shadow-xl z-40 animate-fade-in">
 
-        <div class="relative w-full mb-4">
+        <div class="relative w-full z-50">
             <lucide-icon [name]="icons.Search"
                 class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></lucide-icon>
-            <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()"
+            <input type="text" [ngModel]="searchQuery()" (ngModelChange)="onSearchQueryChange($event)"
+                (focus)="isSearchFocused.set(true)" (keyup.enter)="onSearch()"
                 [placeholder]="'NAVBAR.SEARCH_PLACEHOLDER' | translate"
-                class="w-full h-12 pl-11 pr-4 bg-slate-100 dark:bg-ds-surface border border-transparent focus:border-lotus rounded-full text-sm font-syne outline-none dark:text-white">
+                class="w-full h-11 pl-11 pr-4 bg-slate-100 dark:bg-ds-surface border border-transparent focus:border-lotus rounded-lg text-sm font-syne outline-none text-slate-800 dark:text-white">
+
+            @if (isSearchFocused() && searchQuery().trim().length > 0) {
+            <div
+                class="absolute top-[calc(100%+8px)] left-0 w-full bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-2xl overflow-hidden animate-fade-in p-4 text-left max-h-[280px] overflow-y-auto">
+                <div
+                    class="font-mono text-[9px] uppercase tracking-wider text-slate-400 font-bold mb-3 border-b border-slate-100 dark:border-ds-border/40 pb-2">
+                    {{ 'NAVBAR.SEARCH_RESULTS' | translate }}
+                </div>
+
+                @if (filteredCourses().length === 0) {
+                <div class="py-4 text-center text-xs text-slate-400">
+                    {{ 'NAVBAR.SEARCH_NO_RESULTS' | translate }} <span class="text-lotus italic">"{{ searchQuery()
+                        }}"</span>
+                </div>
+                } @else {
+                <div class="space-y-1">
+                    @for (course of filteredCourses(); track course.id) {
+                    <a [routerLink]="['/courses', course.id]"
+                        (click)="isSearchFocused.set(false); isMobileMenuOpen = false"
+                        class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-ds-black/40 group/row transition-colors">
+                        <img [src]="course.thumbnailUrl || 'assets/images/default-course.png'"
+                            class="w-12 h-8 object-cover rounded bg-slate-100 dark:bg-ds-black shrink-0">
+                        <div class="min-w-0 flex-1">
+                            <h5
+                                class="font-syne font-bold text-xs text-slate-800 dark:text-white group-hover/row:text-lotus transition-colors truncate">
+                                {{ course.title }}
+                            </h5>
+                            <p class="font-mono text-[9px] text-slate-400 mt-0.5 truncate">By {{ course.instructorName
+                                }} • <span class="text-lotus font-bold text-[8px]">{{ course.level }}</span></p>
+                        </div>
+                    </a>
+                    }
+                </div>
+
+                <button (click)="onSearch()"
+                    class="w-full text-center mt-3 pt-3 border-t border-slate-100 dark:border-ds-border/40 font-syne text-[11px] font-bold text-lotus hover:text-lotus-light transition-colors block">
+                    {{ 'NAVBAR.SEARCH_VIEW_ALL' | translate }} "{{ searchQuery() }}" →
+                </button>
+                }
+            </div>
+            }
         </div>
+
+        @if (isSearchFocused() && searchQuery().trim().length > 0) {
+        <div class="fixed inset-0 top-16 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm z-30 transition-all duration-300"
+            (click)="isSearchFocused.set(false)"></div>
+        }
 
         <nav class="flex flex-col gap-1">
             @for (link of navLinks; track link.labelKey) {
             <a [routerLink]="[link.href]" [fragment]="link.fragment" (click)="isMobileMenuOpen = false"
-                class="px-4 py-3 font-mono text-[11px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted hover:bg-slate-50 dark:hover:bg-ds-surface hover:text-lotus dark:hover:text-lotus rounded-xl transition-colors">
+                class="px-4 py-3 font-syne text-sm font-medium text-slate-700 dark:text-ds-muted hover:bg-slate-50 dark:hover:bg-ds-surface hover:text-lotus dark:hover:text-lotus rounded-xl transition-colors">
                 {{ link.labelKey | translate }}
             </a>
             }
@@ -237,48 +322,21 @@
 
         <div class="pt-4 border-t border-slate-200 dark:border-ds-border">
             @if (isLoggedIn()) {
-
-            <!-- DEUXIÈME ACCÈS AUX NOTIFICATIONS : Dans le menu Mobile -->
-            <button (click)="toggleNotifications(); isMobileMenuOpen = false"
-                class="w-full flex items-center justify-between px-4 py-3 mb-2 font-mono text-[11px] uppercase tracking-widest font-bold text-slate-700 dark:text-ds-muted hover:bg-slate-50 dark:hover:bg-ds-surface rounded-xl transition-colors">
-                <div class="flex items-center gap-3">
-                    <lucide-icon [name]="icons.Bell" class="w-4 h-4"></lucide-icon>
-                    {{ 'NOTIFICATIONS.TITLE' | translate }}
-                </div>
-                @if (unreadNotifications() > 0) {
-                <span class="bg-red-500 text-white px-2 py-0.5 rounded text-[10px]">{{ unreadNotifications() }}</span>
-                }
-            </button>
-
-            <div class="flex items-center gap-3 px-4 mb-4 mt-2">
-                <div
-                    class="h-12 w-12 rounded-full bg-slate-100 dark:bg-ds-surface flex items-center justify-center text-lotus font-cormorant text-xl font-bold border border-slate-200 dark:border-ds-border overflow-hidden shrink-0">
-                    @if (user()?.profilePictureUrl) {
-                    <img [src]="user()?.profilePictureUrl" class="w-full h-full object-cover">
-                    } @else {
-                    {{ user()?.firstName?.charAt(0) || 'U' }}
-                    }
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-syne font-bold text-slate-900 dark:text-white">{{ user()?.firstName }} {{
-                        user()?.lastName }}</span>
-                    <span class="font-mono text-[9px] uppercase tracking-wider text-lotus">{{ user()?.role }}</span>
-                </div>
+            <div class="flex flex-col gap-2">
+                <a routerLink="/dashboard" (click)="isMobileMenuOpen = false"
+                    class="w-full flex items-center justify-center gap-2 py-3 bg-lotus text-ds-black rounded-lg font-syne text-xs font-bold">
+                    <lucide-icon [name]="icons.LayoutDashboard" class="w-4 h-4"></lucide-icon>
+                    <span>Dashboard</span>
+                </a>
             </div>
-
-            <a routerLink="/dashboard" (click)="isMobileMenuOpen = false"
-                class="w-full flex items-center justify-center gap-2 py-3.5 font-mono text-[11px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded-xl hover:bg-lotus-light transition-colors">
-                <lucide-icon [name]="icons.LayoutDashboard" class="w-4 h-4"></lucide-icon>
-                {{ 'NAVBAR.DASHBOARD' | translate }}
-            </a>
             } @else {
             <div class="flex flex-col gap-2">
                 <a routerLink="/login" (click)="isMobileMenuOpen = false"
-                    class="w-full py-3.5 text-center font-mono text-[11px] uppercase tracking-widest font-bold border border-slate-200 dark:border-ds-border text-slate-700 dark:text-ds-muted rounded-xl hover:bg-slate-50 dark:hover:bg-ds-surface transition-colors">
+                    class="w-full py-3 text-center font-syne text-xs font-bold border border-slate-200 dark:border-ds-border text-slate-700 dark:text-ds-muted rounded-lg">
                     {{ 'NAVBAR.LOGIN' | translate }}
                 </a>
                 <a [routerLink]="['/login']" [queryParams]="{mode: 'signup'}" (click)="isMobileMenuOpen = false"
-                    class="w-full py-3.5 text-center font-mono text-[11px] uppercase tracking-widest font-bold bg-lotus text-ds-black rounded-xl hover:bg-lotus-light transition-colors shadow-sm">
+                    class="w-full py-3 text-center font-syne text-xs font-bold bg-lotus text-ds-black rounded-lg">
                     {{ 'NAVBAR.SIGNUP' | translate }}
                 </a>
             </div>

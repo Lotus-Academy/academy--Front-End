@@ -187,4 +187,13 @@ export class CourseService {
   getTrendingCourses(): Observable<CourseResponseDTO[]> {
     return this.http.get<CourseResponseDTO[]>(`${this.apiUrl}/courses/trending`);
   }
+
+  searchCoursesInstant(query: string, size: number = 5): Observable<PageCourseResponseDTO> {
+    const params = new HttpParams()
+      .set('search', query)
+      .set('size', size.toString())
+      .set('sort', 'publishedAt,DESC');
+
+    return this.http.get<PageCourseResponseDTO>(`${this.apiUrl}/courses`, { params });
+  }
 }

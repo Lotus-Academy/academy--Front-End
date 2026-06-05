@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, inject, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Inclut DecimalPipe (number) et DatePipe
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -26,6 +26,8 @@ export class CourseCardComponent implements OnInit {
   readonly icons = { Star, Clock, Users, BookOpen, X, ThumbsUp, Loader2, MessageSquare };
 
   // --- ÉTATS DU MODAL D'AVIS ---
+  @ViewChild('reviewsModal') reviewsModalRef!: ElementRef<HTMLDialogElement>;
+
   isReviewsModalOpen = signal<boolean>(false);
   isLoadingReviews = signal<boolean>(false);
   reviews = signal<any[]>([]);
@@ -61,12 +63,17 @@ export class CourseCardComponent implements OnInit {
     this.isReviewsModalOpen.set(true);
     document.body.style.overflow = 'hidden';
 
+    setTimeout(() => {
+      this.reviewsModalRef?.nativeElement?.showModal();
+    });
+
     if (this.reviews().length === 0) {
       this.fetchReviews();
     }
   }
 
   closeReviewsModal(): void {
+    this.reviewsModalRef?.nativeElement?.close();
     this.isReviewsModalOpen.set(false);
     document.body.style.overflow = 'auto';
   }

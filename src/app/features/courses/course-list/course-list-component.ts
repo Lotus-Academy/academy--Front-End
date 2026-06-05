@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { LucideAngularModule, Search, Filter, X, Loader2 } from 'lucide-angular';
+import { LucideAngularModule, Search, Filter, X, Loader2, ChevronDown } from 'lucide-angular';
 import { CourseCardComponent } from '../../../shared/components/course-card/course-card-component';
 import { CourseService } from '../../../core/services/course.service';
 import { CourseResponseDTO, PageCourseResponseDTO, CategoryDTO } from '../../../core/models/course.dto';
@@ -29,10 +29,12 @@ export class CourseListComponent implements OnInit {
   private courseService = inject(CourseService);
   private route = inject(ActivatedRoute);
 
-  readonly icons = { Search, Filter, X, Loader2 };
+  readonly icons = { Search, Filter, X, Loader2, ChevronDown };
 
   allCourses = signal<CourseResponseDTO[]>([]);
   isLoading = signal<boolean>(true);
+
+  // États de filtrage réactifs
   searchQuery = signal<string>('');
   selectedCategory = signal<string>('All');
   selectedLevel = signal<string>('All');
@@ -50,14 +52,15 @@ export class CourseListComponent implements OnInit {
     this.selectedPrice() !== 'All'
   );
 
+  // Moteur d'évaluation synchrone (Miroir local filtré)
   filteredCourses = computed(() => {
-    const query = this.searchQuery().toLowerCase();
+    const query = this.searchQuery().toLowerCase().trim();
     const category = this.selectedCategory();
     const level = this.selectedLevel();
     const price = this.selectedPrice();
 
     return this.allCourses().filter(course => {
-      const matchesSearch = course.title.toLowerCase().includes(query) ||
+      const matchesSearch = !query || course.title.toLowerCase().includes(query) ||
         (course.instructorName && course.instructorName.toLowerCase().includes(query));
       const matchesCategory = category === 'All' || course.categoryId === category;
       const matchesLevel = level === 'All' || (course.level && course.level.toUpperCase() === level);
@@ -70,18 +73,28 @@ export class CourseListComponent implements OnInit {
   });
 
   ngOnInit() {
+    // Écoute croisée des requêtes de recherche provenant de la Navbar (paramètre 'search' ou 'categoryId')
     this.route.queryParams.subscribe(params => {
-      if (params['q']) this.searchQuery.set(params['q']);
+      if (params['search']) {
+        this.searchQuery.set(params['search']);
+      }
+      if (params['categoryId']) {
+        this.selectedCategory.set(params['categoryId']);
+      }
     });
     this.fetchData();
   }
 
   fetchData() {
     this.isLoading.set(true);
+
+    // Chargement des vraies catégories
     this.courseService.getCategories().subscribe({
       next: (cats) => this.categories.set(cats),
       error: (err) => console.error('Erreur chargement catégories', err)
     });
+
+    // Chargement de l'intégralité du catalogue publié
     this.courseService.getPublishedCourses(0, 100).subscribe({
       next: (pageData: PageCourseResponseDTO) => {
         this.allCourses.set(pageData.content);
@@ -92,6 +105,12 @@ export class CourseListComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  // Permet de retrouver le libellé textuel d'une catégorie à partir de son ID UUID pour les badges
+  getCategoryName(id: string): string {
+    const cat = this.categories().find(c => c.id === id);
+    return cat ? cat.name : id;
   }
 
   toggleFilters() {
