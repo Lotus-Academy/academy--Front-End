@@ -31,8 +31,7 @@
                     </div>
                     <div class="grid grid-cols-1 gap-1">
                         @for (topic of topics(); track topic.id) {
-                        <a [routerLink]="['/courses']" [queryParams]="{categoryId: topic.id}"
-                            (click)="isExploreMenuOpen.set(false)"
+                        <a [routerLink]="['/courses']" [queryParams]="{categoryId: topic.id}" (click)="closeAllMenus()"
                             class="flex items-start gap-3 p-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-ds-black/40 group/item transition-colors">
                             <div
                                 [class]="'flex h-8 w-8 items-center justify-center rounded border shrink-0 mt-0.5 ' + topic.color">
@@ -82,7 +81,7 @@
                 } @else {
                 <div class="space-y-1">
                     @for (course of filteredCourses(); track course.id) {
-                    <a [routerLink]="['/courses', course.id]" (click)="isSearchFocused.set(false)"
+                    <a [routerLink]="['/courses', course.id]" (click)="closeAllMenus()"
                         class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-ds-black/40 group/row transition-colors">
                         <img [src]="course.thumbnailUrl || 'assets/images/default-course.png'"
                             class="w-12 h-8 object-cover rounded bg-slate-100 dark:bg-ds-black shrink-0">
@@ -97,7 +96,6 @@
                     </a>
                     }
                 </div>
-
                 <button (click)="onSearch()"
                     class="w-full text-center mt-3 pt-3 border-t border-slate-100 dark:border-ds-border/40 font-syne text-[11px] font-bold text-lotus hover:text-lotus-light transition-colors block">
                     {{ 'NAVBAR.SEARCH_VIEW_ALL' | translate }} "{{ searchQuery() }}" →
@@ -115,13 +113,109 @@
         <div class="flex items-center gap-2 sm:gap-3 shrink-0 relative z-50">
 
             <nav class="hidden md:flex items-center gap-1">
-                @for (link of navLinks; track link.labelKey) {
-                <a [routerLink]="[link.href]" [fragment]="link.fragment" routerLinkActive="text-lotus font-bold"
-                    [routerLinkActiveOptions]="{exact: link.href === '/'}" (click)="closeAllMenus()"
-                    class="px-3 py-2 font-syne text-xs font-medium text-slate-600 dark:text-ds-muted/80 hover:text-lotus dark:hover:text-lotus rounded-md transition-colors">
-                    {{ link.labelKey | translate }}
-                </a>
-                }
+
+                <div class="relative" (mouseenter)="isCoursesMenuOpen.set(true)"
+                    (mouseleave)="isCoursesMenuOpen.set(false)">
+                    <a routerLink="/courses" routerLinkActive="text-lotus font-bold"
+                        class="px-3 py-2 font-syne text-xs font-medium text-slate-600 dark:text-ds-muted/80 hover:text-lotus rounded-md transition-colors flex items-center gap-1">
+                        <span>{{ 'NAVBAR.COURSES' | translate }}</span>
+                        <lucide-icon [name]="icons.ChevronDown" class="w-2.5 h-2.5 opacity-60"></lucide-icon>
+                    </a>
+                    @if (isCoursesMenuOpen()) {
+                    <div
+                        class="absolute left-1/2 -translate-x-1/2 mt-0 w-80 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-2xl p-4 animate-fade-in text-left">
+                        <span
+                            class="font-mono text-[8px] uppercase tracking-wider text-slate-400 font-bold block mb-2">🎓
+                            Learning Options</span>
+                        <div class="space-y-1">
+                            <a routerLink="/courses" (click)="closeAllMenus()"
+                                class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-ds-black/40 text-xs font-syne text-slate-700 dark:text-white hover:text-lotus">
+                                <lucide-icon [name]="icons.Terminal" class="w-4 h-4 text-lotus"></lucide-icon>
+                                <div>
+                                    <span class="font-bold block">All Catalog</span>
+                                    <span class="text-[10px] text-slate-400 block font-normal">Explore our professional
+                                        financial tracks.</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="relative" (mouseenter)="isTeachMenuOpen.set(true)"
+                    (mouseleave)="isTeachMenuOpen.set(false)">
+                    <a routerLink="/instructor-register" fragment="topics" routerLinkActive="text-lotus font-bold"
+                        class="px-3 py-2 font-syne text-xs font-medium text-slate-600 dark:text-ds-muted/80 hover:text-lotus rounded-md transition-colors flex items-center gap-1">
+                        <span>{{ 'NAVBAR.TEACH' | translate }}</span>
+                        <lucide-icon [name]="icons.ChevronDown" class="w-2.5 h-2.5 opacity-60"></lucide-icon>
+                    </a>
+                    @if (isTeachMenuOpen()) {
+                    <div
+                        class="absolute left-1/2 -translate-x-1/2 mt-0 w-80 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-2xl p-4 animate-fade-in text-left">
+                        <span
+                            class="font-mono text-[8px] uppercase tracking-wider text-slate-400 font-bold block mb-2">💼
+                            Instructor Hub</span>
+                        <div class="space-y-1">
+                            <a routerLink="/instructor-register" fragment="topics" (click)="closeAllMenus()"
+                                class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-ds-black/40 text-xs font-syne text-slate-700 dark:text-white hover:text-lotus">
+                                <lucide-icon [name]="icons.GraduationCap" class="w-4 h-4 text-blue-500"></lucide-icon>
+                                <div>
+                                    <span class="font-bold block">Become an Instructor</span>
+                                    <span class="text-[10px] text-slate-400 block font-normal">Share your quantitative
+                                        modeling systems.</span>
+                                </div>
+                            </a>
+                            <a routerLink="/instructor-register" (click)="closeAllMenus()"
+                                class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-ds-black/40 text-xs font-syne text-slate-700 dark:text-white hover:text-lotus">
+                                <lucide-icon [name]="icons.DollarSign" class="w-4 h-4 text-green"></lucide-icon>
+                                <div>
+                                    <span class="font-bold block">Revenue Share Rates</span>
+                                    <span class="text-[10px] text-slate-400 block font-normal">Understand platform
+                                        scales and commissions.</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="relative" (mouseenter)="isFaqMenuOpen.set(true)" (mouseleave)="isFaqMenuOpen.set(false)">
+                    <a routerLink="/" fragment="faq" routerLinkActive="text-lotus font-bold"
+                        [routerLinkActiveOptions]="{exact: true}"
+                        class="px-3 py-2 font-syne text-xs font-medium text-slate-600 dark:text-ds-muted/80 hover:text-lotus rounded-md transition-colors flex items-center gap-1">
+                        <span>{{ 'NAVBAR.FAQ' | translate }}</span>
+                        <lucide-icon [name]="icons.ChevronDown" class="w-2.5 h-2.5 opacity-60"></lucide-icon>
+                    </a>
+                    @if (isFaqMenuOpen()) {
+                    <div
+                        class="absolute right-0 mt-0 w-80 bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-2xl p-4 animate-fade-in text-left">
+                        <span
+                            class="font-mono text-[8px] uppercase tracking-wider text-slate-400 font-bold block mb-2">❓
+                            Support Desk</span>
+                        <div class="space-y-1">
+                            <a routerLink="/" fragment="faq" (click)="closeAllMenus()"
+                                class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-ds-black/40 text-xs font-syne text-slate-700 dark:text-white hover:text-lotus">
+                                <lucide-icon [name]="icons.HelpCircle" class="w-4 h-4 text-purple-500"></lucide-icon>
+                                <div>
+                                    <span class="font-bold block">Platform FAQ</span>
+                                    <span class="text-[10px] text-slate-400 block font-normal">Instant responses to
+                                        common deployment issues.</span>
+                                </div>
+                            </a>
+                            <a routerLink="/instructor-register" fragment="topics" (click)="closeAllMenus()"
+                                class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-ds-black/40 text-xs font-syne text-slate-700 dark:text-white hover:text-lotus">
+                                <lucide-icon [name]="icons.FileText" class="w-4 h-4 text-amber-500"></lucide-icon>
+                                <div>
+                                    <span class="font-bold block">Regulatory Terms</span>
+                                    <span class="text-[10px] text-slate-400 block font-normal">Read dynamic contract
+                                        versioning clauses.</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    }
+                </div>
+
             </nav>
 
             <div class="w-px h-5 bg-slate-200 dark:bg-ds-border/60 hidden md:block mx-1"></div>
@@ -191,7 +285,7 @@
                         </span>
                         }
                     </div>
-                    <div class="max-h-[400px] overflow-y-auto divide-y divide-slate-100 dark:divide-ds-border/50">
+                    <div class="max-h-[280px] overflow-y-auto divide-y divide-slate-100 dark:divide-ds-border/50">
                         @if (notifications().length === 0) {
                         <div
                             class="p-8 text-center text-slate-400 dark:text-ds-muted/40 flex flex-col items-center font-syne text-xs">
@@ -224,12 +318,10 @@
             </a>
 
             <a routerLink="/user/profile" (click)="closeAllMenus()"
-                class="hidden sm:flex h-9 w-9 rounded-xl bg-slate-100 dark:bg-ds-surface items-center justify-center text-lotus font-syne font-bold border border-slate-200 dark:border-ds-border shadow-sm shrink-0 overflow-hidden hover:border-lotus dark:hover:border-lotus transition-colors cursor-pointer">
-                @if (user()?.profilePictureUrl) {
-                <img [src]="user()?.profilePictureUrl" class="w-full h-full object-cover">
-                } @else {
-                {{ user()?.firstName?.charAt(0) || 'U' }}
-                }
+                class="hidden sm:flex h-9 w-9 rounded-full bg-slate-100 dark:bg-ds-surface items-center justify-center text-lotus font-syne font-bold border border-slate-200 dark:border-ds-border shadow-sm shrink-0 overflow-hidden hover:border-lotus dark:hover:border-lotus transition-colors cursor-pointer">
+                <img *ngIf="user()?.profilePictureUrl" [src]="user()?.profilePictureUrl"
+                    class="w-full h-full object-cover">
+                <span *ngIf="!user()?.profilePictureUrl">{{ user()?.firstName?.charAt(0) || 'U' }}</span>
             </a>
 
             } @else {
@@ -255,7 +347,6 @@
     @if (isMobileMenuOpen) {
     <div
         class="md:hidden absolute top-[100%] left-0 w-full border-b border-slate-200 dark:border-ds-border bg-white dark:bg-ds-black p-4 space-y-4 shadow-xl z-40 animate-fade-in">
-
         <div class="relative w-full z-50">
             <lucide-icon [name]="icons.Search"
                 class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></lucide-icon>
@@ -266,64 +357,61 @@
 
             @if (isSearchFocused() && searchQuery().trim().length > 0) {
             <div
-                class="absolute top-[calc(100%+8px)] left-0 w-full bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-2xl overflow-hidden animate-fade-in p-4 text-left max-h-[280px] overflow-y-auto">
+                class="absolute top-[calc(100%+8px)] left-0 w-full bg-white dark:bg-ds-surface border border-slate-200 dark:border-ds-border rounded-xl shadow-2xl overflow-hidden p-3 text-left max-h-[250px] overflow-y-auto z-50 animate-fade-in">
                 <div
-                    class="font-mono text-[9px] uppercase tracking-wider text-slate-400 font-bold mb-3 border-b border-slate-100 dark:border-ds-border/40 pb-2">
+                    class="font-mono text-[9px] uppercase tracking-wider text-slate-400 font-bold mb-2 border-b border-slate-100 dark:border-ds-border/40 pb-1.5">
                     {{ 'NAVBAR.SEARCH_RESULTS' | translate }}
                 </div>
 
                 @if (filteredCourses().length === 0) {
-                <div class="py-4 text-center text-xs text-slate-400">
-                    {{ 'NAVBAR.SEARCH_NO_RESULTS' | translate }} <span class="text-lotus italic">"{{ searchQuery()
-                        }}"</span>
+                <div class="py-3 text-center text-xs text-slate-400">
+                    Aucun cours trouvé pour <span class="text-lotus italic">"{{ searchQuery() }}"</span>
                 </div>
                 } @else {
                 <div class="space-y-1">
                     @for (course of filteredCourses(); track course.id) {
-                    <a [routerLink]="['/courses', course.id]"
-                        (click)="isSearchFocused.set(false); isMobileMenuOpen = false"
+                    <a [routerLink]="['/courses', course.id]" (click)="closeAllMenus()"
                         class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-ds-black/40 group/row transition-colors">
                         <img [src]="course.thumbnailUrl || 'assets/images/default-course.png'"
-                            class="w-12 h-8 object-cover rounded bg-slate-100 dark:bg-ds-black shrink-0">
+                            class="w-10 h-7 object-cover rounded bg-slate-100 shrink-0">
                         <div class="min-w-0 flex-1">
-                            <h5
-                                class="font-syne font-bold text-xs text-slate-800 dark:text-white group-hover/row:text-lotus transition-colors truncate">
+                            <h5 class="font-syne font-bold text-xs text-slate-800 dark:text-white truncate">
                                 {{ course.title }}
                             </h5>
-                            <p class="font-mono text-[9px] text-slate-400 mt-0.5 truncate">By {{ course.instructorName
-                                }} • <span class="text-lotus font-bold text-[8px]">{{ course.level }}</span></p>
+                            <p class="font-mono text-[8px] text-slate-400 mt-0.5 truncate">By {{ course.instructorName
+                                }}</p>
                         </div>
                     </a>
                     }
                 </div>
-
                 <button (click)="onSearch()"
-                    class="w-full text-center mt-3 pt-3 border-t border-slate-100 dark:border-ds-border/40 font-syne text-[11px] font-bold text-lotus hover:text-lotus-light transition-colors block">
-                    {{ 'NAVBAR.SEARCH_VIEW_ALL' | translate }} "{{ searchQuery() }}" →
+                    class="w-full text-center mt-2 pt-2 border-t border-slate-100 dark:border-ds-border/40 font-syne text-[10px] font-bold text-lotus transition-colors block">
+                    {{ 'NAVBAR.SEARCH_VIEW_ALL' | translate }} →
                 </button>
                 }
             </div>
             }
         </div>
 
-        @if (isSearchFocused() && searchQuery().trim().length > 0) {
-        <div class="fixed inset-0 top-16 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm z-30 transition-all duration-300"
-            (click)="isSearchFocused.set(false)"></div>
-        }
-
         <nav class="flex flex-col gap-1">
-            @for (link of navLinks; track link.labelKey) {
-            <a [routerLink]="[link.href]" [fragment]="link.fragment" (click)="isMobileMenuOpen = false"
-                class="px-4 py-3 font-syne text-sm font-medium text-slate-700 dark:text-ds-muted hover:bg-slate-50 dark:hover:bg-ds-surface hover:text-lotus dark:hover:text-lotus rounded-xl transition-colors">
-                {{ link.labelKey | translate }}
+            <a routerLink="/courses" (click)="closeAllMenus()"
+                class="px-4 py-3 text-left font-syne text-sm font-medium text-slate-700 dark:text-ds-muted hover:bg-slate-50 dark:hover:bg-ds-surface hover:text-lotus dark:hover:text-lotus rounded-xl transition-colors">
+                {{ 'NAVBAR.COURSES' | translate }}
             </a>
-            }
+            <a routerLink="/instructor-register" fragment="topics" (click)="closeAllMenus()"
+                class="px-4 py-3 text-left font-syne text-sm font-medium text-slate-700 dark:text-ds-muted hover:bg-slate-50 dark:hover:bg-ds-surface hover:text-lotus dark:hover:text-lotus rounded-xl transition-colors">
+                {{ 'NAVBAR.TEACH' | translate }}
+            </a>
+            <a routerLink="/" fragment="faq" (click)="closeAllMenus()"
+                class="px-4 py-3 text-left font-syne text-sm font-medium text-slate-700 dark:text-ds-muted hover:bg-slate-50 dark:hover:bg-ds-surface hover:text-lotus dark:hover:text-lotus rounded-xl transition-colors">
+                {{ 'NAVBAR.FAQ' | translate }}
+            </a>
         </nav>
 
         <div class="pt-4 border-t border-slate-200 dark:border-ds-border">
             @if (isLoggedIn()) {
             <div class="flex flex-col gap-2">
-                <a routerLink="/dashboard" (click)="isMobileMenuOpen = false"
+                <a routerLink="/dashboard" (click)="closeAllMenus()"
                     class="w-full flex items-center justify-center gap-2 py-3 bg-lotus text-ds-black rounded-lg font-syne text-xs font-bold">
                     <lucide-icon [name]="icons.LayoutDashboard" class="w-4 h-4"></lucide-icon>
                     <span>Dashboard</span>
@@ -331,11 +419,11 @@
             </div>
             } @else {
             <div class="flex flex-col gap-2">
-                <a routerLink="/login" (click)="isMobileMenuOpen = false"
+                <a routerLink="/login" (click)="closeAllMenus()"
                     class="w-full py-3 text-center font-syne text-xs font-bold border border-slate-200 dark:border-ds-border text-slate-700 dark:text-ds-muted rounded-lg">
                     {{ 'NAVBAR.LOGIN' | translate }}
                 </a>
-                <a [routerLink]="['/login']" [queryParams]="{mode: 'signup'}" (click)="isMobileMenuOpen = false"
+                <a [routerLink]="['/login']" [queryParams]="{mode: 'signup'}" (click)="closeAllMenus()"
                     class="w-full py-3 text-center font-syne text-xs font-bold bg-lotus text-ds-black rounded-lg">
                     {{ 'NAVBAR.SIGNUP' | translate }}
                 </a>

@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import {
   LucideAngularModule, Menu, X, Search, Moon, Sun, CheckCircle, ChevronDown,
-  LayoutDashboard, Bell, CheckCheck, AlertTriangle, Info, Globe, TrendingUp, BarChart3, Brain, Shield, Heart, BookOpen, Cpu
+  LayoutDashboard, Bell, CheckCheck, AlertTriangle, Info, Globe, TrendingUp, BarChart3, Brain, Shield, Heart, BookOpen, Cpu, Terminal, HelpCircle, GraduationCap, DollarSign, FileText
 } from 'lucide-angular';
 
 import { ThemeService } from '../../../core/services/theme.service';
@@ -44,28 +44,27 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isNotificationsOpen = signal<boolean>(false);
   isLanguageMenuOpen = signal<boolean>(false);
 
-  // États d'ouverture Coursera-like
+  // États d'ouverture des Mégas Menus
   isExploreMenuOpen = signal<boolean>(false);
+  isCoursesMenuOpen = signal<boolean>(false);
+  isTeachMenuOpen = signal<boolean>(false);
+  isFaqMenuOpen = signal<boolean>(false);
   isSearchFocused = signal<boolean>(false);
 
   searchQuery = signal<string>('');
   filteredCourses = signal<CourseResponseDTO[]>([]);
-
-  // Signal brut alimenté par les VRAIES catégories renvoyées par ton API Spring Boot
   popularCategories = signal<CategoryDTO[]>([]);
 
-  // Pipeline de debounce pour l'Instant Search de la Navbar
   private searchSubject = new Subject<string>();
-
   notifications = signal<AppNotification[]>([]);
   unreadNotifications = computed(() => this.notifications().filter(n => !n.read).length);
 
   readonly icons = {
     Menu, X, Search, Moon, Sun, CheckCircle, ChevronDown, Globe,
-    LayoutDashboard, Bell, CheckCheck, AlertTriangle, Info, TrendingUp, BarChart3, Brain, Shield, Heart
+    LayoutDashboard, Bell, CheckCheck, AlertTriangle, Info, TrendingUp, BarChart3, Brain, Shield, Heart,
+    Terminal, HelpCircle, GraduationCap, DollarSign, FileText
   };
 
-  // Configuration visuelle pour mapper tes icônes sur les vrais noms de ta DB
   private topicConfig: Record<string, { icon: any, color: string, subKey: string }> = {
     "Algorithmic Trading": { icon: TrendingUp, color: "text-lotus bg-lotus/10 border-lotus/20", subKey: "NAVBAR.EXPLORE_SUB_ALGO" },
     "Quantitative Finance": { icon: BarChart3, color: "text-blue-600 bg-blue-500/10 border-blue-500/20", subKey: "NAVBAR.EXPLORE_SUB_QUANT" },
@@ -75,27 +74,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
     "Trading Psychology": { icon: Heart, color: "text-rose-600 bg-rose-500/10 border-rose-500/20", subKey: "NAVBAR.EXPLORE_SUB_PSYCHO" }
   };
 
-  // Génération dynamique et réactive des catégories réelles pour le Méga-Menu Explore
   topics = computed(() => {
     return this.popularCategories().map(cat => {
       const config = this.topicConfig[cat.name] || { icon: BookOpen, color: "text-slate-600 bg-slate-100 border-slate-200", subKey: "HOME.TOPICS.SUBTITLE" };
-      return {
-        id: cat.id,
-        name: cat.name,
-        description: cat.description,
-        icon: config.icon,
-        color: config.color,
-        subKey: config.subKey
-      };
+      return { id: cat.id, name: cat.name, description: cat.description, icon: config.icon, color: config.color, subKey: config.subKey };
     });
   });
 
-  navLinks: NavLink[] = [
-    { href: '/courses', labelKey: 'NAVBAR.COURSES' },
-    { href: '/instructor-register', fragment: 'topics', labelKey: 'NAVBAR.TEACH' },
-    { href: '/', fragment: 'faq', labelKey: 'NAVBAR.FAQ' }
-  ];
-
+  // Remplacement de la structure figée par une gestion granulaire dans le HTML
   ngOnInit(): void {
     if (this.isLoggedIn()) {
       this.notificationService.getNotifications().subscribe({
@@ -108,20 +94,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
       });
     }
 
-    // 1. Appel synchrone à l'API pour récupérer les vraies catégories configurées en base de données
     this.courseService.getPopularCategories().subscribe({
       next: (data) => this.popularCategories.set(data),
       error: (err) => console.error('Erreur de chargement des catégories réelles', err)
     });
 
-    // 2. Branchement de l'Instant Search sur le endpoint réel de ton CourseService
     this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
       switchMap(query => {
-        if (query.trim().length === 0) {
-          return [null];
-        }
+        if (query.trim().length === 0) return [null];
         return this.courseService.searchCoursesInstant(query);
       })
     ).subscribe({
@@ -159,6 +141,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   closeAllMenus(): void {
     this.isExploreMenuOpen.set(false);
+    this.isCoursesMenuOpen.set(false);
+    this.isTeachMenuOpen.set(false);
+    this.isFaqMenuOpen.set(false);
     this.isSearchFocused.set(false);
     this.isLanguageMenuOpen.set(false);
     this.isMobileMenuOpen = false;

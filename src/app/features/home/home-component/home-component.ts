@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit {
   };
 
   stats = [
-    { value: "50,000+", labelKey: "HOME.STATS.STUDENTS" },
+    { value: "10,000+", labelKey: "HOME.STATS.STUDENTS" },
     { value: "200+", labelKey: "HOME.STATS.COURSES" },
     { value: "4.9 / 5", labelKey: "HOME.STATS.RATING" },
   ];
