@@ -27,6 +27,9 @@ jobs:
         
       - name: Start Server and Run Playwright Tests
         run: npx start-server-and-test 'npx ng serve' http://localhost:4200 'npx playwright test'
+        env:
+          TEST_STUDENT_EMAIL: ${{ secrets.TEST_STUDENT_EMAIL }}
+          TEST_STUDENT_PASSWORD: ${{ secrets.TEST_STUDENT_PASSWORD }}
         
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
